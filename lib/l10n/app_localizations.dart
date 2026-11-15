@@ -205,7 +205,7 @@ abstract class AppLocalizations {
   /// No description provided for @dashboardCopilotHint.
   ///
   /// In fr, this message translates to:
-  /// **'Tu peux aussi l\'écrire simplement : « J\'ai 25 000 FCFA sur Wave ».'**
+  /// **'Tu peux aussi l\'écrire simplement : « J\'ai 25 000 FCFA sur Wave ».'**
   String get dashboardCopilotHint;
 
   /// No description provided for @dashboardCopilotAction.
@@ -220,11 +220,377 @@ abstract class AppLocalizations {
   /// **'Tes données restent sur ce téléphone. Les prévisions apparaîtront après environ deux semaines d\'opérations.'**
   String get dashboardPrivacyNote;
 
+  /// No description provided for @dashboardAccountsLink.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{Réparti sur 1 compte} other{Répartis sur {count} comptes}}'**
+  String dashboardAccountsLink(int count);
+
   /// No description provided for @currencyLabel.
   ///
   /// In fr, this message translates to:
   /// **'FCFA'**
   String get currencyLabel;
+
+  /// No description provided for @cancel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annuler'**
+  String get cancel;
+
+  /// No description provided for @errorGeneric.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une erreur est survenue. Réessaie.'**
+  String get errorGeneric;
+
+  /// No description provided for @accountTypeCash.
+  ///
+  /// In fr, this message translates to:
+  /// **'Espèces'**
+  String get accountTypeCash;
+
+  /// No description provided for @accountTypeMobileMoney.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mobile Money'**
+  String get accountTypeMobileMoney;
+
+  /// No description provided for @accountTypeBank.
+  ///
+  /// In fr, this message translates to:
+  /// **'Banque'**
+  String get accountTypeBank;
+
+  /// No description provided for @accountTypeSavings.
+  ///
+  /// In fr, this message translates to:
+  /// **'Épargne'**
+  String get accountTypeSavings;
+
+  /// No description provided for @accountsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes comptes'**
+  String get accountsTitle;
+
+  /// No description provided for @accountsAdd.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter un compte'**
+  String get accountsAdd;
+
+  /// No description provided for @accountsTotal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Total des comptes'**
+  String get accountsTotal;
+
+  /// No description provided for @accountsCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucun compte} =1{1 compte} other{{count} comptes}}'**
+  String accountsCount(int count);
+
+  /// No description provided for @accountsDistribution.
+  ///
+  /// In fr, this message translates to:
+  /// **'Répartition : {parts}'**
+  String accountsDistribution(String parts);
+
+  /// No description provided for @accountsShare.
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} {percent} %'**
+  String accountsShare(String name, int percent);
+
+  /// No description provided for @accountsOthers.
+  ///
+  /// In fr, this message translates to:
+  /// **'Autres'**
+  String get accountsOthers;
+
+  /// No description provided for @accountsArchived.
+  ///
+  /// In fr, this message translates to:
+  /// **'Archivés'**
+  String get accountsArchived;
+
+  /// No description provided for @accountsAddSavings.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter un compte épargne'**
+  String get accountsAddSavings;
+
+  /// No description provided for @accountsAddSavingsHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tontine, livret, coffre…'**
+  String get accountsAddSavingsHint;
+
+  /// No description provided for @accountsEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun compte pour l\'instant.'**
+  String get accountsEmpty;
+
+  /// No description provided for @accountNoOperation.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune opération pour l\'instant'**
+  String get accountNoOperation;
+
+  /// No description provided for @accountArchivedOn.
+  ///
+  /// In fr, this message translates to:
+  /// **'Archivé le {date} · historique conservé'**
+  String accountArchivedOn(String date);
+
+  /// No description provided for @accountNewTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveau compte'**
+  String get accountNewTitle;
+
+  /// No description provided for @accountEditTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier le compte'**
+  String get accountEditTitle;
+
+  /// No description provided for @accountCreatedTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compte créé'**
+  String get accountCreatedTitle;
+
+  /// No description provided for @accountFieldType.
+  ///
+  /// In fr, this message translates to:
+  /// **'Type de compte'**
+  String get accountFieldType;
+
+  /// No description provided for @accountFieldOperator.
+  ///
+  /// In fr, this message translates to:
+  /// **'Opérateur'**
+  String get accountFieldOperator;
+
+  /// No description provided for @accountFieldName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom du compte'**
+  String get accountFieldName;
+
+  /// No description provided for @accountFieldCurrentBalance.
+  ///
+  /// In fr, this message translates to:
+  /// **'Solde actuel'**
+  String get accountFieldCurrentBalance;
+
+  /// No description provided for @accountFieldOpeningBalance.
+  ///
+  /// In fr, this message translates to:
+  /// **'Solde initial'**
+  String get accountFieldOpeningBalance;
+
+  /// No description provided for @accountOpeningBalanceHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce montant de départ n\'est pas compté comme un revenu.'**
+  String get accountOpeningBalanceHelp;
+
+  /// No description provided for @accountNameHintNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisis d\'abord un type'**
+  String get accountNameHintNone;
+
+  /// No description provided for @accountNameHintCash.
+  ///
+  /// In fr, this message translates to:
+  /// **'Portefeuille'**
+  String get accountNameHintCash;
+
+  /// No description provided for @accountNameHintMobileMoney.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex. : Wave'**
+  String get accountNameHintMobileMoney;
+
+  /// No description provided for @accountNameHintBank.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex. : Ecobank'**
+  String get accountNameHintBank;
+
+  /// No description provided for @accountNameHintSavings.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex. : Tontine du quartier'**
+  String get accountNameHintSavings;
+
+  /// No description provided for @accountCreate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Créer le compte'**
+  String get accountCreate;
+
+  /// No description provided for @accountSave.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer'**
+  String get accountSave;
+
+  /// No description provided for @accountCreatedMessage.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compte « {name} » créé'**
+  String accountCreatedMessage(String name);
+
+  /// No description provided for @accountCreatedBalance.
+  ///
+  /// In fr, this message translates to:
+  /// **'Solde de départ : {amount} FCFA'**
+  String accountCreatedBalance(String amount);
+
+  /// No description provided for @accountSeeAll.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir mes comptes'**
+  String get accountSeeAll;
+
+  /// No description provided for @accountAddAnother.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter un autre compte'**
+  String get accountAddAnother;
+
+  /// No description provided for @accountErrorNameMissing.
+  ///
+  /// In fr, this message translates to:
+  /// **'Donne un nom au compte.'**
+  String get accountErrorNameMissing;
+
+  /// No description provided for @accountErrorNameTooLong.
+  ///
+  /// In fr, this message translates to:
+  /// **'40 caractères maximum.'**
+  String get accountErrorNameTooLong;
+
+  /// No description provided for @accountErrorNameTaken.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu as déjà un compte actif à ce nom.'**
+  String get accountErrorNameTaken;
+
+  /// No description provided for @accountErrorOpeningBalance.
+  ///
+  /// In fr, this message translates to:
+  /// **'Montant trop élevé.'**
+  String get accountErrorOpeningBalance;
+
+  /// No description provided for @accountErrorNotFound.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce compte n\'existe plus.'**
+  String get accountErrorNotFound;
+
+  /// No description provided for @accountEditAction.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier'**
+  String get accountEditAction;
+
+  /// No description provided for @accountTypeAndName.
+  ///
+  /// In fr, this message translates to:
+  /// **'{type} · {name}'**
+  String accountTypeAndName(String type, String name);
+
+  /// No description provided for @accountOpeningInfo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Solde initial : {amount} FCFA, saisi le {date}.'**
+  String accountOpeningInfo(String amount, String date);
+
+  /// No description provided for @accountArchivedInfo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Archivé le {date}. Il n\'apparaît plus dans tes listes ni dans ton total.'**
+  String accountArchivedInfo(String date);
+
+  /// No description provided for @accountArchive.
+  ///
+  /// In fr, this message translates to:
+  /// **'Archiver ce compte'**
+  String get accountArchive;
+
+  /// No description provided for @accountRestore.
+  ///
+  /// In fr, this message translates to:
+  /// **'Restaurer ce compte'**
+  String get accountRestore;
+
+  /// No description provided for @accountRestored.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compte restauré.'**
+  String get accountRestored;
+
+  /// No description provided for @accountRestoreNameTaken.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un compte actif porte déjà ce nom : renomme celui-ci avant de le restaurer.'**
+  String get accountRestoreNameTaken;
+
+  /// No description provided for @accountDelete.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer ce compte'**
+  String get accountDelete;
+
+  /// No description provided for @accountArchiveTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Archiver le compte {name} ?'**
+  String accountArchiveTitle(String name);
+
+  /// No description provided for @accountArchiveBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Il disparaît de tes listes et de ton total, mais son historique reste consultable dans Comptes › Archivés. Tu pourras le restaurer à tout moment.'**
+  String get accountArchiveBody;
+
+  /// No description provided for @accountArchiveConfirm.
+  ///
+  /// In fr, this message translates to:
+  /// **'Archiver'**
+  String get accountArchiveConfirm;
+
+  /// No description provided for @accountDeleteTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer le compte {name} ?'**
+  String accountDeleteTitle(String name);
+
+  /// No description provided for @accountDeleteBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton solde total baissera de {amount} FCFA. Cette action est définitive. Pour garder l\'historique, archive-le plutôt.'**
+  String accountDeleteBody(String amount);
+
+  /// No description provided for @accountDeleteBodyArchived.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette action est définitive : son historique sera perdu.'**
+  String get accountDeleteBodyArchived;
+
+  /// No description provided for @accountDeleteConfirm.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer définitivement'**
+  String get accountDeleteConfirm;
 }
 
 class _AppLocalizationsDelegate

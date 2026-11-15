@@ -7,20 +7,25 @@ import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
 import '../../../core/clock.dart';
-import '../../../core/money/money.dart';
+import '../../../core/widgets/amount_display.dart';
 import '../../../l10n/l10n.dart';
+import '../../accounts/domain/accounts_summary.dart';
+import '../../accounts/presentation/accounts_providers.dart';
 
-/// Tableau de bord — état « premier lancement » (maquette Accueil-Vide).
-///
-/// Rien n'est affiché tant que l'utilisateur n'a rien saisi : solde à 0 et
-/// étapes pour bien démarrer. La version avec données viendra avec les
-/// fonctionnalités Comptes et Transactions.
+/// Tableau de bord — état « premier lancement » (maquette Accueil-Vide),
+/// complété au fur et à mesure : le solde devient réel dès le premier compte.
+/// La version complète viendra avec la fonctionnalité Transactions.
 class DashboardPage extends ConsumerWidget {
   const DashboardPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final now = ref.watch(clockProvider)();
+    final accounts = ref.watch(activeAccountsProvider);
+    // Évite d'afficher brièvement l'état vide pendant la première lecture.
+    if (!accounts.hasValue) return const Scaffold();
+    final summary = AccountsSummary.of(accounts.requireValue);
+
     return Scaffold(
       body: SafeArea(
         bottom: false,
@@ -31,8 +36,8 @@ class DashboardPage extends ConsumerWidget {
             spacing: 32,
             children: [
               _Header(date: now),
-              const _EmptyBalance(),
-              const _GetStarted(),
+              _Balance(summary: summary),
+              _GetStarted(hasAccounts: summary.count > 0),
               const _CopilotHint(),
               const _PrivacyNote(),
             ],
@@ -91,13 +96,16 @@ class _Header extends StatelessWidget {
   }
 }
 
-class _EmptyBalance extends StatelessWidget {
-  const _EmptyBalance();
+class _Balance extends StatelessWidget {
+  const _Balance({required this.summary});
+
+  final AccountsSummary summary;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     final l10n = context.l10n;
+    final hasAccounts = summary.count > 0;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 6,
@@ -110,42 +118,44 @@ class _EmptyBalance extends StatelessWidget {
             color: colors.inkSecondary,
           ),
         ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.baseline,
-          textBaseline: TextBaseline.alphabetic,
-          spacing: 8,
-          children: [
-            Text(
-              MoneyFormat.amount(Money.zero),
-              style: TextStyle(
-                fontSize: 46,
-                fontWeight: FontWeight.w600,
-                letterSpacing: -1.6,
-                height: 1,
-                color: colors.inkTertiary,
-              ),
-            ),
-            Text(
-              l10n.currencyLabel,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: colors.inkTertiary,
-              ),
-            ),
-          ],
+        AmountDisplay(
+          amount: summary.total,
+          fontSize: 46,
+          // Sans compte, le 0 reste discret : ce n'est pas un vrai solde.
+          color: hasAccounts ? colors.ink : colors.inkTertiary,
+          currencyColor: hasAccounts ? colors.inkSecondary : colors.inkTertiary,
         ),
-        Text(
-          l10n.dashboardEmptyBalanceHint,
-          style: TextStyle(fontSize: 13.5, color: colors.inkSecondary),
-        ),
+        if (hasAccounts)
+          TextButton(
+            onPressed: () => context.go(AppRoutes.accounts),
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.zero,
+              minimumSize: const Size(0, 44),
+              alignment: Alignment.centerLeft,
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              spacing: 4,
+              children: [
+                Text(l10n.dashboardAccountsLink(summary.count)),
+                const Icon(AppIcons.caretRight, size: 12),
+              ],
+            ),
+          )
+        else
+          Text(
+            l10n.dashboardEmptyBalanceHint,
+            style: TextStyle(fontSize: 13.5, color: colors.inkSecondary),
+          ),
       ],
     );
   }
 }
 
 class _GetStarted extends StatelessWidget {
-  const _GetStarted();
+  const _GetStarted({required this.hasAccounts});
+
+  final bool hasAccounts;
 
   @override
   Widget build(BuildContext context) {
@@ -167,12 +177,17 @@ class _GetStarted extends StatelessWidget {
           number: 1,
           title: l10n.dashboardStepAccountsTitle,
           subtitle: l10n.dashboardStepAccountsSubtitle,
-          isNext: true,
+          done: hasAccounts,
+          isNext: !hasAccounts,
+          onTap: () => hasAccounts
+              ? context.go(AppRoutes.accounts)
+              : context.push(AppRoutes.newAccount),
         ),
         _StepRow(
           number: 2,
           title: l10n.dashboardStepTransactionsTitle,
           subtitle: l10n.dashboardStepTransactionsSubtitle,
+          isNext: hasAccounts,
         ),
         _StepRow(
           number: 3,
@@ -185,73 +200,94 @@ class _GetStarted extends StatelessWidget {
   }
 }
 
-/// Étape de démarrage. Non cliquable tant que l'écran cible n'existe pas.
+/// Étape de démarrage. Cliquable seulement si son écran existe ([onTap]).
 class _StepRow extends StatelessWidget {
   const _StepRow({
     required this.number,
     required this.title,
     required this.subtitle,
+    this.done = false,
     this.isNext = false,
     this.showDivider = true,
+    this.onTap,
   });
 
   final int number;
   final String title;
   final String subtitle;
+  final bool done;
 
   /// Prochaine étape à faire : pastille mise en avant.
   final bool isNext;
   final bool showDivider;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 14),
-      decoration: showDivider
-          ? BoxDecoration(border: Border(bottom: BorderSide(color: colors.line)))
-          : null,
-      child: Row(
-        spacing: 14,
-        children: [
-          Container(
-            width: 32,
-            height: 32,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: isNext ? colors.primary : colors.chip,
+    final Color badgeColor;
+    final Color badgeInk;
+    if (done) {
+      (badgeColor, badgeInk) = (colors.primarySoft, colors.onPrimarySoft);
+    } else if (isNext) {
+      (badgeColor, badgeInk) = (colors.primary, colors.onPrimary);
+    } else {
+      (badgeColor, badgeInk) = (colors.chip, colors.inkSecondary);
+    }
+
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        decoration: showDivider
+            ? BoxDecoration(
+                border: Border(bottom: BorderSide(color: colors.line)),
+              )
+            : null,
+        child: Row(
+          spacing: 14,
+          children: [
+            Container(
+              width: 32,
+              height: 32,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: badgeColor,
+              ),
+              child: done
+                  ? Icon(AppIcons.checkBold, size: 16, color: badgeInk)
+                  : Text(
+                      '$number',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: badgeInk,
+                      ),
+                    ),
             ),
-            child: Text(
-              '$number',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                color: isNext ? colors.onPrimary : colors.inkSecondary,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 2,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    subtitle,
+                    style: TextStyle(fontSize: 12.5, color: colors.inkTertiary),
+                  ),
+                ],
               ),
             ),
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 2,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                Text(
-                  subtitle,
-                  style: TextStyle(fontSize: 12.5, color: colors.inkTertiary),
-                ),
-              ],
-            ),
-          ),
-          Icon(AppIcons.caretRight, size: 16, color: colors.inkTertiary),
-        ],
+            Icon(AppIcons.caretRight, size: 16, color: colors.inkTertiary),
+          ],
+        ),
       ),
     );
   }
@@ -302,11 +338,6 @@ class _CopilotHint extends StatelessWidget {
                   style: TextButton.styleFrom(
                     padding: EdgeInsets.zero,
                     minimumSize: const Size(0, 44),
-                    foregroundColor: colors.primary,
-                    textStyle: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
                   ),
                   child: Text(l10n.dashboardCopilotAction),
                 ),

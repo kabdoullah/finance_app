@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
 import 'app_colors.dart';
+import 'app_icons.dart';
 
 /// Thème global : Manrope seule, chiffres tabulaires partout (les montants
 /// restent alignés), couleurs issues de [AppColors].
@@ -40,6 +41,73 @@ abstract final class AppTheme {
       fontFamily: fontFamily,
       scaffoldBackgroundColor: colors.background,
       dividerTheme: DividerThemeData(color: colors.line, thickness: 1, space: 1),
+      // En-têtes des maquettes : fond papier, titre centré 16/600, sans ombre.
+      appBarTheme: AppBarTheme(
+        backgroundColor: colors.background,
+        foregroundColor: colors.ink,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        centerTitle: true,
+        titleTextStyle: TextStyle(
+          fontFamily: fontFamily,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: colors.ink,
+        ),
+      ),
+      actionIconTheme: ActionIconThemeData(
+        backButtonIconBuilder: (_) => const Icon(AppIcons.caretLeftBold, size: 20),
+        closeButtonIconBuilder: (_) => const Icon(AppIcons.xBold, size: 20),
+      ),
+      // Boutons « pilule » de 52 px des maquettes.
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          minimumSize: const Size(0, 52),
+          shape: const StadiumBorder(),
+          backgroundColor: colors.primary,
+          foregroundColor: colors.onPrimary,
+          disabledBackgroundColor: colors.primary.withValues(alpha: 0.4),
+          disabledForegroundColor: colors.onPrimary,
+          textStyle: _buttonText,
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          minimumSize: const Size(0, 52),
+          shape: const StadiumBorder(),
+          backgroundColor: colors.surface,
+          foregroundColor: colors.ink,
+          side: BorderSide(color: colors.line),
+          textStyle: _buttonText,
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: colors.primary,
+          textStyle: _buttonText.copyWith(fontSize: 14),
+        ),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: colors.surface,
+        hintStyle: TextStyle(color: colors.inkTertiary),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 14,
+          vertical: 16,
+        ),
+        border: _inputBorder(colors.line),
+        enabledBorder: _inputBorder(colors.line),
+        focusedBorder: _inputBorder(colors.primary),
+        errorBorder: _inputBorder(colors.negative),
+        focusedErrorBorder: _inputBorder(colors.negative),
+        errorStyle: TextStyle(color: colors.negative, fontSize: 12.5),
+      ),
+      dialogTheme: DialogThemeData(
+        backgroundColor: colors.surface,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      ),
       extensions: [colors],
     );
 
@@ -50,6 +118,17 @@ abstract final class AppTheme {
       ),
     );
   }
+
+  static const _buttonText = TextStyle(
+    fontFamily: fontFamily,
+    fontSize: 15,
+    fontWeight: FontWeight.w600,
+  );
+
+  static OutlineInputBorder _inputBorder(Color color) => OutlineInputBorder(
+    borderRadius: BorderRadius.circular(14),
+    borderSide: BorderSide(color: color),
+  );
 
   /// Applique `tnum` à tous les styles, comme `font-variant-numeric:
   /// tabular-nums` sur la racine des maquettes.

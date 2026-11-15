@@ -8,25 +8,31 @@ import 'package:integration_test/integration_test.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets("l'application démarre sur l'accueil", (tester) async {
-    await tester.pumpWidget(const ProviderScope(child: FinanceApp()));
-    await tester.pumpAndSettle();
-
-    expect(find.text('Solde total'), findsOneWidget);
-  });
-
   testWidgets(
-    'la base chiffrée s’ouvre sur l’appareil (stockage sécurisé + sqlite3mc)',
+    "l'application démarre sur l'accueil, avec sa base chiffrée migrée",
     (tester) async {
-      final container = ProviderContainer();
-      addTearDown(container.dispose);
+      await tester.pumpWidget(const ProviderScope(child: FinanceApp()));
 
+      // Sur appareil, l'ouverture de la base (Keychain/Keystore, isolate,
+      // migrations) prend plusieurs frames : on attend l'accueil, 10 s max.
+      final balance = find.text('Solde total');
+      for (var i = 0; i < 100 && balance.evaluate().isEmpty; i++) {
+        await tester.pump(const Duration(milliseconds: 100));
+      }
+      expect(balance, findsOneWidget);
+
+      // Même instance de base que l'application (un seul ProviderScope).
+      final container = ProviderScope.containerOf(
+        tester.element(find.byType(FinanceApp)),
+      );
       final db = container.read(appDatabaseProvider);
-      final row = await db
+      final engine = await db
           .customSelect('SELECT sqlite3mc_version() AS v')
           .getSingle();
-
-      expect(row.read<String>('v'), isNotEmpty);
+      expect(engine.read<String>('v'), startsWith('SQLite3 Multiple Ciphers'));
+      expect(db.schemaVersion, 2);
+      // La table de la migration v2 existe et se lit sur l'appareil.
+      await db.select(db.accounts).get();
     },
   );
 }

@@ -1,8 +1,8 @@
 import 'package:finance_app/core/money/money.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// Espace fine insécable (U+202F), séparateur de milliers en français.
-const _nnbsp = ' ';
+/// Espace insécable (U+00A0), séparateur de milliers (voir MoneyFormat).
+const _nnbsp = '\u00a0';
 
 void main() {
   group('Money', () {

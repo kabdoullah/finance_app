@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 abstract final class AppIcons {
   static const _regular = 'Phosphor';
   static const _fill = 'PhosphorFill';
+  static const _bold = 'PhosphorBold';
 
   // Navigation (variante pleine = onglet actif).
   static const house = IconData(0xe2c2, fontFamily: _regular);
@@ -22,4 +23,17 @@ abstract final class AppIcons {
   static const caretRight = IconData(0xe13a, fontFamily: _regular);
   static const gearSix = IconData(0xe272, fontFamily: _regular);
   static const lockSimple = IconData(0xe308, fontFamily: _regular);
+  static const caretLeftBold = IconData(0xe138, fontFamily: _bold);
+  static const xBold = IconData(0xe4f6, fontFamily: _bold);
+  static const plusBold = IconData(0xe3d4, fontFamily: _bold);
+  static const checkBold = IconData(0xe182, fontFamily: _bold);
+  static const archive = IconData(0xe00c, fontFamily: _regular);
+  static const arrowCounterClockwise = IconData(0xe038, fontFamily: _regular);
+  static const trash = IconData(0xe4a6, fontFamily: _regular);
+
+  // Types de compte.
+  static const money = IconData(0xe588, fontFamily: _regular);
+  static const deviceMobile = IconData(0xe1e0, fontFamily: _regular);
+  static const bank = IconData(0xe0b4, fontFamily: _regular);
+  static const piggyBank = IconData(0xea04, fontFamily: _regular);
 }

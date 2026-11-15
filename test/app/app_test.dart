@@ -1,16 +1,17 @@
-import 'package:finance_app/app/app.dart';
-import 'package:finance_app/core/clock.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:finance_app/core/database/app_database.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
-/// Application complète avec une date fixe (dimanche 15 novembre 2026).
-Widget buildApp() => ProviderScope(
-  overrides: [clockProvider.overrideWithValue(() => DateTime(2026, 11, 15))],
-  child: const FinanceApp(),
-);
+import '../helpers/test_app.dart';
 
 void main() {
+  late AppDatabase db;
+
+  setUp(() => db = newTestDatabase());
+  tearDown(() => db.close());
+
+  Widget buildApp() => buildTestApp(db);
+
   testWidgets("affiche l'accueil vide au démarrage", (tester) async {
     await tester.pumpWidget(buildApp());
     await tester.pumpAndSettle();

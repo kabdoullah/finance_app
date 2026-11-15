@@ -24,7 +24,14 @@ abstract final class MoneyFormat {
   static const _minus = '−';
 
   /// Montant en valeur absolue : `-8500` → `8 500`.
-  static String amount(Money money) => _digits.format(money.value.abs());
+  ///
+  /// Séparateur de milliers : espace insécable (U+00A0), de même largeur que
+  /// l'espace des maquettes. L'espace fine d'`intl` (U+202F) devient presque
+  /// invisible sur les grands montants à l'interlettrage serré.
+  static String amount(Money money) =>
+      _digits.format(money.value.abs()).replaceAll(' ', _groupSeparator);
+
+  static const _groupSeparator = ' ';
 
   /// Montant signé : `-8500` → `−8 500`, `45000` → `+45 000`, `0` → `0`.
   static String signed(Money money) {
