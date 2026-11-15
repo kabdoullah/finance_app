@@ -205,7 +205,7 @@ abstract class AppLocalizations {
   /// No description provided for @dashboardCopilotHint.
   ///
   /// In fr, this message translates to:
-  /// **'Tu peux aussi l\'écrire simplement : « J\'ai 25 000 FCFA sur Wave ».'**
+  /// **'Tu peux aussi l\'écrire simplement : « J\'ai 25 000 FCFA sur Wave ».'**
   String get dashboardCopilotHint;
 
   /// No description provided for @dashboardCopilotAction.

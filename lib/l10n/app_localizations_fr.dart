@@ -69,7 +69,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get dashboardCopilotHint =>
-      'Tu peux aussi l\'écrire simplement : « J\'ai 25 000 FCFA sur Wave ».';
+      'Tu peux aussi l\'écrire simplement : « J\'ai 25 000 FCFA sur Wave ».';
 
   @override
   String get dashboardCopilotAction => 'Écrire au Copilote';
