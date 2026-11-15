@@ -1,0 +1,11 @@
+targets:
+  $default:
+    builders:
+      drift_dev:
+        options:
+          # Base déclarée pour `dart run drift_dev make-migrations`
+          # (export du schéma dans drift_schemas/ + tests de migration).
+          databases:
+            app_database: lib/core/database/app_database.dart
+          sql:
+            dialect: sqlite

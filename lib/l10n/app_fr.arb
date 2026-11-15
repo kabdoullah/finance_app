@@ -1,0 +1,29 @@
+{
+  "@@locale": "fr",
+  "appTitle": "Finance Copilot",
+
+  "navHome": "Accueil",
+  "navTransactions": "Transactions",
+  "navBudgets": "Budgets",
+  "navForecast": "Prévisions",
+  "navAssistant": "Assistant",
+  "settingsTitle": "Paramètres",
+
+  "comingSoonMessage": "Cet écran arrive bientôt.",
+
+  "dashboardWelcome": "Bienvenue",
+  "dashboardTotalBalance": "Solde total",
+  "dashboardEmptyBalanceHint": "Ajoute un compte pour voir ton solde réel.",
+  "dashboardGetStartedTitle": "Pour bien démarrer",
+  "dashboardStepAccountsTitle": "Ajoute tes comptes",
+  "dashboardStepAccountsSubtitle": "Espèces, Wave, Orange Money, banque…",
+  "dashboardStepTransactionsTitle": "Saisis tes premières opérations",
+  "dashboardStepTransactionsSubtitle": "Une dépense, un revenu, un transfert",
+  "dashboardStepBudgetTitle": "Fixe un premier budget",
+  "dashboardStepBudgetSubtitle": "Par exemple pour l'alimentation",
+  "dashboardCopilotHint": "Tu peux aussi l'écrire simplement : « J'ai 25 000 FCFA sur Wave ».",
+  "dashboardCopilotAction": "Écrire au Copilote",
+  "dashboardPrivacyNote": "Tes données restent sur ce téléphone. Les prévisions apparaîtront après environ deux semaines d'opérations.",
+
+  "currencyLabel": "FCFA"
+}
