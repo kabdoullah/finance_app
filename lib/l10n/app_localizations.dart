@@ -1012,6 +1012,66 @@ abstract class AppLocalizations {
   /// **'Choisir le mois'**
   String get txChooseMonth;
 
+  /// No description provided for @txAllAccounts.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tous les comptes'**
+  String get txAllAccounts;
+
+  /// No description provided for @txAllCategories.
+  ///
+  /// In fr, this message translates to:
+  /// **'Toutes catégories'**
+  String get txAllCategories;
+
+  /// No description provided for @txChooseCategory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisir une catégorie'**
+  String get txChooseCategory;
+
+  /// No description provided for @txFilterExpenseSection.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépenses'**
+  String get txFilterExpenseSection;
+
+  /// No description provided for @txFilterIncomeSection.
+  ///
+  /// In fr, this message translates to:
+  /// **'Revenus'**
+  String get txFilterIncomeSection;
+
+  /// No description provided for @txArchivedAccount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} (archivé)'**
+  String txArchivedAccount(String name);
+
+  /// No description provided for @txNoFilterMatch.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune opération ne correspond à ces filtres en {month}.'**
+  String txNoFilterMatch(String month);
+
+  /// No description provided for @txResetFilters.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réinitialiser les filtres'**
+  String get txResetFilters;
+
+  /// No description provided for @dashboardWhereMoney.
+  ///
+  /// In fr, this message translates to:
+  /// **'Où va ton argent'**
+  String get dashboardWhereMoney;
+
+  /// No description provided for @dashboardShare.
+  ///
+  /// In fr, this message translates to:
+  /// **'{percent} %'**
+  String dashboardShare(int percent);
+
   /// No description provided for @txDetailTitle.
   ///
   /// In fr, this message translates to:

@@ -566,6 +566,42 @@ class AppLocalizationsFr extends AppLocalizations {
   String get txChooseMonth => 'Choisir le mois';
 
   @override
+  String get txAllAccounts => 'Tous les comptes';
+
+  @override
+  String get txAllCategories => 'Toutes catégories';
+
+  @override
+  String get txChooseCategory => 'Choisir une catégorie';
+
+  @override
+  String get txFilterExpenseSection => 'Dépenses';
+
+  @override
+  String get txFilterIncomeSection => 'Revenus';
+
+  @override
+  String txArchivedAccount(String name) {
+    return '$name (archivé)';
+  }
+
+  @override
+  String txNoFilterMatch(String month) {
+    return 'Aucune opération ne correspond à ces filtres en $month.';
+  }
+
+  @override
+  String get txResetFilters => 'Réinitialiser les filtres';
+
+  @override
+  String get dashboardWhereMoney => 'Où va ton argent';
+
+  @override
+  String dashboardShare(int percent) {
+    return '$percent %';
+  }
+
+  @override
   String get txDetailTitle => 'Opération';
 
   @override

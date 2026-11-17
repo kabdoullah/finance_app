@@ -7,12 +7,14 @@ import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
 import '../../../core/clock.dart';
+import '../../../core/formatting/relative_date.dart';
 import '../../../core/money/money.dart';
 import '../../../core/time/month.dart';
 import '../../../core/widgets/amount_display.dart';
 import '../../../l10n/l10n.dart';
 import '../../accounts/domain/accounts_summary.dart';
 import '../../accounts/presentation/accounts_providers.dart';
+import '../../transactions/domain/expense_breakdown.dart';
 import '../../transactions/domain/transaction_stats.dart';
 import '../../transactions/presentation/new_operation_sheet.dart';
 import '../../transactions/presentation/transaction_labels.dart';
@@ -55,6 +57,7 @@ class DashboardPage extends ConsumerWidget {
               _Balance(summary: summary),
               if (active) ...[
                 _MonthTotals(month: Month.of(now)),
+                _WhereMoneyGoes(month: Month.of(now)),
                 const _RecentOperations(),
               ] else ...[
                 _GetStarted(hasAccounts: hasAccounts),
@@ -151,6 +154,126 @@ class _MonthTotals extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// « Où va ton argent » : une seule barre empilée et une légende chiffrée
+/// (aucune lecture d'angle). Masquée sans dépense dans le mois.
+class _WhereMoneyGoes extends ConsumerWidget {
+  const _WhereMoneyGoes({required this.month});
+
+  final Month month;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.colors;
+    final l10n = context.l10n;
+    final breakdown = ExpenseBreakdown.of(
+      ref.watch(monthTransactionsProvider(month)).value ?? const [],
+    );
+    if (breakdown.isEmpty) return const SizedBox.shrink();
+
+    final monthName = RelativeDate.capitalize(
+      RelativeDate(
+        l10n,
+        Localizations.localeOf(context).toLanguageTag(),
+        ref.watch(clockProvider)(),
+      ).month(month),
+    );
+    String name(ExpenseShare share) =>
+        share.category?.name ?? l10n.accountsOthers;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: 16,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
+          children: [
+            Expanded(
+              child: Semantics(
+                header: true,
+                child: Text(
+                  l10n.dashboardWhereMoney,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+            Text(
+              monthName,
+              style: TextStyle(fontSize: 13, color: colors.inkTertiary),
+            ),
+          ],
+        ),
+        Semantics(
+          label: [
+            for (final share in breakdown.shares)
+              l10n.accountsShare(name(share), share.percent),
+          ].join(', '),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(6),
+            child: SizedBox(
+              height: 12,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                spacing: 2,
+                children: [
+                  for (final (i, share) in breakdown.shares.indexed)
+                    if (share.percent > 0)
+                      Expanded(
+                        flex: share.percent,
+                        child: ColoredBox(color: colors.chart[i]),
+                      ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        ExcludeSemantics(
+          child: Column(
+            spacing: 12,
+            children: [
+              for (final (i, share) in breakdown.shares.indexed)
+                Row(
+                  spacing: 10,
+                  children: [
+                    DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: colors.chart[i],
+                        borderRadius: BorderRadius.circular(3),
+                      ),
+                      child: const SizedBox.square(dimension: 10),
+                    ),
+                    Text(
+                      name(share),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      l10n.dashboardShare(share.percent),
+                      style: TextStyle(fontSize: 14, color: colors.inkTertiary),
+                    ),
+                    const Spacer(),
+                    Text(
+                      MoneyFormat.amount(share.amount),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

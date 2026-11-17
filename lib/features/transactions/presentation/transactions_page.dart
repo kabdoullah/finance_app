@@ -12,6 +12,11 @@ import '../../../core/money/money.dart';
 import '../../../core/time/month.dart';
 import '../../../core/widgets/segmented_choice.dart';
 import '../../../l10n/l10n.dart';
+import '../../accounts/domain/account.dart';
+import '../../accounts/presentation/account_labels.dart';
+import '../../accounts/presentation/accounts_providers.dart';
+import '../../categories/domain/category.dart';
+import '../../categories/presentation/category_icons.dart';
 import '../domain/transaction.dart';
 import '../domain/transaction_stats.dart';
 import 'new_operation_sheet.dart';
@@ -33,6 +38,14 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
   /// `null` = tous les types.
   TransactionKind? _kind;
 
+  /// `null` = tous les comptes. Un transfert correspond s'il touche le compte.
+  String? _accountId;
+
+  /// `null` = toutes les catégories (filtre sur la catégorie principale).
+  String? _categoryId;
+
+  bool get _hasFilters => _accountId != null || _categoryId != null;
+
   @override
   void initState() {
     super.initState();
@@ -47,6 +60,8 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
 
   bool _matches(Transaction t, AppLocalizations l10n) =>
       (_kind == null || t.kind == _kind) &&
+      (_accountId == null || t.involves(_accountId!)) &&
+      (_categoryId == null || t.mainCategory?.id == _categoryId) &&
       TextSearch.matches(_search.text, [
         t.description,
         t.category?.name,
@@ -144,30 +159,28 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
               ),
             ),
             const SizedBox(height: 14),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: OutlinedButton(
-                onPressed: () => _chooseMonth(relative),
-                style: OutlinedButton.styleFrom(
-                  minimumSize: const Size(0, 36),
-                  padding: const EdgeInsets.only(left: 14, right: 12),
-                  textStyle: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
+            // Filtres de la maquette : période, compte, catégorie.
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              clipBehavior: Clip.none,
+              child: Row(
+                spacing: 8,
+                children: [
+                  _FilterChip(
+                    label: RelativeDate.capitalize(monthName),
+                    onTap: () => _chooseMonth(relative),
                   ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 6,
-                  children: [
-                    Text(RelativeDate.capitalize(monthName)),
-                    Icon(
-                      AppIcons.caretDownBold,
-                      size: 11,
-                      color: colors.inkTertiary,
-                    ),
-                  ],
-                ),
+                  _FilterChip(
+                    label: _accountLabel(l10n) ?? l10n.txAllAccounts,
+                    active: _accountId != null,
+                    onTap: _chooseAccount,
+                  ),
+                  _FilterChip(
+                    label: _categoryLabel() ?? l10n.txAllCategories,
+                    active: _categoryId != null,
+                    onTap: _chooseCategory,
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 14),
@@ -215,10 +228,25 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
               query.isEmpty
                   ? Padding(
                       padding: const EdgeInsets.symmetric(vertical: 40),
-                      child: Text(
-                        l10n.txMonthEmpty(monthName),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: colors.inkSecondary),
+                      child: Column(
+                        spacing: 8,
+                        children: [
+                          Text(
+                            _hasFilters
+                                ? l10n.txNoFilterMatch(monthName)
+                                : l10n.txMonthEmpty(monthName),
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: colors.inkSecondary),
+                          ),
+                          if (_hasFilters)
+                            TextButton(
+                              onPressed: () => setState(() {
+                                _accountId = null;
+                                _categoryId = null;
+                              }),
+                              child: Text(l10n.txResetFilters),
+                            ),
+                        ],
                       ),
                     )
                   : _NoResult(
@@ -240,49 +268,242 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
     );
   }
 
+  /// Comptes actifs puis archivés : une opération peut appartenir à un compte
+  /// archivé.
+  List<Account> _allAccounts() => [
+    ...?ref.read(activeAccountsProvider).value,
+    ...?ref.read(archivedAccountsProvider).value,
+  ];
+
+  String? _accountLabel(AppLocalizations l10n) {
+    final account = [
+      ...?ref.watch(activeAccountsProvider).value,
+      ...?ref.watch(archivedAccountsProvider).value,
+    ].where((a) => a.id == _accountId).firstOrNull;
+    if (account == null) return null;
+    return account.isArchived
+        ? l10n.txArchivedAccount(account.name)
+        : account.name;
+  }
+
+  String? _categoryLabel() => [
+    ...?ref.watch(categoryGroupsProvider(CategoryKind.expense)).value,
+    ...?ref.watch(categoryGroupsProvider(CategoryKind.income)).value,
+  ].where((g) => g.category.id == _categoryId).firstOrNull?.category.name;
+
   /// Les 12 derniers mois.
   Future<void> _chooseMonth(RelativeDate relative) async {
     final current = Month.of(ref.read(clockProvider)());
-    final months = [
-      for (var m = current, i = 0; i < 12; m = m.previous, i++) m,
+    final picked = await _showChoices<Month>(
+      title: context.l10n.txChooseMonth,
+      selected: _month,
+      options: [
+        for (var m = current, i = 0; i < 12; m = m.previous, i++)
+          _Choice(m, RelativeDate.capitalize(relative.month(m))),
+      ],
+    );
+    if (picked != null) setState(() => _month = picked.$1);
+  }
+
+  Future<void> _chooseAccount() async {
+    final l10n = context.l10n;
+    final picked = await _showChoices<String?>(
+      title: l10n.txChooseAccount,
+      selected: _accountId,
+      options: [
+        _Choice(null, l10n.txAllAccounts),
+        for (final account in _allAccounts())
+          _Choice(
+            account.id,
+            account.isArchived
+                ? l10n.txArchivedAccount(account.name)
+                : account.name,
+            icon: account.type.icon,
+          ),
+      ],
+    );
+    if (picked != null) setState(() => _accountId = picked.$1);
+  }
+
+  Future<void> _chooseCategory() async {
+    // On attend les catégories : la feuille ne doit jamais s'ouvrir vide.
+    final expense = await ref.read(
+      categoryGroupsProvider(CategoryKind.expense).future,
+    );
+    final income = await ref.read(
+      categoryGroupsProvider(CategoryKind.income).future,
+    );
+    if (!mounted) return;
+    final l10n = context.l10n;
+    List<_Choice<String?>> section(
+      List<CategoryGroup> groups,
+      String heading,
+    ) => [
+      _Choice.heading(heading),
+      for (final group in groups)
+        _Choice(
+          group.category.id,
+          group.category.name,
+          icon: categoryIcon(group.category.iconKey),
+        ),
     ];
-    final picked = await showModalBottomSheet<Month>(
+    final picked = await _showChoices<String?>(
+      title: l10n.txChooseCategory,
+      selected: _categoryId,
+      options: [
+        _Choice(null, l10n.txAllCategories),
+        ...section(expense, l10n.txFilterExpenseSection),
+        ...section(income, l10n.txFilterIncomeSection),
+      ],
+    );
+    if (picked != null) setState(() => _categoryId = picked.$1);
+  }
+
+  /// Feuille de choix. Retourne `(valeur,)` (la valeur peut être `null` pour
+  /// « Tous »), ou `null` si la feuille est fermée sans choix.
+  Future<(T,)?> _showChoices<T>({
+    required String title,
+    required T selected,
+    required List<_Choice<T>> options,
+  }) async {
+    final result = await showModalBottomSheet<(T,)>(
       context: context,
       useRootNavigator: true,
       showDragHandle: true,
+      isScrollControlled: true,
       backgroundColor: context.colors.surface,
-      builder: (sheetContext) => SafeArea(
-        child: ListView(
-          shrinkWrap: true,
-          padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-              child: Text(
-                sheetContext.l10n.txChooseMonth,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
+      builder: (sheetContext) {
+        final colors = sheetContext.colors;
+        return SafeArea(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.sizeOf(sheetContext).height * 0.75,
+            ),
+            child: ListView(
+              shrinkWrap: true,
+              padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                  child: Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
+                for (final option in options)
+                  if (option.isHeading)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 16, 8, 4),
+                      child: Text(
+                        option.label.toUpperCase(),
+                        style: TextStyle(
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w600,
+                          color: colors.inkTertiary,
+                        ),
+                      ),
+                    )
+                  else
+                    ListTile(
+                      leading: option.icon == null
+                          ? null
+                          : Icon(option.icon, size: 20, color: colors.ink),
+                      title: Text(option.label),
+                      trailing: option.value == selected
+                          ? Icon(
+                              AppIcons.checkBold,
+                              size: 16,
+                              color: colors.primary,
+                            )
+                          : null,
+                      onTap: () =>
+                          Navigator.of(sheetContext).pop((option.value,)),
+                    ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+    return mounted ? result : null;
+  }
+}
+
+/// Option d'une feuille de choix (ou intertitre de section).
+class _Choice<T> {
+  const _Choice(this.value, this.label, {this.icon}) : isHeading = false;
+
+  const _Choice.heading(this.label)
+    : value = null as T,
+      icon = null,
+      isHeading = true;
+
+  final T value;
+  final String label;
+  final IconData? icon;
+  final bool isHeading;
+}
+
+/// Puce de filtre des maquettes (« Novembre ▾ », « Tous les comptes ▾ »),
+/// mise en avant quand un filtre est actif.
+class _FilterChip extends StatelessWidget {
+  const _FilterChip({
+    required this.label,
+    required this.onTap,
+    this.active = false,
+  });
+
+  final String label;
+  final VoidCallback onTap;
+  final bool active;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final shape = StadiumBorder(
+      side: BorderSide(color: active ? colors.primary : colors.line),
+    );
+    final foreground = active ? colors.onPrimarySoft : colors.ink;
+    return Semantics(
+      button: true,
+      selected: active,
+      child: Material(
+        color: active ? colors.primarySoft : colors.surface,
+        shape: shape,
+        child: InkWell(
+          customBorder: shape,
+          onTap: onTap,
+          child: SizedBox(
+            height: 36,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 14, right: 12),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                spacing: 6,
+                children: [
+                  Text(
+                    label,
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: foreground,
+                    ),
+                  ),
+                  Icon(
+                    AppIcons.caretDownBold,
+                    size: 11,
+                    color: active ? foreground : colors.inkTertiary,
+                  ),
+                ],
               ),
             ),
-            for (final m in months)
-              ListTile(
-                title: Text(RelativeDate.capitalize(relative.month(m))),
-                trailing: m == _month
-                    ? Icon(
-                        AppIcons.checkBold,
-                        size: 16,
-                        color: sheetContext.colors.primary,
-                      )
-                    : null,
-                onTap: () => Navigator.of(sheetContext).pop(m),
-              ),
-          ],
+          ),
         ),
       ),
     );
-    if (picked != null && mounted) setState(() => _month = picked);
   }
 }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import '../../../core/money/money.dart';
+import '../../../core/money/percent_split.dart';
 import 'account.dart';
 import 'account_type.dart';
 
@@ -82,7 +83,7 @@ class AccountsSummary {
       for (final a in kept) a.balance.value,
       if (others > 0) others,
     ];
-    final percents = _largestRemainder(amounts);
+    final percents = splitPercentages(amounts);
 
     return [
       for (var i = 0; i < amounts.length; i++)
@@ -92,26 +93,5 @@ class AccountsSummary {
           percent: percents[i],
         ),
     ];
-  }
-
-  /// Pourcentages entiers dont la somme vaut exactement 100 (méthode du plus
-  /// fort reste ; à reste égal, la plus grande part l'emporte).
-  static List<int> _largestRemainder(List<int> amounts) {
-    final total = amounts.fold<int>(0, (sum, a) => sum + a);
-    final floors = [for (final a in amounts) a * 100 ~/ total];
-    final remainders = [for (final a in amounts) a * 100 % total];
-
-    final order = List<int>.generate(amounts.length, (i) => i)
-      ..sort((i, j) {
-        final byRemainder = remainders[j].compareTo(remainders[i]);
-        return byRemainder != 0 ? byRemainder : i.compareTo(j);
-      });
-    var missing = 100 - floors.fold<int>(0, (sum, p) => sum + p);
-    for (final i in order) {
-      if (missing == 0) break;
-      floors[i]++;
-      missing--;
-    }
-    return floors;
   }
 }
