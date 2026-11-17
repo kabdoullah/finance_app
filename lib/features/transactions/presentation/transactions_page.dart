@@ -16,6 +16,7 @@ import '../../accounts/domain/account.dart';
 import '../../accounts/presentation/account_labels.dart';
 import '../../accounts/presentation/accounts_providers.dart';
 import '../../categories/domain/category.dart';
+import '../../categories/presentation/categories_providers.dart';
 import '../../categories/presentation/category_icons.dart';
 import '../domain/transaction.dart';
 import '../domain/transaction_stats.dart';

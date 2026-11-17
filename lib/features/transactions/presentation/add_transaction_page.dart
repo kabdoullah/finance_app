@@ -15,6 +15,7 @@ import '../../../l10n/l10n.dart';
 import '../../accounts/domain/account.dart';
 import '../../accounts/presentation/account_picker_sheet.dart';
 import '../../accounts/presentation/accounts_providers.dart';
+import '../../categories/presentation/categories_providers.dart';
 import '../../categories/presentation/category_icons.dart';
 import '../domain/transaction.dart';
 import '../domain/transaction_draft.dart';

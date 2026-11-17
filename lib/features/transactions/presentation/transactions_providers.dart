@@ -3,8 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/clock.dart';
 import '../../../core/database/database_providers.dart';
 import '../../../core/time/month.dart';
-import '../../categories/data/categories_repository.dart';
-import '../../categories/domain/category.dart';
 import '../data/transactions_repository.dart';
 import '../domain/transaction.dart';
 
@@ -14,18 +12,6 @@ final transactionsRepositoryProvider = Provider<TransactionsRepository>(
     ref.watch(clockProvider),
   ),
 );
-
-final categoriesRepositoryProvider = Provider<CategoriesRepository>(
-  (ref) => CategoriesRepository(
-    ref.watch(appDatabaseProvider),
-    ref.watch(clockProvider),
-  ),
-);
-
-final categoryGroupsProvider =
-    StreamProvider.family<List<CategoryGroup>, CategoryKind>(
-      (ref, kind) => ref.watch(categoriesRepositoryProvider).watchGroups(kind),
-    );
 
 final monthTransactionsProvider =
     StreamProvider.family<List<Transaction>, Month>(

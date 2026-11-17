@@ -8,9 +8,9 @@ import '../../../core/widgets/choice_pill.dart';
 import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/segmented_choice.dart';
 import '../../../l10n/l10n.dart';
-import '../../transactions/presentation/transactions_providers.dart';
 import '../domain/category.dart';
 import '../domain/category_draft.dart';
+import 'categories_providers.dart';
 import 'category_icons.dart';
 
 /// Gestion des catégories (maquette Catégories).
