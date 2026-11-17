@@ -6,6 +6,10 @@ import '../features/accounts/presentation/account_detail_page.dart';
 import '../features/accounts/presentation/account_form_page.dart';
 import '../features/accounts/presentation/accounts_page.dart';
 import '../features/dashboard/presentation/dashboard_page.dart';
+import '../features/transactions/domain/transaction.dart';
+import '../features/transactions/presentation/add_transaction_page.dart';
+import '../features/transactions/presentation/transaction_detail_page.dart';
+import '../features/transactions/presentation/transactions_page.dart';
 import '../l10n/l10n.dart';
 import 'app_shell.dart';
 import 'coming_soon_page.dart';
@@ -23,6 +27,13 @@ abstract final class AppRoutes {
   static const newAccount = '/accounts/new';
   static String accountDetail(String id) => '/accounts/$id';
   static String editAccount(String id) => '/accounts/$id/edit';
+
+  static String newTransaction({TransactionKind? kind, String? accountId}) =>
+      Uri(
+        path: '/transactions/new',
+        queryParameters: {'kind': ?kind?.storageValue, 'account': ?accountId},
+      ).toString();
+  static String transactionDetail(String id) => '/transactions/$id';
 }
 
 /// Routeur de l'application : 5 onglets (chacun garde sa pile de navigation)
@@ -39,6 +50,21 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           fullscreenDialog: true,
           child: AccountFormPage(),
         ),
+      ),
+      GoRoute(
+        path: '/transactions/new',
+        pageBuilder: (context, state) {
+          final kind = state.uri.queryParameters['kind'];
+          return MaterialPage(
+            fullscreenDialog: true,
+            child: AddTransactionPage(
+              initialKind: kind == null
+                  ? TransactionKind.expense
+                  : TransactionKind.fromStorage(kind),
+              initialAccountId: state.uri.queryParameters['account'],
+            ),
+          );
+        },
       ),
       GoRoute(
         path: '/accounts/:id/edit',
@@ -77,8 +103,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: AppRoutes.transactions,
-                builder: (context, state) =>
-                    ComingSoonPage(title: context.l10n.navTransactions),
+                builder: (context, state) => const TransactionsPage(),
+                routes: [
+                  GoRoute(
+                    path: ':id',
+                    builder: (context, state) => TransactionDetailPage(
+                      transactionId: state.pathParameters['id']!,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -113,10 +146,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: AppRoutes.settings,
-        builder: (context, state) => ComingSoonPage(
-          title: context.l10n.settingsTitle,
-          showAppBar: true,
-        ),
+        builder: (context, state) =>
+            ComingSoonPage(title: context.l10n.settingsTitle, showAppBar: true),
       ),
     ],
   );

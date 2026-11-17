@@ -30,9 +30,11 @@ void main() {
           .customSelect('SELECT sqlite3mc_version() AS v')
           .getSingle();
       expect(engine.read<String>('v'), startsWith('SQLite3 Multiple Ciphers'));
-      expect(db.schemaVersion, 2);
-      // La table de la migration v2 existe et se lit sur l'appareil.
+      // Les tables des migrations (v2, v3) existent et se lisent sur
+      // l'appareil ; les catégories par défaut ont été insérées.
       await db.select(db.accounts).get();
+      await db.select(db.transactions).get();
+      expect(await db.select(db.categories).get(), isNotEmpty);
     },
   );
 }

@@ -40,7 +40,11 @@ abstract final class AppTheme {
       colorScheme: colorScheme,
       fontFamily: fontFamily,
       scaffoldBackgroundColor: colors.background,
-      dividerTheme: DividerThemeData(color: colors.line, thickness: 1, space: 1),
+      dividerTheme: DividerThemeData(
+        color: colors.line,
+        thickness: 1,
+        space: 1,
+      ),
       // En-têtes des maquettes : fond papier, titre centré 16/600, sans ombre.
       appBarTheme: AppBarTheme(
         backgroundColor: colors.background,
@@ -57,7 +61,8 @@ abstract final class AppTheme {
         ),
       ),
       actionIconTheme: ActionIconThemeData(
-        backButtonIconBuilder: (_) => const Icon(AppIcons.caretLeftBold, size: 20),
+        backButtonIconBuilder: (_) =>
+            const Icon(AppIcons.caretLeftBold, size: 20),
         closeButtonIconBuilder: (_) => const Icon(AppIcons.xBold, size: 20),
       ),
       // Boutons « pilule » de 52 px des maquettes.
@@ -103,6 +108,15 @@ abstract final class AppTheme {
         focusedErrorBorder: _inputBorder(colors.negative),
         errorStyle: TextStyle(color: colors.negative, fontSize: 12.5),
       ),
+      // Bouton « Ajouter » : pilule libellée, toujours au même endroit.
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: colors.primary,
+        foregroundColor: colors.onPrimary,
+        shape: const StadiumBorder(),
+        extendedSizeConstraints: const BoxConstraints.tightFor(height: 52),
+        extendedPadding: const EdgeInsets.only(left: 18, right: 22),
+        extendedTextStyle: _buttonText,
+      ),
       dialogTheme: DialogThemeData(
         backgroundColor: colors.surface,
         surfaceTintColor: Colors.transparent,
@@ -112,10 +126,8 @@ abstract final class AppTheme {
     );
 
     return base.copyWith(
-      textTheme: _withTabularFigures(base.textTheme).apply(
-        bodyColor: colors.ink,
-        displayColor: colors.ink,
-      ),
+      textTheme: _withTabularFigures(base.textTheme)
+          .apply(bodyColor: colors.ink, displayColor: colors.ink),
     );
   }
 

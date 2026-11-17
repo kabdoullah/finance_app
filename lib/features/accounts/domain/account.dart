@@ -14,6 +14,8 @@ class Account {
     required this.balance,
     required this.createdAt,
     this.archivedAt,
+    this.lastOperationAt,
+    this.operationCount = 0,
   });
 
   final String id;
@@ -31,6 +33,12 @@ class Account {
 
   /// Un compte archivé sort des listes et du total ; son historique reste.
   final DateTime? archivedAt;
+
+  /// Date de la dernière opération touchant le compte (transferts compris).
+  final DateTime? lastOperationAt;
+
+  /// Nombre d'opérations touchant le compte (supprimées avec lui).
+  final int operationCount;
 
   bool get isArchived => archivedAt != null;
 }

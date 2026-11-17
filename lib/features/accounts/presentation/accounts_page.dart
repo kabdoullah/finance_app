@@ -5,7 +5,9 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../core/clock.dart';
 import '../../../core/formatting/date_format.dart';
+import '../../../core/formatting/relative_date.dart';
 import '../../../core/money/money.dart';
 import '../../../core/widgets/amount_display.dart';
 import '../../../l10n/l10n.dart';
@@ -259,24 +261,31 @@ class _GroupHeader extends StatelessWidget {
   }
 }
 
-class _AccountTile extends StatelessWidget {
+class _AccountTile extends ConsumerWidget {
   const _AccountTile({required this.account});
 
   final Account account;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
     final l10n = context.l10n;
+    final locale = Localizations.localeOf(context).toLanguageTag();
     final archived = account.isArchived;
+    final lastOperation = account.lastOperationAt;
     final subtitle = archived
         ? l10n.accountArchivedOn(
-            AppDateFormat.dayMonth(
-              account.archivedAt!,
-              Localizations.localeOf(context).toLanguageTag(),
-            ),
+            AppDateFormat.dayMonth(account.archivedAt!, locale),
           )
-        : l10n.accountNoOperation;
+        : lastOperation == null
+        ? l10n.accountNoOperation
+        : l10n.accountLastOperation(
+            RelativeDate(
+              l10n,
+              locale,
+              ref.watch(clockProvider)(),
+            ).day(lastOperation),
+          );
 
     final tile = InkWell(
       onTap: () => context.go(AppRoutes.accountDetail(account.id)),
@@ -351,10 +360,7 @@ class _AddSavingsTile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 6),
       child: CustomPaint(
-        foregroundPainter: _DashedBorderPainter(
-          color: colors.line,
-          radius: 14,
-        ),
+        foregroundPainter: _DashedBorderPainter(color: colors.line, radius: 14),
         child: InkWell(
           borderRadius: radius,
           onTap: () => context.push(AppRoutes.newAccount),

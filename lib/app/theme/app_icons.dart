@@ -31,6 +31,35 @@ abstract final class AppIcons {
   static const arrowCounterClockwise = IconData(0xe038, fontFamily: _regular);
   static const trash = IconData(0xe4a6, fontFamily: _regular);
 
+  static const caretDownBold = IconData(0xe136, fontFamily: _bold);
+  static const arrowDownLeftBold = IconData(0xe040, fontFamily: _bold);
+  static const arrowUpRightBold = IconData(0xe092, fontFamily: _bold);
+  static const arrowDownLeft = IconData(0xe040, fontFamily: _regular);
+  static const arrowUpRight = IconData(0xe092, fontFamily: _regular);
+  static const arrowsLeftRight = IconData(0xe0a0, fontFamily: _regular);
+  static const magnifyingGlass = IconData(0xe30c, fontFamily: _regular);
+  static const calendarBlank = IconData(0xe10a, fontFamily: _regular);
+  static const notePencil = IconData(0xe34c, fontFamily: _regular);
+  static const copy = IconData(0xe1ca, fontFamily: _regular);
+  static const backspace = IconData(0xe0ae, fontFamily: _regular);
+  static const wallet = IconData(0xe68a, fontFamily: _regular);
+  static const tray = IconData(0xe4aa, fontFamily: _regular);
+  static const info = IconData(0xe2ce, fontFamily: _regular);
+
+  // Catégories (clés de la table categories).
+  static const basket = IconData(0xe964, fontFamily: _regular);
+  static const taxi = IconData(0xe902, fontFamily: _regular);
+  static const houseLine = IconData(0xe2c4, fontFamily: _regular);
+  static const receipt = IconData(0xe3ec, fontFamily: _regular);
+  static const ticket = IconData(0xe490, fontFamily: _regular);
+  static const heartbeat = IconData(0xe2ac, fontFamily: _regular);
+  static const users = IconData(0xe4d6, fontFamily: _regular);
+  static const handCoins = IconData(0xea8c, fontFamily: _regular);
+  static const graduationCap = IconData(0xe62c, fontFamily: _regular);
+  static const tShirt = IconData(0xe670, fontFamily: _regular);
+  static const dotsThree = IconData(0xe1fe, fontFamily: _regular);
+  static const tag = IconData(0xe478, fontFamily: _regular);
+
   // Types de compte.
   static const money = IconData(0xe588, fontFamily: _regular);
   static const deviceMobile = IconData(0xe1e0, fontFamily: _regular);

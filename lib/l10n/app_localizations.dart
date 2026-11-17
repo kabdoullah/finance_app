@@ -586,6 +586,570 @@ abstract class AppLocalizations {
   /// **'Cette action est définitive : son historique sera perdu.'**
   String get accountDeleteBodyArchived;
 
+  /// No description provided for @accountDeleteBodyWithOperations.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{Son opération sera aussi supprimée} other{Ses {count} opérations seront aussi supprimées}} et ton solde total baissera de {amount} FCFA. Cette action est définitive. Pour garder l\'historique, archive-le plutôt.'**
+  String accountDeleteBodyWithOperations(int count, String amount);
+
+  /// No description provided for @accountLastOperation.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dernière opération : {when}'**
+  String accountLastOperation(String when);
+
+  /// No description provided for @accountMonthIn.
+  ///
+  /// In fr, this message translates to:
+  /// **'Arrivées en {month}'**
+  String accountMonthIn(String month);
+
+  /// No description provided for @accountMonthOut.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sorties en {month}'**
+  String accountMonthOut(String month);
+
+  /// No description provided for @accountTransfersNote.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dont {amount} FCFA de transferts entre tes comptes, exclus de tes revenus et dépenses.'**
+  String accountTransfersNote(String amount);
+
+  /// No description provided for @accountHistory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Historique des mouvements'**
+  String get accountHistory;
+
+  /// No description provided for @accountNoHistory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun mouvement pour l\'instant.'**
+  String get accountNoHistory;
+
+  /// No description provided for @accountNewOperation.
+  ///
+  /// In fr, this message translates to:
+  /// **'Opération'**
+  String get accountNewOperation;
+
+  /// No description provided for @accountNewTransfer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Transférer'**
+  String get accountNewTransfer;
+
+  /// No description provided for @accountBalanceAfterShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'Solde {amount}'**
+  String accountBalanceAfterShort(String amount);
+
+  /// No description provided for @accountInternalTransfer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Transfert interne'**
+  String get accountInternalTransfer;
+
+  /// No description provided for @today.
+  ///
+  /// In fr, this message translates to:
+  /// **'aujourd\'hui'**
+  String get today;
+
+  /// No description provided for @yesterday.
+  ///
+  /// In fr, this message translates to:
+  /// **'hier'**
+  String get yesterday;
+
+  /// No description provided for @dayToday.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aujourd\'hui'**
+  String get dayToday;
+
+  /// No description provided for @dayYesterday.
+  ///
+  /// In fr, this message translates to:
+  /// **'Hier'**
+  String get dayYesterday;
+
+  /// No description provided for @dayHeaderRelative.
+  ///
+  /// In fr, this message translates to:
+  /// **'{day} · {date}'**
+  String dayHeaderRelative(String day, String date);
+
+  /// No description provided for @atTime.
+  ///
+  /// In fr, this message translates to:
+  /// **'{day} à {time}'**
+  String atTime(String day, String time);
+
+  /// No description provided for @txKindExpense.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépense'**
+  String get txKindExpense;
+
+  /// No description provided for @txKindIncome.
+  ///
+  /// In fr, this message translates to:
+  /// **'Revenu'**
+  String get txKindIncome;
+
+  /// No description provided for @txKindTransfer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Transfert'**
+  String get txKindTransfer;
+
+  /// No description provided for @txKindExpenseHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Achat, facture, retrait'**
+  String get txKindExpenseHint;
+
+  /// No description provided for @txKindIncomeHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Salaire, vente, argent reçu'**
+  String get txKindIncomeHint;
+
+  /// No description provided for @txKindTransferHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Entre deux de tes comptes'**
+  String get txKindTransferHint;
+
+  /// No description provided for @txAdd.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter'**
+  String get txAdd;
+
+  /// No description provided for @txNewTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle opération'**
+  String get txNewTitle;
+
+  /// No description provided for @txSavedTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Opération enregistrée'**
+  String get txSavedTitle;
+
+  /// No description provided for @txAmount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Montant'**
+  String get txAmount;
+
+  /// No description provided for @txContinue.
+  ///
+  /// In fr, this message translates to:
+  /// **'Continuer'**
+  String get txContinue;
+
+  /// No description provided for @txChange.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier'**
+  String get txChange;
+
+  /// No description provided for @txCategory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Catégorie'**
+  String get txCategory;
+
+  /// No description provided for @txSubcategory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sous-catégorie'**
+  String get txSubcategory;
+
+  /// No description provided for @txNoSubcategory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune'**
+  String get txNoSubcategory;
+
+  /// No description provided for @txAccount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compte'**
+  String get txAccount;
+
+  /// No description provided for @txFrom.
+  ///
+  /// In fr, this message translates to:
+  /// **'Depuis'**
+  String get txFrom;
+
+  /// No description provided for @txTo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vers'**
+  String get txTo;
+
+  /// No description provided for @txDate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Date'**
+  String get txDate;
+
+  /// No description provided for @txDescription.
+  ///
+  /// In fr, this message translates to:
+  /// **'Description'**
+  String get txDescription;
+
+  /// No description provided for @txAddDescription.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter une description'**
+  String get txAddDescription;
+
+  /// No description provided for @txDescriptionHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex. : taxi pour le bureau'**
+  String get txDescriptionHint;
+
+  /// No description provided for @txTransferInfo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un transfert entre tes comptes ne compte ni comme revenu ni comme dépense : ton solde total ne change pas.'**
+  String get txTransferInfo;
+
+  /// No description provided for @txSaveExpense.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer la dépense'**
+  String get txSaveExpense;
+
+  /// No description provided for @txSaveIncome.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer le revenu'**
+  String get txSaveIncome;
+
+  /// No description provided for @txSaveTransfer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer le transfert'**
+  String get txSaveTransfer;
+
+  /// No description provided for @txSavedExpense.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépense enregistrée'**
+  String get txSavedExpense;
+
+  /// No description provided for @txSavedIncome.
+  ///
+  /// In fr, this message translates to:
+  /// **'Revenu enregistré'**
+  String get txSavedIncome;
+
+  /// No description provided for @txSavedTransfer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Transfert enregistré'**
+  String get txSavedTransfer;
+
+  /// No description provided for @txNewBalance.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveau solde {account}'**
+  String txNewBalance(String account);
+
+  /// No description provided for @txBackHome.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retour à l\'accueil'**
+  String get txBackHome;
+
+  /// No description provided for @txAddAnother.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter une autre opération'**
+  String get txAddAnother;
+
+  /// No description provided for @txNeedAccount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoute d\'abord un compte pour enregistrer une opération.'**
+  String get txNeedAccount;
+
+  /// No description provided for @txNeedTwoAccounts.
+  ///
+  /// In fr, this message translates to:
+  /// **'Il faut au moins deux comptes actifs pour faire un transfert.'**
+  String get txNeedTwoAccounts;
+
+  /// No description provided for @txChooseAccount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisir un compte'**
+  String get txChooseAccount;
+
+  /// No description provided for @txAccountUnavailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce compte n\'est plus disponible : choisis-en un autre.'**
+  String get txAccountUnavailable;
+
+  /// No description provided for @txTransferTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vers {account}'**
+  String txTransferTitle(String account);
+
+  /// No description provided for @txTransferMeta.
+  ///
+  /// In fr, this message translates to:
+  /// **'Transfert · {from} → {to}'**
+  String txTransferMeta(String from, String to);
+
+  /// No description provided for @txMeta.
+  ///
+  /// In fr, this message translates to:
+  /// **'{category} · {account}'**
+  String txMeta(String category, String account);
+
+  /// No description provided for @txListTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Transactions'**
+  String get txListTitle;
+
+  /// No description provided for @txSearchHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rechercher une opération'**
+  String get txSearchHint;
+
+  /// No description provided for @txClearSearch.
+  ///
+  /// In fr, this message translates to:
+  /// **'Effacer la recherche'**
+  String get txClearSearch;
+
+  /// No description provided for @txFilterAll.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tout'**
+  String get txFilterAll;
+
+  /// No description provided for @txFilterIncome.
+  ///
+  /// In fr, this message translates to:
+  /// **'Revenus'**
+  String get txFilterIncome;
+
+  /// No description provided for @txFilterExpense.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépenses'**
+  String get txFilterExpense;
+
+  /// No description provided for @txFilterTransfer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Transferts'**
+  String get txFilterTransfer;
+
+  /// No description provided for @txCountSummary.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucune opération} =1{1 opération} other{{count} opérations}} · transferts exclus des totaux'**
+  String txCountSummary(int count);
+
+  /// No description provided for @txEmptyTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune opération pour l\'instant'**
+  String get txEmptyTitle;
+
+  /// No description provided for @txEmptyBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoute ta première dépense ou ton premier revenu. Tu peux aussi l\'écrire au Copilote : « Taxi 2 500 avec Wave ».'**
+  String get txEmptyBody;
+
+  /// No description provided for @txEmptyAction.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter une opération'**
+  String get txEmptyAction;
+
+  /// No description provided for @txMonthEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune opération en {month}.'**
+  String txMonthEmpty(String month);
+
+  /// No description provided for @txNoResultTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun résultat'**
+  String get txNoResultTitle;
+
+  /// No description provided for @txNoResultBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune opération ne correspond à « {query} » en {month}. Essaie un autre mot ou change de période.'**
+  String txNoResultBody(String query, String month);
+
+  /// No description provided for @txChooseMonth.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisir le mois'**
+  String get txChooseMonth;
+
+  /// No description provided for @txDetailTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Opération'**
+  String get txDetailTitle;
+
+  /// No description provided for @txKindWhen.
+  ///
+  /// In fr, this message translates to:
+  /// **'{kind} · {when}'**
+  String txKindWhen(String kind, String when);
+
+  /// No description provided for @txBalanceAfter.
+  ///
+  /// In fr, this message translates to:
+  /// **'Solde après : {amount} FCFA'**
+  String txBalanceAfter(String amount);
+
+  /// No description provided for @txEntry.
+  ///
+  /// In fr, this message translates to:
+  /// **'Saisie'**
+  String get txEntry;
+
+  /// No description provided for @entryManual.
+  ///
+  /// In fr, this message translates to:
+  /// **'Manuelle'**
+  String get entryManual;
+
+  /// No description provided for @entryVoice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vocale'**
+  String get entryVoice;
+
+  /// No description provided for @entryText.
+  ///
+  /// In fr, this message translates to:
+  /// **'Texte'**
+  String get entryText;
+
+  /// No description provided for @entryReceipt.
+  ///
+  /// In fr, this message translates to:
+  /// **'Reçu'**
+  String get entryReceipt;
+
+  /// No description provided for @entryRecurring.
+  ///
+  /// In fr, this message translates to:
+  /// **'Récurrente'**
+  String get entryRecurring;
+
+  /// No description provided for @txDuplicate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dupliquer'**
+  String get txDuplicate;
+
+  /// No description provided for @txDuplicated.
+  ///
+  /// In fr, this message translates to:
+  /// **'Opération dupliquée.'**
+  String get txDuplicated;
+
+  /// No description provided for @txDelete.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer'**
+  String get txDelete;
+
+  /// No description provided for @txDeleteTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'{kind, select, expense{Supprimer cette dépense ?} income{Supprimer ce revenu ?} other{Supprimer ce transfert ?}}'**
+  String txDeleteTitle(String kind);
+
+  /// No description provided for @txDeleteBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'{title}, {amount} FCFA. Le solde {account} sera recalculé.'**
+  String txDeleteBody(String title, String amount, String account);
+
+  /// No description provided for @txDeletedTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Opération supprimée'**
+  String get txDeletedTitle;
+
+  /// No description provided for @txDeletedBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le solde {account} a été mis à jour.'**
+  String txDeletedBody(String account);
+
+  /// No description provided for @txUndo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annuler la suppression'**
+  String get txUndo;
+
+  /// No description provided for @txBackToList.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retour aux transactions'**
+  String get txBackToList;
+
+  /// No description provided for @txNotFound.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette opération n\'existe plus.'**
+  String get txNotFound;
+
+  /// No description provided for @dashboardMonthIncome.
+  ///
+  /// In fr, this message translates to:
+  /// **'Revenus du mois'**
+  String get dashboardMonthIncome;
+
+  /// No description provided for @dashboardMonthExpense.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépenses du mois'**
+  String get dashboardMonthExpense;
+
+  /// No description provided for @dashboardRecent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dernières opérations'**
+  String get dashboardRecent;
+
+  /// No description provided for @dashboardSeeAll.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tout voir'**
+  String get dashboardSeeAll;
+
   /// No description provided for @accountDeleteConfirm.
   ///
   /// In fr, this message translates to:

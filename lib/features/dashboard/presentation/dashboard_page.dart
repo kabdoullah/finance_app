@@ -7,14 +7,24 @@ import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
 import '../../../core/clock.dart';
+import '../../../core/money/money.dart';
+import '../../../core/time/month.dart';
 import '../../../core/widgets/amount_display.dart';
 import '../../../l10n/l10n.dart';
 import '../../accounts/domain/accounts_summary.dart';
 import '../../accounts/presentation/accounts_providers.dart';
+import '../../transactions/domain/transaction_stats.dart';
+import '../../transactions/presentation/new_operation_sheet.dart';
+import '../../transactions/presentation/transaction_labels.dart';
+import '../../transactions/presentation/transactions_providers.dart';
 
-/// Tableau de bord — état « premier lancement » (maquette Accueil-Vide),
-/// complété au fur et à mesure : le solde devient réel dès le premier compte.
-/// La version complète viendra avec la fonctionnalité Transactions.
+/// Tableau de bord.
+///
+/// Tant qu'il manque un compte ou une première opération : état « premier
+/// lancement » (maquette Accueil-Vide) avec les étapes pour bien démarrer.
+/// Ensuite : solde, revenus et dépenses du mois, dernières opérations.
+/// Budgets, prévisions et « Où va ton argent » viendront avec leurs
+/// fonctionnalités.
 class DashboardPage extends ConsumerWidget {
   const DashboardPage({super.key});
 
@@ -22,28 +32,165 @@ class DashboardPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final now = ref.watch(clockProvider)();
     final accounts = ref.watch(activeAccountsProvider);
+    final hasTransactions = ref.watch(hasTransactionsProvider);
     // Évite d'afficher brièvement l'état vide pendant la première lecture.
-    if (!accounts.hasValue) return const Scaffold();
+    if (!accounts.hasValue || !hasTransactions.hasValue) {
+      return const Scaffold();
+    }
     final summary = AccountsSummary.of(accounts.requireValue);
+    final hasAccounts = summary.count > 0;
+    final active = hasAccounts && hasTransactions.requireValue;
 
     return Scaffold(
+      floatingActionButton: hasAccounts ? const AddOperationButton() : null,
       body: SafeArea(
         bottom: false,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(24, 12, 24, 40),
+          padding: EdgeInsets.fromLTRB(24, 12, 24, hasAccounts ? 120 : 40),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             spacing: 32,
             children: [
               _Header(date: now),
               _Balance(summary: summary),
-              _GetStarted(hasAccounts: summary.count > 0),
-              const _CopilotHint(),
-              const _PrivacyNote(),
+              if (active) ...[
+                _MonthTotals(month: Month.of(now)),
+                const _RecentOperations(),
+              ] else ...[
+                _GetStarted(hasAccounts: hasAccounts),
+                const _CopilotHint(),
+                const _PrivacyNote(),
+              ],
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Revenus et dépenses du mois (transferts exclus).
+class _MonthTotals extends ConsumerWidget {
+  const _MonthTotals({required this.month});
+
+  final Month month;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.colors;
+    final l10n = context.l10n;
+    final totals = TransactionTotals.of(
+      ref.watch(monthTransactionsProvider(month)).value ?? const [],
+    );
+    Widget cell(
+      IconData icon,
+      Color iconColor,
+      String label,
+      Money amount,
+      EdgeInsets padding,
+    ) => Padding(
+      padding: padding,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 4,
+        children: [
+          Row(
+            spacing: 6,
+            children: [
+              Icon(icon, size: 14, color: iconColor),
+              Flexible(
+                child: Text(
+                  label,
+                  style: TextStyle(fontSize: 13, color: colors.inkSecondary),
+                ),
+              ),
+            ],
+          ),
+          Text(
+            MoneyFormat.amount(amount),
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              letterSpacing: -0.4,
+            ),
+          ),
+        ],
+      ),
+    );
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        border: Border.symmetric(horizontal: BorderSide(color: colors.line)),
+      ),
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  border: Border(right: BorderSide(color: colors.line)),
+                ),
+                child: cell(
+                  AppIcons.arrowDownLeftBold,
+                  colors.positive,
+                  l10n.dashboardMonthIncome,
+                  totals.income,
+                  const EdgeInsets.fromLTRB(0, 16, 16, 16),
+                ),
+              ),
+            ),
+            Expanded(
+              child: cell(
+                AppIcons.arrowUpRightBold,
+                colors.inkSecondary,
+                l10n.dashboardMonthExpense,
+                totals.expense,
+                const EdgeInsets.fromLTRB(16, 16, 0, 16),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _RecentOperations extends ConsumerWidget {
+  const _RecentOperations();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final recent = ref.watch(recentTransactionsProvider).value ?? const [];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Semantics(
+                header: true,
+                child: Text(
+                  l10n.dashboardRecent,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () => context.go(AppRoutes.transactions),
+              child: Text(l10n.dashboardSeeAll),
+            ),
+          ],
+        ),
+        for (final t in recent)
+          TransactionTile(
+            transaction: t,
+            onTap: () => context.push(AppRoutes.transactionDetail(t.id)),
+          ),
+      ],
     );
   }
 }
@@ -188,6 +335,7 @@ class _GetStarted extends StatelessWidget {
           title: l10n.dashboardStepTransactionsTitle,
           subtitle: l10n.dashboardStepTransactionsSubtitle,
           isNext: hasAccounts,
+          onTap: hasAccounts ? () => showNewOperationSheet(context) : null,
         ),
         _StepRow(
           number: 3,
@@ -303,9 +451,7 @@ class _CopilotHint extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16),
       decoration: BoxDecoration(
-        border: Border.symmetric(
-          horizontal: BorderSide(color: colors.line),
-        ),
+        border: Border.symmetric(horizontal: BorderSide(color: colors.line)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -356,7 +502,11 @@ class _PrivacyNote extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final style = TextStyle(fontSize: 13, height: 1.5, color: colors.inkTertiary);
+    final style = TextStyle(
+      fontSize: 13,
+      height: 1.5,
+      color: colors.inkTertiary,
+    );
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 8,

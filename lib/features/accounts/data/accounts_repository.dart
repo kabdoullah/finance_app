@@ -22,25 +22,59 @@ class AccountsRepository {
 
   /// Comptes actifs, du plus ancien au plus récent.
   Stream<List<Account>> watchActive() =>
-      (_db.select(_accounts)
-            ..where((a) => a.archivedAt.isNull())
-            ..orderBy([(a) => OrderingTerm.asc(a.createdAt)]))
-          .watch()
-          .map((rows) => rows.map(_toAccount).toList());
+      _watchAccounts('WHERE a.archived_at IS NULL ORDER BY a.created_at ASC');
 
   /// Comptes archivés, du plus récemment archivé au plus ancien.
-  Stream<List<Account>> watchArchived() =>
-      (_db.select(_accounts)
-            ..where((a) => a.archivedAt.isNotNull())
-            ..orderBy([(a) => OrderingTerm.desc(a.archivedAt)]))
-          .watch()
-          .map((rows) => rows.map(_toAccount).toList());
+  Stream<List<Account>> watchArchived() => _watchAccounts(
+    'WHERE a.archived_at IS NOT NULL ORDER BY a.archived_at DESC',
+  );
 
   /// Un compte, ou `null` s'il n'existe pas (ou plus).
-  Stream<Account?> watchById(String id) =>
-      (_db.select(_accounts)..where((a) => a.id.equals(id)))
-          .watchSingleOrNull()
-          .map((row) => row == null ? null : _toAccount(row));
+  Stream<Account?> watchById(String id) => _watchAccounts('WHERE a.id = ?', [
+    Variable.withString(id),
+  ]).map((accounts) => accounts.isEmpty ? null : accounts.single);
+
+  /// Le solde n'est jamais stocké : solde initial + revenus − dépenses
+  /// − transferts sortants + transferts entrants. Réévalué à chaque
+  /// changement des comptes ou des opérations.
+  static const _accountsWithBalance = '''
+SELECT a.*,
+  a.opening_balance + COALESCE((
+    SELECT SUM(CASE
+      WHEN t.account_id = a.id AND t.kind = 'income' THEN t.amount
+      WHEN t.account_id = a.id THEN -t.amount
+      ELSE t.amount
+    END)
+    FROM transactions t WHERE t.account_id = a.id OR t.to_account_id = a.id
+  ), 0) AS balance,
+  (SELECT MAX(t.occurred_at) FROM transactions t
+    WHERE t.account_id = a.id OR t.to_account_id = a.id) AS last_operation_at,
+  (SELECT COUNT(*) FROM transactions t
+    WHERE t.account_id = a.id OR t.to_account_id = a.id) AS operation_count
+FROM accounts a
+''';
+
+  Stream<List<Account>> _watchAccounts(
+    String clauses, [
+    List<Variable<Object>> variables = const [],
+  ]) => _db
+      .customSelect(
+        '$_accountsWithBalance $clauses',
+        variables: variables,
+        readsFrom: {_accounts, _db.transactions},
+      )
+      .watch()
+      .map(
+        (rows) => [
+          for (final row in rows)
+            _toAccount(
+              _accounts.map(row.data),
+              balance: Money(row.read<int>('balance')),
+              lastOperationAtMs: row.readNullable<int>('last_operation_at'),
+              operationCount: row.read<int>('operation_count'),
+            ),
+        ],
+      );
 
   Future<Result<Account>> create(AccountDraft draft) => _guard(() async {
     final errors = await _validate(draft);
@@ -57,37 +91,36 @@ class AccountsRepository {
         updatedAt: now,
       ),
     );
-    return Ok(_toAccount(row));
+    return Ok(await _reload(row.id));
   });
 
-  Future<Result<Account>> update(String id, AccountDraft draft) =>
-      _guard(() async {
-        final errors = await _validate(draft, excludeId: id);
-        if (errors.isNotEmpty) return Err(ValidationFailure(errors));
+  Future<Result<Account>> update(
+    String id,
+    AccountDraft draft,
+  ) => _guard(() async {
+    final errors = await _validate(draft, excludeId: id);
+    if (errors.isNotEmpty) return Err(ValidationFailure(errors));
 
-        final rows =
-            await (_db.update(_accounts)..where((a) => a.id.equals(id)))
-                .writeReturning(
-                  AccountsCompanion(
-                    name: Value(draft.normalizedName),
-                    type: Value(draft.type!.storageValue),
-                    openingBalance: Value(draft.openingBalance.value),
-                    updatedAt: Value(_nowMs()),
-                  ),
-                );
-        return rows.isEmpty
-            ? const Err(NotFoundFailure())
-            : Ok(_toAccount(rows.single));
-      });
+    final rows = await (_db.update(_accounts)..where((a) => a.id.equals(id)))
+        .writeReturning(
+          AccountsCompanion(
+            name: Value(draft.normalizedName),
+            type: Value(draft.type!.storageValue),
+            openingBalance: Value(draft.openingBalance.value),
+            updatedAt: Value(_nowMs()),
+          ),
+        );
+    return rows.isEmpty ? const Err(NotFoundFailure()) : Ok(await _reload(id));
+  });
 
   Future<Result<void>> archive(String id) => _guard(() async {
     final now = _nowMs();
     final count =
-        await (_db.update(_accounts)
-              ..where((a) => a.id.equals(id) & a.archivedAt.isNull()))
-            .write(
-              AccountsCompanion(archivedAt: Value(now), updatedAt: Value(now)),
-            );
+        await (_db.update(
+          _accounts,
+        )..where((a) => a.id.equals(id) & a.archivedAt.isNull())).write(
+          AccountsCompanion(archivedAt: Value(now), updatedAt: Value(now)),
+        );
     return count == 0 ? const Err(NotFoundFailure()) : const Ok(null);
   });
 
@@ -159,20 +192,28 @@ class AccountsRepository {
     }
   }
 
-  static Account _toAccount(AccountRow row) {
-    final opening = Money(row.openingBalance);
+  static Account _toAccount(
+    AccountRow row, {
+    required Money balance,
+    required int? lastOperationAtMs,
+    required int operationCount,
+  }) {
+    DateTime? date(int? ms) => ms == null
+        ? null
+        : DateTime.fromMillisecondsSinceEpoch(ms, isUtc: true);
     return Account(
       id: row.id,
       name: row.name,
       type: AccountType.fromStorage(row.type),
-      openingBalance: opening,
-      // Pas encore de mouvements : la fonctionnalité Transactions ajoutera
-      // ici la somme des opérations du compte.
-      balance: opening,
-      createdAt: DateTime.fromMillisecondsSinceEpoch(row.createdAt, isUtc: true),
-      archivedAt: row.archivedAt == null
-          ? null
-          : DateTime.fromMillisecondsSinceEpoch(row.archivedAt!, isUtc: true),
+      openingBalance: Money(row.openingBalance),
+      balance: balance,
+      createdAt: date(row.createdAt)!,
+      archivedAt: date(row.archivedAt),
+      lastOperationAt: date(lastOperationAtMs),
+      operationCount: operationCount,
     );
   }
+
+  /// Relit un compte avec son solde calculé (après écriture).
+  Future<Account> _reload(String id) async => (await watchById(id).first)!;
 }

@@ -6,7 +6,11 @@ import 'theme/app_colors.dart';
 /// Écran provisoire des sections pas encore développées.
 /// À supprimer au fur et à mesure que les fonctionnalités arrivent.
 class ComingSoonPage extends StatelessWidget {
-  const ComingSoonPage({required this.title, this.showAppBar = false, super.key});
+  const ComingSoonPage({
+    required this.title,
+    this.showAppBar = false,
+    super.key,
+  });
 
   final String title;
 

@@ -8,6 +8,7 @@ import '../../../app/theme/app_icons.dart';
 import '../../../core/errors/result.dart';
 import '../../../core/money/amount_input_formatter.dart';
 import '../../../core/money/money.dart';
+import '../../../core/widgets/choice_pill.dart';
 import '../../../l10n/l10n.dart';
 import '../domain/account.dart';
 import '../domain/account_draft.dart';
@@ -225,7 +226,7 @@ class _AccountFormPageState extends ConsumerState<AccountFormPage> {
             runSpacing: 8,
             children: [
               for (final operator in mobileMoneyOperators)
-                _OperatorChip(
+                ChoicePill(
                   label: operator,
                   selected: _draft.normalizedName == operator,
                   onTap: () => _name.text = operator,
@@ -371,57 +372,6 @@ class _TypeTile extends StatelessWidget {
                     ),
                   ),
                 ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _OperatorChip extends StatelessWidget {
-  const _OperatorChip({
-    required this.label,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
-    final shape = StadiumBorder(
-      side: BorderSide(color: selected ? colors.primary : colors.line),
-    );
-    return Semantics(
-      button: true,
-      selected: selected,
-      child: Material(
-        color: selected ? colors.primarySoft : colors.surface,
-        shape: shape,
-        child: InkWell(
-          customBorder: shape,
-          onTap: onTap,
-          // `widthFactor: 1` : la pilule épouse son texte au lieu de
-          // s'étirer sur toute la largeur du Wrap.
-          child: SizedBox(
-            height: 38,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14),
-              child: Center(
-                widthFactor: 1,
-                child: Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 13.5,
-                    fontWeight: FontWeight.w600,
-                    color: selected ? colors.onPrimarySoft : colors.ink,
-                  ),
-                ),
               ),
             ),
           ),

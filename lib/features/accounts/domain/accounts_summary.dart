@@ -75,10 +75,9 @@ class AccountsSummary {
     final kept = positive.length > maxShares
         ? positive.take(maxShares - 1).toList()
         : positive;
-    final others = positive.skip(kept.length).fold<int>(
-      0,
-      (sum, a) => sum + a.balance.value,
-    );
+    final others = positive
+        .skip(kept.length)
+        .fold<int>(0, (sum, a) => sum + a.balance.value);
     final amounts = [
       for (final a in kept) a.balance.value,
       if (others > 0) others,
