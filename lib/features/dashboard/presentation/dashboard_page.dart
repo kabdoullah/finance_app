@@ -14,6 +14,8 @@ import '../../../core/widgets/amount_display.dart';
 import '../../../l10n/l10n.dart';
 import '../../accounts/domain/accounts_summary.dart';
 import '../../accounts/presentation/accounts_providers.dart';
+import '../../budgets/presentation/budget_widgets.dart';
+import '../../budgets/presentation/budgets_providers.dart';
 import '../../transactions/domain/expense_breakdown.dart';
 import '../../transactions/domain/transaction_stats.dart';
 import '../../transactions/presentation/new_operation_sheet.dart';
@@ -58,6 +60,7 @@ class DashboardPage extends ConsumerWidget {
               if (active) ...[
                 _MonthTotals(month: Month.of(now)),
                 _WhereMoneyGoes(month: Month.of(now)),
+                const _Budgets(),
                 const _RecentOperations(),
               ] else ...[
                 _GetStarted(hasAccounts: hasAccounts),
@@ -273,6 +276,52 @@ class _WhereMoneyGoes extends ConsumerWidget {
             ],
           ),
         ),
+      ],
+    );
+  }
+}
+
+/// Section « Budgets » : les budgets par catégorie du mois (masquée sans
+/// budget).
+class _Budgets extends ConsumerWidget {
+  const _Budgets();
+
+  static const _maxRows = 3;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final budgets = ref.watch(budgetsOverviewProvider)?.categories ?? const [];
+    if (budgets.isEmpty) return const SizedBox.shrink();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Semantics(
+                header: true,
+                child: Text(
+                  l10n.budgetsTitle,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () => context.go(AppRoutes.budgets),
+              child: Text(l10n.dashboardSeeAll),
+            ),
+          ],
+        ),
+        for (final status in budgets.take(_maxRows))
+          BudgetRow(
+            status: status,
+            showAmounts: false,
+            onTap: () => context.go(AppRoutes.budgets),
+          ),
       ],
     );
   }

@@ -740,6 +740,178 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get budgetsTitle => 'Budgets';
+
+  @override
+  String budgetMonthTitle(String month) {
+    return 'Budget de $month';
+  }
+
+  @override
+  String budgetOfLimit(String limit) {
+    return '/ $limit FCFA';
+  }
+
+  @override
+  String budgetRemainingSentence(String amount, String perDay) {
+    return 'Il te reste $amount FCFA jusqu\'à la fin du mois, soit environ $perDay FCFA par jour.';
+  }
+
+  @override
+  String budgetOverSentence(String amount) {
+    return 'Budget du mois dépassé de $amount FCFA.';
+  }
+
+  @override
+  String budgetDaysLeft(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Encore $count jours',
+      one: 'Dernier jour',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get budgetNoGlobal => 'Définir un budget pour tout le mois';
+
+  @override
+  String budgetExceededAlert(String name, String amount) {
+    return '$name : budget dépassé de $amount FCFA.';
+  }
+
+  @override
+  String get budgetByCategory => 'Par catégorie';
+
+  @override
+  String budgetSpentOf(String spent, String limit) {
+    return '$spent sur $limit';
+  }
+
+  @override
+  String budgetRemaining(String amount) {
+    return '$amount restants';
+  }
+
+  @override
+  String budgetExceeded(String amount) {
+    return 'Dépassé de $amount';
+  }
+
+  @override
+  String get budgetPaid => 'Payé';
+
+  @override
+  String budgetWithout(String names) {
+    return 'Sans budget : $names';
+  }
+
+  @override
+  String get budgetCreate => 'Créer un budget';
+
+  @override
+  String get budgetSeeOperations => 'Voir les opérations';
+
+  @override
+  String get budgetEmpty =>
+      'Aucun budget pour l\'instant. Fixe une limite par mois pour suivre tes dépenses.';
+
+  @override
+  String get budgetNewTitle => 'Création d\'un budget';
+
+  @override
+  String get budgetEditTitle => 'Modifier le budget';
+
+  @override
+  String get budgetAllExpenses => 'Toutes les dépenses';
+
+  @override
+  String budgetAlreadyTracked(String names) {
+    return 'Déjà suivies : $names';
+  }
+
+  @override
+  String get budgetLimit => 'Limite par mois';
+
+  @override
+  String budgetAverage(String amount) {
+    return 'Ces 3 derniers mois, tu as dépensé en moyenne $amount FCFA.';
+  }
+
+  @override
+  String get budgetUseAmount => 'Utiliser ce montant';
+
+  @override
+  String get budgetPeriod => 'Période';
+
+  @override
+  String get budgetPeriodMonthly => 'Chaque mois, à partir du 1er';
+
+  @override
+  String get budgetAlertAt => 'M\'avertir quand j\'atteins';
+
+  @override
+  String get budgetSave => 'Créer le budget';
+
+  @override
+  String get budgetCreatedTitle => 'Budget créé';
+
+  @override
+  String budgetCreatedMessage(String name) {
+    return 'Budget $name créé';
+  }
+
+  @override
+  String get budgetCreatedGlobal => 'Budget du mois créé';
+
+  @override
+  String budgetCreatedDetail(String amount, int percent) {
+    return '$amount FCFA par mois · alerte à $percent %';
+  }
+
+  @override
+  String get budgetSeeAll => 'Voir mes budgets';
+
+  @override
+  String get budgetAddAnother => 'Créer un autre budget';
+
+  @override
+  String get budgetSaveChanges => 'Enregistrer';
+
+  @override
+  String get budgetDeleted => 'Budget supprimé.';
+
+  @override
+  String get budgetErrorLimit => 'Indique une limite supérieure à 0.';
+
+  @override
+  String get budgetErrorExists => 'Cette catégorie a déjà un budget.';
+
+  @override
+  String get budgetErrorCategory => 'Choisis une catégorie de dépenses.';
+
+  @override
+  String get budgetDelete => 'Supprimer ce budget';
+
+  @override
+  String get budgetDeleteTitle => 'Supprimer ce budget ?';
+
+  @override
+  String get budgetDeleteBody =>
+      'Tes opérations ne sont pas modifiées : seul le suivi de la limite disparaît.';
+
+  @override
+  String budgetImpactLeft(String amount, String name) {
+    return 'Il te reste $amount FCFA dans ton budget $name.';
+  }
+
+  @override
+  String budgetImpactOver(String name, String amount) {
+    return 'Ton budget $name est maintenant dépassé de $amount FCFA.';
+  }
+
+  @override
   String get dashboardWhereMoney => 'Où va ton argent';
 
   @override

@@ -1252,6 +1252,270 @@ abstract class AppLocalizations {
   /// **'{key, select, tag{Étiquette} gift{Cadeau} hand_coins{Argent} device_mobile{Téléphone} heartbeat{Santé} graduation_cap{Études} users{Famille} t_shirt{Vêtements} house_line{Maison} ticket{Sortie} taxi{Transport} basket{Courses} other{Icône}}'**
   String categoryIconLabel(String key);
 
+  /// No description provided for @budgetsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Budgets'**
+  String get budgetsTitle;
+
+  /// No description provided for @budgetMonthTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Budget de {month}'**
+  String budgetMonthTitle(String month);
+
+  /// No description provided for @budgetOfLimit.
+  ///
+  /// In fr, this message translates to:
+  /// **'/ {limit} FCFA'**
+  String budgetOfLimit(String limit);
+
+  /// No description provided for @budgetRemainingSentence.
+  ///
+  /// In fr, this message translates to:
+  /// **'Il te reste {amount} FCFA jusqu\'à la fin du mois, soit environ {perDay} FCFA par jour.'**
+  String budgetRemainingSentence(String amount, String perDay);
+
+  /// No description provided for @budgetOverSentence.
+  ///
+  /// In fr, this message translates to:
+  /// **'Budget du mois dépassé de {amount} FCFA.'**
+  String budgetOverSentence(String amount);
+
+  /// No description provided for @budgetDaysLeft.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{Dernier jour} other{Encore {count} jours}}'**
+  String budgetDaysLeft(int count);
+
+  /// No description provided for @budgetNoGlobal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Définir un budget pour tout le mois'**
+  String get budgetNoGlobal;
+
+  /// No description provided for @budgetExceededAlert.
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} : budget dépassé de {amount} FCFA.'**
+  String budgetExceededAlert(String name, String amount);
+
+  /// No description provided for @budgetByCategory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Par catégorie'**
+  String get budgetByCategory;
+
+  /// No description provided for @budgetSpentOf.
+  ///
+  /// In fr, this message translates to:
+  /// **'{spent} sur {limit}'**
+  String budgetSpentOf(String spent, String limit);
+
+  /// No description provided for @budgetRemaining.
+  ///
+  /// In fr, this message translates to:
+  /// **'{amount} restants'**
+  String budgetRemaining(String amount);
+
+  /// No description provided for @budgetExceeded.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépassé de {amount}'**
+  String budgetExceeded(String amount);
+
+  /// No description provided for @budgetPaid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Payé'**
+  String get budgetPaid;
+
+  /// No description provided for @budgetWithout.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sans budget : {names}'**
+  String budgetWithout(String names);
+
+  /// No description provided for @budgetCreate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Créer un budget'**
+  String get budgetCreate;
+
+  /// No description provided for @budgetSeeOperations.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir les opérations'**
+  String get budgetSeeOperations;
+
+  /// No description provided for @budgetEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun budget pour l\'instant. Fixe une limite par mois pour suivre tes dépenses.'**
+  String get budgetEmpty;
+
+  /// No description provided for @budgetNewTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Création d\'un budget'**
+  String get budgetNewTitle;
+
+  /// No description provided for @budgetEditTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier le budget'**
+  String get budgetEditTitle;
+
+  /// No description provided for @budgetAllExpenses.
+  ///
+  /// In fr, this message translates to:
+  /// **'Toutes les dépenses'**
+  String get budgetAllExpenses;
+
+  /// No description provided for @budgetAlreadyTracked.
+  ///
+  /// In fr, this message translates to:
+  /// **'Déjà suivies : {names}'**
+  String budgetAlreadyTracked(String names);
+
+  /// No description provided for @budgetLimit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Limite par mois'**
+  String get budgetLimit;
+
+  /// No description provided for @budgetAverage.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ces 3 derniers mois, tu as dépensé en moyenne {amount} FCFA.'**
+  String budgetAverage(String amount);
+
+  /// No description provided for @budgetUseAmount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Utiliser ce montant'**
+  String get budgetUseAmount;
+
+  /// No description provided for @budgetPeriod.
+  ///
+  /// In fr, this message translates to:
+  /// **'Période'**
+  String get budgetPeriod;
+
+  /// No description provided for @budgetPeriodMonthly.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chaque mois, à partir du 1er'**
+  String get budgetPeriodMonthly;
+
+  /// No description provided for @budgetAlertAt.
+  ///
+  /// In fr, this message translates to:
+  /// **'M\'avertir quand j\'atteins'**
+  String get budgetAlertAt;
+
+  /// No description provided for @budgetSave.
+  ///
+  /// In fr, this message translates to:
+  /// **'Créer le budget'**
+  String get budgetSave;
+
+  /// No description provided for @budgetCreatedTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Budget créé'**
+  String get budgetCreatedTitle;
+
+  /// No description provided for @budgetCreatedMessage.
+  ///
+  /// In fr, this message translates to:
+  /// **'Budget {name} créé'**
+  String budgetCreatedMessage(String name);
+
+  /// No description provided for @budgetCreatedGlobal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Budget du mois créé'**
+  String get budgetCreatedGlobal;
+
+  /// No description provided for @budgetCreatedDetail.
+  ///
+  /// In fr, this message translates to:
+  /// **'{amount} FCFA par mois · alerte à {percent} %'**
+  String budgetCreatedDetail(String amount, int percent);
+
+  /// No description provided for @budgetSeeAll.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir mes budgets'**
+  String get budgetSeeAll;
+
+  /// No description provided for @budgetAddAnother.
+  ///
+  /// In fr, this message translates to:
+  /// **'Créer un autre budget'**
+  String get budgetAddAnother;
+
+  /// No description provided for @budgetSaveChanges.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer'**
+  String get budgetSaveChanges;
+
+  /// No description provided for @budgetDeleted.
+  ///
+  /// In fr, this message translates to:
+  /// **'Budget supprimé.'**
+  String get budgetDeleted;
+
+  /// No description provided for @budgetErrorLimit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Indique une limite supérieure à 0.'**
+  String get budgetErrorLimit;
+
+  /// No description provided for @budgetErrorExists.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette catégorie a déjà un budget.'**
+  String get budgetErrorExists;
+
+  /// No description provided for @budgetErrorCategory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisis une catégorie de dépenses.'**
+  String get budgetErrorCategory;
+
+  /// No description provided for @budgetDelete.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer ce budget'**
+  String get budgetDelete;
+
+  /// No description provided for @budgetDeleteTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer ce budget ?'**
+  String get budgetDeleteTitle;
+
+  /// No description provided for @budgetDeleteBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tes opérations ne sont pas modifiées : seul le suivi de la limite disparaît.'**
+  String get budgetDeleteBody;
+
+  /// No description provided for @budgetImpactLeft.
+  ///
+  /// In fr, this message translates to:
+  /// **'Il te reste {amount} FCFA dans ton budget {name}.'**
+  String budgetImpactLeft(String amount, String name);
+
+  /// No description provided for @budgetImpactOver.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton budget {name} est maintenant dépassé de {amount} FCFA.'**
+  String budgetImpactOver(String name, String amount);
+
   /// No description provided for @dashboardWhereMoney.
   ///
   /// In fr, this message translates to:

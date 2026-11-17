@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 
 import '../../features/accounts/data/accounts_table.dart';
+import '../../features/budgets/data/budgets_table.dart';
 import '../../features/categories/data/categories_table.dart';
 import '../../features/categories/data/default_categories.dart';
 import '../../features/transactions/data/transactions_table.dart';
@@ -13,12 +14,12 @@ part 'app_database.g.dart';
 /// Les tables sont ajoutées fonctionnalité par fonctionnalité. Toute
 /// modification du schéma passe par une migration
 /// (`dart run drift_dev make-migrations`) testée.
-@DriftDatabase(tables: [Accounts, Categories, Transactions])
+@DriftDatabase(tables: [Accounts, Categories, Transactions, Budgets])
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -44,6 +45,10 @@ class AppDatabase extends _$AppDatabase {
       from3To4: (m, schema) async {
         await m.addColumn(schema.categories, schema.categories.isCustom);
         await m.addColumn(schema.categories, schema.categories.hiddenAt);
+      },
+      from4To5: (m, schema) async {
+        await m.createTable(schema.budgets);
+        await m.createIndex(schema.budgetsCategoryUnique);
       },
     ),
     beforeOpen: (details) async {

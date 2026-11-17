@@ -15,6 +15,7 @@ import '../../../l10n/l10n.dart';
 import '../../accounts/domain/account.dart';
 import '../../accounts/presentation/account_picker_sheet.dart';
 import '../../accounts/presentation/accounts_providers.dart';
+import '../../budgets/presentation/budget_widgets.dart';
 import '../../categories/presentation/categories_providers.dart';
 import '../../categories/presentation/category_icons.dart';
 import '../domain/transaction.dart';
@@ -547,6 +548,12 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 14, color: colors.inkSecondary),
               ),
+              if (saved.kind == TransactionKind.expense)
+                if (saved.mainCategory case final category?)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 24),
+                    child: BudgetImpactNote(mainCategoryId: category.id),
+                  ),
               if (account != null) ...[
                 const SizedBox(height: 28),
                 Container(

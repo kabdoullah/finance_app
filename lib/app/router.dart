@@ -5,6 +5,8 @@ import 'package:material_ui/material_ui.dart';
 import '../features/accounts/presentation/account_detail_page.dart';
 import '../features/accounts/presentation/account_form_page.dart';
 import '../features/accounts/presentation/accounts_page.dart';
+import '../features/budgets/presentation/budget_form_page.dart';
+import '../features/budgets/presentation/budgets_page.dart';
 import '../features/categories/presentation/categories_page.dart';
 import '../features/dashboard/presentation/dashboard_page.dart';
 import '../features/settings/presentation/settings_page.dart';
@@ -21,6 +23,8 @@ abstract final class AppRoutes {
   static const home = '/';
   static const transactions = '/transactions';
   static const budgets = '/budgets';
+  static const newBudget = '/budgets/new';
+  static String editBudget(String id) => '/budgets/$id/edit';
   static const forecast = '/forecast';
   static const assistant = '/assistant';
   static const settings = '/settings';
@@ -76,6 +80,18 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           child: AccountFormPage(accountId: state.pathParameters['id']),
         ),
       ),
+      GoRoute(
+        path: AppRoutes.newBudget,
+        pageBuilder: (context, state) =>
+            const MaterialPage(fullscreenDialog: true, child: BudgetFormPage()),
+      ),
+      GoRoute(
+        path: '/budgets/:id/edit',
+        pageBuilder: (context, state) => MaterialPage(
+          fullscreenDialog: true,
+          child: BudgetFormPage(budgetId: state.pathParameters['id']),
+        ),
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, shell) => AppShell(navigationShell: shell),
         branches: [
@@ -122,8 +138,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: AppRoutes.budgets,
-                builder: (context, state) =>
-                    ComingSoonPage(title: context.l10n.navBudgets),
+                builder: (context, state) => const BudgetsPage(),
               ),
             ],
           ),
