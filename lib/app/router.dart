@@ -5,7 +5,9 @@ import 'package:material_ui/material_ui.dart';
 import '../features/accounts/presentation/account_detail_page.dart';
 import '../features/accounts/presentation/account_form_page.dart';
 import '../features/accounts/presentation/accounts_page.dart';
+import '../features/categories/presentation/categories_page.dart';
 import '../features/dashboard/presentation/dashboard_page.dart';
+import '../features/settings/presentation/settings_page.dart';
 import '../features/transactions/domain/transaction.dart';
 import '../features/transactions/presentation/add_transaction_page.dart';
 import '../features/transactions/presentation/transaction_detail_page.dart';
@@ -22,6 +24,7 @@ abstract final class AppRoutes {
   static const forecast = '/forecast';
   static const assistant = '/assistant';
   static const settings = '/settings';
+  static const categories = '/settings/categories';
 
   static const accounts = '/accounts';
   static const newAccount = '/accounts/new';
@@ -146,8 +149,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: AppRoutes.settings,
-        builder: (context, state) =>
-            ComingSoonPage(title: context.l10n.settingsTitle, showAppBar: true),
+        builder: (context, state) => const SettingsPage(),
+        routes: [
+          GoRoute(
+            path: 'categories',
+            builder: (context, state) => const CategoriesPage(),
+          ),
+        ],
       ),
     ],
   );

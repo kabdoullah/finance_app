@@ -551,6 +551,32 @@ class $CategoriesTable extends Categories
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _isCustomMeta = const VerificationMeta(
+    'isCustom',
+  );
+  @override
+  late final GeneratedColumn<bool> isCustom = GeneratedColumn<bool>(
+    'is_custom',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_custom" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _hiddenAtMeta = const VerificationMeta(
+    'hiddenAt',
+  );
+  @override
+  late final GeneratedColumn<int> hiddenAt = GeneratedColumn<int>(
+    'hidden_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -581,6 +607,8 @@ class $CategoriesTable extends Categories
     icon,
     parentId,
     sortOrder,
+    isCustom,
+    hiddenAt,
     createdAt,
     updatedAt,
   ];
@@ -639,6 +667,18 @@ class $CategoriesTable extends Categories
     } else if (isInserting) {
       context.missing(_sortOrderMeta);
     }
+    if (data.containsKey('is_custom')) {
+      context.handle(
+        _isCustomMeta,
+        isCustom.isAcceptableOrUnknown(data['is_custom']!, _isCustomMeta),
+      );
+    }
+    if (data.containsKey('hidden_at')) {
+      context.handle(
+        _hiddenAtMeta,
+        hiddenAt.isAcceptableOrUnknown(data['hidden_at']!, _hiddenAtMeta),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -688,6 +728,14 @@ class $CategoriesTable extends Categories
         DriftSqlType.int,
         data['${effectivePrefix}sort_order'],
       )!,
+      isCustom: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_custom'],
+      )!,
+      hiddenAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}hidden_at'],
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}created_at'],
@@ -718,6 +766,14 @@ class CategoryRow extends DataClass implements Insertable<CategoryRow> {
   /// Catégorie parente pour une sous-catégorie (un seul niveau).
   final String? parentId;
   final int sortOrder;
+
+  /// Créée par l'utilisateur (renommable, supprimable). Les catégories
+  /// prédéfinies peuvent seulement être masquées.
+  final bool isCustom;
+
+  /// Masquée (epoch ms UTC) : plus proposée à la saisie ; les opérations
+  /// existantes la gardent.
+  final int? hiddenAt;
   final int createdAt;
   final int updatedAt;
   const CategoryRow({
@@ -727,6 +783,8 @@ class CategoryRow extends DataClass implements Insertable<CategoryRow> {
     required this.icon,
     this.parentId,
     required this.sortOrder,
+    required this.isCustom,
+    this.hiddenAt,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -741,6 +799,10 @@ class CategoryRow extends DataClass implements Insertable<CategoryRow> {
       map['parent_id'] = Variable<String>(parentId);
     }
     map['sort_order'] = Variable<int>(sortOrder);
+    map['is_custom'] = Variable<bool>(isCustom);
+    if (!nullToAbsent || hiddenAt != null) {
+      map['hidden_at'] = Variable<int>(hiddenAt);
+    }
     map['created_at'] = Variable<int>(createdAt);
     map['updated_at'] = Variable<int>(updatedAt);
     return map;
@@ -756,6 +818,10 @@ class CategoryRow extends DataClass implements Insertable<CategoryRow> {
           ? const Value.absent()
           : Value(parentId),
       sortOrder: Value(sortOrder),
+      isCustom: Value(isCustom),
+      hiddenAt: hiddenAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(hiddenAt),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -773,6 +839,8 @@ class CategoryRow extends DataClass implements Insertable<CategoryRow> {
       icon: serializer.fromJson<String>(json['icon']),
       parentId: serializer.fromJson<String?>(json['parentId']),
       sortOrder: serializer.fromJson<int>(json['sortOrder']),
+      isCustom: serializer.fromJson<bool>(json['isCustom']),
+      hiddenAt: serializer.fromJson<int?>(json['hiddenAt']),
       createdAt: serializer.fromJson<int>(json['createdAt']),
       updatedAt: serializer.fromJson<int>(json['updatedAt']),
     );
@@ -787,6 +855,8 @@ class CategoryRow extends DataClass implements Insertable<CategoryRow> {
       'icon': serializer.toJson<String>(icon),
       'parentId': serializer.toJson<String?>(parentId),
       'sortOrder': serializer.toJson<int>(sortOrder),
+      'isCustom': serializer.toJson<bool>(isCustom),
+      'hiddenAt': serializer.toJson<int?>(hiddenAt),
       'createdAt': serializer.toJson<int>(createdAt),
       'updatedAt': serializer.toJson<int>(updatedAt),
     };
@@ -799,6 +869,8 @@ class CategoryRow extends DataClass implements Insertable<CategoryRow> {
     String? icon,
     Value<String?> parentId = const Value.absent(),
     int? sortOrder,
+    bool? isCustom,
+    Value<int?> hiddenAt = const Value.absent(),
     int? createdAt,
     int? updatedAt,
   }) => CategoryRow(
@@ -808,6 +880,8 @@ class CategoryRow extends DataClass implements Insertable<CategoryRow> {
     icon: icon ?? this.icon,
     parentId: parentId.present ? parentId.value : this.parentId,
     sortOrder: sortOrder ?? this.sortOrder,
+    isCustom: isCustom ?? this.isCustom,
+    hiddenAt: hiddenAt.present ? hiddenAt.value : this.hiddenAt,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
@@ -819,6 +893,8 @@ class CategoryRow extends DataClass implements Insertable<CategoryRow> {
       icon: data.icon.present ? data.icon.value : this.icon,
       parentId: data.parentId.present ? data.parentId.value : this.parentId,
       sortOrder: data.sortOrder.present ? data.sortOrder.value : this.sortOrder,
+      isCustom: data.isCustom.present ? data.isCustom.value : this.isCustom,
+      hiddenAt: data.hiddenAt.present ? data.hiddenAt.value : this.hiddenAt,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -833,6 +909,8 @@ class CategoryRow extends DataClass implements Insertable<CategoryRow> {
           ..write('icon: $icon, ')
           ..write('parentId: $parentId, ')
           ..write('sortOrder: $sortOrder, ')
+          ..write('isCustom: $isCustom, ')
+          ..write('hiddenAt: $hiddenAt, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -847,6 +925,8 @@ class CategoryRow extends DataClass implements Insertable<CategoryRow> {
     icon,
     parentId,
     sortOrder,
+    isCustom,
+    hiddenAt,
     createdAt,
     updatedAt,
   );
@@ -860,6 +940,8 @@ class CategoryRow extends DataClass implements Insertable<CategoryRow> {
           other.icon == this.icon &&
           other.parentId == this.parentId &&
           other.sortOrder == this.sortOrder &&
+          other.isCustom == this.isCustom &&
+          other.hiddenAt == this.hiddenAt &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -871,6 +953,8 @@ class CategoriesCompanion extends UpdateCompanion<CategoryRow> {
   final Value<String> icon;
   final Value<String?> parentId;
   final Value<int> sortOrder;
+  final Value<bool> isCustom;
+  final Value<int?> hiddenAt;
   final Value<int> createdAt;
   final Value<int> updatedAt;
   final Value<int> rowid;
@@ -881,6 +965,8 @@ class CategoriesCompanion extends UpdateCompanion<CategoryRow> {
     this.icon = const Value.absent(),
     this.parentId = const Value.absent(),
     this.sortOrder = const Value.absent(),
+    this.isCustom = const Value.absent(),
+    this.hiddenAt = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -892,6 +978,8 @@ class CategoriesCompanion extends UpdateCompanion<CategoryRow> {
     required String icon,
     this.parentId = const Value.absent(),
     required int sortOrder,
+    this.isCustom = const Value.absent(),
+    this.hiddenAt = const Value.absent(),
     required int createdAt,
     required int updatedAt,
     this.rowid = const Value.absent(),
@@ -909,6 +997,8 @@ class CategoriesCompanion extends UpdateCompanion<CategoryRow> {
     Expression<String>? icon,
     Expression<String>? parentId,
     Expression<int>? sortOrder,
+    Expression<bool>? isCustom,
+    Expression<int>? hiddenAt,
     Expression<int>? createdAt,
     Expression<int>? updatedAt,
     Expression<int>? rowid,
@@ -920,6 +1010,8 @@ class CategoriesCompanion extends UpdateCompanion<CategoryRow> {
       if (icon != null) 'icon': icon,
       if (parentId != null) 'parent_id': parentId,
       if (sortOrder != null) 'sort_order': sortOrder,
+      if (isCustom != null) 'is_custom': isCustom,
+      if (hiddenAt != null) 'hidden_at': hiddenAt,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
@@ -933,6 +1025,8 @@ class CategoriesCompanion extends UpdateCompanion<CategoryRow> {
     Value<String>? icon,
     Value<String?>? parentId,
     Value<int>? sortOrder,
+    Value<bool>? isCustom,
+    Value<int?>? hiddenAt,
     Value<int>? createdAt,
     Value<int>? updatedAt,
     Value<int>? rowid,
@@ -944,6 +1038,8 @@ class CategoriesCompanion extends UpdateCompanion<CategoryRow> {
       icon: icon ?? this.icon,
       parentId: parentId ?? this.parentId,
       sortOrder: sortOrder ?? this.sortOrder,
+      isCustom: isCustom ?? this.isCustom,
+      hiddenAt: hiddenAt ?? this.hiddenAt,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
@@ -971,6 +1067,12 @@ class CategoriesCompanion extends UpdateCompanion<CategoryRow> {
     if (sortOrder.present) {
       map['sort_order'] = Variable<int>(sortOrder.value);
     }
+    if (isCustom.present) {
+      map['is_custom'] = Variable<bool>(isCustom.value);
+    }
+    if (hiddenAt.present) {
+      map['hidden_at'] = Variable<int>(hiddenAt.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<int>(createdAt.value);
     }
@@ -992,6 +1094,8 @@ class CategoriesCompanion extends UpdateCompanion<CategoryRow> {
           ..write('icon: $icon, ')
           ..write('parentId: $parentId, ')
           ..write('sortOrder: $sortOrder, ')
+          ..write('isCustom: $isCustom, ')
+          ..write('hiddenAt: $hiddenAt, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
@@ -2011,6 +2115,8 @@ typedef $$CategoriesTableCreateCompanionBuilder = CategoriesCompanion Function({
   required String icon,
   Value<String?> parentId,
   required int sortOrder,
+  Value<bool> isCustom,
+  Value<int?> hiddenAt,
   required int createdAt,
   required int updatedAt,
   Value<int> rowid,
@@ -2022,6 +2128,8 @@ typedef $$CategoriesTableUpdateCompanionBuilder = CategoriesCompanion Function({
   Value<String> icon,
   Value<String?> parentId,
   Value<int> sortOrder,
+  Value<bool> isCustom,
+  Value<int?> hiddenAt,
   Value<int> createdAt,
   Value<int> updatedAt,
   Value<int> rowid,
@@ -2098,6 +2206,16 @@ class $$CategoriesTableFilterComposer
 
   ColumnFilters<int> get sortOrder => $composableBuilder(
     column: $table.sortOrder,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isCustom => $composableBuilder(
+    column: $table.isCustom,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get hiddenAt => $composableBuilder(
+    column: $table.hiddenAt,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2194,6 +2312,16 @@ class $$CategoriesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get isCustom => $composableBuilder(
+    column: $table.isCustom,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get hiddenAt => $composableBuilder(
+    column: $table.hiddenAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -2251,6 +2379,12 @@ class $$CategoriesTableAnnotationComposer
 
   GeneratedColumn<int> get sortOrder =>
       $composableBuilder(column: $table.sortOrder, builder: (column) => column);
+
+  GeneratedColumn<bool> get isCustom =>
+      $composableBuilder(column: $table.isCustom, builder: (column) => column);
+
+  GeneratedColumn<int> get hiddenAt =>
+      $composableBuilder(column: $table.hiddenAt, builder: (column) => column);
 
   GeneratedColumn<int> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -2341,6 +2475,8 @@ class $$CategoriesTableTableManager
                 Value<String> icon = const Value.absent(),
                 Value<String?> parentId = const Value.absent(),
                 Value<int> sortOrder = const Value.absent(),
+                Value<bool> isCustom = const Value.absent(),
+                Value<int?> hiddenAt = const Value.absent(),
                 Value<int> createdAt = const Value.absent(),
                 Value<int> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -2351,6 +2487,8 @@ class $$CategoriesTableTableManager
                 icon: icon,
                 parentId: parentId,
                 sortOrder: sortOrder,
+                isCustom: isCustom,
+                hiddenAt: hiddenAt,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -2363,6 +2501,8 @@ class $$CategoriesTableTableManager
                 required String icon,
                 Value<String?> parentId = const Value.absent(),
                 required int sortOrder,
+                Value<bool> isCustom = const Value.absent(),
+                Value<int?> hiddenAt = const Value.absent(),
                 required int createdAt,
                 required int updatedAt,
                 Value<int> rowid = const Value.absent(),
@@ -2373,6 +2513,8 @@ class $$CategoriesTableTableManager
                 icon: icon,
                 parentId: parentId,
                 sortOrder: sortOrder,
+                isCustom: isCustom,
+                hiddenAt: hiddenAt,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,

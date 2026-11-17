@@ -18,7 +18,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -40,6 +40,10 @@ class AppDatabase extends _$AppDatabase {
         await m.createIndex(schema.transactionsToAccount);
         await m.createIndex(schema.transactionsOccurredAt);
         await insertDefaultCategories(this, _nowMs());
+      },
+      from3To4: (m, schema) async {
+        await m.addColumn(schema.categories, schema.categories.isCustom);
+        await m.addColumn(schema.categories, schema.categories.hiddenAt);
       },
     ),
     beforeOpen: (details) async {

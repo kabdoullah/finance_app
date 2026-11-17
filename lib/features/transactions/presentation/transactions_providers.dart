@@ -16,7 +16,10 @@ final transactionsRepositoryProvider = Provider<TransactionsRepository>(
 );
 
 final categoriesRepositoryProvider = Provider<CategoriesRepository>(
-  (ref) => CategoriesRepository(ref.watch(appDatabaseProvider)),
+  (ref) => CategoriesRepository(
+    ref.watch(appDatabaseProvider),
+    ref.watch(clockProvider),
+  ),
 );
 
 final categoryGroupsProvider =

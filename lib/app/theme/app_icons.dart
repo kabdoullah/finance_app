@@ -59,6 +59,10 @@ abstract final class AppIcons {
   static const tShirt = IconData(0xe670, fontFamily: _regular);
   static const dotsThree = IconData(0xe1fe, fontFamily: _regular);
   static const tag = IconData(0xe478, fontFamily: _regular);
+  static const gift = IconData(0xe276, fontFamily: _regular);
+  static const eyeSlash = IconData(0xe224, fontFamily: _regular);
+  static const eye = IconData(0xe220, fontFamily: _regular);
+  static const pencilSimple = IconData(0xe3b4, fontFamily: _regular);
 
   // Types de compte.
   static const money = IconData(0xe588, fontFamily: _regular);

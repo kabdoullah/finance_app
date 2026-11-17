@@ -686,13 +686,14 @@ class _CategoryPills extends ConsumerWidget {
       runSpacing: 8,
       children: [
         for (final group in groups)
-          ChoicePill(
-            label: group.category.name,
-            icon: categoryIcon(group.category.iconKey),
-            height: 40,
-            selected: group.category.id == selectedId,
-            onTap: () => onSelected(group.category.id),
-          ),
+          if (!group.category.isHidden || group.category.id == selectedId)
+            ChoicePill(
+              label: group.category.name,
+              icon: categoryIcon(group.category.iconKey),
+              height: 40,
+              selected: group.category.id == selectedId,
+              onTap: () => onSelected(group.category.id),
+            ),
       ],
     );
   }

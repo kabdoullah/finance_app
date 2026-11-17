@@ -1060,6 +1060,198 @@ abstract class AppLocalizations {
   /// **'Réinitialiser les filtres'**
   String get txResetFilters;
 
+  /// No description provided for @settingsCategoriesHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépenses et revenus, sous-catégories'**
+  String get settingsCategoriesHint;
+
+  /// No description provided for @categoriesTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Catégories'**
+  String get categoriesTitle;
+
+  /// No description provided for @categoriesNew.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle catégorie'**
+  String get categoriesNew;
+
+  /// No description provided for @categoriesNewSub.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle sous-catégorie'**
+  String get categoriesNewSub;
+
+  /// No description provided for @categoryCustom.
+  ///
+  /// In fr, this message translates to:
+  /// **'Personnalisée'**
+  String get categoryCustom;
+
+  /// No description provided for @categoryHidden.
+  ///
+  /// In fr, this message translates to:
+  /// **'Masquée'**
+  String get categoryHidden;
+
+  /// No description provided for @categorySubCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucune sous-catégorie} =1{1 sous-catégorie} other{{count} sous-catégories}}'**
+  String categorySubCount(int count);
+
+  /// No description provided for @categoryAddSub.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter'**
+  String get categoryAddSub;
+
+  /// No description provided for @categoriesFootnote.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les catégories prédéfinies ne peuvent pas être supprimées, seulement masquées. Une catégorie personnalisée supprimée renvoie ses opérations vers « Autre ».'**
+  String get categoriesFootnote;
+
+  /// No description provided for @categoryName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom'**
+  String get categoryName;
+
+  /// No description provided for @categoryNameHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex. : Tontine, Cadeaux, Moto'**
+  String get categoryNameHint;
+
+  /// No description provided for @categoryAttachTo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rattacher à'**
+  String get categoryAttachTo;
+
+  /// No description provided for @categoryNoParent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune (principale)'**
+  String get categoryNoParent;
+
+  /// No description provided for @categoryIcon.
+  ///
+  /// In fr, this message translates to:
+  /// **'Icône'**
+  String get categoryIcon;
+
+  /// No description provided for @categoryCreate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Créer la catégorie'**
+  String get categoryCreate;
+
+  /// No description provided for @categoryAddTo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter à {parent}'**
+  String categoryAddTo(String parent);
+
+  /// No description provided for @categoryCreated.
+  ///
+  /// In fr, this message translates to:
+  /// **'Catégorie « {name} » créée.'**
+  String categoryCreated(String name);
+
+  /// No description provided for @categorySubCreated.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sous-catégorie « {name} » ajoutée à {parent}.'**
+  String categorySubCreated(String name, String parent);
+
+  /// No description provided for @categoryRename.
+  ///
+  /// In fr, this message translates to:
+  /// **'Renommer'**
+  String get categoryRename;
+
+  /// No description provided for @categoryRenameTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Renommer « {name} »'**
+  String categoryRenameTitle(String name);
+
+  /// No description provided for @categoryHide.
+  ///
+  /// In fr, this message translates to:
+  /// **'Masquer'**
+  String get categoryHide;
+
+  /// No description provided for @categoryShow.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réafficher'**
+  String get categoryShow;
+
+  /// No description provided for @categoryDelete.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer'**
+  String get categoryDelete;
+
+  /// No description provided for @categoryHiddenToast.
+  ///
+  /// In fr, this message translates to:
+  /// **'« {name} » est masquée : elle n\'est plus proposée à la saisie.'**
+  String categoryHiddenToast(String name);
+
+  /// No description provided for @categoryShownToast.
+  ///
+  /// In fr, this message translates to:
+  /// **'« {name} » est de nouveau proposée.'**
+  String categoryShownToast(String name);
+
+  /// No description provided for @categoryDeleteTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer « {name} » ?'**
+  String categoryDeleteTitle(String name);
+
+  /// No description provided for @categoryDeleteBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucune opération ne l\'utilise.} =1{Son opération passera dans « {target} ».} other{Ses {count} opérations passeront dans « {target} ».}} Cette action est définitive.'**
+  String categoryDeleteBody(int count, String target);
+
+  /// No description provided for @categoryDeleted.
+  ///
+  /// In fr, this message translates to:
+  /// **'Catégorie supprimée.'**
+  String get categoryDeleted;
+
+  /// No description provided for @categoryErrorNameMissing.
+  ///
+  /// In fr, this message translates to:
+  /// **'Donne un nom à la catégorie.'**
+  String get categoryErrorNameMissing;
+
+  /// No description provided for @categoryErrorNameTooLong.
+  ///
+  /// In fr, this message translates to:
+  /// **'40 caractères maximum.'**
+  String get categoryErrorNameTooLong;
+
+  /// No description provided for @categoryErrorNameTaken.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une catégorie porte déjà ce nom ici.'**
+  String get categoryErrorNameTaken;
+
+  /// No description provided for @categoryIconLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'{key, select, tag{Étiquette} gift{Cadeau} hand_coins{Argent} device_mobile{Téléphone} heartbeat{Santé} graduation_cap{Études} users{Famille} t_shirt{Vêtements} house_line{Maison} ticket{Sortie} taxi{Transport} basket{Courses} other{Icône}}'**
+  String categoryIconLabel(String key);
+
   /// No description provided for @dashboardWhereMoney.
   ///
   /// In fr, this message translates to:

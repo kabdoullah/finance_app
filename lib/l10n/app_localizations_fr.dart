@@ -594,6 +594,152 @@ class AppLocalizationsFr extends AppLocalizations {
   String get txResetFilters => 'Réinitialiser les filtres';
 
   @override
+  String get settingsCategoriesHint => 'Dépenses et revenus, sous-catégories';
+
+  @override
+  String get categoriesTitle => 'Catégories';
+
+  @override
+  String get categoriesNew => 'Nouvelle catégorie';
+
+  @override
+  String get categoriesNewSub => 'Nouvelle sous-catégorie';
+
+  @override
+  String get categoryCustom => 'Personnalisée';
+
+  @override
+  String get categoryHidden => 'Masquée';
+
+  @override
+  String categorySubCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sous-catégories',
+      one: '1 sous-catégorie',
+      zero: 'Aucune sous-catégorie',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get categoryAddSub => 'Ajouter';
+
+  @override
+  String get categoriesFootnote =>
+      'Les catégories prédéfinies ne peuvent pas être supprimées, seulement masquées. Une catégorie personnalisée supprimée renvoie ses opérations vers « Autre ».';
+
+  @override
+  String get categoryName => 'Nom';
+
+  @override
+  String get categoryNameHint => 'Ex. : Tontine, Cadeaux, Moto';
+
+  @override
+  String get categoryAttachTo => 'Rattacher à';
+
+  @override
+  String get categoryNoParent => 'Aucune (principale)';
+
+  @override
+  String get categoryIcon => 'Icône';
+
+  @override
+  String get categoryCreate => 'Créer la catégorie';
+
+  @override
+  String categoryAddTo(String parent) {
+    return 'Ajouter à $parent';
+  }
+
+  @override
+  String categoryCreated(String name) {
+    return 'Catégorie « $name » créée.';
+  }
+
+  @override
+  String categorySubCreated(String name, String parent) {
+    return 'Sous-catégorie « $name » ajoutée à $parent.';
+  }
+
+  @override
+  String get categoryRename => 'Renommer';
+
+  @override
+  String categoryRenameTitle(String name) {
+    return 'Renommer « $name »';
+  }
+
+  @override
+  String get categoryHide => 'Masquer';
+
+  @override
+  String get categoryShow => 'Réafficher';
+
+  @override
+  String get categoryDelete => 'Supprimer';
+
+  @override
+  String categoryHiddenToast(String name) {
+    return '« $name » est masquée : elle n\'est plus proposée à la saisie.';
+  }
+
+  @override
+  String categoryShownToast(String name) {
+    return '« $name » est de nouveau proposée.';
+  }
+
+  @override
+  String categoryDeleteTitle(String name) {
+    return 'Supprimer « $name » ?';
+  }
+
+  @override
+  String categoryDeleteBody(int count, String target) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Ses $count opérations passeront dans « $target ».',
+      one: 'Son opération passera dans « $target ».',
+      zero: 'Aucune opération ne l\'utilise.',
+    );
+    return '$_temp0 Cette action est définitive.';
+  }
+
+  @override
+  String get categoryDeleted => 'Catégorie supprimée.';
+
+  @override
+  String get categoryErrorNameMissing => 'Donne un nom à la catégorie.';
+
+  @override
+  String get categoryErrorNameTooLong => '40 caractères maximum.';
+
+  @override
+  String get categoryErrorNameTaken => 'Une catégorie porte déjà ce nom ici.';
+
+  @override
+  String categoryIconLabel(String key) {
+    String _temp0 = intl.Intl.selectLogic(key, {
+      'tag': 'Étiquette',
+      'gift': 'Cadeau',
+      'hand_coins': 'Argent',
+      'device_mobile': 'Téléphone',
+      'heartbeat': 'Santé',
+      'graduation_cap': 'Études',
+      'users': 'Famille',
+      't_shirt': 'Vêtements',
+      'house_line': 'Maison',
+      'ticket': 'Sortie',
+      'taxi': 'Transport',
+      'basket': 'Courses',
+      'other': 'Icône',
+    });
+    return '$_temp0';
+  }
+
+  @override
   String get dashboardWhereMoney => 'Où va ton argent';
 
   @override

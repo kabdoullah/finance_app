@@ -341,11 +341,12 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
     ) => [
       _Choice.heading(heading),
       for (final group in groups)
-        _Choice(
-          group.category.id,
-          group.category.name,
-          icon: categoryIcon(group.category.iconKey),
-        ),
+        if (!group.category.isHidden || group.category.id == _categoryId)
+          _Choice(
+            group.category.id,
+            group.category.name,
+            icon: categoryIcon(group.category.iconKey),
+          ),
     ];
     final picked = await _showChoices<String?>(
       title: l10n.txChooseCategory,

@@ -22,6 +22,14 @@ class Categories extends Table {
 
   IntColumn get sortOrder => integer()();
 
+  /// Créée par l'utilisateur (renommable, supprimable). Les catégories
+  /// prédéfinies peuvent seulement être masquées.
+  BoolColumn get isCustom => boolean().withDefault(const Constant(false))();
+
+  /// Masquée (epoch ms UTC) : plus proposée à la saisie ; les opérations
+  /// existantes la gardent.
+  IntColumn get hiddenAt => integer().nullable()();
+
   IntColumn get createdAt => integer()();
 
   IntColumn get updatedAt => integer()();

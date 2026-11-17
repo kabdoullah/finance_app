@@ -80,6 +80,7 @@ void main() {
   test('les catégories par défaut sont créées avec la base', () async {
     final groups = await CategoriesRepository(
       db,
+      () => now,
     ).watchGroups(CategoryKind.expense).first;
 
     final transport = groups.firstWhere((g) => g.category.name == 'Transport');

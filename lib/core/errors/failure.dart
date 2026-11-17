@@ -19,6 +19,12 @@ final class NotFoundFailure extends Failure {
   const NotFoundFailure();
 }
 
+/// Opération refusée par une règle métier (ex. supprimer une catégorie
+/// prédéfinie).
+final class NotAllowedFailure extends Failure {
+  const NotAllowedFailure();
+}
+
 /// Erreur inattendue de la base locale.
 final class StorageFailure extends Failure {
   const StorageFailure(this.cause, this.stackTrace);

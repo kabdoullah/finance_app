@@ -16,6 +16,8 @@ const _icons = {
   'dots-three': AppIcons.dotsThree,
   'money': AppIcons.money,
   'tag': AppIcons.tag,
+  'gift': AppIcons.gift,
+  'device-mobile': AppIcons.deviceMobile,
   'arrow-down-left': AppIcons.arrowDownLeft,
 };
 

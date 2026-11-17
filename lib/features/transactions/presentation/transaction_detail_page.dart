@@ -366,14 +366,17 @@ class _TransactionDetailPageState extends ConsumerState<TransactionDetailPage> {
                       runSpacing: 8,
                       children: [
                         for (final group in groups)
-                          ChoicePill(
-                            label: group.category.name,
-                            icon: categoryIcon(group.category.iconKey),
-                            selected: group == selectedGroup,
-                            onTap: () => update(
-                              (d) => d.copyWith(categoryId: group.category.id),
+                          if (!group.category.isHidden ||
+                              group == selectedGroup)
+                            ChoicePill(
+                              label: group.category.name,
+                              icon: categoryIcon(group.category.iconKey),
+                              selected: group == selectedGroup,
+                              onTap: () => update(
+                                (d) =>
+                                    d.copyWith(categoryId: group.category.id),
+                              ),
                             ),
-                          ),
                       ],
                     ),
                     if (selectedGroup != null &&
@@ -395,13 +398,14 @@ class _TransactionDetailPageState extends ConsumerState<TransactionDetailPage> {
                             ),
                           ),
                           for (final child in selectedGroup.children)
-                            ChoicePill(
-                              label: child.name,
-                              selected: draft.categoryId == child.id,
-                              onTap: () => update(
-                                (d) => d.copyWith(categoryId: child.id),
+                            if (!child.isHidden || child.id == draft.categoryId)
+                              ChoicePill(
+                                label: child.name,
+                                selected: draft.categoryId == child.id,
+                                onTap: () => update(
+                                  (d) => d.copyWith(categoryId: child.id),
+                                ),
                               ),
-                            ),
                         ],
                       ),
                     ],
