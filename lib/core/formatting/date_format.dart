@@ -14,6 +14,10 @@ abstract final class AppDateFormat {
     return '${_day(local)} ${DateFormat('MMM y', locale).format(local)}';
   }
 
+  /// Une date abrégée finit déjà par un point (« 15 déc. ») : retire le
+  /// point doublé en fin de phrase (« d'ici le 15 déc.. »).
+  static String sentence(String text) => text.replaceAll('..', '.');
+
   /// Le premier du mois s'écrit « 1er » en français.
   static String _day(DateTime date) => date.day == 1 ? '1er' : '${date.day}';
 }

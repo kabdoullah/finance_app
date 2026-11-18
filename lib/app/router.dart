@@ -9,6 +9,7 @@ import '../features/budgets/presentation/budget_form_page.dart';
 import '../features/budgets/presentation/budgets_page.dart';
 import '../features/categories/presentation/categories_page.dart';
 import '../features/dashboard/presentation/dashboard_page.dart';
+import '../features/forecast/presentation/forecast_page.dart';
 import '../features/goals/presentation/goal_detail_page.dart';
 import '../features/goals/presentation/goal_form_page.dart';
 import '../features/goals/presentation/goals_page.dart';
@@ -209,8 +210,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: AppRoutes.forecast,
-                builder: (context, state) =>
-                    ComingSoonPage(title: context.l10n.navForecast),
+                builder: (context, state) => const ForecastPage(),
               ),
             ],
           ),

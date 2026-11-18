@@ -28,7 +28,7 @@ void main() {
     await tester.pumpWidget(buildApp());
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Prévisions'));
+    await tester.tap(find.text('Assistant'));
     await tester.pumpAndSettle();
 
     expect(find.text('Cet écran arrive bientôt.'), findsOneWidget);

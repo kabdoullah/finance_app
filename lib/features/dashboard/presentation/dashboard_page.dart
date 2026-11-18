@@ -252,11 +252,16 @@ class _WhereMoneyGoes extends ConsumerWidget {
                       ),
                       child: const SizedBox.square(dimension: 10),
                     ),
-                    Text(
-                      name(share),
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
+                    // Un nom long se réduit au lieu de déborder.
+                    Flexible(
+                      child: Text(
+                        name(share),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                     Text(

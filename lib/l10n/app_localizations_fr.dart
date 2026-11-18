@@ -986,6 +986,216 @@ class AppLocalizationsFr extends AppLocalizations {
   String get txDuplicate => 'Dupliquer';
 
   @override
+  String get forecastTitle => 'Prévisions';
+
+  @override
+  String get forecastHorizon7 => '7 jours';
+
+  @override
+  String get forecastHorizon30 => '30 jours';
+
+  @override
+  String get forecastHorizon90 => '90 jours';
+
+  @override
+  String get forecastInsufficientTitle => 'Pas encore assez de données';
+
+  @override
+  String get forecastInsufficientBody =>
+      'Pour estimer ton solde à venir, l\'appli a besoin d\'environ deux semaines d\'opérations.';
+
+  @override
+  String forecastInsufficientProgress(int days, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days jours sur $total',
+      one: '1 jour sur $total',
+      zero: '0 jour sur $total',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String forecastInsufficientLeft(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Encore $count jours',
+      one: 'Encore 1 jour',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get forecastTipDaily =>
+      'Saisis tes dépenses au fil de la journée, même les petites.';
+
+  @override
+  String get forecastTipIncome =>
+      'Ajoute tes revenus réguliers (salaire, loyers perçus…).';
+
+  @override
+  String get forecastTipFixed =>
+      'Indique tes charges fixes : loyer, tontine, abonnements.';
+
+  @override
+  String get forecastAddOperation => 'Ajouter une opération';
+
+  @override
+  String get forecastCurrent => 'Solde actuel';
+
+  @override
+  String forecastExpectedOn(String date) {
+    return 'Prévu au $date';
+  }
+
+  @override
+  String forecastRange(String low, String high) {
+    return 'Entre $low et $high FCFA';
+  }
+
+  @override
+  String forecastReliability(String level) {
+    return 'Fiabilité $level';
+  }
+
+  @override
+  String get forecastReliabilityHigh => 'élevée';
+
+  @override
+  String get forecastReliabilityMedium => 'moyenne';
+
+  @override
+  String get forecastReliabilityLow => 'faible';
+
+  @override
+  String get forecastToday => 'Aujourd\'hui';
+
+  @override
+  String get forecastLegendPast => 'Passé';
+
+  @override
+  String get forecastLegendEstimate => 'Estimation';
+
+  @override
+  String get forecastLegendRange => 'Fourchette probable';
+
+  @override
+  String forecastChartLabel(String date, String amount) {
+    return 'Solde estimé jusqu\'au $date : environ $amount FCFA';
+  }
+
+  @override
+  String get forecastRisks => 'Risques détectés';
+
+  @override
+  String forecastRiskCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count points de vigilance',
+      one: '1 point de vigilance',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String forecastNoNegative(String date) {
+    return 'Aucun solde négatif prévu d\'ici le $date.';
+  }
+
+  @override
+  String forecastNegative(String date) {
+    return 'Solde négatif possible le $date.';
+  }
+
+  @override
+  String get forecastNegativeAdvice =>
+      'Reporte une dépense ou prévois un transfert.';
+
+  @override
+  String forecastLow(String date, String amount) {
+    return '$date : solde bas possible (≈ $amount FCFA).';
+  }
+
+  @override
+  String get forecastLowBeforeIncome =>
+      'Juste avant ton salaire. Évite les grosses dépenses d\'ici là.';
+
+  @override
+  String get forecastLowAdvice => 'Évite les grosses dépenses d\'ici là.';
+
+  @override
+  String forecastBudget(String name, String date) {
+    return '$name : budget dépassé vers le $date';
+  }
+
+  @override
+  String forecastBudgetPace(String amount) {
+    return 'au rythme actuel (≈ $amount FCFA par jour).';
+  }
+
+  @override
+  String get forecastSeeBudget => 'Voir le budget';
+
+  @override
+  String get forecastExpected => 'Ce qui est attendu';
+
+  @override
+  String get forecastRecurring => 'Récurrentes';
+
+  @override
+  String get forecastExpectedIncome => 'Revenus attendus';
+
+  @override
+  String get forecastExpectedExpenses => 'Dépenses attendues';
+
+  @override
+  String get forecastNoRecurring =>
+      'Aucune opération récurrente dans la période.';
+
+  @override
+  String get forecastEveryDay => 'Chaque jour';
+
+  @override
+  String get forecastVariable => 'Dépenses variables';
+
+  @override
+  String get forecastVariableHelp => 'Estimées sur tes 3 derniers mois';
+
+  @override
+  String get forecastHowTitle => 'Comment est calculée cette prévision ?';
+
+  @override
+  String get forecastHowRecurring =>
+      'Les opérations récurrentes actives arrivent à leur date.';
+
+  @override
+  String get forecastHowNoRecurring =>
+      'Aucune opération récurrente n\'est programmée : seules tes dépenses courantes sont projetées.';
+
+  @override
+  String forecastHowVariable(String amount) {
+    return 'Tes dépenses courantes restent proches de ta moyenne (≈ $amount FCFA par jour).';
+  }
+
+  @override
+  String get forecastHowIncome =>
+      'Seuls les revenus récurrents sont comptés, par prudence.';
+
+  @override
+  String get forecastHowNoException =>
+      'Aucune dépense exceptionnelle n\'est prévue.';
+
+  @override
+  String get forecastDisclaimer =>
+      'C\'est une estimation, pas une certitude : plus l\'horizon est lointain, plus la fourchette s\'élargit. Calculé sur ton téléphone.';
+
+  @override
+  String get budgetSeeForecast => 'Voir la prévision';
+
+  @override
   String get budgetsSegment => 'Budgets';
 
   @override

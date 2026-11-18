@@ -90,6 +90,8 @@ class BudgetsPage extends ConsumerWidget {
                     foreground: colors.warning,
                     title: l10n.budgetForecastLabel,
                     body: _forecastText(context, overview.forecasts),
+                    linkLabel: l10n.budgetSeeForecast,
+                    onLink: () => context.go(AppRoutes.forecast),
                   ),
                 ),
               const SizedBox(height: 28),
@@ -181,7 +183,7 @@ String _forecastText(
       ? items.single
       : '${items.sublist(0, items.length - 1).join(', ')} '
             '${l10n.listAnd} ${items.last}';
-  return l10n.budgetForecastLead(joined);
+  return AppDateFormat.sentence(l10n.budgetForecastLead(joined));
 }
 
 /// « Budget de novembre » : dépensé / limite, barre, reste par jour.

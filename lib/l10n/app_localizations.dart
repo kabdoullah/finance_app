@@ -1624,6 +1624,312 @@ abstract class AppLocalizations {
   /// **'Dupliquer'**
   String get txDuplicate;
 
+  /// No description provided for @forecastTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prévisions'**
+  String get forecastTitle;
+
+  /// No description provided for @forecastHorizon7.
+  ///
+  /// In fr, this message translates to:
+  /// **'7 jours'**
+  String get forecastHorizon7;
+
+  /// No description provided for @forecastHorizon30.
+  ///
+  /// In fr, this message translates to:
+  /// **'30 jours'**
+  String get forecastHorizon30;
+
+  /// No description provided for @forecastHorizon90.
+  ///
+  /// In fr, this message translates to:
+  /// **'90 jours'**
+  String get forecastHorizon90;
+
+  /// No description provided for @forecastInsufficientTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas encore assez de données'**
+  String get forecastInsufficientTitle;
+
+  /// No description provided for @forecastInsufficientBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pour estimer ton solde à venir, l\'appli a besoin d\'environ deux semaines d\'opérations.'**
+  String get forecastInsufficientBody;
+
+  /// No description provided for @forecastInsufficientProgress.
+  ///
+  /// In fr, this message translates to:
+  /// **'{days, plural, =0{0 jour sur {total}} =1{1 jour sur {total}} other{{days} jours sur {total}}}'**
+  String forecastInsufficientProgress(int days, int total);
+
+  /// No description provided for @forecastInsufficientLeft.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{Encore 1 jour} other{Encore {count} jours}}'**
+  String forecastInsufficientLeft(int count);
+
+  /// No description provided for @forecastTipDaily.
+  ///
+  /// In fr, this message translates to:
+  /// **'Saisis tes dépenses au fil de la journée, même les petites.'**
+  String get forecastTipDaily;
+
+  /// No description provided for @forecastTipIncome.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoute tes revenus réguliers (salaire, loyers perçus…).'**
+  String get forecastTipIncome;
+
+  /// No description provided for @forecastTipFixed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Indique tes charges fixes : loyer, tontine, abonnements.'**
+  String get forecastTipFixed;
+
+  /// No description provided for @forecastAddOperation.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter une opération'**
+  String get forecastAddOperation;
+
+  /// No description provided for @forecastCurrent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Solde actuel'**
+  String get forecastCurrent;
+
+  /// No description provided for @forecastExpectedOn.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prévu au {date}'**
+  String forecastExpectedOn(String date);
+
+  /// No description provided for @forecastRange.
+  ///
+  /// In fr, this message translates to:
+  /// **'Entre {low} et {high} FCFA'**
+  String forecastRange(String low, String high);
+
+  /// No description provided for @forecastReliability.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fiabilité {level}'**
+  String forecastReliability(String level);
+
+  /// No description provided for @forecastReliabilityHigh.
+  ///
+  /// In fr, this message translates to:
+  /// **'élevée'**
+  String get forecastReliabilityHigh;
+
+  /// No description provided for @forecastReliabilityMedium.
+  ///
+  /// In fr, this message translates to:
+  /// **'moyenne'**
+  String get forecastReliabilityMedium;
+
+  /// No description provided for @forecastReliabilityLow.
+  ///
+  /// In fr, this message translates to:
+  /// **'faible'**
+  String get forecastReliabilityLow;
+
+  /// No description provided for @forecastToday.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aujourd\'hui'**
+  String get forecastToday;
+
+  /// No description provided for @forecastLegendPast.
+  ///
+  /// In fr, this message translates to:
+  /// **'Passé'**
+  String get forecastLegendPast;
+
+  /// No description provided for @forecastLegendEstimate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Estimation'**
+  String get forecastLegendEstimate;
+
+  /// No description provided for @forecastLegendRange.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fourchette probable'**
+  String get forecastLegendRange;
+
+  /// No description provided for @forecastChartLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Solde estimé jusqu\'au {date} : environ {amount} FCFA'**
+  String forecastChartLabel(String date, String amount);
+
+  /// No description provided for @forecastRisks.
+  ///
+  /// In fr, this message translates to:
+  /// **'Risques détectés'**
+  String get forecastRisks;
+
+  /// No description provided for @forecastRiskCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 point de vigilance} other{{count} points de vigilance}}'**
+  String forecastRiskCount(int count);
+
+  /// No description provided for @forecastNoNegative.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun solde négatif prévu d\'ici le {date}.'**
+  String forecastNoNegative(String date);
+
+  /// No description provided for @forecastNegative.
+  ///
+  /// In fr, this message translates to:
+  /// **'Solde négatif possible le {date}.'**
+  String forecastNegative(String date);
+
+  /// No description provided for @forecastNegativeAdvice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Reporte une dépense ou prévois un transfert.'**
+  String get forecastNegativeAdvice;
+
+  /// No description provided for @forecastLow.
+  ///
+  /// In fr, this message translates to:
+  /// **'{date} : solde bas possible (≈ {amount} FCFA).'**
+  String forecastLow(String date, String amount);
+
+  /// No description provided for @forecastLowBeforeIncome.
+  ///
+  /// In fr, this message translates to:
+  /// **'Juste avant ton salaire. Évite les grosses dépenses d\'ici là.'**
+  String get forecastLowBeforeIncome;
+
+  /// No description provided for @forecastLowAdvice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Évite les grosses dépenses d\'ici là.'**
+  String get forecastLowAdvice;
+
+  /// No description provided for @forecastBudget.
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} : budget dépassé vers le {date}'**
+  String forecastBudget(String name, String date);
+
+  /// No description provided for @forecastBudgetPace.
+  ///
+  /// In fr, this message translates to:
+  /// **'au rythme actuel (≈ {amount} FCFA par jour).'**
+  String forecastBudgetPace(String amount);
+
+  /// No description provided for @forecastSeeBudget.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir le budget'**
+  String get forecastSeeBudget;
+
+  /// No description provided for @forecastExpected.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce qui est attendu'**
+  String get forecastExpected;
+
+  /// No description provided for @forecastRecurring.
+  ///
+  /// In fr, this message translates to:
+  /// **'Récurrentes'**
+  String get forecastRecurring;
+
+  /// No description provided for @forecastExpectedIncome.
+  ///
+  /// In fr, this message translates to:
+  /// **'Revenus attendus'**
+  String get forecastExpectedIncome;
+
+  /// No description provided for @forecastExpectedExpenses.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépenses attendues'**
+  String get forecastExpectedExpenses;
+
+  /// No description provided for @forecastNoRecurring.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune opération récurrente dans la période.'**
+  String get forecastNoRecurring;
+
+  /// No description provided for @forecastEveryDay.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chaque jour'**
+  String get forecastEveryDay;
+
+  /// No description provided for @forecastVariable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépenses variables'**
+  String get forecastVariable;
+
+  /// No description provided for @forecastVariableHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Estimées sur tes 3 derniers mois'**
+  String get forecastVariableHelp;
+
+  /// No description provided for @forecastHowTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Comment est calculée cette prévision ?'**
+  String get forecastHowTitle;
+
+  /// No description provided for @forecastHowRecurring.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les opérations récurrentes actives arrivent à leur date.'**
+  String get forecastHowRecurring;
+
+  /// No description provided for @forecastHowNoRecurring.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune opération récurrente n\'est programmée : seules tes dépenses courantes sont projetées.'**
+  String get forecastHowNoRecurring;
+
+  /// No description provided for @forecastHowVariable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tes dépenses courantes restent proches de ta moyenne (≈ {amount} FCFA par jour).'**
+  String forecastHowVariable(String amount);
+
+  /// No description provided for @forecastHowIncome.
+  ///
+  /// In fr, this message translates to:
+  /// **'Seuls les revenus récurrents sont comptés, par prudence.'**
+  String get forecastHowIncome;
+
+  /// No description provided for @forecastHowNoException.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune dépense exceptionnelle n\'est prévue.'**
+  String get forecastHowNoException;
+
+  /// No description provided for @forecastDisclaimer.
+  ///
+  /// In fr, this message translates to:
+  /// **'C\'est une estimation, pas une certitude : plus l\'horizon est lointain, plus la fourchette s\'élargit. Calculé sur ton téléphone.'**
+  String get forecastDisclaimer;
+
+  /// No description provided for @budgetSeeForecast.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir la prévision'**
+  String get budgetSeeForecast;
+
   /// No description provided for @budgetsSegment.
   ///
   /// In fr, this message translates to:

@@ -119,8 +119,10 @@ class _AccountDetail extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.only(bottom: 4),
               child: Text(
-                l10n.accountArchivedInfo(
-                  AppDateFormat.dayMonth(account.archivedAt!, locale),
+                AppDateFormat.sentence(
+                  l10n.accountArchivedInfo(
+                    AppDateFormat.dayMonth(account.archivedAt!, locale),
+                  ),
                 ),
                 style: _captionStyle(colors),
               ),

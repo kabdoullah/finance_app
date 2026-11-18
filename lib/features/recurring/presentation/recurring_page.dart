@@ -289,8 +289,10 @@ class _PendingCard extends ConsumerWidget {
             )
           else
             Text(
-              l10n.recurringWaitingTurn(
-                AppDateFormat.dayMonth(operation.nextDue!, locale),
+              AppDateFormat.sentence(
+                l10n.recurringWaitingTurn(
+                  AppDateFormat.dayMonth(operation.nextDue!, locale),
+                ),
               ),
               style: TextStyle(fontSize: 12.5, color: colors.inkSecondary),
             ),
