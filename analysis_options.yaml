@@ -9,6 +9,8 @@ analyzer:
     - build/**
     - android/**
     - ios/**
+    # POC séparés (leurs propres dépendances et analyse).
+    - tools/**
     # Code généré (drift, gen-l10n).
     - "**/*.g.dart"
     - lib/l10n/app_localizations*.dart
