@@ -6,6 +6,7 @@ import 'package:drift/drift.dart';
 
 import '../../accounts/data/accounts_table.dart';
 import '../../categories/data/categories_table.dart';
+import '../../recurring/data/recurring_table.dart';
 
 /// Opérations : dépenses, revenus et transferts entre comptes.
 /// Montants toujours positifs (le sens vient de `kind`), dates en epoch ms UTC.
@@ -57,6 +58,14 @@ class Transactions extends Table {
           'recurring',
         ]),
       )();
+
+  /// Modèle récurrent qui a produit l'opération ; `NULL` si saisie à la main
+  /// ou si le modèle a été supprimé.
+  TextColumn get recurringId => text().nullable().references(
+    RecurringOperations,
+    #id,
+    onDelete: KeyAction.setNull,
+  )();
 
   IntColumn get createdAt => integer()();
 

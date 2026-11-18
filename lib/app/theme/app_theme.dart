@@ -45,6 +45,16 @@ abstract final class AppTheme {
         thickness: 1,
         space: 1,
       ),
+      // Interrupteurs des maquettes : piste verte ou trait, pastille blanche.
+      switchTheme: SwitchThemeData(
+        thumbColor: const WidgetStatePropertyAll(Color(0xFFFFFFFF)),
+        trackColor: WidgetStateProperty.resolveWith(
+          (states) => states.contains(WidgetState.selected)
+              ? colors.primary
+              : colors.line,
+        ),
+        trackOutlineColor: const WidgetStatePropertyAll(Color(0x00000000)),
+      ),
       // En-têtes des maquettes : fond papier, titre centré 16/600, sans ombre.
       appBarTheme: AppBarTheme(
         backgroundColor: colors.background,

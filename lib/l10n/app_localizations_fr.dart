@@ -986,6 +986,282 @@ class AppLocalizationsFr extends AppLocalizations {
   String get txDuplicate => 'Dupliquer';
 
   @override
+  String get recurringTitle => 'Opérations récurrentes';
+
+  @override
+  String get recurringIntroBefore => 'Ce sont des ';
+
+  @override
+  String get recurringIntroBold => 'modèles';
+
+  @override
+  String get recurringIntroAfter =>
+      ' : ils servent aux prévisions et te rappellent les échéances, mais ne changent ton solde qu\'une fois l\'opération enregistrée.';
+
+  @override
+  String get recurringIncomePerMonth => 'Revenus prévus / mois';
+
+  @override
+  String get recurringExpensePerMonth => 'Dépenses prévues / mois';
+
+  @override
+  String get recurringPendingToday => 'À confirmer · échéance aujourd\'hui';
+
+  @override
+  String get recurringPendingYesterday => 'À confirmer · échéance hier';
+
+  @override
+  String recurringPendingOn(String date) {
+    return 'À confirmer · échéance du $date';
+  }
+
+  @override
+  String recurringPendingMeta(String date, String account) {
+    return 'Prévue le $date · $account · pas encore dans tes opérations';
+  }
+
+  @override
+  String recurringWaitingTurn(String date) {
+    return 'À traiter après l\'échéance du $date.';
+  }
+
+  @override
+  String get recurringRecord => 'Enregistrer';
+
+  @override
+  String get recurringSkipWeek => 'Pas cette semaine';
+
+  @override
+  String get recurringSkipMonth => 'Pas ce mois-ci';
+
+  @override
+  String get recurringSkipYear => 'Pas cette année';
+
+  @override
+  String get recurringModels => 'Modèles';
+
+  @override
+  String recurringNext(String date) {
+    return 'Prochaine échéance : $date';
+  }
+
+  @override
+  String get recurringPaused => 'En pause · aucune échéance prévue';
+
+  @override
+  String get recurringFinished => 'Terminée · plus d\'échéance';
+
+  @override
+  String get recurringEstimated => 'montant estimé';
+
+  @override
+  String get recurringNew => 'Nouvelle opération récurrente';
+
+  @override
+  String get recurringEmpty =>
+      'Aucune opération récurrente. Programme ton salaire, ton loyer ou ta tontine : l\'appli te rappelle chaque échéance.';
+
+  @override
+  String recurringPausedToast(String name) {
+    return '$name mise en pause : elle ne compte plus dans les prévisions.';
+  }
+
+  @override
+  String recurringResumedToast(String name) {
+    return '$name réactivée : elle compte à nouveau dans les prévisions.';
+  }
+
+  @override
+  String recurringRecordedToast(String name, String amount, String account) {
+    return '$name enregistrée : $amount FCFA sur $account.';
+  }
+
+  @override
+  String get recurringSkippedToast =>
+      'Échéance ignorée. Le modèle reste actif.';
+
+  @override
+  String recurringAutoRecorded(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count opérations récurrentes enregistrées automatiquement.',
+      one: '1 opération récurrente enregistrée automatiquement.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String recurringMetaWeek(String weekday) {
+    return 'Chaque $weekday';
+  }
+
+  @override
+  String recurringMetaMonth(String day) {
+    return 'Chaque mois, le $day';
+  }
+
+  @override
+  String recurringMetaYear(String date) {
+    return 'Chaque année, le $date';
+  }
+
+  @override
+  String recurringDueWeek(String weekday) {
+    return 'Chaque $weekday';
+  }
+
+  @override
+  String recurringDueMonth(String day) {
+    return 'Le $day de chaque mois';
+  }
+
+  @override
+  String recurringDueYear(String date) {
+    return 'Chaque $date';
+  }
+
+  @override
+  String get recurringNewTitle => 'Nouvelle récurrence';
+
+  @override
+  String get recurringEditTitle => 'Modifier la récurrence';
+
+  @override
+  String get recurringCreatedTitle => 'Programmée';
+
+  @override
+  String get recurringName => 'Nom';
+
+  @override
+  String get recurringNameHint => 'Ex. : Tontine du quartier';
+
+  @override
+  String get recurringAmount => 'Montant';
+
+  @override
+  String get recurringVariable => 'Montant variable';
+
+  @override
+  String get recurringVariableHelp =>
+      'Ex. : facture d\'électricité. Tu confirmes le montant réel.';
+
+  @override
+  String get recurringFrequency => 'Fréquence';
+
+  @override
+  String get recurringFreqWeek => 'Semaine';
+
+  @override
+  String get recurringFreqMonth => 'Mois';
+
+  @override
+  String get recurringFreqYear => 'Année';
+
+  @override
+  String get recurringDue => 'Échéance';
+
+  @override
+  String get recurringStart => 'Début';
+
+  @override
+  String get recurringEnd => 'Fin';
+
+  @override
+  String get recurringNoEnd => 'Sans fin';
+
+  @override
+  String get recurringEndOnDate => 'À une date';
+
+  @override
+  String get recurringLastDue => 'Dernière échéance';
+
+  @override
+  String recurringLastDueValue(String date, int count) {
+    return '$date · $count fois';
+  }
+
+  @override
+  String get recurringAsk => 'Me demander avant d\'enregistrer';
+
+  @override
+  String get recurringAskOn =>
+      'Une demande apparaît à chaque échéance. Tu ajustes le montant si besoin.';
+
+  @override
+  String get recurringAskOff =>
+      'L\'opération sera enregistrée automatiquement à la date prévue.';
+
+  @override
+  String get recurringSave => 'Programmer';
+
+  @override
+  String get recurringSaveChanges => 'Enregistrer';
+
+  @override
+  String get recurringDelete => 'Supprimer ce modèle';
+
+  @override
+  String get recurringDeleteTitle => 'Supprimer ce modèle ?';
+
+  @override
+  String get recurringDeleteBody =>
+      'Les opérations déjà enregistrées restent dans ton historique.';
+
+  @override
+  String get recurringDeleted => 'Modèle supprimé.';
+
+  @override
+  String recurringCreatedMessage(String name) {
+    return '« $name » programmée';
+  }
+
+  @override
+  String recurringCreatedSummary(
+    String amount,
+    String schedule,
+    String account,
+  ) {
+    return '$amount FCFA $schedule · $account';
+  }
+
+  @override
+  String recurringCreatedNext(String date) {
+    return 'Prochaine échéance : $date. Rien n\'est enregistré avant cette date.';
+  }
+
+  @override
+  String get recurringSeeAll => 'Voir les opérations récurrentes';
+
+  @override
+  String get recurringErrorName => 'Donne un nom à cette opération.';
+
+  @override
+  String get recurringErrorAmount => 'Indique un montant supérieur à 0.';
+
+  @override
+  String get recurringErrorEnd => 'La fin doit être après le début.';
+
+  @override
+  String get recurringErrorAccount => 'Ce compte n\'est plus disponible.';
+
+  @override
+  String get recurringErrorCategory => 'Choisis une catégorie.';
+
+  @override
+  String recurringRealAmountTitle(String name) {
+    return 'Montant réel : $name';
+  }
+
+  @override
+  String recurringRealAmountHelp(String amount) {
+    return 'Estimation : $amount FCFA.';
+  }
+
+  @override
+  String get txMakeRecurring => 'Rendre récurrente';
+
+  @override
   String get txDuplicated => 'Opération dupliquée.';
 
   @override

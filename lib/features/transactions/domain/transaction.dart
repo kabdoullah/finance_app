@@ -55,6 +55,7 @@ class Transaction {
     this.category,
     this.parentCategory,
     this.description,
+    this.recurringId,
   });
 
   final String id;
@@ -80,6 +81,9 @@ class Transaction {
   final String? description;
   final DateTime occurredAt;
   final EntryMethod entryMethod;
+
+  /// Modèle récurrent qui a produit l'opération, s'il existe encore.
+  final String? recurringId;
 
   /// Catégorie principale (celle qui compte pour les budgets).
   Category? get mainCategory => parentCategory ?? category;

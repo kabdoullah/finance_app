@@ -271,6 +271,16 @@ class _TransactionDetailPageState extends ConsumerState<TransactionDetailPage> {
             _InfoRow(label: l10n.txDescription, value: t.description!),
           _InfoRow(label: l10n.txEntry, value: t.entryMethod.label(l10n)),
           const SizedBox(height: 16),
+          // Une opération déjà issue d'un modèle n'en crée pas un second.
+          if (t.kind != TransactionKind.transfer && t.recurringId == null)
+            _ActionRow(
+              icon: AppIcons.repeat,
+              label: l10n.txMakeRecurring,
+              color: colors.ink,
+              showChevron: true,
+              onTap: () =>
+                  context.push(AppRoutes.newRecurring(fromTransactionId: t.id)),
+            ),
           _ActionRow(
             icon: AppIcons.copy,
             label: l10n.txDuplicate,
@@ -536,6 +546,7 @@ class _ActionRow extends StatelessWidget {
     required this.color,
     required this.onTap,
     this.showDivider = true,
+    this.showChevron = false,
   });
 
   final IconData icon;
@@ -543,6 +554,7 @@ class _ActionRow extends StatelessWidget {
   final Color color;
   final VoidCallback onTap;
   final bool showDivider;
+  final bool showChevron;
 
   @override
   Widget build(BuildContext context) => InkWell(
@@ -559,14 +571,22 @@ class _ActionRow extends StatelessWidget {
         spacing: 12,
         children: [
           Icon(icon, size: 18, color: color),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-              color: color,
+          Expanded(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: color,
+              ),
             ),
           ),
+          if (showChevron)
+            Icon(
+              AppIcons.caretRight,
+              size: 16,
+              color: context.colors.inkTertiary,
+            ),
         ],
       ),
     ),

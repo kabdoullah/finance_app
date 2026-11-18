@@ -154,6 +154,15 @@ class CategoriesRepository {
           updatedAt: Value(_nowMs()),
         ),
       );
+      // Les modèles récurrents suivent leurs opérations.
+      await (_db.update(
+        _db.recurringOperations,
+      )..where((r) => r.categoryId.isIn(ids))).write(
+        RecurringOperationsCompanion(
+          categoryId: Value(target),
+          updatedAt: Value(_nowMs()),
+        ),
+      );
       // Les sous-catégories d'abord (clé étrangère vers le parent).
       await (_db.delete(_categories)..where((c) => c.parentId.equals(id))).go();
       await (_db.delete(_categories)..where((c) => c.id.equals(id))).go();

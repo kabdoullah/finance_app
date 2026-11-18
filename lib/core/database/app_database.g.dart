@@ -1104,6 +1104,890 @@ class CategoriesCompanion extends UpdateCompanion<CategoryRow> {
   }
 }
 
+class $RecurringOperationsTable extends RecurringOperations
+    with TableInfo<$RecurringOperationsTable, RecurringRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $RecurringOperationsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _kindMeta = const VerificationMeta('kind');
+  @override
+  late final GeneratedColumn<String> kind = GeneratedColumn<String>(
+    'kind',
+    aliasedName,
+    false,
+    check: () => kind.isIn(const ['expense', 'income']),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 80,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  @override
+  late final GeneratedColumn<int> amount = GeneratedColumn<int>(
+    'amount',
+    aliasedName,
+    false,
+    check: () => ComparableExpr(amount).isBetweenValues(1, 999999999),
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _isVariableMeta = const VerificationMeta(
+    'isVariable',
+  );
+  @override
+  late final GeneratedColumn<bool> isVariable = GeneratedColumn<bool>(
+    'is_variable',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_variable" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _categoryIdMeta = const VerificationMeta(
+    'categoryId',
+  );
+  @override
+  late final GeneratedColumn<String> categoryId = GeneratedColumn<String>(
+    'category_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES categories (id) ON DELETE RESTRICT',
+    ),
+  );
+  static const VerificationMeta _accountIdMeta = const VerificationMeta(
+    'accountId',
+  );
+  @override
+  late final GeneratedColumn<String> accountId = GeneratedColumn<String>(
+    'account_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES accounts (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _frequencyMeta = const VerificationMeta(
+    'frequency',
+  );
+  @override
+  late final GeneratedColumn<String> frequency = GeneratedColumn<String>(
+    'frequency',
+    aliasedName,
+    false,
+    check: () => frequency.isIn(const ['week', 'month', 'year']),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _startDateMeta = const VerificationMeta(
+    'startDate',
+  );
+  @override
+  late final GeneratedColumn<String> startDate = GeneratedColumn<String>(
+    'start_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _endDateMeta = const VerificationMeta(
+    'endDate',
+  );
+  @override
+  late final GeneratedColumn<String> endDate = GeneratedColumn<String>(
+    'end_date',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _nextDueDateMeta = const VerificationMeta(
+    'nextDueDate',
+  );
+  @override
+  late final GeneratedColumn<String> nextDueDate = GeneratedColumn<String>(
+    'next_due_date',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _askBeforeRecordingMeta =
+      const VerificationMeta('askBeforeRecording');
+  @override
+  late final GeneratedColumn<bool> askBeforeRecording = GeneratedColumn<bool>(
+    'ask_before_recording',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("ask_before_recording" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  static const VerificationMeta _pausedAtMeta = const VerificationMeta(
+    'pausedAt',
+  );
+  @override
+  late final GeneratedColumn<int> pausedAt = GeneratedColumn<int>(
+    'paused_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<int> createdAt = GeneratedColumn<int>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<int> updatedAt = GeneratedColumn<int>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    kind,
+    name,
+    amount,
+    isVariable,
+    categoryId,
+    accountId,
+    frequency,
+    startDate,
+    endDate,
+    nextDueDate,
+    askBeforeRecording,
+    pausedAt,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'recurring_operations';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<RecurringRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('kind')) {
+      context.handle(
+        _kindMeta,
+        kind.isAcceptableOrUnknown(data['kind']!, _kindMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_kindMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('amount')) {
+      context.handle(
+        _amountMeta,
+        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_amountMeta);
+    }
+    if (data.containsKey('is_variable')) {
+      context.handle(
+        _isVariableMeta,
+        isVariable.isAcceptableOrUnknown(data['is_variable']!, _isVariableMeta),
+      );
+    }
+    if (data.containsKey('category_id')) {
+      context.handle(
+        _categoryIdMeta,
+        categoryId.isAcceptableOrUnknown(data['category_id']!, _categoryIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_categoryIdMeta);
+    }
+    if (data.containsKey('account_id')) {
+      context.handle(
+        _accountIdMeta,
+        accountId.isAcceptableOrUnknown(data['account_id']!, _accountIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_accountIdMeta);
+    }
+    if (data.containsKey('frequency')) {
+      context.handle(
+        _frequencyMeta,
+        frequency.isAcceptableOrUnknown(data['frequency']!, _frequencyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_frequencyMeta);
+    }
+    if (data.containsKey('start_date')) {
+      context.handle(
+        _startDateMeta,
+        startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_startDateMeta);
+    }
+    if (data.containsKey('end_date')) {
+      context.handle(
+        _endDateMeta,
+        endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta),
+      );
+    }
+    if (data.containsKey('next_due_date')) {
+      context.handle(
+        _nextDueDateMeta,
+        nextDueDate.isAcceptableOrUnknown(
+          data['next_due_date']!,
+          _nextDueDateMeta,
+        ),
+      );
+    }
+    if (data.containsKey('ask_before_recording')) {
+      context.handle(
+        _askBeforeRecordingMeta,
+        askBeforeRecording.isAcceptableOrUnknown(
+          data['ask_before_recording']!,
+          _askBeforeRecordingMeta,
+        ),
+      );
+    }
+    if (data.containsKey('paused_at')) {
+      context.handle(
+        _pausedAtMeta,
+        pausedAt.isAcceptableOrUnknown(data['paused_at']!, _pausedAtMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  RecurringRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return RecurringRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      kind: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}kind'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      amount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}amount'],
+      )!,
+      isVariable: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_variable'],
+      )!,
+      categoryId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}category_id'],
+      )!,
+      accountId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}account_id'],
+      )!,
+      frequency: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}frequency'],
+      )!,
+      startDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}start_date'],
+      )!,
+      endDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}end_date'],
+      ),
+      nextDueDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}next_due_date'],
+      ),
+      askBeforeRecording: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}ask_before_recording'],
+      )!,
+      pausedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}paused_at'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $RecurringOperationsTable createAlias(String alias) {
+    return $RecurringOperationsTable(attachedDatabase, alias);
+  }
+}
+
+class RecurringRow extends DataClass implements Insertable<RecurringRow> {
+  final String id;
+
+  /// `expense` ou `income` (pas de transfert pour l'instant).
+  final String kind;
+  final String name;
+
+  /// Montant fixe, ou estimation si [isVariable].
+  final int amount;
+  final bool isVariable;
+  final String categoryId;
+  final String accountId;
+
+  /// `week`, `month` ou `year` ; l'échéance découle de [startDate].
+  final String frequency;
+  final String startDate;
+
+  /// Dernière date possible ; `NULL` = sans fin.
+  final String? endDate;
+
+  /// Prochaine échéance non traitée ; `NULL` quand le modèle est terminé.
+  final String? nextDueDate;
+  final bool askBeforeRecording;
+  final int? pausedAt;
+  final int createdAt;
+  final int updatedAt;
+  const RecurringRow({
+    required this.id,
+    required this.kind,
+    required this.name,
+    required this.amount,
+    required this.isVariable,
+    required this.categoryId,
+    required this.accountId,
+    required this.frequency,
+    required this.startDate,
+    this.endDate,
+    this.nextDueDate,
+    required this.askBeforeRecording,
+    this.pausedAt,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['kind'] = Variable<String>(kind);
+    map['name'] = Variable<String>(name);
+    map['amount'] = Variable<int>(amount);
+    map['is_variable'] = Variable<bool>(isVariable);
+    map['category_id'] = Variable<String>(categoryId);
+    map['account_id'] = Variable<String>(accountId);
+    map['frequency'] = Variable<String>(frequency);
+    map['start_date'] = Variable<String>(startDate);
+    if (!nullToAbsent || endDate != null) {
+      map['end_date'] = Variable<String>(endDate);
+    }
+    if (!nullToAbsent || nextDueDate != null) {
+      map['next_due_date'] = Variable<String>(nextDueDate);
+    }
+    map['ask_before_recording'] = Variable<bool>(askBeforeRecording);
+    if (!nullToAbsent || pausedAt != null) {
+      map['paused_at'] = Variable<int>(pausedAt);
+    }
+    map['created_at'] = Variable<int>(createdAt);
+    map['updated_at'] = Variable<int>(updatedAt);
+    return map;
+  }
+
+  RecurringOperationsCompanion toCompanion(bool nullToAbsent) {
+    return RecurringOperationsCompanion(
+      id: Value(id),
+      kind: Value(kind),
+      name: Value(name),
+      amount: Value(amount),
+      isVariable: Value(isVariable),
+      categoryId: Value(categoryId),
+      accountId: Value(accountId),
+      frequency: Value(frequency),
+      startDate: Value(startDate),
+      endDate: endDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(endDate),
+      nextDueDate: nextDueDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nextDueDate),
+      askBeforeRecording: Value(askBeforeRecording),
+      pausedAt: pausedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(pausedAt),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory RecurringRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return RecurringRow(
+      id: serializer.fromJson<String>(json['id']),
+      kind: serializer.fromJson<String>(json['kind']),
+      name: serializer.fromJson<String>(json['name']),
+      amount: serializer.fromJson<int>(json['amount']),
+      isVariable: serializer.fromJson<bool>(json['isVariable']),
+      categoryId: serializer.fromJson<String>(json['categoryId']),
+      accountId: serializer.fromJson<String>(json['accountId']),
+      frequency: serializer.fromJson<String>(json['frequency']),
+      startDate: serializer.fromJson<String>(json['startDate']),
+      endDate: serializer.fromJson<String?>(json['endDate']),
+      nextDueDate: serializer.fromJson<String?>(json['nextDueDate']),
+      askBeforeRecording: serializer.fromJson<bool>(json['askBeforeRecording']),
+      pausedAt: serializer.fromJson<int?>(json['pausedAt']),
+      createdAt: serializer.fromJson<int>(json['createdAt']),
+      updatedAt: serializer.fromJson<int>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'kind': serializer.toJson<String>(kind),
+      'name': serializer.toJson<String>(name),
+      'amount': serializer.toJson<int>(amount),
+      'isVariable': serializer.toJson<bool>(isVariable),
+      'categoryId': serializer.toJson<String>(categoryId),
+      'accountId': serializer.toJson<String>(accountId),
+      'frequency': serializer.toJson<String>(frequency),
+      'startDate': serializer.toJson<String>(startDate),
+      'endDate': serializer.toJson<String?>(endDate),
+      'nextDueDate': serializer.toJson<String?>(nextDueDate),
+      'askBeforeRecording': serializer.toJson<bool>(askBeforeRecording),
+      'pausedAt': serializer.toJson<int?>(pausedAt),
+      'createdAt': serializer.toJson<int>(createdAt),
+      'updatedAt': serializer.toJson<int>(updatedAt),
+    };
+  }
+
+  RecurringRow copyWith({
+    String? id,
+    String? kind,
+    String? name,
+    int? amount,
+    bool? isVariable,
+    String? categoryId,
+    String? accountId,
+    String? frequency,
+    String? startDate,
+    Value<String?> endDate = const Value.absent(),
+    Value<String?> nextDueDate = const Value.absent(),
+    bool? askBeforeRecording,
+    Value<int?> pausedAt = const Value.absent(),
+    int? createdAt,
+    int? updatedAt,
+  }) => RecurringRow(
+    id: id ?? this.id,
+    kind: kind ?? this.kind,
+    name: name ?? this.name,
+    amount: amount ?? this.amount,
+    isVariable: isVariable ?? this.isVariable,
+    categoryId: categoryId ?? this.categoryId,
+    accountId: accountId ?? this.accountId,
+    frequency: frequency ?? this.frequency,
+    startDate: startDate ?? this.startDate,
+    endDate: endDate.present ? endDate.value : this.endDate,
+    nextDueDate: nextDueDate.present ? nextDueDate.value : this.nextDueDate,
+    askBeforeRecording: askBeforeRecording ?? this.askBeforeRecording,
+    pausedAt: pausedAt.present ? pausedAt.value : this.pausedAt,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  RecurringRow copyWithCompanion(RecurringOperationsCompanion data) {
+    return RecurringRow(
+      id: data.id.present ? data.id.value : this.id,
+      kind: data.kind.present ? data.kind.value : this.kind,
+      name: data.name.present ? data.name.value : this.name,
+      amount: data.amount.present ? data.amount.value : this.amount,
+      isVariable: data.isVariable.present
+          ? data.isVariable.value
+          : this.isVariable,
+      categoryId: data.categoryId.present
+          ? data.categoryId.value
+          : this.categoryId,
+      accountId: data.accountId.present ? data.accountId.value : this.accountId,
+      frequency: data.frequency.present ? data.frequency.value : this.frequency,
+      startDate: data.startDate.present ? data.startDate.value : this.startDate,
+      endDate: data.endDate.present ? data.endDate.value : this.endDate,
+      nextDueDate: data.nextDueDate.present
+          ? data.nextDueDate.value
+          : this.nextDueDate,
+      askBeforeRecording: data.askBeforeRecording.present
+          ? data.askBeforeRecording.value
+          : this.askBeforeRecording,
+      pausedAt: data.pausedAt.present ? data.pausedAt.value : this.pausedAt,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RecurringRow(')
+          ..write('id: $id, ')
+          ..write('kind: $kind, ')
+          ..write('name: $name, ')
+          ..write('amount: $amount, ')
+          ..write('isVariable: $isVariable, ')
+          ..write('categoryId: $categoryId, ')
+          ..write('accountId: $accountId, ')
+          ..write('frequency: $frequency, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate, ')
+          ..write('nextDueDate: $nextDueDate, ')
+          ..write('askBeforeRecording: $askBeforeRecording, ')
+          ..write('pausedAt: $pausedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    kind,
+    name,
+    amount,
+    isVariable,
+    categoryId,
+    accountId,
+    frequency,
+    startDate,
+    endDate,
+    nextDueDate,
+    askBeforeRecording,
+    pausedAt,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is RecurringRow &&
+          other.id == this.id &&
+          other.kind == this.kind &&
+          other.name == this.name &&
+          other.amount == this.amount &&
+          other.isVariable == this.isVariable &&
+          other.categoryId == this.categoryId &&
+          other.accountId == this.accountId &&
+          other.frequency == this.frequency &&
+          other.startDate == this.startDate &&
+          other.endDate == this.endDate &&
+          other.nextDueDate == this.nextDueDate &&
+          other.askBeforeRecording == this.askBeforeRecording &&
+          other.pausedAt == this.pausedAt &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class RecurringOperationsCompanion extends UpdateCompanion<RecurringRow> {
+  final Value<String> id;
+  final Value<String> kind;
+  final Value<String> name;
+  final Value<int> amount;
+  final Value<bool> isVariable;
+  final Value<String> categoryId;
+  final Value<String> accountId;
+  final Value<String> frequency;
+  final Value<String> startDate;
+  final Value<String?> endDate;
+  final Value<String?> nextDueDate;
+  final Value<bool> askBeforeRecording;
+  final Value<int?> pausedAt;
+  final Value<int> createdAt;
+  final Value<int> updatedAt;
+  final Value<int> rowid;
+  const RecurringOperationsCompanion({
+    this.id = const Value.absent(),
+    this.kind = const Value.absent(),
+    this.name = const Value.absent(),
+    this.amount = const Value.absent(),
+    this.isVariable = const Value.absent(),
+    this.categoryId = const Value.absent(),
+    this.accountId = const Value.absent(),
+    this.frequency = const Value.absent(),
+    this.startDate = const Value.absent(),
+    this.endDate = const Value.absent(),
+    this.nextDueDate = const Value.absent(),
+    this.askBeforeRecording = const Value.absent(),
+    this.pausedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  RecurringOperationsCompanion.insert({
+    required String id,
+    required String kind,
+    required String name,
+    required int amount,
+    this.isVariable = const Value.absent(),
+    required String categoryId,
+    required String accountId,
+    required String frequency,
+    required String startDate,
+    this.endDate = const Value.absent(),
+    this.nextDueDate = const Value.absent(),
+    this.askBeforeRecording = const Value.absent(),
+    this.pausedAt = const Value.absent(),
+    required int createdAt,
+    required int updatedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       kind = Value(kind),
+       name = Value(name),
+       amount = Value(amount),
+       categoryId = Value(categoryId),
+       accountId = Value(accountId),
+       frequency = Value(frequency),
+       startDate = Value(startDate),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<RecurringRow> custom({
+    Expression<String>? id,
+    Expression<String>? kind,
+    Expression<String>? name,
+    Expression<int>? amount,
+    Expression<bool>? isVariable,
+    Expression<String>? categoryId,
+    Expression<String>? accountId,
+    Expression<String>? frequency,
+    Expression<String>? startDate,
+    Expression<String>? endDate,
+    Expression<String>? nextDueDate,
+    Expression<bool>? askBeforeRecording,
+    Expression<int>? pausedAt,
+    Expression<int>? createdAt,
+    Expression<int>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (kind != null) 'kind': kind,
+      if (name != null) 'name': name,
+      if (amount != null) 'amount': amount,
+      if (isVariable != null) 'is_variable': isVariable,
+      if (categoryId != null) 'category_id': categoryId,
+      if (accountId != null) 'account_id': accountId,
+      if (frequency != null) 'frequency': frequency,
+      if (startDate != null) 'start_date': startDate,
+      if (endDate != null) 'end_date': endDate,
+      if (nextDueDate != null) 'next_due_date': nextDueDate,
+      if (askBeforeRecording != null)
+        'ask_before_recording': askBeforeRecording,
+      if (pausedAt != null) 'paused_at': pausedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  RecurringOperationsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? kind,
+    Value<String>? name,
+    Value<int>? amount,
+    Value<bool>? isVariable,
+    Value<String>? categoryId,
+    Value<String>? accountId,
+    Value<String>? frequency,
+    Value<String>? startDate,
+    Value<String?>? endDate,
+    Value<String?>? nextDueDate,
+    Value<bool>? askBeforeRecording,
+    Value<int?>? pausedAt,
+    Value<int>? createdAt,
+    Value<int>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return RecurringOperationsCompanion(
+      id: id ?? this.id,
+      kind: kind ?? this.kind,
+      name: name ?? this.name,
+      amount: amount ?? this.amount,
+      isVariable: isVariable ?? this.isVariable,
+      categoryId: categoryId ?? this.categoryId,
+      accountId: accountId ?? this.accountId,
+      frequency: frequency ?? this.frequency,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      nextDueDate: nextDueDate ?? this.nextDueDate,
+      askBeforeRecording: askBeforeRecording ?? this.askBeforeRecording,
+      pausedAt: pausedAt ?? this.pausedAt,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (kind.present) {
+      map['kind'] = Variable<String>(kind.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (amount.present) {
+      map['amount'] = Variable<int>(amount.value);
+    }
+    if (isVariable.present) {
+      map['is_variable'] = Variable<bool>(isVariable.value);
+    }
+    if (categoryId.present) {
+      map['category_id'] = Variable<String>(categoryId.value);
+    }
+    if (accountId.present) {
+      map['account_id'] = Variable<String>(accountId.value);
+    }
+    if (frequency.present) {
+      map['frequency'] = Variable<String>(frequency.value);
+    }
+    if (startDate.present) {
+      map['start_date'] = Variable<String>(startDate.value);
+    }
+    if (endDate.present) {
+      map['end_date'] = Variable<String>(endDate.value);
+    }
+    if (nextDueDate.present) {
+      map['next_due_date'] = Variable<String>(nextDueDate.value);
+    }
+    if (askBeforeRecording.present) {
+      map['ask_before_recording'] = Variable<bool>(askBeforeRecording.value);
+    }
+    if (pausedAt.present) {
+      map['paused_at'] = Variable<int>(pausedAt.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<int>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<int>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RecurringOperationsCompanion(')
+          ..write('id: $id, ')
+          ..write('kind: $kind, ')
+          ..write('name: $name, ')
+          ..write('amount: $amount, ')
+          ..write('isVariable: $isVariable, ')
+          ..write('categoryId: $categoryId, ')
+          ..write('accountId: $accountId, ')
+          ..write('frequency: $frequency, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate, ')
+          ..write('nextDueDate: $nextDueDate, ')
+          ..write('askBeforeRecording: $askBeforeRecording, ')
+          ..write('pausedAt: $pausedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $TransactionsTable extends Transactions
     with TableInfo<$TransactionsTable, TransactionRow> {
   @override
@@ -1226,6 +2110,20 @@ class $TransactionsTable extends Transactions
     requiredDuringInsert: false,
     defaultValue: const Constant('manual'),
   );
+  static const VerificationMeta _recurringIdMeta = const VerificationMeta(
+    'recurringId',
+  );
+  @override
+  late final GeneratedColumn<String> recurringId = GeneratedColumn<String>(
+    'recurring_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES recurring_operations (id) ON DELETE SET NULL',
+    ),
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -1259,6 +2157,7 @@ class $TransactionsTable extends Transactions
     description,
     occurredAt,
     entryMethod,
+    recurringId,
     createdAt,
     updatedAt,
   ];
@@ -1344,6 +2243,15 @@ class $TransactionsTable extends Transactions
         ),
       );
     }
+    if (data.containsKey('recurring_id')) {
+      context.handle(
+        _recurringIdMeta,
+        recurringId.isAcceptableOrUnknown(
+          data['recurring_id']!,
+          _recurringIdMeta,
+        ),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -1405,6 +2313,10 @@ class $TransactionsTable extends Transactions
         DriftSqlType.string,
         data['${effectivePrefix}entry_method'],
       )!,
+      recurringId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}recurring_id'],
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}created_at'],
@@ -1442,6 +2354,10 @@ class TransactionRow extends DataClass implements Insertable<TransactionRow> {
 
   /// Mode de saisie (valeurs de `EntryMethod.storageValue`).
   final String entryMethod;
+
+  /// Modèle récurrent qui a produit l'opération ; `NULL` si saisie à la main
+  /// ou si le modèle a été supprimé.
+  final String? recurringId;
   final int createdAt;
   final int updatedAt;
   const TransactionRow({
@@ -1454,6 +2370,7 @@ class TransactionRow extends DataClass implements Insertable<TransactionRow> {
     this.description,
     required this.occurredAt,
     required this.entryMethod,
+    this.recurringId,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -1475,6 +2392,9 @@ class TransactionRow extends DataClass implements Insertable<TransactionRow> {
     }
     map['occurred_at'] = Variable<int>(occurredAt);
     map['entry_method'] = Variable<String>(entryMethod);
+    if (!nullToAbsent || recurringId != null) {
+      map['recurring_id'] = Variable<String>(recurringId);
+    }
     map['created_at'] = Variable<int>(createdAt);
     map['updated_at'] = Variable<int>(updatedAt);
     return map;
@@ -1497,6 +2417,9 @@ class TransactionRow extends DataClass implements Insertable<TransactionRow> {
           : Value(description),
       occurredAt: Value(occurredAt),
       entryMethod: Value(entryMethod),
+      recurringId: recurringId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(recurringId),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -1517,6 +2440,7 @@ class TransactionRow extends DataClass implements Insertable<TransactionRow> {
       description: serializer.fromJson<String?>(json['description']),
       occurredAt: serializer.fromJson<int>(json['occurredAt']),
       entryMethod: serializer.fromJson<String>(json['entryMethod']),
+      recurringId: serializer.fromJson<String?>(json['recurringId']),
       createdAt: serializer.fromJson<int>(json['createdAt']),
       updatedAt: serializer.fromJson<int>(json['updatedAt']),
     );
@@ -1534,6 +2458,7 @@ class TransactionRow extends DataClass implements Insertable<TransactionRow> {
       'description': serializer.toJson<String?>(description),
       'occurredAt': serializer.toJson<int>(occurredAt),
       'entryMethod': serializer.toJson<String>(entryMethod),
+      'recurringId': serializer.toJson<String?>(recurringId),
       'createdAt': serializer.toJson<int>(createdAt),
       'updatedAt': serializer.toJson<int>(updatedAt),
     };
@@ -1549,6 +2474,7 @@ class TransactionRow extends DataClass implements Insertable<TransactionRow> {
     Value<String?> description = const Value.absent(),
     int? occurredAt,
     String? entryMethod,
+    Value<String?> recurringId = const Value.absent(),
     int? createdAt,
     int? updatedAt,
   }) => TransactionRow(
@@ -1561,6 +2487,7 @@ class TransactionRow extends DataClass implements Insertable<TransactionRow> {
     description: description.present ? description.value : this.description,
     occurredAt: occurredAt ?? this.occurredAt,
     entryMethod: entryMethod ?? this.entryMethod,
+    recurringId: recurringId.present ? recurringId.value : this.recurringId,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
@@ -1585,6 +2512,9 @@ class TransactionRow extends DataClass implements Insertable<TransactionRow> {
       entryMethod: data.entryMethod.present
           ? data.entryMethod.value
           : this.entryMethod,
+      recurringId: data.recurringId.present
+          ? data.recurringId.value
+          : this.recurringId,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -1602,6 +2532,7 @@ class TransactionRow extends DataClass implements Insertable<TransactionRow> {
           ..write('description: $description, ')
           ..write('occurredAt: $occurredAt, ')
           ..write('entryMethod: $entryMethod, ')
+          ..write('recurringId: $recurringId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -1619,6 +2550,7 @@ class TransactionRow extends DataClass implements Insertable<TransactionRow> {
     description,
     occurredAt,
     entryMethod,
+    recurringId,
     createdAt,
     updatedAt,
   );
@@ -1635,6 +2567,7 @@ class TransactionRow extends DataClass implements Insertable<TransactionRow> {
           other.description == this.description &&
           other.occurredAt == this.occurredAt &&
           other.entryMethod == this.entryMethod &&
+          other.recurringId == this.recurringId &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -1649,6 +2582,7 @@ class TransactionsCompanion extends UpdateCompanion<TransactionRow> {
   final Value<String?> description;
   final Value<int> occurredAt;
   final Value<String> entryMethod;
+  final Value<String?> recurringId;
   final Value<int> createdAt;
   final Value<int> updatedAt;
   final Value<int> rowid;
@@ -1662,6 +2596,7 @@ class TransactionsCompanion extends UpdateCompanion<TransactionRow> {
     this.description = const Value.absent(),
     this.occurredAt = const Value.absent(),
     this.entryMethod = const Value.absent(),
+    this.recurringId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -1676,6 +2611,7 @@ class TransactionsCompanion extends UpdateCompanion<TransactionRow> {
     this.description = const Value.absent(),
     required int occurredAt,
     this.entryMethod = const Value.absent(),
+    this.recurringId = const Value.absent(),
     required int createdAt,
     required int updatedAt,
     this.rowid = const Value.absent(),
@@ -1696,6 +2632,7 @@ class TransactionsCompanion extends UpdateCompanion<TransactionRow> {
     Expression<String>? description,
     Expression<int>? occurredAt,
     Expression<String>? entryMethod,
+    Expression<String>? recurringId,
     Expression<int>? createdAt,
     Expression<int>? updatedAt,
     Expression<int>? rowid,
@@ -1710,6 +2647,7 @@ class TransactionsCompanion extends UpdateCompanion<TransactionRow> {
       if (description != null) 'description': description,
       if (occurredAt != null) 'occurred_at': occurredAt,
       if (entryMethod != null) 'entry_method': entryMethod,
+      if (recurringId != null) 'recurring_id': recurringId,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
@@ -1726,6 +2664,7 @@ class TransactionsCompanion extends UpdateCompanion<TransactionRow> {
     Value<String?>? description,
     Value<int>? occurredAt,
     Value<String>? entryMethod,
+    Value<String?>? recurringId,
     Value<int>? createdAt,
     Value<int>? updatedAt,
     Value<int>? rowid,
@@ -1740,6 +2679,7 @@ class TransactionsCompanion extends UpdateCompanion<TransactionRow> {
       description: description ?? this.description,
       occurredAt: occurredAt ?? this.occurredAt,
       entryMethod: entryMethod ?? this.entryMethod,
+      recurringId: recurringId ?? this.recurringId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
@@ -1776,6 +2716,9 @@ class TransactionsCompanion extends UpdateCompanion<TransactionRow> {
     if (entryMethod.present) {
       map['entry_method'] = Variable<String>(entryMethod.value);
     }
+    if (recurringId.present) {
+      map['recurring_id'] = Variable<String>(recurringId.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<int>(createdAt.value);
     }
@@ -1800,6 +2743,7 @@ class TransactionsCompanion extends UpdateCompanion<TransactionRow> {
           ..write('description: $description, ')
           ..write('occurredAt: $occurredAt, ')
           ..write('entryMethod: $entryMethod, ')
+          ..write('recurringId: $recurringId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
@@ -2252,6 +3196,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $AccountsTable accounts = $AccountsTable(this);
   late final $CategoriesTable categories = $CategoriesTable(this);
+  late final $RecurringOperationsTable recurringOperations =
+      $RecurringOperationsTable(this);
   late final $TransactionsTable transactions = $TransactionsTable(this);
   late final $BudgetsTable budgets = $BudgetsTable(this);
   late final Index accountsActiveNameUnique = Index(
@@ -2274,6 +3220,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     'budgets_category_unique',
     'CREATE UNIQUE INDEX budgets_category_unique ON budgets (COALESCE(category_id, \'\'))',
   );
+  late final Index recurringNextDue = Index(
+    'recurring_next_due',
+    'CREATE INDEX recurring_next_due ON recurring_operations (next_due_date)',
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2281,6 +3231,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     accounts,
     categories,
+    recurringOperations,
     transactions,
     budgets,
     accountsActiveNameUnique,
@@ -2288,9 +3239,17 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     transactionsToAccount,
     transactionsOccurredAt,
     budgetsCategoryUnique,
+    recurringNextDue,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'accounts',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('recurring_operations', kind: UpdateKind.delete)],
+    ),
     WritePropagation(
       on: TableUpdateQuery.onTableName(
         'accounts',
@@ -2304,6 +3263,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('transactions', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'recurring_operations',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('transactions', kind: UpdateKind.update)],
     ),
     WritePropagation(
       on: TableUpdateQuery.onTableName(
@@ -2335,6 +3301,32 @@ typedef $$AccountsTableUpdateCompanionBuilder = AccountsCompanion Function({
   Value<int> updatedAt,
   Value<int> rowid,
 });
+
+final class $$AccountsTableReferences
+    extends BaseReferences<_$AppDatabase, $AccountsTable, AccountRow> {
+  $$AccountsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$RecurringOperationsTable, List<RecurringRow>>
+  _recurringOperationsRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.recurringOperations,
+        aliasName: 'accounts__id__recurring_operations__account_id',
+      );
+
+  $$RecurringOperationsTableProcessedTableManager get recurringOperationsRefs {
+    final manager = $$RecurringOperationsTableTableManager(
+      $_db,
+      $_db.recurringOperations,
+    ).filter((f) => f.accountId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _recurringOperationsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
 
 class $$AccountsTableFilterComposer
     extends Composer<_$AppDatabase, $AccountsTable> {
@@ -2379,6 +3371,31 @@ class $$AccountsTableFilterComposer
     column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  Expression<bool> recurringOperationsRefs(
+    Expression<bool> Function($$RecurringOperationsTableFilterComposer f) f,
+  ) {
+    final $$RecurringOperationsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.recurringOperations,
+      getReferencedColumn: (t) => t.accountId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RecurringOperationsTableFilterComposer(
+            $db: $db,
+            $table: $db.recurringOperations,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$AccountsTableOrderingComposer
@@ -2459,6 +3476,32 @@ class $$AccountsTableAnnotationComposer
 
   GeneratedColumn<int> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  Expression<T> recurringOperationsRefs<T extends Object>(
+    Expression<T> Function($$RecurringOperationsTableAnnotationComposer a) f,
+  ) {
+    final $$RecurringOperationsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.recurringOperations,
+          getReferencedColumn: (t) => t.accountId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$RecurringOperationsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.recurringOperations,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$AccountsTableTableManager
@@ -2472,12 +3515,9 @@ class $$AccountsTableTableManager
           $$AccountsTableAnnotationComposer,
           $$AccountsTableCreateCompanionBuilder,
           $$AccountsTableUpdateCompanionBuilder,
-          (
-            AccountRow,
-            BaseReferences<_$AppDatabase, $AccountsTable, AccountRow>,
-          ),
+          (AccountRow, $$AccountsTableReferences),
           AccountRow,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool recurringOperationsRefs})
         > {
   $$AccountsTableTableManager(_$AppDatabase db, $AccountsTable table)
     : super(
@@ -2534,15 +3574,42 @@ class $$AccountsTableTableManager
               .map(
                 (e) => (
                   e.readTable<$AccountsTable, AccountRow>(table),
-                  BaseReferences<_$AppDatabase, $AccountsTable, AccountRow>(
-                    db,
-                    table,
-                    e,
-                  ),
+                  $$AccountsTableReferences(db, table, e),
                 ),
               )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({recurringOperationsRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (recurringOperationsRefs) db.recurringOperations,
+              ],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (recurringOperationsRefs)
+                    await $_getPrefetchedDataByColumns<
+                      AccountRow,
+                      $AccountsTable,
+                      RecurringRow,
+                      $RecurringOperationsTable
+                    >(
+                      currentTable: table,
+                      referencedTable: $$AccountsTableReferences
+                          ._recurringOperationsRefsTable(db),
+                      managerFromTypedResult: (p0) => $$AccountsTableReferences(
+                        db,
+                        table,
+                        p0,
+                      ).recurringOperationsRefs,
+                      currentColumn: 'id',
+                      referencedColumn: 'account_id',
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
         ),
       );
 }
@@ -2557,9 +3624,9 @@ typedef $$AccountsTableProcessedTableManager =
       $$AccountsTableAnnotationComposer,
       $$AccountsTableCreateCompanionBuilder,
       $$AccountsTableUpdateCompanionBuilder,
-      (AccountRow, BaseReferences<_$AppDatabase, $AccountsTable, AccountRow>),
+      (AccountRow, $$AccountsTableReferences),
       AccountRow,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool recurringOperationsRefs})
     >;
 typedef $$CategoriesTableCreateCompanionBuilder = CategoriesCompanion Function({
   required String id,
@@ -2606,6 +3673,27 @@ final class $$CategoriesTableReferences
     if (item == null) return manager;
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<$RecurringOperationsTable, List<RecurringRow>>
+  _recurringOperationsRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.recurringOperations,
+        aliasName: 'categories__id__recurring_operations__category_id',
+      );
+
+  $$RecurringOperationsTableProcessedTableManager get recurringOperationsRefs {
+    final manager = $$RecurringOperationsTableTableManager(
+      $_db,
+      $_db.recurringOperations,
+    ).filter((f) => f.categoryId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _recurringOperationsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
     );
   }
 
@@ -2722,6 +3810,31 @@ class $$CategoriesTableFilterComposer
           ),
     );
     return composer;
+  }
+
+  Expression<bool> recurringOperationsRefs(
+    Expression<bool> Function($$RecurringOperationsTableFilterComposer f) f,
+  ) {
+    final $$RecurringOperationsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.recurringOperations,
+      getReferencedColumn: (t) => t.categoryId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RecurringOperationsTableFilterComposer(
+            $db: $db,
+            $table: $db.recurringOperations,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
   }
 
   Expression<bool> transactionsRefs(
@@ -2912,6 +4025,32 @@ class $$CategoriesTableAnnotationComposer
     return composer;
   }
 
+  Expression<T> recurringOperationsRefs<T extends Object>(
+    Expression<T> Function($$RecurringOperationsTableAnnotationComposer a) f,
+  ) {
+    final $$RecurringOperationsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.recurringOperations,
+          getReferencedColumn: (t) => t.categoryId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$RecurringOperationsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.recurringOperations,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
   Expression<T> transactionsRefs<T extends Object>(
     Expression<T> Function($$TransactionsTableAnnotationComposer a) f,
   ) {
@@ -2978,6 +4117,7 @@ class $$CategoriesTableTableManager
           CategoryRow,
           PrefetchHooks Function({
             bool parentId,
+            bool recurringOperationsRefs,
             bool transactionsRefs,
             bool budgetsRefs,
           })
@@ -3056,12 +4196,14 @@ class $$CategoriesTableTableManager
           prefetchHooksCallback:
               ({
                 parentId = false,
+                recurringOperationsRefs = false,
                 transactionsRefs = false,
                 budgetsRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
+                    if (recurringOperationsRefs) db.recurringOperations,
                     if (transactionsRefs) db.transactions,
                     if (budgetsRefs) db.budgets,
                   ],
@@ -3097,6 +4239,26 @@ class $$CategoriesTableTableManager
                       },
                   getPrefetchedDataCallback: (items) async {
                     return [
+                      if (recurringOperationsRefs)
+                        await $_getPrefetchedDataByColumns<
+                          CategoryRow,
+                          $CategoriesTable,
+                          RecurringRow,
+                          $RecurringOperationsTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$CategoriesTableReferences
+                              ._recurringOperationsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$CategoriesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).recurringOperationsRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'category_id',
+                          typedResults: items,
+                        ),
                       if (transactionsRefs)
                         await $_getPrefetchedDataByColumns<
                           CategoryRow,
@@ -3159,8 +4321,725 @@ typedef $$CategoriesTableProcessedTableManager =
       CategoryRow,
       PrefetchHooks Function({
         bool parentId,
+        bool recurringOperationsRefs,
         bool transactionsRefs,
         bool budgetsRefs,
+      })
+    >;
+typedef $$RecurringOperationsTableCreateCompanionBuilder =
+    RecurringOperationsCompanion Function({
+      required String id,
+      required String kind,
+      required String name,
+      required int amount,
+      Value<bool> isVariable,
+      required String categoryId,
+      required String accountId,
+      required String frequency,
+      required String startDate,
+      Value<String?> endDate,
+      Value<String?> nextDueDate,
+      Value<bool> askBeforeRecording,
+      Value<int?> pausedAt,
+      required int createdAt,
+      required int updatedAt,
+      Value<int> rowid,
+    });
+typedef $$RecurringOperationsTableUpdateCompanionBuilder =
+    RecurringOperationsCompanion Function({
+      Value<String> id,
+      Value<String> kind,
+      Value<String> name,
+      Value<int> amount,
+      Value<bool> isVariable,
+      Value<String> categoryId,
+      Value<String> accountId,
+      Value<String> frequency,
+      Value<String> startDate,
+      Value<String?> endDate,
+      Value<String?> nextDueDate,
+      Value<bool> askBeforeRecording,
+      Value<int?> pausedAt,
+      Value<int> createdAt,
+      Value<int> updatedAt,
+      Value<int> rowid,
+    });
+
+final class $$RecurringOperationsTableReferences
+    extends
+        BaseReferences<_$AppDatabase, $RecurringOperationsTable, RecurringRow> {
+  $$RecurringOperationsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $CategoriesTable _categoryIdTable(_$AppDatabase db) => db.categories
+      .createAlias('recurring_operations__category_id__categories__id');
+
+  $$CategoriesTableProcessedTableManager get categoryId {
+    final $_column = $_itemColumn<String>('category_id')!;
+
+    final manager = $$CategoriesTableTableManager(
+      $_db,
+      $_db.categories,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_categoryIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $AccountsTable _accountIdTable(_$AppDatabase db) =>
+      db.accounts.createAlias('recurring_operations__account_id__accounts__id');
+
+  $$AccountsTableProcessedTableManager get accountId {
+    final $_column = $_itemColumn<String>('account_id')!;
+
+    final manager = $$AccountsTableTableManager(
+      $_db,
+      $_db.accounts,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_accountIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<$TransactionsTable, List<TransactionRow>>
+  _transactionsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.transactions,
+    aliasName: 'recurring_operations__id__transactions__recurring_id',
+  );
+
+  $$TransactionsTableProcessedTableManager get transactionsRefs {
+    final manager = $$TransactionsTableTableManager(
+      $_db,
+      $_db.transactions,
+    ).filter((f) => f.recurringId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_transactionsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$RecurringOperationsTableFilterComposer
+    extends Composer<_$AppDatabase, $RecurringOperationsTable> {
+  $$RecurringOperationsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isVariable => $composableBuilder(
+    column: $table.isVariable,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get frequency => $composableBuilder(
+    column: $table.frequency,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get endDate => $composableBuilder(
+    column: $table.endDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nextDueDate => $composableBuilder(
+    column: $table.nextDueDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get askBeforeRecording => $composableBuilder(
+    column: $table.askBeforeRecording,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get pausedAt => $composableBuilder(
+    column: $table.pausedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$CategoriesTableFilterComposer get categoryId {
+    final $$CategoriesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.categoryId,
+      referencedTable: $db.categories,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CategoriesTableFilterComposer(
+            $db: $db,
+            $table: $db.categories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableFilterComposer get accountId {
+    final $$AccountsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.accountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableFilterComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<bool> transactionsRefs(
+    Expression<bool> Function($$TransactionsTableFilterComposer f) f,
+  ) {
+    final $$TransactionsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.transactions,
+      getReferencedColumn: (t) => t.recurringId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TransactionsTableFilterComposer(
+            $db: $db,
+            $table: $db.transactions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$RecurringOperationsTableOrderingComposer
+    extends Composer<_$AppDatabase, $RecurringOperationsTable> {
+  $$RecurringOperationsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isVariable => $composableBuilder(
+    column: $table.isVariable,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get frequency => $composableBuilder(
+    column: $table.frequency,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get endDate => $composableBuilder(
+    column: $table.endDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nextDueDate => $composableBuilder(
+    column: $table.nextDueDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get askBeforeRecording => $composableBuilder(
+    column: $table.askBeforeRecording,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get pausedAt => $composableBuilder(
+    column: $table.pausedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$CategoriesTableOrderingComposer get categoryId {
+    final $$CategoriesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.categoryId,
+      referencedTable: $db.categories,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CategoriesTableOrderingComposer(
+            $db: $db,
+            $table: $db.categories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableOrderingComposer get accountId {
+    final $$AccountsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.accountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableOrderingComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$RecurringOperationsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $RecurringOperationsTable> {
+  $$RecurringOperationsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get kind =>
+      $composableBuilder(column: $table.kind, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<int> get amount =>
+      $composableBuilder(column: $table.amount, builder: (column) => column);
+
+  GeneratedColumn<bool> get isVariable => $composableBuilder(
+    column: $table.isVariable,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get frequency =>
+      $composableBuilder(column: $table.frequency, builder: (column) => column);
+
+  GeneratedColumn<String> get startDate =>
+      $composableBuilder(column: $table.startDate, builder: (column) => column);
+
+  GeneratedColumn<String> get endDate =>
+      $composableBuilder(column: $table.endDate, builder: (column) => column);
+
+  GeneratedColumn<String> get nextDueDate => $composableBuilder(
+    column: $table.nextDueDate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get askBeforeRecording => $composableBuilder(
+    column: $table.askBeforeRecording,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get pausedAt =>
+      $composableBuilder(column: $table.pausedAt, builder: (column) => column);
+
+  GeneratedColumn<int> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<int> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$CategoriesTableAnnotationComposer get categoryId {
+    final $$CategoriesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.categoryId,
+      referencedTable: $db.categories,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CategoriesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.categories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableAnnotationComposer get accountId {
+    final $$AccountsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.accountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<T> transactionsRefs<T extends Object>(
+    Expression<T> Function($$TransactionsTableAnnotationComposer a) f,
+  ) {
+    final $$TransactionsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.transactions,
+      getReferencedColumn: (t) => t.recurringId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TransactionsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.transactions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$RecurringOperationsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $RecurringOperationsTable,
+          RecurringRow,
+          $$RecurringOperationsTableFilterComposer,
+          $$RecurringOperationsTableOrderingComposer,
+          $$RecurringOperationsTableAnnotationComposer,
+          $$RecurringOperationsTableCreateCompanionBuilder,
+          $$RecurringOperationsTableUpdateCompanionBuilder,
+          (RecurringRow, $$RecurringOperationsTableReferences),
+          RecurringRow,
+          PrefetchHooks Function({
+            bool categoryId,
+            bool accountId,
+            bool transactionsRefs,
+          })
+        > {
+  $$RecurringOperationsTableTableManager(
+    _$AppDatabase db,
+    $RecurringOperationsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$RecurringOperationsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$RecurringOperationsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$RecurringOperationsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> kind = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<int> amount = const Value.absent(),
+                Value<bool> isVariable = const Value.absent(),
+                Value<String> categoryId = const Value.absent(),
+                Value<String> accountId = const Value.absent(),
+                Value<String> frequency = const Value.absent(),
+                Value<String> startDate = const Value.absent(),
+                Value<String?> endDate = const Value.absent(),
+                Value<String?> nextDueDate = const Value.absent(),
+                Value<bool> askBeforeRecording = const Value.absent(),
+                Value<int?> pausedAt = const Value.absent(),
+                Value<int> createdAt = const Value.absent(),
+                Value<int> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => RecurringOperationsCompanion(
+                id: id,
+                kind: kind,
+                name: name,
+                amount: amount,
+                isVariable: isVariable,
+                categoryId: categoryId,
+                accountId: accountId,
+                frequency: frequency,
+                startDate: startDate,
+                endDate: endDate,
+                nextDueDate: nextDueDate,
+                askBeforeRecording: askBeforeRecording,
+                pausedAt: pausedAt,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String kind,
+                required String name,
+                required int amount,
+                Value<bool> isVariable = const Value.absent(),
+                required String categoryId,
+                required String accountId,
+                required String frequency,
+                required String startDate,
+                Value<String?> endDate = const Value.absent(),
+                Value<String?> nextDueDate = const Value.absent(),
+                Value<bool> askBeforeRecording = const Value.absent(),
+                Value<int?> pausedAt = const Value.absent(),
+                required int createdAt,
+                required int updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => RecurringOperationsCompanion.insert(
+                id: id,
+                kind: kind,
+                name: name,
+                amount: amount,
+                isVariable: isVariable,
+                categoryId: categoryId,
+                accountId: accountId,
+                frequency: frequency,
+                startDate: startDate,
+                endDate: endDate,
+                nextDueDate: nextDueDate,
+                askBeforeRecording: askBeforeRecording,
+                pausedAt: pausedAt,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$RecurringOperationsTable, RecurringRow>(table),
+                  $$RecurringOperationsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({
+                categoryId = false,
+                accountId = false,
+                transactionsRefs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (transactionsRefs) db.transactions,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (categoryId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.categoryId,
+                            referencedTable:
+                                $$RecurringOperationsTableReferences
+                                    ._categoryIdTable(db),
+                            referencedColumn:
+                                $$RecurringOperationsTableReferences
+                                    ._categoryIdTable(db)
+                                    .id,
+                          ) as T;
+                        }
+                        if (accountId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.accountId,
+                            referencedTable:
+                                $$RecurringOperationsTableReferences
+                                    ._accountIdTable(db),
+                            referencedColumn:
+                                $$RecurringOperationsTableReferences
+                                    ._accountIdTable(db)
+                                    .id,
+                          ) as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (transactionsRefs)
+                        await $_getPrefetchedDataByColumns<
+                          RecurringRow,
+                          $RecurringOperationsTable,
+                          TransactionRow,
+                          $TransactionsTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$RecurringOperationsTableReferences
+                              ._transactionsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$RecurringOperationsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).transactionsRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'recurring_id',
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$RecurringOperationsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $RecurringOperationsTable,
+      RecurringRow,
+      $$RecurringOperationsTableFilterComposer,
+      $$RecurringOperationsTableOrderingComposer,
+      $$RecurringOperationsTableAnnotationComposer,
+      $$RecurringOperationsTableCreateCompanionBuilder,
+      $$RecurringOperationsTableUpdateCompanionBuilder,
+      (RecurringRow, $$RecurringOperationsTableReferences),
+      RecurringRow,
+      PrefetchHooks Function({
+        bool categoryId,
+        bool accountId,
+        bool transactionsRefs,
       })
     >;
 typedef $$TransactionsTableCreateCompanionBuilder =
@@ -3174,6 +5053,7 @@ typedef $$TransactionsTableCreateCompanionBuilder =
       Value<String?> description,
       required int occurredAt,
       Value<String> entryMethod,
+      Value<String?> recurringId,
       required int createdAt,
       required int updatedAt,
       Value<int> rowid,
@@ -3189,6 +5069,7 @@ typedef $$TransactionsTableUpdateCompanionBuilder =
       Value<String?> description,
       Value<int> occurredAt,
       Value<String> entryMethod,
+      Value<String?> recurringId,
       Value<int> createdAt,
       Value<int> updatedAt,
       Value<int> rowid,
@@ -3243,6 +5124,24 @@ final class $$TransactionsTableReferences
       $_db.categories,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_categoryIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $RecurringOperationsTable _recurringIdTable(_$AppDatabase db) => db
+      .recurringOperations
+      .createAlias('transactions__recurring_id__recurring_operations__id');
+
+  $$RecurringOperationsTableProcessedTableManager? get recurringId {
+    final $_column = $_itemColumn<String>('recurring_id');
+    if ($_column == null) return null;
+    final manager = $$RecurringOperationsTableTableManager(
+      $_db,
+      $_db.recurringOperations,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_recurringIdTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: [item]),
@@ -3359,6 +5258,29 @@ class $$TransactionsTableFilterComposer
           }) => $$CategoriesTableFilterComposer(
             $db: $db,
             $table: $db.categories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$RecurringOperationsTableFilterComposer get recurringId {
+    final $$RecurringOperationsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.recurringId,
+      referencedTable: $db.recurringOperations,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RecurringOperationsTableFilterComposer(
+            $db: $db,
+            $table: $db.recurringOperations,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -3486,6 +5408,30 @@ class $$TransactionsTableOrderingComposer
     );
     return composer;
   }
+
+  $$RecurringOperationsTableOrderingComposer get recurringId {
+    final $$RecurringOperationsTableOrderingComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.recurringId,
+          referencedTable: $db.recurringOperations,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$RecurringOperationsTableOrderingComposer(
+                $db: $db,
+                $table: $db.recurringOperations,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
 }
 
 class $$TransactionsTableAnnotationComposer
@@ -3595,6 +5541,30 @@ class $$TransactionsTableAnnotationComposer
     );
     return composer;
   }
+
+  $$RecurringOperationsTableAnnotationComposer get recurringId {
+    final $$RecurringOperationsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.recurringId,
+          referencedTable: $db.recurringOperations,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$RecurringOperationsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.recurringOperations,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
 }
 
 class $$TransactionsTableTableManager
@@ -3614,6 +5584,7 @@ class $$TransactionsTableTableManager
             bool accountId,
             bool toAccountId,
             bool categoryId,
+            bool recurringId,
           })
         > {
   $$TransactionsTableTableManager(_$AppDatabase db, $TransactionsTable table)
@@ -3638,6 +5609,7 @@ class $$TransactionsTableTableManager
                 Value<String?> description = const Value.absent(),
                 Value<int> occurredAt = const Value.absent(),
                 Value<String> entryMethod = const Value.absent(),
+                Value<String?> recurringId = const Value.absent(),
                 Value<int> createdAt = const Value.absent(),
                 Value<int> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -3651,6 +5623,7 @@ class $$TransactionsTableTableManager
                 description: description,
                 occurredAt: occurredAt,
                 entryMethod: entryMethod,
+                recurringId: recurringId,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -3666,6 +5639,7 @@ class $$TransactionsTableTableManager
                 Value<String?> description = const Value.absent(),
                 required int occurredAt,
                 Value<String> entryMethod = const Value.absent(),
+                Value<String?> recurringId = const Value.absent(),
                 required int createdAt,
                 required int updatedAt,
                 Value<int> rowid = const Value.absent(),
@@ -3679,6 +5653,7 @@ class $$TransactionsTableTableManager
                 description: description,
                 occurredAt: occurredAt,
                 entryMethod: entryMethod,
+                recurringId: recurringId,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -3692,7 +5667,12 @@ class $$TransactionsTableTableManager
               )
               .toList(),
           prefetchHooksCallback:
-              ({accountId = false, toAccountId = false, categoryId = false}) {
+              ({
+                accountId = false,
+                toAccountId = false,
+                categoryId = false,
+                recurringId = false,
+              }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [],
@@ -3745,6 +5725,17 @@ class $$TransactionsTableTableManager
                                 .id,
                           ) as T;
                         }
+                        if (recurringId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.recurringId,
+                            referencedTable: $$TransactionsTableReferences
+                                ._recurringIdTable(db),
+                            referencedColumn: $$TransactionsTableReferences
+                                ._recurringIdTable(db)
+                                .id,
+                          ) as T;
+                        }
 
                         return state;
                       },
@@ -3773,6 +5764,7 @@ typedef $$TransactionsTableProcessedTableManager =
         bool accountId,
         bool toAccountId,
         bool categoryId,
+        bool recurringId,
       })
     >;
 typedef $$BudgetsTableCreateCompanionBuilder = BudgetsCompanion Function({
@@ -4119,6 +6111,8 @@ class $AppDatabaseManager {
       $$AccountsTableTableManager(_db, _db.accounts);
   $$CategoriesTableTableManager get categories =>
       $$CategoriesTableTableManager(_db, _db.categories);
+  $$RecurringOperationsTableTableManager get recurringOperations =>
+      $$RecurringOperationsTableTableManager(_db, _db.recurringOperations);
   $$TransactionsTableTableManager get transactions =>
       $$TransactionsTableTableManager(_db, _db.transactions);
   $$BudgetsTableTableManager get budgets =>

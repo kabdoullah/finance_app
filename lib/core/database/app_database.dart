@@ -4,6 +4,7 @@ import '../../features/accounts/data/accounts_table.dart';
 import '../../features/budgets/data/budgets_table.dart';
 import '../../features/categories/data/categories_table.dart';
 import '../../features/categories/data/default_categories.dart';
+import '../../features/recurring/data/recurring_table.dart';
 import '../../features/transactions/data/transactions_table.dart';
 import 'app_database.steps.dart';
 
@@ -14,12 +15,14 @@ part 'app_database.g.dart';
 /// Les tables sont ajoutées fonctionnalité par fonctionnalité. Toute
 /// modification du schéma passe par une migration
 /// (`dart run drift_dev make-migrations`) testée.
-@DriftDatabase(tables: [Accounts, Categories, Transactions, Budgets])
+@DriftDatabase(
+  tables: [Accounts, Categories, Transactions, Budgets, RecurringOperations],
+)
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -49,6 +52,11 @@ class AppDatabase extends _$AppDatabase {
       from4To5: (m, schema) async {
         await m.createTable(schema.budgets);
         await m.createIndex(schema.budgetsCategoryUnique);
+      },
+      from5To6: (m, schema) async {
+        await m.createTable(schema.recurringOperations);
+        await m.createIndex(schema.recurringNextDue);
+        await m.addColumn(schema.transactions, schema.transactions.recurringId);
       },
     ),
     beforeOpen: (details) async {

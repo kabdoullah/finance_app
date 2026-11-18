@@ -68,6 +68,7 @@ class TransactionsRepository {
   Future<Result<Transaction>> create(
     TransactionDraft draft, {
     EntryMethod entryMethod = EntryMethod.manual,
+    String? recurringId,
   }) => _guard(() async {
     final errors = await _validate(draft);
     if (errors.isNotEmpty) return Err(ValidationFailure(errors));
@@ -80,6 +81,7 @@ class TransactionsRepository {
           _companion(draft).copyWith(
             id: Value(id),
             entryMethod: Value(entryMethod.storageValue),
+            recurringId: Value(recurringId),
             createdAt: Value(now),
             updatedAt: Value(now),
           ),
@@ -105,7 +107,10 @@ class TransactionsRepository {
     if (original == null) return const Err(NotFoundFailure());
     return create(
       TransactionDraft.from(original).copyWith(occurredAt: _clock()),
-      entryMethod: original.entryMethod,
+      // Une copie d'une échéance récurrente est une saisie à la main.
+      entryMethod: original.entryMethod == EntryMethod.recurring
+          ? EntryMethod.manual
+          : original.entryMethod,
     );
   });
 
@@ -120,12 +125,21 @@ class TransactionsRepository {
   /// Annule une suppression : réinsère l'opération à l'identique.
   Future<Result<void>> restore(Transaction transaction) => _guard(() async {
     final now = _nowMs();
+    // Le modèle récurrent a pu être supprimé entre-temps.
+    final recurringId = transaction.recurringId;
+    final keepsLink =
+        recurringId != null &&
+        await (_db.select(
+              _db.recurringOperations,
+            )..where((r) => r.id.equals(recurringId))).getSingleOrNull() !=
+            null;
     await _db
         .into(_db.transactions)
         .insert(
           _companion(TransactionDraft.from(transaction)).copyWith(
             id: Value(transaction.id),
             entryMethod: Value(transaction.entryMethod.storageValue),
+            recurringId: Value(keepsLink ? recurringId : null),
             createdAt: Value(now),
             updatedAt: Value(now),
           ),
@@ -244,6 +258,7 @@ class TransactionsRepository {
         isUtc: true,
       ),
       entryMethod: EntryMethod.fromStorage(t.entryMethod),
+      recurringId: t.recurringId,
     );
   }
 

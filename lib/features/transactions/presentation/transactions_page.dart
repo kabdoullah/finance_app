@@ -127,6 +127,11 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
             ),
           ),
           IconButton(
+            tooltip: l10n.recurringTitle,
+            onPressed: () => context.go(AppRoutes.recurring),
+            icon: const Icon(AppIcons.repeat, size: 20),
+          ),
+          IconButton(
             tooltip: l10n.accountsTitle,
             onPressed: () => context.go(AppRoutes.accounts),
             icon: const Icon(AppIcons.wallet, size: 20),

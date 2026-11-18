@@ -9,6 +9,9 @@ import '../features/budgets/presentation/budget_form_page.dart';
 import '../features/budgets/presentation/budgets_page.dart';
 import '../features/categories/presentation/categories_page.dart';
 import '../features/dashboard/presentation/dashboard_page.dart';
+import '../features/recurring/presentation/recurring_auto_recorder.dart';
+import '../features/recurring/presentation/recurring_form_page.dart';
+import '../features/recurring/presentation/recurring_page.dart';
 import '../features/settings/presentation/settings_page.dart';
 import '../features/transactions/domain/transaction.dart';
 import '../features/transactions/presentation/add_transaction_page.dart';
@@ -41,6 +44,12 @@ abstract final class AppRoutes {
         queryParameters: {'kind': ?kind?.storageValue, 'account': ?accountId},
       ).toString();
   static String transactionDetail(String id) => '/transactions/$id';
+  static const recurring = '/transactions/recurring';
+  static String newRecurring({String? fromTransactionId}) => Uri(
+    path: '/recurring/new',
+    queryParameters: {'from': ?fromTransactionId},
+  ).toString();
+  static String editRecurring(String id) => '/recurring/$id/edit';
 }
 
 /// Routeur de l'application : 5 onglets (chacun garde sa pile de navigation)
@@ -92,8 +101,25 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           child: BudgetFormPage(budgetId: state.pathParameters['id']),
         ),
       ),
+      GoRoute(
+        path: '/recurring/new',
+        pageBuilder: (context, state) => MaterialPage(
+          fullscreenDialog: true,
+          child: RecurringFormPage(
+            fromTransactionId: state.uri.queryParameters['from'],
+          ),
+        ),
+      ),
+      GoRoute(
+        path: '/recurring/:id/edit',
+        pageBuilder: (context, state) => MaterialPage(
+          fullscreenDialog: true,
+          child: RecurringFormPage(recurringId: state.pathParameters['id']),
+        ),
+      ),
       StatefulShellRoute.indexedStack(
-        builder: (context, state, shell) => AppShell(navigationShell: shell),
+        builder: (context, state, shell) =>
+            RecurringAutoRecorder(child: AppShell(navigationShell: shell)),
         branches: [
           StatefulShellBranch(
             routes: [
@@ -124,6 +150,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 path: AppRoutes.transactions,
                 builder: (context, state) => const TransactionsPage(),
                 routes: [
+                  // Avant « :id » : « recurring » n'est pas une opération.
+                  GoRoute(
+                    path: 'recurring',
+                    builder: (context, state) => const RecurringPage(),
+                  ),
                   GoRoute(
                     path: ':id',
                     builder: (context, state) => TransactionDetailPage(

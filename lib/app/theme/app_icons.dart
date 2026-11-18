@@ -27,6 +27,11 @@ abstract final class AppIcons {
   static const xBold = IconData(0xe4f6, fontFamily: _bold);
   static const plusBold = IconData(0xe3d4, fontFamily: _bold);
   static const checkBold = IconData(0xe182, fontFamily: _bold);
+  static const clockBold = IconData(0xe19a, fontFamily: _bold);
+  static const repeatBold = IconData(0xe3f6, fontFamily: _bold);
+  static const repeat = IconData(0xe3f6, fontFamily: _regular);
+  static const play = IconData(0xe3d0, fontFamily: _regular);
+  static const stop = IconData(0xe46c, fontFamily: _regular);
   static const warningCircleBold = IconData(0xe4e2, fontFamily: _bold);
   static const chartLineBold = IconData(0xe154, fontFamily: _bold);
   static const archive = IconData(0xe00c, fontFamily: _regular);

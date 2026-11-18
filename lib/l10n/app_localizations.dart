@@ -1624,6 +1624,448 @@ abstract class AppLocalizations {
   /// **'Dupliquer'**
   String get txDuplicate;
 
+  /// No description provided for @recurringTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Opérations récurrentes'**
+  String get recurringTitle;
+
+  /// No description provided for @recurringIntroBefore.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce sont des '**
+  String get recurringIntroBefore;
+
+  /// No description provided for @recurringIntroBold.
+  ///
+  /// In fr, this message translates to:
+  /// **'modèles'**
+  String get recurringIntroBold;
+
+  /// No description provided for @recurringIntroAfter.
+  ///
+  /// In fr, this message translates to:
+  /// **' : ils servent aux prévisions et te rappellent les échéances, mais ne changent ton solde qu\'une fois l\'opération enregistrée.'**
+  String get recurringIntroAfter;
+
+  /// No description provided for @recurringIncomePerMonth.
+  ///
+  /// In fr, this message translates to:
+  /// **'Revenus prévus / mois'**
+  String get recurringIncomePerMonth;
+
+  /// No description provided for @recurringExpensePerMonth.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépenses prévues / mois'**
+  String get recurringExpensePerMonth;
+
+  /// No description provided for @recurringPendingToday.
+  ///
+  /// In fr, this message translates to:
+  /// **'À confirmer · échéance aujourd\'hui'**
+  String get recurringPendingToday;
+
+  /// No description provided for @recurringPendingYesterday.
+  ///
+  /// In fr, this message translates to:
+  /// **'À confirmer · échéance hier'**
+  String get recurringPendingYesterday;
+
+  /// No description provided for @recurringPendingOn.
+  ///
+  /// In fr, this message translates to:
+  /// **'À confirmer · échéance du {date}'**
+  String recurringPendingOn(String date);
+
+  /// No description provided for @recurringPendingMeta.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prévue le {date} · {account} · pas encore dans tes opérations'**
+  String recurringPendingMeta(String date, String account);
+
+  /// No description provided for @recurringWaitingTurn.
+  ///
+  /// In fr, this message translates to:
+  /// **'À traiter après l\'échéance du {date}.'**
+  String recurringWaitingTurn(String date);
+
+  /// No description provided for @recurringRecord.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer'**
+  String get recurringRecord;
+
+  /// No description provided for @recurringSkipWeek.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas cette semaine'**
+  String get recurringSkipWeek;
+
+  /// No description provided for @recurringSkipMonth.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas ce mois-ci'**
+  String get recurringSkipMonth;
+
+  /// No description provided for @recurringSkipYear.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas cette année'**
+  String get recurringSkipYear;
+
+  /// No description provided for @recurringModels.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modèles'**
+  String get recurringModels;
+
+  /// No description provided for @recurringNext.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prochaine échéance : {date}'**
+  String recurringNext(String date);
+
+  /// No description provided for @recurringPaused.
+  ///
+  /// In fr, this message translates to:
+  /// **'En pause · aucune échéance prévue'**
+  String get recurringPaused;
+
+  /// No description provided for @recurringFinished.
+  ///
+  /// In fr, this message translates to:
+  /// **'Terminée · plus d\'échéance'**
+  String get recurringFinished;
+
+  /// No description provided for @recurringEstimated.
+  ///
+  /// In fr, this message translates to:
+  /// **'montant estimé'**
+  String get recurringEstimated;
+
+  /// No description provided for @recurringNew.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle opération récurrente'**
+  String get recurringNew;
+
+  /// No description provided for @recurringEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune opération récurrente. Programme ton salaire, ton loyer ou ta tontine : l\'appli te rappelle chaque échéance.'**
+  String get recurringEmpty;
+
+  /// No description provided for @recurringPausedToast.
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} mise en pause : elle ne compte plus dans les prévisions.'**
+  String recurringPausedToast(String name);
+
+  /// No description provided for @recurringResumedToast.
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} réactivée : elle compte à nouveau dans les prévisions.'**
+  String recurringResumedToast(String name);
+
+  /// No description provided for @recurringRecordedToast.
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} enregistrée : {amount} FCFA sur {account}.'**
+  String recurringRecordedToast(String name, String amount, String account);
+
+  /// No description provided for @recurringSkippedToast.
+  ///
+  /// In fr, this message translates to:
+  /// **'Échéance ignorée. Le modèle reste actif.'**
+  String get recurringSkippedToast;
+
+  /// No description provided for @recurringAutoRecorded.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 opération récurrente enregistrée automatiquement.} other{{count} opérations récurrentes enregistrées automatiquement.}}'**
+  String recurringAutoRecorded(int count);
+
+  /// No description provided for @recurringMetaWeek.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chaque {weekday}'**
+  String recurringMetaWeek(String weekday);
+
+  /// No description provided for @recurringMetaMonth.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chaque mois, le {day}'**
+  String recurringMetaMonth(String day);
+
+  /// No description provided for @recurringMetaYear.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chaque année, le {date}'**
+  String recurringMetaYear(String date);
+
+  /// No description provided for @recurringDueWeek.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chaque {weekday}'**
+  String recurringDueWeek(String weekday);
+
+  /// No description provided for @recurringDueMonth.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le {day} de chaque mois'**
+  String recurringDueMonth(String day);
+
+  /// No description provided for @recurringDueYear.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chaque {date}'**
+  String recurringDueYear(String date);
+
+  /// No description provided for @recurringNewTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle récurrence'**
+  String get recurringNewTitle;
+
+  /// No description provided for @recurringEditTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier la récurrence'**
+  String get recurringEditTitle;
+
+  /// No description provided for @recurringCreatedTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Programmée'**
+  String get recurringCreatedTitle;
+
+  /// No description provided for @recurringName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom'**
+  String get recurringName;
+
+  /// No description provided for @recurringNameHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex. : Tontine du quartier'**
+  String get recurringNameHint;
+
+  /// No description provided for @recurringAmount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Montant'**
+  String get recurringAmount;
+
+  /// No description provided for @recurringVariable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Montant variable'**
+  String get recurringVariable;
+
+  /// No description provided for @recurringVariableHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex. : facture d\'électricité. Tu confirmes le montant réel.'**
+  String get recurringVariableHelp;
+
+  /// No description provided for @recurringFrequency.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fréquence'**
+  String get recurringFrequency;
+
+  /// No description provided for @recurringFreqWeek.
+  ///
+  /// In fr, this message translates to:
+  /// **'Semaine'**
+  String get recurringFreqWeek;
+
+  /// No description provided for @recurringFreqMonth.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mois'**
+  String get recurringFreqMonth;
+
+  /// No description provided for @recurringFreqYear.
+  ///
+  /// In fr, this message translates to:
+  /// **'Année'**
+  String get recurringFreqYear;
+
+  /// No description provided for @recurringDue.
+  ///
+  /// In fr, this message translates to:
+  /// **'Échéance'**
+  String get recurringDue;
+
+  /// No description provided for @recurringStart.
+  ///
+  /// In fr, this message translates to:
+  /// **'Début'**
+  String get recurringStart;
+
+  /// No description provided for @recurringEnd.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fin'**
+  String get recurringEnd;
+
+  /// No description provided for @recurringNoEnd.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sans fin'**
+  String get recurringNoEnd;
+
+  /// No description provided for @recurringEndOnDate.
+  ///
+  /// In fr, this message translates to:
+  /// **'À une date'**
+  String get recurringEndOnDate;
+
+  /// No description provided for @recurringLastDue.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dernière échéance'**
+  String get recurringLastDue;
+
+  /// No description provided for @recurringLastDueValue.
+  ///
+  /// In fr, this message translates to:
+  /// **'{date} · {count} fois'**
+  String recurringLastDueValue(String date, int count);
+
+  /// No description provided for @recurringAsk.
+  ///
+  /// In fr, this message translates to:
+  /// **'Me demander avant d\'enregistrer'**
+  String get recurringAsk;
+
+  /// No description provided for @recurringAskOn.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une demande apparaît à chaque échéance. Tu ajustes le montant si besoin.'**
+  String get recurringAskOn;
+
+  /// No description provided for @recurringAskOff.
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'opération sera enregistrée automatiquement à la date prévue.'**
+  String get recurringAskOff;
+
+  /// No description provided for @recurringSave.
+  ///
+  /// In fr, this message translates to:
+  /// **'Programmer'**
+  String get recurringSave;
+
+  /// No description provided for @recurringSaveChanges.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer'**
+  String get recurringSaveChanges;
+
+  /// No description provided for @recurringDelete.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer ce modèle'**
+  String get recurringDelete;
+
+  /// No description provided for @recurringDeleteTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer ce modèle ?'**
+  String get recurringDeleteTitle;
+
+  /// No description provided for @recurringDeleteBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les opérations déjà enregistrées restent dans ton historique.'**
+  String get recurringDeleteBody;
+
+  /// No description provided for @recurringDeleted.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modèle supprimé.'**
+  String get recurringDeleted;
+
+  /// No description provided for @recurringCreatedMessage.
+  ///
+  /// In fr, this message translates to:
+  /// **'« {name} » programmée'**
+  String recurringCreatedMessage(String name);
+
+  /// No description provided for @recurringCreatedSummary.
+  ///
+  /// In fr, this message translates to:
+  /// **'{amount} FCFA {schedule} · {account}'**
+  String recurringCreatedSummary(
+    String amount,
+    String schedule,
+    String account,
+  );
+
+  /// No description provided for @recurringCreatedNext.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prochaine échéance : {date}. Rien n\'est enregistré avant cette date.'**
+  String recurringCreatedNext(String date);
+
+  /// No description provided for @recurringSeeAll.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir les opérations récurrentes'**
+  String get recurringSeeAll;
+
+  /// No description provided for @recurringErrorName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Donne un nom à cette opération.'**
+  String get recurringErrorName;
+
+  /// No description provided for @recurringErrorAmount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Indique un montant supérieur à 0.'**
+  String get recurringErrorAmount;
+
+  /// No description provided for @recurringErrorEnd.
+  ///
+  /// In fr, this message translates to:
+  /// **'La fin doit être après le début.'**
+  String get recurringErrorEnd;
+
+  /// No description provided for @recurringErrorAccount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce compte n\'est plus disponible.'**
+  String get recurringErrorAccount;
+
+  /// No description provided for @recurringErrorCategory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisis une catégorie.'**
+  String get recurringErrorCategory;
+
+  /// No description provided for @recurringRealAmountTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Montant réel : {name}'**
+  String recurringRealAmountTitle(String name);
+
+  /// No description provided for @recurringRealAmountHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Estimation : {amount} FCFA.'**
+  String recurringRealAmountHelp(String amount);
+
+  /// No description provided for @txMakeRecurring.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rendre récurrente'**
+  String get txMakeRecurring;
+
   /// No description provided for @txDuplicated.
   ///
   /// In fr, this message translates to:
