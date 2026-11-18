@@ -7,6 +7,7 @@ import '../../accounts/domain/account.dart';
 import '../../accounts/domain/account_type.dart';
 import '../../categories/domain/category.dart';
 import '../../transactions/domain/transaction.dart';
+import '../../transactions/domain/transaction_draft.dart';
 
 /// Champ deviné sans certitude : affiché « À vérifier » au récapitulatif.
 enum ParsedField { amount, category, account }
@@ -43,6 +44,27 @@ class ParsedOperation {
   /// Morceau de phrase d'origine, tel que dit ou écrit (envoyé à Gemma).
   final String source;
   final Set<ParsedField> uncertain;
+
+  /// Saisie à enregistrer, datée du jour de l'opération à l'heure de [now].
+  TransactionDraft toDraft(DateTime now) {
+    final isTransfer = kind == TransactionKind.transfer;
+    return TransactionDraft(
+      kind: kind,
+      amount: amount ?? Money.zero,
+      occurredAt: DateTime(
+        date.year,
+        date.month,
+        date.day,
+        now.hour,
+        now.minute,
+        now.second,
+      ),
+      accountId: accountId,
+      toAccountId: isTransfer ? toAccountId : null,
+      categoryId: isTransfer ? null : categoryId,
+      description: description,
+    );
+  }
 }
 
 /// Ce que l'analyseur connaît de l'utilisateur.

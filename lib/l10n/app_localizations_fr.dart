@@ -1418,16 +1418,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Pose une question sur tes dépenses, tes budgets, tes soldes ou un achat. Les chiffres sont toujours calculés par l\'application.';
 
   @override
-  String get asSuggest1 => 'Combien ai-je dépensé cette semaine ?';
-
-  @override
   String get asSuggest2 => 'Quelle catégorie me coûte le plus ?';
 
   @override
   String get asSuggest3 => 'Combien puis-je dépenser cette semaine ?';
-
-  @override
-  String get asSuggest4 => 'Mon solde à la fin du mois ?';
 
   @override
   String get asSuggest5 => 'Puis-je acheter un téléphone à 150 000 ?';
@@ -1631,6 +1625,136 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String asRowEndWithout(String date) {
     return 'Le $date, sans l\'achat';
+  }
+
+  @override
+  String get asSuggestSave => 'Pourquoi j\'ai du mal à économiser ?';
+
+  @override
+  String get asSuggestGoal => 'Comment économiser 100 000 en 3 mois ?';
+
+  @override
+  String get asPrepared =>
+      'J\'ai préparé cette opération. Vérifie avant d\'enregistrer :';
+
+  @override
+  String asPreparedMany(int count) {
+    return 'J\'ai préparé ces $count opérations. Vérifie avant d\'enregistrer :';
+  }
+
+  @override
+  String get asPreparedNone =>
+      'Je n\'ai pas trouvé de montant. Écris par exemple « Taxi 2 500 avec Wave ».';
+
+  @override
+  String asSavePrepared(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Enregistrer les $count opérations',
+      one: 'Enregistrer',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get asEditPrepared => 'Modifier';
+
+  @override
+  String asSavedOne(String kind, String account, String balance) {
+    return '$kind enregistrée · solde $account : $balance FCFA';
+  }
+
+  @override
+  String asSavedMany(int count) {
+    return '$count opérations enregistrées';
+  }
+
+  @override
+  String get asSaveFailed =>
+      'L\'enregistrement a échoué. Touche « Modifier » pour vérifier l\'opération.';
+
+  @override
+  String get asNotSaved => 'Non enregistrée';
+
+  @override
+  String get asRowAmount => 'Montant';
+
+  @override
+  String get asRowCategory => 'Catégorie';
+
+  @override
+  String get asRowAccount => 'Compte';
+
+  @override
+  String get asRowDate => 'Date';
+
+  @override
+  String get asSavingsTooEarly =>
+      'Il faut environ un mois d\'opérations pour faire ce bilan.';
+
+  @override
+  String asSavings(String income, String expenses, String percent) {
+    return 'En moyenne, tu gagnes $income FCFA et tu dépenses $expenses FCFA par mois. Tes charges fixes en représentent $percent %.';
+  }
+
+  @override
+  String asSavingsDeficit(String expenses, String income, String percent) {
+    return 'En moyenne, tes dépenses ($expenses FCFA) dépassent tes revenus ($income FCFA) chaque mois. Tes charges fixes en représentent $percent %.';
+  }
+
+  @override
+  String get asRowIncome => 'Revenus moyens';
+
+  @override
+  String get asRowExpenses => 'Dépenses moyennes';
+
+  @override
+  String get asRowFixed => 'Dont charges fixes';
+
+  @override
+  String asGoalFeasible(String monthly, String surplus) {
+    return 'C\'est faisable : il faut mettre de côté environ $monthly FCFA par mois, et tu épargnes en moyenne $surplus FCFA par mois.';
+  }
+
+  @override
+  String asGoalHard(String monthly, String surplus) {
+    return 'Il faudrait mettre de côté $monthly FCFA par mois, plus que ton épargne moyenne actuelle ($surplus FCFA). Un délai plus long ou moins de dépenses aideraient.';
+  }
+
+  @override
+  String asGoalUnknown(String monthly) {
+    return 'Il faut mettre de côté environ $monthly FCFA par mois.';
+  }
+
+  @override
+  String get asRowMonthly => 'À mettre de côté par mois';
+
+  @override
+  String get asRowSurplus => 'Ton épargne moyenne actuelle';
+
+  @override
+  String get asRowDeadline => 'Échéance';
+
+  @override
+  String get asLinkGoal => 'Créer l\'objectif';
+
+  @override
+  String get simAskCopilot => 'En parler au Copilote';
+
+  @override
+  String simAskQuestion(String label, String price) {
+    return 'Puis-je acheter $label à $price FCFA ?';
+  }
+
+  @override
+  String simAskQuestionNoLabel(String price) {
+    return 'Puis-je faire un achat de $price FCFA ?';
+  }
+
+  @override
+  String goalDueMonths(int count) {
+    return '$count mois';
   }
 
   @override

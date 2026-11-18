@@ -21,7 +21,11 @@ import '../../categories/presentation/categories_providers.dart';
 import '../../forecast/domain/forecast.dart';
 import '../../forecast/domain/purchase_simulation.dart';
 import '../../forecast/presentation/forecast_providers.dart';
+import '../../goals/data/goals_repository.dart';
+import '../../goals/domain/savings_goal.dart';
 import '../../goals/presentation/goals_providers.dart';
+import '../../quick_entry/domain/quick_entry_parser.dart';
+import '../../recurring/domain/recurring_operation.dart';
 import '../../recurring/presentation/recurring_providers.dart';
 import '../../transactions/domain/expense_breakdown.dart';
 import '../../transactions/domain/transaction.dart';
@@ -41,6 +45,10 @@ class AssistantToolbox {
   /// Codes stables → catégories de dépenses et comptes (voir [prepare]).
   final _categories = <String, Category>{};
   final _accounts = <String, Account>{};
+
+  /// Question en cours : une opération préparée est lue dans la phrase de
+  /// l'utilisateur, jamais dans la reformulation de Gemma.
+  String question = '';
 
   static const instruction =
       "Tu es le Copilote d'une application de finances personnelles en Côte "
@@ -140,6 +148,41 @@ class AssistantToolbox {
           'required': ['price'],
         },
       ),
+      const Tool(
+        name: 'prepare_operation',
+        description:
+            'Prépare une dépense, un revenu ou un transfert que '
+            "l'utilisateur décrit (« Taxi 2 500 ce matin avec Wave »). "
+            "L'utilisateur confirme avant tout enregistrement.",
+        parameters: {
+          'type': 'object',
+          'properties': {
+            'text': {'type': 'string'},
+          },
+        },
+      ),
+      const Tool(
+        name: 'get_savings_overview',
+        description:
+            "Bilan d'épargne : revenus et dépenses moyens par mois, part "
+            "des charges fixes. Pour « pourquoi j'ai du mal à économiser ».",
+        parameters: {'type': 'object', 'properties': <String, Object?>{}},
+      ),
+      const Tool(
+        name: 'plan_savings_goal',
+        description:
+            'Combien mettre de côté par mois pour réunir une somme en un '
+            'nombre de mois, comparé à l\'épargne moyenne.',
+        parameters: {
+          'type': 'object',
+          'properties': {
+            'amount': {'type': 'integer'},
+            'months': {'type': 'integer'},
+            'label': {'type': 'string'},
+          },
+          'required': ['amount', 'months'],
+        },
+      ),
     ];
   }
 
@@ -150,6 +193,9 @@ class AssistantToolbox {
         'get_balance' => _balance(args),
         'get_forecast' => _forecast(args),
         'simulate_purchase' => _simulate(args),
+        'prepare_operation' => _prepare(),
+        'get_savings_overview' => _savings(),
+        'plan_savings_goal' => _goal(args),
         _ => Future.value(
           ToolOutcome(data: {'error': 'unknown tool'}, summary: _l10n.asError),
         ),
@@ -571,6 +617,162 @@ class AssistantToolbox {
         ReplyRow(
           _l10n.asRowEndWithout(end),
           '≈ ${_fcfa(simulation.endWithout)}',
+        ),
+      ],
+      link: link,
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // Opération préparée, bilan d'épargne, objectif.
+
+  Future<ToolOutcome> _prepare() async {
+    final accounts = await _read(activeAccountsProvider);
+    final lastUsed = await _ref
+        .read(transactionsRepositoryProvider)
+        .lastUsedAccountId();
+    final operations = const QuickEntryParser().parse(
+      question,
+      QuickEntryContext(
+        now: _now,
+        accounts: accounts,
+        expenseGroups: await _read(
+          categoryGroupsProvider(CategoryKind.expense),
+        ),
+        incomeGroups: await _read(categoryGroupsProvider(CategoryKind.income)),
+        defaultAccountId: lastUsed ?? accounts.firstOrNull?.id,
+      ),
+    );
+    final usable = [
+      for (final op in operations)
+        if (op.amount != null) op,
+    ];
+    if (usable.isEmpty) {
+      return ToolOutcome(
+        data: const {'prepared': 0},
+        summary: _l10n.asPreparedNone,
+      );
+    }
+    return ToolOutcome(
+      data: {
+        'prepared': usable.length,
+        'saved': false,
+        'operations': [
+          for (final op in usable)
+            {'kind': op.kind.name, 'amount_fcfa': op.amount!.value},
+        ],
+      },
+      summary: usable.length == 1
+          ? _l10n.asPrepared
+          : _l10n.asPreparedMany(usable.length),
+      prepared: usable,
+    );
+  }
+
+  Future<ToolOutcome> _savings() async {
+    const link = ReplyLink(ReplyLinkTarget.budgets);
+    final history = await _read(spendingHistoryProvider);
+    final goals = _ref.read(goalsRepositoryProvider);
+    final surplus = await goals.averageMonthlySurplus();
+    final expenses = await goals.averageMonthlyExpenses();
+    if (history.daysOfHistory(_now) < GoalsRepository.minHistoryDays ||
+        surplus == null ||
+        expenses == null ||
+        expenses.value <= 0) {
+      return ToolOutcome(
+        data: const {'savings': 'not_enough_history'},
+        summary: _l10n.asSavingsTooEarly,
+        link: link,
+      );
+    }
+    final income = surplus + expenses;
+    final fixed = RecurringTotals.of(await _read(recurringOperationsProvider))
+        .expense;
+    final percent = (fixed.value * 100 / expenses.value).round();
+    final top = income.value > expenses.value ? income.value : expenses.value;
+    return ToolOutcome(
+      data: {
+        'average_income_fcfa': income.value,
+        'average_expenses_fcfa': expenses.value,
+        'average_savings_fcfa': surplus.value,
+        'fixed_charges_fcfa': fixed.value,
+        'fixed_percent': percent,
+      },
+      summary: surplus.value < 0
+          ? _l10n.asSavingsDeficit(
+              _amount(expenses),
+              _amount(income),
+              '$percent',
+            )
+          : _l10n.asSavings(_amount(income), _amount(expenses), '$percent'),
+      rows: [
+        ReplyRow(
+          _l10n.asRowIncome,
+          _fcfa(income),
+          ratio: top == 0 ? 0 : income.value / top,
+        ),
+        ReplyRow(
+          _l10n.asRowExpenses,
+          _fcfa(expenses),
+          ratio: top == 0 ? 0 : expenses.value / top,
+        ),
+        ReplyRow(
+          '${_l10n.asRowFixed} ($percent %)',
+          _fcfa(fixed),
+          ratio: top == 0 ? 0 : (fixed.value / top).clamp(0, 1).toDouble(),
+        ),
+      ],
+      link: link,
+    );
+  }
+
+  Future<ToolOutcome> _goal(Map<String, dynamic> args) async {
+    final amount = switch (args['amount']) {
+      final num a => a.round(),
+      _ => 0,
+    };
+    final months = switch (args['months']) {
+      final num m => m.round().clamp(1, 120),
+      _ => 0,
+    };
+    final label = (args['label'] as String?)?.trim() ?? '';
+    if (amount <= 0 || months <= 0) {
+      return ToolOutcome(
+        data: const {'goal': 'invalid'},
+        summary: _l10n.asFallback,
+      );
+    }
+    final monthly = roundUpToHundred(Money((amount / months).ceil()));
+    final now = _now;
+    final deadline = DateTime(now.year, now.month + months, now.day);
+    final surplus = await _ref
+        .read(goalsRepositoryProvider)
+        .averageMonthlySurplus();
+    final link = ReplyLink(
+      ReplyLinkTarget.goal,
+      goalName: label.isEmpty ? null : label,
+      goalTarget: amount,
+      goalMonths: months,
+    );
+    return ToolOutcome(
+      data: {
+        'amount_fcfa': amount,
+        'months': months,
+        'monthly_fcfa': monthly.value,
+        'deadline': AppDateFormat.dayMonthYear(deadline, _locale),
+        'average_savings_fcfa': ?surplus?.value,
+      },
+      summary: surplus == null
+          ? _l10n.asGoalUnknown(_amount(monthly))
+          : surplus.value >= monthly.value
+          ? _l10n.asGoalFeasible(_amount(monthly), _amount(surplus))
+          : _l10n.asGoalHard(_amount(monthly), _amount(surplus)),
+      rows: [
+        ReplyRow(_l10n.asRowMonthly, _fcfa(monthly)),
+        if (surplus != null) ReplyRow(_l10n.asRowSurplus, _fcfa(surplus)),
+        ReplyRow(
+          _l10n.asRowDeadline,
+          AppDateFormat.dayMonthYear(deadline, _locale),
         ),
       ],
       link: link,

@@ -129,7 +129,12 @@ void main() {
     // Sans épargne mais après le salaire du 1er déc. : possible aussi.
     await tester.tap(find.byType(Switch));
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.text('Après « Salaire » (1er déc.)'));
+    // La page est longue : l'option peut être hors de la zone construite.
+    await tester.scrollUntilVisible(
+      find.text('Après « Salaire » (1er déc.)'),
+      -200,
+      scrollable: scrollableOf(SimulationPage),
+    );
     await tester.tap(find.text('Après « Salaire » (1er déc.)'));
     await tester.pumpAndSettle();
     expect(find.text('Possible'), findsOneWidget);

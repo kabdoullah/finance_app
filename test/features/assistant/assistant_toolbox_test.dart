@@ -97,6 +97,9 @@ void main() {
       'get_balance',
       'get_forecast',
       'simulate_purchase',
+      'prepare_operation',
+      'get_savings_overview',
+      'plan_savings_goal',
     ]);
     final balance = tools[2].parameters['properties'] as Map;
     expect((balance['account'] as Map)['enum'], ['orange_money', 'wave']);
@@ -169,5 +172,43 @@ void main() {
     expect(simulation.data['verdict'], 'discouraged');
     expect(simulation.link?.simulationPrice, 150000);
     expect(simulation.link?.simulationLabel, 'Téléphone');
+  });
+
+  test('opération préparée depuis la phrase de l\'utilisateur', () async {
+    toolbox.question = 'Taxi 2 500 ce matin avec Wave';
+    final outcome = await toolbox.run('prepare_operation', {
+      // Reformulation de Gemma ignorée.
+      'text': 'taxi 9 999',
+    });
+    expect(outcome.prepared, hasLength(1));
+    expect(outcome.prepared.single.amount, const Money(2500));
+    expect(outcome.data['prepared'], 1);
+    expect(outcome.rows, isEmpty);
+
+    toolbox.question = 'bonjour';
+    final none = await toolbox.run('prepare_operation', {});
+    expect(none.prepared, isEmpty);
+    expect(none.summary, startsWith('Je n\'ai pas trouvé de montant'));
+  });
+
+  test('bilan d\'épargne : moins d\'un mois d\'historique', () async {
+    final outcome = await toolbox.run('get_savings_overview', {});
+    expect(outcome.data['savings'], 'not_enough_history');
+    expect(outcome.rows, isEmpty);
+  });
+
+  test('objectif : 100 000 en 3 mois', () async {
+    final outcome = await toolbox.run('plan_savings_goal', {
+      'amount': 100000,
+      'months': 3,
+      'label': 'Moto',
+    });
+    // 33 333,33 arrondi à la centaine supérieure.
+    expect(outcome.data['monthly_fcfa'], 33400);
+    expect(outcome.rows.first.value, '33\u00a0400 FCFA');
+    expect(outcome.link?.target, ReplyLinkTarget.goal);
+    expect(outcome.link?.goalMonths, 3);
+    expect(outcome.link?.goalTarget, 100000);
+    expect(outcome.link?.goalName, 'Moto');
   });
 }

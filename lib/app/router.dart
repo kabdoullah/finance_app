@@ -35,9 +35,17 @@ abstract final class AppRoutes {
   static const goals = '/budgets/goals';
   static String goalDetail(String id) => '/budgets/goals/$id';
   static const newGoal = '/goals/new';
-  static String newGoalFor({required String name, required int target}) => Uri(
+  static String newGoalFor({
+    required String name,
+    required int target,
+    int? months,
+  }) => Uri(
     path: newGoal,
-    queryParameters: {'name': name, 'target': '$target'},
+    queryParameters: {
+      'name': name,
+      'target': '$target',
+      'months': ?months?.toString(),
+    },
   ).toString();
   static const simulation = '/forecast/simulate';
   static String simulationFor({String? label, int? price}) => Uri(
@@ -65,10 +73,14 @@ abstract final class AppRoutes {
       ).toString();
   static String transactionDetail(String id) => '/transactions/$id';
 
-  /// Saisie rapide : dictée, ou texte avec [text].
-  static String quickEntry({bool text = false}) => Uri(
+  /// Saisie rapide : dictée, ou texte avec [text] ; [initialText] est
+  /// analysé dès l'ouverture.
+  static String quickEntry({bool text = false, String? initialText}) => Uri(
     path: '/quick-entry',
-    queryParameters: {if (text) 'mode': 'text'},
+    queryParameters: {
+      if (text || initialText != null) 'mode': 'text',
+      'text': ?initialText,
+    },
   ).toString();
   static const recurring = '/transactions/recurring';
   static String newRecurring({String? fromTransactionId}) => Uri(
@@ -116,6 +128,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             initialMode: state.uri.queryParameters['mode'] == 'text'
                 ? QuickEntryMode.text
                 : QuickEntryMode.voice,
+            initialText: state.uri.queryParameters['text'],
           ),
         ),
       ),
@@ -162,6 +175,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             initialName: state.uri.queryParameters['name'],
             initialTarget: int.tryParse(
               state.uri.queryParameters['target'] ?? '',
+            ),
+            initialMonths: int.tryParse(
+              state.uri.queryParameters['months'] ?? '',
             ),
           ),
         ),

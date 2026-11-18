@@ -50,9 +50,17 @@ enum _AiBanner {
 /// plusieurs opérations, vérifier le récapitulatif, enregistrer. Sans IA :
 /// l'analyse est faite par [QuickEntryParser].
 class QuickEntryPage extends ConsumerStatefulWidget {
-  const QuickEntryPage({required this.initialMode, super.key});
+  const QuickEntryPage({
+    required this.initialMode,
+    this.initialText,
+    super.key,
+  });
 
   final QuickEntryMode initialMode;
+
+  /// Phrase déjà écrite (« Modifier » d'une opération préparée par le
+  /// Copilote) : analysée dès l'ouverture.
+  final String? initialText;
 
   @override
   ConsumerState<QuickEntryPage> createState() => _QuickEntryPageState();
@@ -100,6 +108,10 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
     super.initState();
     if (_stage == _Stage.listen) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _listen());
+    } else if (widget.initialText case final text?
+        when text.trim().isNotEmpty) {
+      _text.text = text;
+      WidgetsBinding.instance.addPostFrameCallback((_) => _analyse(text));
     }
   }
 

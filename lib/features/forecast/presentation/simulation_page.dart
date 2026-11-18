@@ -12,6 +12,8 @@ import '../../../core/money/money.dart';
 import '../../../core/time/calendar_date.dart';
 import '../../../core/widgets/segmented_choice.dart';
 import '../../../l10n/l10n.dart';
+import '../../assistant/presentation/ai_model_controller.dart';
+import '../../assistant/presentation/assistant_controller.dart';
 import '../../goals/presentation/goals_providers.dart';
 import '../../recurring/presentation/recurring_providers.dart';
 import '../../transactions/domain/transaction.dart';
@@ -225,6 +227,27 @@ class _SimulationPageState extends ConsumerState<SimulationPage> {
               ),
               icon: const Icon(AppIcons.target, size: 18),
               label: Text(l10n.simCreateGoal),
+            ),
+            const SizedBox(height: 8),
+            TextButton.icon(
+              onPressed: () {
+                // Question posée seulement si l'assistant est prêt ; sinon
+                // l'onglet s'ouvre tel quel.
+                if (ref.read(aiModelControllerProvider).status ==
+                    AiModelStatus.ready) {
+                  final amount = MoneyFormat.amount(price);
+                  ref
+                      .read(assistantRequestProvider.notifier)
+                      .ask(
+                        label.isEmpty
+                            ? l10n.simAskQuestionNoLabel(amount)
+                            : l10n.simAskQuestion(label, amount),
+                      );
+                }
+                context.go(AppRoutes.assistant);
+              },
+              icon: const Icon(AppIcons.chatCircleText, size: 18),
+              label: Text(l10n.simAskCopilot),
             ),
           ],
         ],

@@ -2380,12 +2380,6 @@ abstract class AppLocalizations {
   /// **'Pose une question sur tes dépenses, tes budgets, tes soldes ou un achat. Les chiffres sont toujours calculés par l\'application.'**
   String get asIntro;
 
-  /// No description provided for @asSuggest1.
-  ///
-  /// In fr, this message translates to:
-  /// **'Combien ai-je dépensé cette semaine ?'**
-  String get asSuggest1;
-
   /// No description provided for @asSuggest2.
   ///
   /// In fr, this message translates to:
@@ -2397,12 +2391,6 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Combien puis-je dépenser cette semaine ?'**
   String get asSuggest3;
-
-  /// No description provided for @asSuggest4.
-  ///
-  /// In fr, this message translates to:
-  /// **'Mon solde à la fin du mois ?'**
-  String get asSuggest4;
 
   /// No description provided for @asSuggest5.
   ///
@@ -2709,6 +2697,198 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Le {date}, sans l\'achat'**
   String asRowEndWithout(String date);
+
+  /// No description provided for @asSuggestSave.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pourquoi j\'ai du mal à économiser ?'**
+  String get asSuggestSave;
+
+  /// No description provided for @asSuggestGoal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Comment économiser 100 000 en 3 mois ?'**
+  String get asSuggestGoal;
+
+  /// No description provided for @asPrepared.
+  ///
+  /// In fr, this message translates to:
+  /// **'J\'ai préparé cette opération. Vérifie avant d\'enregistrer :'**
+  String get asPrepared;
+
+  /// No description provided for @asPreparedMany.
+  ///
+  /// In fr, this message translates to:
+  /// **'J\'ai préparé ces {count} opérations. Vérifie avant d\'enregistrer :'**
+  String asPreparedMany(int count);
+
+  /// No description provided for @asPreparedNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Je n\'ai pas trouvé de montant. Écris par exemple « Taxi 2 500 avec Wave ».'**
+  String get asPreparedNone;
+
+  /// No description provided for @asSavePrepared.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{Enregistrer} other{Enregistrer les {count} opérations}}'**
+  String asSavePrepared(int count);
+
+  /// No description provided for @asEditPrepared.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier'**
+  String get asEditPrepared;
+
+  /// No description provided for @asSavedOne.
+  ///
+  /// In fr, this message translates to:
+  /// **'{kind} enregistrée · solde {account} : {balance} FCFA'**
+  String asSavedOne(String kind, String account, String balance);
+
+  /// No description provided for @asSavedMany.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} opérations enregistrées'**
+  String asSavedMany(int count);
+
+  /// No description provided for @asSaveFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'enregistrement a échoué. Touche « Modifier » pour vérifier l\'opération.'**
+  String get asSaveFailed;
+
+  /// No description provided for @asNotSaved.
+  ///
+  /// In fr, this message translates to:
+  /// **'Non enregistrée'**
+  String get asNotSaved;
+
+  /// No description provided for @asRowAmount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Montant'**
+  String get asRowAmount;
+
+  /// No description provided for @asRowCategory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Catégorie'**
+  String get asRowCategory;
+
+  /// No description provided for @asRowAccount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compte'**
+  String get asRowAccount;
+
+  /// No description provided for @asRowDate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Date'**
+  String get asRowDate;
+
+  /// No description provided for @asSavingsTooEarly.
+  ///
+  /// In fr, this message translates to:
+  /// **'Il faut environ un mois d\'opérations pour faire ce bilan.'**
+  String get asSavingsTooEarly;
+
+  /// No description provided for @asSavings.
+  ///
+  /// In fr, this message translates to:
+  /// **'En moyenne, tu gagnes {income} FCFA et tu dépenses {expenses} FCFA par mois. Tes charges fixes en représentent {percent} %.'**
+  String asSavings(String income, String expenses, String percent);
+
+  /// No description provided for @asSavingsDeficit.
+  ///
+  /// In fr, this message translates to:
+  /// **'En moyenne, tes dépenses ({expenses} FCFA) dépassent tes revenus ({income} FCFA) chaque mois. Tes charges fixes en représentent {percent} %.'**
+  String asSavingsDeficit(String expenses, String income, String percent);
+
+  /// No description provided for @asRowIncome.
+  ///
+  /// In fr, this message translates to:
+  /// **'Revenus moyens'**
+  String get asRowIncome;
+
+  /// No description provided for @asRowExpenses.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépenses moyennes'**
+  String get asRowExpenses;
+
+  /// No description provided for @asRowFixed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dont charges fixes'**
+  String get asRowFixed;
+
+  /// No description provided for @asGoalFeasible.
+  ///
+  /// In fr, this message translates to:
+  /// **'C\'est faisable : il faut mettre de côté environ {monthly} FCFA par mois, et tu épargnes en moyenne {surplus} FCFA par mois.'**
+  String asGoalFeasible(String monthly, String surplus);
+
+  /// No description provided for @asGoalHard.
+  ///
+  /// In fr, this message translates to:
+  /// **'Il faudrait mettre de côté {monthly} FCFA par mois, plus que ton épargne moyenne actuelle ({surplus} FCFA). Un délai plus long ou moins de dépenses aideraient.'**
+  String asGoalHard(String monthly, String surplus);
+
+  /// No description provided for @asGoalUnknown.
+  ///
+  /// In fr, this message translates to:
+  /// **'Il faut mettre de côté environ {monthly} FCFA par mois.'**
+  String asGoalUnknown(String monthly);
+
+  /// No description provided for @asRowMonthly.
+  ///
+  /// In fr, this message translates to:
+  /// **'À mettre de côté par mois'**
+  String get asRowMonthly;
+
+  /// No description provided for @asRowSurplus.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton épargne moyenne actuelle'**
+  String get asRowSurplus;
+
+  /// No description provided for @asRowDeadline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Échéance'**
+  String get asRowDeadline;
+
+  /// No description provided for @asLinkGoal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Créer l\'objectif'**
+  String get asLinkGoal;
+
+  /// No description provided for @simAskCopilot.
+  ///
+  /// In fr, this message translates to:
+  /// **'En parler au Copilote'**
+  String get simAskCopilot;
+
+  /// No description provided for @simAskQuestion.
+  ///
+  /// In fr, this message translates to:
+  /// **'Puis-je acheter {label} à {price} FCFA ?'**
+  String simAskQuestion(String label, String price);
+
+  /// No description provided for @simAskQuestionNoLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Puis-je faire un achat de {price} FCFA ?'**
+  String simAskQuestionNoLabel(String price);
+
+  /// No description provided for @goalDueMonths.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} mois'**
+  String goalDueMonths(int count);
 
   /// No description provided for @txDuplicate.
   ///

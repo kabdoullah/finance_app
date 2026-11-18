@@ -5,8 +5,15 @@ import 'package:flutter/foundation.dart' show immutable;
 import 'package:flutter_edge_ai/flutter_edge_ai.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/clock.dart';
 import '../../../core/errors/error_reporter.dart';
+import '../../../core/errors/result.dart';
+import '../../../core/money/money.dart';
 import '../../../l10n/l10n.dart';
+import '../../accounts/presentation/accounts_providers.dart';
+import '../../transactions/domain/transaction.dart';
+import '../../transactions/presentation/transaction_labels.dart';
+import '../../transactions/presentation/transactions_providers.dart';
 import '../data/assistant_toolbox.dart';
 import '../domain/assistant_reply.dart';
 import 'ai_model_controller.dart';
@@ -70,7 +77,7 @@ class AssistantController extends Notifier<AssistantState> {
 
   Future<ReplyEntry> _answer(InferenceModel model, String question) async {
     final chat = await _openChat(model);
-    final toolbox = _toolbox!;
+    final toolbox = _toolbox!..question = question;
     _turns++;
     await chat.addQueryChunk(Message.text(text: question, isUser: true));
     final outcomes = <ToolOutcome>[];
@@ -90,6 +97,48 @@ class AssistantController extends Notifier<AssistantState> {
       gemmaText: text.toString(),
       outcomes: outcomes,
       fallback: _l10n.asFallback,
+    );
+  }
+
+  /// Enregistre les opérations préparées de [entry] (toutes ou aucune) et
+  /// met à jour sa carte.
+  Future<void> savePrepared(ReplyEntry entry) async {
+    if (entry.preparedState != PreparedState.pending) return;
+    final now = ref.read(clockProvider)();
+    final result = await ref.read(transactionsRepositoryProvider).createAll([
+      for (final op in entry.prepared) op.toDraft(now),
+    ], entryMethod: EntryMethod.text);
+    final ReplyEntry updated;
+    switch (result) {
+      case Ok(:final value) when value.length == 1:
+        final saved = value.single;
+        final account = await ref
+            .read(accountsRepositoryProvider)
+            .getById(saved.accountId);
+        updated = entry.withPrepared(
+          PreparedState.saved,
+          note: _l10n.asSavedOne(
+            saved.kind.label(_l10n),
+            saved.accountName,
+            MoneyFormat.amount(account?.balance ?? Money.zero),
+          ),
+        );
+      case Ok(:final value):
+        updated = entry.withPrepared(
+          PreparedState.saved,
+          note: _l10n.asSavedMany(value.length),
+        );
+      case Err():
+        updated = entry.withPrepared(
+          PreparedState.pending,
+          note: _l10n.asSaveFailed,
+        );
+    }
+    state = AssistantState(
+      entries: [
+        for (final e in state.entries) identical(e, entry) ? updated : e,
+      ],
+      busy: state.busy,
     );
   }
 
@@ -132,3 +181,23 @@ final assistantControllerProvider =
     NotifierProvider<AssistantController, AssistantState>(
       AssistantController.new,
     );
+
+/// Question à poser en ouvrant l'onglet Assistant (« En parler au
+/// Copilote » de la simulation). L'onglet la pose puis la consomme.
+class AssistantRequest extends Notifier<String?> {
+  @override
+  String? build() => null;
+
+  void ask(String question) => state = question;
+
+  /// Retourne la question demandée et l'efface.
+  String? take() {
+    final question = state;
+    state = null;
+    return question;
+  }
+}
+
+final assistantRequestProvider = NotifierProvider<AssistantRequest, String?>(
+  AssistantRequest.new,
+);

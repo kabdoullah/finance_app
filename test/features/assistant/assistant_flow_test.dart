@@ -6,11 +6,15 @@ import 'package:finance_app/features/accounts/domain/account.dart';
 import 'package:finance_app/features/accounts/domain/account_draft.dart';
 import 'package:finance_app/features/accounts/domain/account_type.dart';
 import 'package:finance_app/features/assistant/data/ai_platform.dart';
+import 'package:finance_app/features/assistant/presentation/assistant_controller.dart';
+import 'package:finance_app/features/assistant/presentation/assistant_page.dart';
 import 'package:finance_app/features/transactions/data/transactions_repository.dart';
 import 'package:finance_app/features/transactions/domain/transaction.dart';
 import 'package:finance_app/features/transactions/domain/transaction_draft.dart';
 import 'package:flutter_edge_ai/flutter_edge_ai.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../helpers/fake_ai.dart';
 import '../../helpers/test_app.dart';
@@ -80,6 +84,12 @@ void main() {
     return model;
   }
 
+  Future<void> ask(WidgetTester tester, String question) async {
+    await tester.enterText(find.byType(TextField), question);
+    await tester.tap(find.byTooltip('Envoyer'));
+    await tester.pumpAndSettle();
+  }
+
   const weekSpending = FunctionCallResponse(
     name: 'get_spending',
     args: {'period': 'this_week'},
@@ -95,10 +105,9 @@ void main() {
           'alimentation.',
       toolCall: weekSpending,
     );
-    await tester.tap(find.text('Combien ai-je dépensé cette semaine ?'));
-    await tester.pumpAndSettle();
+    await ask(tester, 'Quelle catégorie me coûte le plus ?');
 
-    expect(model.lastChat!.queries, ['Combien ai-je dépensé cette semaine ?']);
+    expect(model.lastChat!.queries, ['Quelle catégorie me coûte le plus ?']);
     expect(model.lastChat!.toolResults.single['total_fcfa'], 28000);
     expect(
       find.textContaining('Tu as dépensé 28 000 FCFA cette semaine, surtout'),
@@ -121,8 +130,7 @@ void main() {
       answer: 'Tu as dépensé 99 000 FCFA cette semaine.',
       toolCall: weekSpending,
     );
-    await tester.tap(find.text('Combien ai-je dépensé cette semaine ?'));
-    await tester.pumpAndSettle();
+    await ask(tester, 'Quelle catégorie me coûte le plus ?');
     expect(find.textContaining('99 000'), findsNothing);
     expect(
       find.textContaining('Tu as dépensé 28 000 FCFA cette semaine.'),
@@ -151,5 +159,76 @@ void main() {
     );
     expect(find.text('Charger l\'assistant'), findsNothing);
     expect(find.text('Installer l\'assistant'), findsNothing);
+  });
+
+  testWidgets(
+    'opération préparée : enregistrée seulement après « Enregistrer »',
+    (tester) async {
+      await openAssistant(
+        tester,
+        answer: 'C\'est noté.',
+        toolCall: const FunctionCallResponse(
+          name: 'prepare_operation',
+          args: {'text': 'taxi'},
+        ),
+      );
+      final before = (await db.select(db.transactions).get()).length;
+      await tester.enterText(
+        find.byType(TextField),
+        'Taxi 2 500 ce matin avec Wave',
+      );
+      await tester.tap(find.byTooltip('Envoyer'));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.text(
+          'J\'ai préparé cette opération. Vérifie avant d\'enregistrer :',
+        ),
+        findsOneWidget,
+      );
+      expect(find.text('\u22122\u00a0500 FCFA'), findsOneWidget);
+      expect((await db.select(db.transactions).get()).length, before);
+
+      await tester.tap(find.text('Enregistrer'));
+      await tester.pumpAndSettle();
+      final rows = await db.select(db.transactions).get();
+      expect(rows.length, before + 1);
+      expect(rows.last.entryMethod, 'text');
+      expect(rows.last.amount, 2500);
+      // 100 000 − 17 000 − 11 000 − 2 500.
+      expect(
+        find.text('Dépense enregistrée · solde Wave : 69\u00a0500 FCFA'),
+        findsOneWidget,
+      );
+      expect(find.text('Enregistrer'), findsNothing);
+    },
+  );
+
+  testWidgets('question demandée ailleurs : posée à l\'ouverture', (
+    tester,
+  ) async {
+    final model = FakeModel(answer: 'Rien à signaler.');
+    await pumpTestApp(
+      tester,
+      db,
+      overrides: [
+        deviceInfoServiceProvider.overrideWithValue(
+          FakeDeviceInfo(fakeDevice()),
+        ),
+        gemmaRuntimeProvider.overrideWithValue(
+          FakeGemmaRuntime(installed: true, model: model),
+        ),
+        aiPreferencesProvider.overrideWithValue(FakeAiPreferences(value: true)),
+      ],
+    );
+    ProviderScope.containerOf(tester.element(find.byType(MaterialApp)))
+        .read(assistantRequestProvider.notifier)
+        .ask('Puis-je acheter Téléphone à 150 000 FCFA ?');
+    await tester.tap(find.text('Assistant').last);
+    await tester.pumpAndSettle();
+    expect(find.byType(AssistantPage), findsOneWidget);
+    expect(model.lastChat!.queries, [
+      'Puis-je acheter Téléphone à 150 000 FCFA ?',
+    ]);
   });
 }

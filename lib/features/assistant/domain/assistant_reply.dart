@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart' show immutable;
 
+import '../../quick_entry/domain/quick_entry_parser.dart';
 import 'number_check.dart';
 
 /// Ligne de chiffres d'une réponse (maquette Assistant) : libellé, valeur
@@ -14,17 +15,36 @@ class ReplyRow {
 }
 
 /// Écran vers lequel une réponse renvoie.
-enum ReplyLinkTarget { transactions, budgets, accounts, forecast, simulation }
+enum ReplyLinkTarget {
+  transactions,
+  budgets,
+  accounts,
+  forecast,
+  simulation,
+  goal,
+}
 
 @immutable
 class ReplyLink {
-  const ReplyLink(this.target, {this.simulationLabel, this.simulationPrice});
+  const ReplyLink(
+    this.target, {
+    this.simulationLabel,
+    this.simulationPrice,
+    this.goalName,
+    this.goalTarget,
+    this.goalMonths,
+  });
 
   final ReplyLinkTarget target;
 
   /// Achat à pré-remplir dans la simulation.
   final String? simulationLabel;
   final int? simulationPrice;
+
+  /// Objectif à pré-remplir.
+  final String? goalName;
+  final int? goalTarget;
+  final int? goalMonths;
 }
 
 /// Résultat d'un outil, calculé par l'application : [data] part chez Gemma,
@@ -37,12 +57,25 @@ class ToolOutcome {
     required this.summary,
     this.rows = const [],
     this.link,
+    this.prepared = const [],
   });
 
   final Map<String, Object?> data;
   final String summary;
   final List<ReplyRow> rows;
   final ReplyLink? link;
+
+  /// Opérations préparées, à confirmer par l'utilisateur.
+  final List<ParsedOperation> prepared;
+}
+
+/// État de la carte d'opérations préparées.
+enum PreparedState {
+  pending,
+  saved,
+
+  /// Pas enregistrée et plus enregistrable (historique d'une autre session).
+  unsaved,
 }
 
 /// Message de la conversation.
@@ -63,11 +96,31 @@ final class ReplyEntry extends ChatEntry {
     this.rows = const [],
     this.link,
     this.fromTools = false,
+    this.prepared = const [],
+    this.preparedState = PreparedState.pending,
+    this.note,
   });
 
   final String text;
   final List<ReplyRow> rows;
   final ReplyLink? link;
+
+  /// Opérations préparées (carte Enregistrer / Modifier).
+  final List<ParsedOperation> prepared;
+  final PreparedState preparedState;
+
+  /// Mention sous la carte (« Dépense enregistrée · solde Wave : … »).
+  final String? note;
+
+  ReplyEntry withPrepared(PreparedState state, {String? note}) => ReplyEntry(
+    text: text,
+    rows: rows,
+    link: link,
+    fromTools: fromTools,
+    prepared: prepared,
+    preparedState: state,
+    note: note,
+  );
 
   /// Vrai si des chiffres de l'application sont affichés (mention « Chiffres
   /// calculés par l'application · expliqués par Gemma 4 »).
@@ -112,5 +165,6 @@ ReplyEntry composeReply({
     rows: rows,
     link: outcomes.map((o) => o.link).nonNulls.lastOrNull,
     fromTools: rows.isNotEmpty,
+    prepared: [for (final outcome in outcomes) ...outcome.prepared],
   );
 }

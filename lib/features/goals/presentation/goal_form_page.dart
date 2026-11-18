@@ -26,6 +26,7 @@ class GoalFormPage extends ConsumerStatefulWidget {
     this.goalId,
     this.initialName,
     this.initialTarget,
+    this.initialMonths,
     super.key,
   });
 
@@ -36,13 +37,20 @@ class GoalFormPage extends ConsumerStatefulWidget {
   final String? initialName;
   final int? initialTarget;
 
+  /// Délai pré-choisi en mois (Copilote : « 100 000 en 3 mois »).
+  final int? initialMonths;
+
   @override
   ConsumerState<GoalFormPage> createState() => _GoalFormPageState();
 }
 
 class _GoalFormPageState extends ConsumerState<GoalFormPage> {
-  /// Échéances proposées à la création, en mois (0 = sans date).
-  static const _dueMonths = [3, 6, 12, 0];
+  /// Échéances proposées à la création, en mois (0 = sans date), plus le
+  /// délai demandé au Copilote s'il n'en fait pas partie.
+  late final List<int> _dueMonths = [
+    ...{3, 6, 12, ?widget.initialMonths}.where((m) => m > 0).toList()..sort(),
+    0,
+  ];
 
   final _name = TextEditingController();
   final _target = TextEditingController();
@@ -50,7 +58,9 @@ class _GoalFormPageState extends ConsumerState<GoalFormPage> {
   bool _saving = false;
 
   /// Création : nombre de mois choisi.
-  int _months = 6;
+  late int _months = (widget.initialMonths ?? 0) > 0
+      ? widget.initialMonths!
+      : 6;
 
   /// Modification : date précise (`null` = sans date).
   DateTime? _date;
@@ -356,7 +366,8 @@ class _GoalFormPageState extends ConsumerState<GoalFormPage> {
                     3 => l10n.goalDue3,
                     6 => l10n.goalDue6,
                     12 => l10n.goalDue12,
-                    _ => l10n.goalDueNone,
+                    0 => l10n.goalDueNone,
+                    _ => l10n.goalDueMonths(m),
                   },
                 ),
             ],

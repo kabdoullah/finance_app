@@ -5,7 +5,15 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../core/clock.dart';
+import '../../../core/formatting/relative_date.dart';
+import '../../../core/money/money.dart';
 import '../../../l10n/l10n.dart';
+import '../../accounts/presentation/accounts_providers.dart';
+import '../../categories/domain/category.dart';
+import '../../categories/presentation/categories_providers.dart';
+import '../../quick_entry/domain/quick_entry_parser.dart';
+import '../../transactions/domain/transaction.dart';
 import '../domain/assistant_reply.dart';
 import 'ai_model_controller.dart';
 import 'assistant_controller.dart';
@@ -47,10 +55,10 @@ class AssistantPage extends ConsumerWidget {
 
 /// Questions proposées en pastilles.
 List<String> _suggestions(AppLocalizations l10n) => [
-  l10n.asSuggest1,
+  l10n.asSuggestSave,
   l10n.asSuggest2,
   l10n.asSuggest3,
-  l10n.asSuggest4,
+  l10n.asSuggestGoal,
   l10n.asSuggest5,
 ];
 
@@ -64,6 +72,19 @@ class _Conversation extends ConsumerStatefulWidget {
 class _ConversationState extends ConsumerState<_Conversation> {
   final _input = TextEditingController();
   final _scroll = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _takeRequest());
+  }
+
+  /// Question demandée ailleurs (« En parler au Copilote »).
+  void _takeRequest() {
+    if (!mounted) return;
+    final question = ref.read(assistantRequestProvider.notifier).take();
+    if (question != null) _send(question);
+  }
 
   @override
   void dispose() {
@@ -95,7 +116,13 @@ class _ConversationState extends ConsumerState<_Conversation> {
     final colors = context.colors;
     final l10n = context.l10n;
     final state = ref.watch(assistantControllerProvider);
-    ref.listen(assistantControllerProvider, (_, _) => _scrollToEnd());
+    ref
+      ..listen(assistantControllerProvider, (_, _) => _scrollToEnd())
+      ..listen(assistantRequestProvider, (_, next) {
+        if (next != null) {
+          WidgetsBinding.instance.addPostFrameCallback((_) => _takeRequest());
+        }
+      });
 
     return Column(
       children: [
@@ -218,6 +245,13 @@ class _ReplyBubble extends StatelessWidget {
         price: link.simulationPrice,
       ),
     ),
+    ReplyLinkTarget.goal => context.push(
+      AppRoutes.newGoalFor(
+        name: link.goalName ?? '',
+        target: link.goalTarget ?? 0,
+        months: link.goalMonths,
+      ),
+    ),
   };
 
   @override
@@ -281,6 +315,7 @@ class _ReplyBubble extends StatelessWidget {
                 ),
               ),
           ],
+          if (reply.prepared.isNotEmpty) _PreparedCard(reply: reply),
           if (reply.fromTools) ...[
             const SizedBox(height: 8),
             Text(
@@ -303,11 +338,179 @@ class _ReplyBubble extends StatelessWidget {
                   ReplyLinkTarget.accounts => l10n.asLinkAccounts,
                   ReplyLinkTarget.forecast => l10n.asLinkForecast,
                   ReplyLinkTarget.simulation => l10n.asLinkSimulation,
+                  ReplyLinkTarget.goal => l10n.asLinkGoal,
                 }),
               ),
             )
           else
             const SizedBox(height: 4),
+        ],
+      ),
+    );
+  }
+}
+
+/// Carte « J'ai préparé cette opération » : rien n'est enregistré avant
+/// « Enregistrer ».
+class _PreparedCard extends ConsumerWidget {
+  const _PreparedCard({required this.reply});
+
+  final ReplyEntry reply;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.colors;
+    final l10n = context.l10n;
+    final accounts = ref.watch(activeAccountsProvider).value ?? const [];
+    final groups = [
+      ...?ref.watch(categoryGroupsProvider(CategoryKind.expense)).value,
+      ...?ref.watch(categoryGroupsProvider(CategoryKind.income)).value,
+    ];
+    String categoryName(String? id) =>
+        [
+          for (final g in groups) ...[g.category, ...g.children],
+        ].where((c) => c.id == id).firstOrNull?.name ??
+        '—';
+    String accountName(String? id) =>
+        accounts.where((a) => a.id == id).firstOrNull?.name ?? '—';
+    final relative = RelativeDate(
+      l10n,
+      Localizations.localeOf(context).toLanguageTag(),
+      ref.watch(clockProvider)(),
+    );
+    final ops = reply.prepared;
+    final canSave = ops.every((op) => (op.amount?.value ?? 0) > 0);
+
+    Widget row(String label, String value, {bool toCheck = false}) => Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        spacing: 8,
+        children: [
+          Text(
+            label,
+            style: TextStyle(fontSize: 13.5, color: colors.inkSecondary),
+          ),
+          if (toCheck)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+              decoration: BoxDecoration(
+                color: colors.warningSoft,
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Text(
+                l10n.qeToCheck,
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: colors.warning,
+                ),
+              ),
+            ),
+          Expanded(
+            child: Text(
+              value,
+              textAlign: TextAlign.end,
+              style: const TextStyle(
+                fontSize: 13.5,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    return Container(
+      margin: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: colors.background,
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (final (i, op) in ops.indexed) ...[
+            if (i > 0) Divider(color: colors.line, height: 16),
+            row(
+              l10n.asRowAmount,
+              op.amount == null
+                  ? '—'
+                  : '${op.kind == TransactionKind.expense ? MoneyFormat.signed(-op.amount!) : MoneyFormat.amount(op.amount!)} ${l10n.currencyLabel}',
+              toCheck: op.uncertain.contains(ParsedField.amount),
+            ),
+            if (op.kind != TransactionKind.transfer)
+              row(
+                l10n.asRowCategory,
+                categoryName(op.categoryId),
+                toCheck: op.uncertain.contains(ParsedField.category),
+              ),
+            row(
+              l10n.asRowAccount,
+              op.kind == TransactionKind.transfer
+                  ? '${accountName(op.accountId)} → ${accountName(op.toAccountId)}'
+                  : accountName(op.accountId),
+              toCheck: op.uncertain.contains(ParsedField.account),
+            ),
+            row(l10n.asRowDate, RelativeDate.capitalize(relative.day(op.date))),
+          ],
+          const SizedBox(height: 8),
+          switch (reply.preparedState) {
+            PreparedState.pending => Row(
+              spacing: 8,
+              children: [
+                Expanded(
+                  child: FilledButton(
+                    onPressed: canSave
+                        ? () => ref
+                              .read(assistantControllerProvider.notifier)
+                              .savePrepared(reply)
+                        : null,
+                    child: Text(l10n.asSavePrepared(ops.length)),
+                  ),
+                ),
+                OutlinedButton(
+                  onPressed: () => context.push(
+                    AppRoutes.quickEntry(
+                      initialText: ops.map((o) => o.source).join(', '),
+                    ),
+                  ),
+                  child: Text(l10n.asEditPrepared),
+                ),
+              ],
+            ),
+            PreparedState.saved => const SizedBox.shrink(),
+            PreparedState.unsaved => Text(
+              l10n.asNotSaved,
+              style: TextStyle(fontSize: 13, color: colors.inkTertiary),
+            ),
+          },
+          if (reply.note case final note?)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Row(
+                spacing: 8,
+                children: [
+                  if (reply.preparedState == PreparedState.saved)
+                    Icon(
+                      AppIcons.checkCircleBold,
+                      size: 16,
+                      color: colors.positive,
+                    ),
+                  Expanded(
+                    child: Text(
+                      note,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: reply.preparedState == PreparedState.saved
+                            ? colors.positive
+                            : colors.warning,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
         ],
       ),
     );
