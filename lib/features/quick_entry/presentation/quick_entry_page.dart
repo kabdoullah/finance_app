@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
@@ -12,6 +11,7 @@ import '../../../core/clock.dart';
 import '../../../core/errors/result.dart';
 import '../../../core/formatting/date_format.dart';
 import '../../../core/formatting/relative_date.dart';
+import '../../../core/money/amount_input_formatter.dart';
 import '../../../core/money/money.dart';
 import '../../../core/widgets/choice_pill.dart';
 import '../../../l10n/l10n.dart';
@@ -1014,10 +1014,7 @@ class _EditableOperation {
   final TextEditingController amountText;
   final TextEditingController description;
 
-  Money get amount {
-    final digits = amountText.text.replaceAll(RegExp(r'\D'), '');
-    return digits.isEmpty ? Money.zero : Money(int.parse(digits));
-  }
+  Money get amount => AmountInputFormatter.parse(amountText.text);
 
   void dispose() {
     amountText.dispose();
@@ -1153,11 +1150,7 @@ class _OperationCard extends ConsumerWidget {
                 TextField(
                   controller: op.amountText,
                   keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(9),
-                    _GroupedDigitsFormatter(),
-                  ],
+                  inputFormatters: const [AmountInputFormatter(maxDigits: 9)],
                   onChanged: (_) =>
                       _update((op) => op.uncertain.remove(ParsedField.amount)),
                   style: const TextStyle(
@@ -1395,24 +1388,6 @@ class _Notice extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-/// « 25000 » → « 25 000 » pendant la frappe.
-class _GroupedDigitsFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-    TextEditingValue oldValue,
-    TextEditingValue newValue,
-  ) {
-    final digits = newValue.text.replaceAll(RegExp(r'\D'), '');
-    final text = digits.isEmpty
-        ? ''
-        : MoneyFormat.amount(Money(int.parse(digits)));
-    return TextEditingValue(
-      text: text,
-      selection: TextSelection.collapsed(offset: text.length),
     );
   }
 }

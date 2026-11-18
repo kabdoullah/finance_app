@@ -22,15 +22,23 @@ import 'forecast_providers.dart';
 /// « Simuler un achat » (maquette Simulation) : pure hypothèse, rien n'est
 /// enregistré.
 class SimulationPage extends ConsumerStatefulWidget {
-  const SimulationPage({super.key});
+  const SimulationPage({this.initialLabel, this.initialPrice, super.key});
+
+  /// Achat pré-rempli (lien « Ouvrir la simulation » du Copilote).
+  final String? initialLabel;
+  final int? initialPrice;
 
   @override
   ConsumerState<SimulationPage> createState() => _SimulationPageState();
 }
 
 class _SimulationPageState extends ConsumerState<SimulationPage> {
-  final _label = TextEditingController();
-  final _price = TextEditingController();
+  late final _label = TextEditingController(text: widget.initialLabel);
+  late final _price = TextEditingController(
+    text: widget.initialPrice == null
+        ? null
+        : MoneyFormat.amount(Money(widget.initialPrice!)),
+  );
   bool _afterIncome = false;
   bool _useSavings = false;
 

@@ -136,12 +136,6 @@ abstract class AppLocalizations {
   /// **'Paramètres'**
   String get settingsTitle;
 
-  /// No description provided for @comingSoonMessage.
-  ///
-  /// In fr, this message translates to:
-  /// **'Cet écran arrive bientôt.'**
-  String get comingSoonMessage;
-
   /// No description provided for @dashboardWelcome.
   ///
   /// In fr, this message translates to:
@@ -2343,6 +2337,378 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Gérer le modèle IA'**
   String get qeManageAi;
+
+  /// No description provided for @asTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Copilote'**
+  String get asTitle;
+
+  /// No description provided for @asSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sur ton téléphone · fonctionne hors connexion'**
+  String get asSubtitle;
+
+  /// No description provided for @asFootnote.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chiffres calculés par l\'application · expliqués par Gemma 4'**
+  String get asFootnote;
+
+  /// No description provided for @asTyping.
+  ///
+  /// In fr, this message translates to:
+  /// **'Analyse de tes opérations…'**
+  String get asTyping;
+
+  /// No description provided for @asInputHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pose ta question…'**
+  String get asInputHint;
+
+  /// No description provided for @asSend.
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyer'**
+  String get asSend;
+
+  /// No description provided for @asIntro.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pose une question sur tes dépenses, tes budgets, tes soldes ou un achat. Les chiffres sont toujours calculés par l\'application.'**
+  String get asIntro;
+
+  /// No description provided for @asSuggest1.
+  ///
+  /// In fr, this message translates to:
+  /// **'Combien ai-je dépensé cette semaine ?'**
+  String get asSuggest1;
+
+  /// No description provided for @asSuggest2.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quelle catégorie me coûte le plus ?'**
+  String get asSuggest2;
+
+  /// No description provided for @asSuggest3.
+  ///
+  /// In fr, this message translates to:
+  /// **'Combien puis-je dépenser cette semaine ?'**
+  String get asSuggest3;
+
+  /// No description provided for @asSuggest4.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mon solde à la fin du mois ?'**
+  String get asSuggest4;
+
+  /// No description provided for @asSuggest5.
+  ///
+  /// In fr, this message translates to:
+  /// **'Puis-je acheter un téléphone à 150 000 ?'**
+  String get asSuggest5;
+
+  /// No description provided for @asFallback.
+  ///
+  /// In fr, this message translates to:
+  /// **'Je n\'ai pas bien compris. Tu peux me demander « Mes dépenses cette semaine » ou « Combien puis-je dépenser cette semaine ? ».'**
+  String get asFallback;
+
+  /// No description provided for @asError.
+  ///
+  /// In fr, this message translates to:
+  /// **'Je n\'ai pas pu répondre. Réessaie.'**
+  String get asError;
+
+  /// No description provided for @asOffTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'assistant n\'est pas chargé'**
+  String get asOffTitle;
+
+  /// No description provided for @asOffBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les questions en langage naturel sont indisponibles pour l\'instant. Tous tes chiffres restent accessibles.'**
+  String get asOffBody;
+
+  /// No description provided for @asOffNotInstalled.
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'assistant n\'est pas installé. Tous tes chiffres restent accessibles.'**
+  String get asOffNotInstalled;
+
+  /// No description provided for @asOffUnavailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'assistant IA n\'est pas disponible sur ce téléphone. Tous tes chiffres restent accessibles.'**
+  String get asOffUnavailable;
+
+  /// No description provided for @asOffDownloading.
+  ///
+  /// In fr, this message translates to:
+  /// **'Téléchargement de l\'assistant en cours. Tous tes chiffres restent accessibles.'**
+  String get asOffDownloading;
+
+  /// No description provided for @asLoad.
+  ///
+  /// In fr, this message translates to:
+  /// **'Charger l\'assistant'**
+  String get asLoad;
+
+  /// No description provided for @asInstall.
+  ///
+  /// In fr, this message translates to:
+  /// **'Installer l\'assistant'**
+  String get asInstall;
+
+  /// No description provided for @asLoading.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chargement de l\'assistant…'**
+  String get asLoading;
+
+  /// No description provided for @asShortcutDictate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dicter'**
+  String get asShortcutDictate;
+
+  /// No description provided for @asLinkTransactions.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir les opérations'**
+  String get asLinkTransactions;
+
+  /// No description provided for @asLinkBudgets.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir mes budgets'**
+  String get asLinkBudgets;
+
+  /// No description provided for @asLinkAccounts.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir mes comptes'**
+  String get asLinkAccounts;
+
+  /// No description provided for @asLinkForecast.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir la prévision'**
+  String get asLinkForecast;
+
+  /// No description provided for @asLinkSimulation.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvrir la simulation'**
+  String get asLinkSimulation;
+
+  /// No description provided for @asPeriodToday.
+  ///
+  /// In fr, this message translates to:
+  /// **'aujourd\'hui'**
+  String get asPeriodToday;
+
+  /// No description provided for @asPeriodWeek.
+  ///
+  /// In fr, this message translates to:
+  /// **'cette semaine'**
+  String get asPeriodWeek;
+
+  /// No description provided for @asPeriodMonth.
+  ///
+  /// In fr, this message translates to:
+  /// **'ce mois-ci'**
+  String get asPeriodMonth;
+
+  /// No description provided for @asPeriodLastMonth.
+  ///
+  /// In fr, this message translates to:
+  /// **'le mois dernier'**
+  String get asPeriodLastMonth;
+
+  /// No description provided for @asSpending.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu as dépensé {amount} FCFA {period}.'**
+  String asSpending(String amount, String period);
+
+  /// No description provided for @asSpendingCategory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu as dépensé {amount} FCFA en {category} {period}.'**
+  String asSpendingCategory(String amount, String category, String period);
+
+  /// No description provided for @asSpendingTop.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ta plus grosse dépense : {category}, {amount} FCFA ({percent} %).'**
+  String asSpendingTop(String category, String amount, String percent);
+
+  /// No description provided for @asSpendingNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune dépense enregistrée {period}.'**
+  String asSpendingNone(String period);
+
+  /// No description provided for @asNoBudget.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu n\'as pas encore de budget. Crée-en un pour savoir combien tu peux dépenser.'**
+  String get asNoBudget;
+
+  /// No description provided for @asNoBudgetCategory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu n\'as pas de budget pour {category}.'**
+  String asNoBudgetCategory(String category);
+
+  /// No description provided for @asBudget.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pour rester dans tes budgets, tu peux dépenser environ {week} FCFA sur les 7 prochains jours, soit {perDay} FCFA par jour.'**
+  String asBudget(String week, String perDay);
+
+  /// No description provided for @asBudgetCategory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Budget {category} : il te reste {remaining} FCFA sur {limit} FCFA.'**
+  String asBudgetCategory(String category, String remaining, String limit);
+
+  /// No description provided for @asBudgetExceeded.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tes budgets sont dépassés de {amount} FCFA ce mois-ci.'**
+  String asBudgetExceeded(String amount);
+
+  /// No description provided for @asBudgetCategoryExceeded.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le budget {category} est dépassé de {amount} FCFA.'**
+  String asBudgetCategoryExceeded(String category, String amount);
+
+  /// No description provided for @asRowRemaining.
+  ///
+  /// In fr, this message translates to:
+  /// **'Reste du budget de {month}'**
+  String asRowRemaining(String month);
+
+  /// No description provided for @asRowDaysLeft.
+  ///
+  /// In fr, this message translates to:
+  /// **'Jours restants'**
+  String get asRowDaysLeft;
+
+  /// No description provided for @asRowWeek.
+  ///
+  /// In fr, this message translates to:
+  /// **'Possible sur 7 jours'**
+  String get asRowWeek;
+
+  /// No description provided for @asRowSpentOf.
+  ///
+  /// In fr, this message translates to:
+  /// **'{spent} sur {limit} FCFA'**
+  String asRowSpentOf(String spent, String limit);
+
+  /// No description provided for @asBalance.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu as {amount} FCFA sur tes comptes.'**
+  String asBalance(String amount);
+
+  /// No description provided for @asBalanceAccount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu as {amount} FCFA sur {account}.'**
+  String asBalanceAccount(String amount, String account);
+
+  /// No description provided for @asRowTotal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Total'**
+  String get asRowTotal;
+
+  /// No description provided for @asForecast.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton solde devrait être d\'environ {amount} FCFA le {date}. Fiabilité {level} : c\'est une estimation, pas une certitude.'**
+  String asForecast(String amount, String date, String level);
+
+  /// No description provided for @asForecastNegative.
+  ///
+  /// In fr, this message translates to:
+  /// **'Attention : ton solde passerait sous zéro vers le {date}.'**
+  String asForecastNegative(String date);
+
+  /// No description provided for @asForecastTooEarly.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les prévisions apparaîtront après environ deux semaines d\'opérations.'**
+  String get asForecastTooEarly;
+
+  /// No description provided for @asRowForecastOn.
+  ///
+  /// In fr, this message translates to:
+  /// **'Solde prévu le {date}'**
+  String asRowForecastOn(String date);
+
+  /// No description provided for @asRowRange.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fourchette probable'**
+  String get asRowRange;
+
+  /// No description provided for @asRowRangeValue.
+  ///
+  /// In fr, this message translates to:
+  /// **'{low} à {high} FCFA'**
+  String asRowRangeValue(String low, String high);
+
+  /// No description provided for @asRowReliability.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fiabilité'**
+  String get asRowReliability;
+
+  /// No description provided for @asSimPossible.
+  ///
+  /// In fr, this message translates to:
+  /// **'C\'est possible : ton disponible le plus bas serait d\'environ {lowest} FCFA, le {date}.'**
+  String asSimPossible(String lowest, String date);
+
+  /// No description provided for @asSimTight.
+  ///
+  /// In fr, this message translates to:
+  /// **'C\'est possible, mais serré : ton disponible descendrait à environ {lowest} FCFA le {date}.'**
+  String asSimTight(String lowest, String date);
+
+  /// No description provided for @asSimDiscouraged.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas maintenant : ton disponible passerait sous zéro vers le {date}.'**
+  String asSimDiscouraged(String date);
+
+  /// No description provided for @asRowLowest.
+  ///
+  /// In fr, this message translates to:
+  /// **'Disponible le plus bas'**
+  String get asRowLowest;
+
+  /// No description provided for @asRowEndWith.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le {date}, avec l\'achat'**
+  String asRowEndWith(String date);
+
+  /// No description provided for @asRowEndWithout.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le {date}, sans l\'achat'**
+  String asRowEndWithout(String date);
 
   /// No description provided for @txDuplicate.
   ///

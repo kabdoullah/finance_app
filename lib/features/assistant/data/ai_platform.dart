@@ -83,11 +83,12 @@ class GemmaRuntime {
   }
 
   /// Charge le modèle en mémoire, sur le CPU (le GPU Mali n'apporte rien et
-  /// se charge en ~40 s, voir tools/ai_poc/RAPPORT.md).
+  /// se charge en ~40 s, voir tools/ai_poc/RAPPORT.md). 4 096 jetons : la
+  /// conversation de l'assistant (consigne, outils, questions) dépasse 2 048.
   Future<InferenceModel> load() async {
     await _init();
     return FlutterEdgeAi.getActiveModel(
-      maxTokens: 2048,
+      maxTokens: 4096,
       preferredBackend: PreferredBackend.cpu,
     );
   }

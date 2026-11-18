@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import '../../../core/formatting/text_search.dart';
 import '../../../core/money/money.dart';
 import '../../categories/domain/category.dart';
 import '../../transactions/domain/transaction.dart';
@@ -30,7 +31,7 @@ class EntryAssistPrompt {
       final items = <String>[];
       for (final group in groups) {
         if (group.category.isHidden) continue;
-        final code = _uniqueCode(group.category.name, categories.keys);
+        final code = stableCode(group.category.name, categories.keys);
         categories[code] = group.category;
         final children = [for (final c in group.visibleChildren) c.name];
         items.add(children.isEmpty ? code : '$code (${children.join(', ')})');
@@ -39,7 +40,7 @@ class EntryAssistPrompt {
     }
     final accounts = <String, String>{};
     for (final account in context.accounts) {
-      accounts[_uniqueCode(account.name, accounts.keys)] = account.id;
+      accounts[stableCode(account.name, accounts.keys)] = account.id;
     }
 
     final instruction =
@@ -148,26 +149,5 @@ class EntryAssistPrompt {
       // Les champs complétés par Gemma restent « À vérifier ».
       uncertain: op.uncertain,
     );
-  }
-
-  /// « Orange Money » → « orange_money », unique parmi [taken].
-  static String _uniqueCode(String name, Iterable<String> taken) {
-    const accents = {
-      'à': 'a', 'â': 'a', 'ä': 'a', 'é': 'e', 'è': 'e', 'ê': 'e', //
-      'ë': 'e', 'î': 'i', 'ï': 'i', 'ô': 'o', 'ö': 'o', 'ù': 'u',
-      'û': 'u', 'ü': 'u', 'ç': 'c',
-    };
-    var code = name.toLowerCase();
-    accents.forEach((from, to) => code = code.replaceAll(from, to));
-    code = code
-        .replaceAll(RegExp('[^a-z0-9]+'), '_')
-        .replaceAll(RegExp(r'^_+|_+$'), '');
-    if (code.isEmpty || code == 'none') code = 'item';
-    final used = taken.toSet();
-    var unique = code;
-    for (var i = 2; used.contains(unique); i++) {
-      unique = '${code}_$i';
-    }
-    return unique;
   }
 }

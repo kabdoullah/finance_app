@@ -36,12 +36,19 @@ class FakeDeviceInfo extends DeviceInfoService {
 }
 
 /// Conversation de test : répond [answer] à chaque message (ou attend
-/// indéfiniment si [answer] est `null`).
+/// indéfiniment si [answer] est `null`) ; avec outils, appelle d'abord
+/// [toolCall] puis répond [answer].
 class FakeChat implements InferenceChat {
-  FakeChat(this.answer);
+  FakeChat(this.answer, {this.toolCall, this.tools = const []});
 
   final String? answer;
+  final FunctionCallResponse? toolCall;
+  @override
+  final List<Tool> tools;
   final queries = <String>[];
+
+  /// Résultats renvoyés par l'application pour [toolCall].
+  final toolResults = <Map<String, dynamic>>[];
   bool closed = false;
 
   @override
@@ -57,6 +64,18 @@ class FakeChat implements InferenceChat {
       : Future.value(TextResponse(answer!));
 
   @override
+  Stream<ModelResponse> generateChatResponseWithTools({
+    required FutureOr<Map<String, dynamic>> Function(FunctionCallResponse call)
+    onToolCall,
+    int maxToolTurns = 8,
+    bool Function()? isCancelled,
+    void Function()? onMaxToolTurns,
+  }) async* {
+    if (toolCall case final call?) toolResults.add(await onToolCall(call));
+    if (answer case final text?) yield TextResponse(text);
+  }
+
+  @override
   Future<void> clearHistory({List<Message>? replayHistory}) async {}
 
   @override
@@ -67,10 +86,14 @@ class FakeChat implements InferenceChat {
 }
 
 class FakeModel implements InferenceModel {
-  FakeModel({this.answer});
+  FakeModel({this.answer, this.toolCall});
 
-  /// Réponse JSON de la conversation ouverte par [openChat].
+  /// Réponse de la conversation ouverte par [openChat] (JSON pour la saisie,
+  /// texte pour l'assistant).
   String? answer;
+
+  /// Outil que le faux Gemma appelle (assistant).
+  FunctionCallResponse? toolCall;
   FakeChat? lastChat;
   bool closed = false;
 
@@ -93,7 +116,7 @@ class FakeModel implements InferenceModel {
     String? systemInstruction,
     int? maxOutputTokens,
     ResponseFormat? responseFormat,
-  }) async => lastChat = FakeChat(answer);
+  }) async => lastChat = FakeChat(answer, toolCall: toolCall, tools: tools);
 
   @override
   Future<void> close() async => closed = true;

@@ -6,6 +6,7 @@ import '../features/accounts/presentation/account_detail_page.dart';
 import '../features/accounts/presentation/account_form_page.dart';
 import '../features/accounts/presentation/accounts_page.dart';
 import '../features/assistant/presentation/ai_model_page.dart';
+import '../features/assistant/presentation/assistant_page.dart';
 import '../features/budgets/presentation/budget_form_page.dart';
 import '../features/budgets/presentation/budgets_page.dart';
 import '../features/categories/presentation/categories_page.dart';
@@ -24,9 +25,7 @@ import '../features/transactions/domain/transaction.dart';
 import '../features/transactions/presentation/add_transaction_page.dart';
 import '../features/transactions/presentation/transaction_detail_page.dart';
 import '../features/transactions/presentation/transactions_page.dart';
-import '../l10n/l10n.dart';
 import 'app_shell.dart';
-import 'coming_soon_page.dart';
 
 /// Chemins de navigation, déclarés en un seul endroit.
 abstract final class AppRoutes {
@@ -41,6 +40,10 @@ abstract final class AppRoutes {
     queryParameters: {'name': name, 'target': '$target'},
   ).toString();
   static const simulation = '/forecast/simulate';
+  static String simulationFor({String? label, int? price}) => Uri(
+    path: simulation,
+    queryParameters: {'label': ?label, 'price': ?price?.toString()},
+  ).toString();
   static String editGoal(String id) => '/goals/$id/edit';
   static const newBudget = '/budgets/new';
   static String editBudget(String id) => '/budgets/$id/edit';
@@ -247,7 +250,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 routes: [
                   GoRoute(
                     path: 'simulate',
-                    builder: (context, state) => const SimulationPage(),
+                    builder: (context, state) => SimulationPage(
+                      initialLabel: state.uri.queryParameters['label'],
+                      initialPrice: int.tryParse(
+                        state.uri.queryParameters['price'] ?? '',
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -257,8 +265,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: AppRoutes.assistant,
-                builder: (context, state) =>
-                    ComingSoonPage(title: context.l10n.navAssistant),
+                builder: (context, state) => const AssistantPage(),
               ),
             ],
           ),

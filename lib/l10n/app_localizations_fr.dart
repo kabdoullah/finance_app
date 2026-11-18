@@ -31,9 +31,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settingsTitle => 'Paramètres';
 
   @override
-  String get comingSoonMessage => 'Cet écran arrive bientôt.';
-
-  @override
   String get dashboardWelcome => 'Bienvenue';
 
   @override
@@ -1396,6 +1393,245 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get qeManageAi => 'Gérer le modèle IA';
+
+  @override
+  String get asTitle => 'Copilote';
+
+  @override
+  String get asSubtitle => 'Sur ton téléphone · fonctionne hors connexion';
+
+  @override
+  String get asFootnote =>
+      'Chiffres calculés par l\'application · expliqués par Gemma 4';
+
+  @override
+  String get asTyping => 'Analyse de tes opérations…';
+
+  @override
+  String get asInputHint => 'Pose ta question…';
+
+  @override
+  String get asSend => 'Envoyer';
+
+  @override
+  String get asIntro =>
+      'Pose une question sur tes dépenses, tes budgets, tes soldes ou un achat. Les chiffres sont toujours calculés par l\'application.';
+
+  @override
+  String get asSuggest1 => 'Combien ai-je dépensé cette semaine ?';
+
+  @override
+  String get asSuggest2 => 'Quelle catégorie me coûte le plus ?';
+
+  @override
+  String get asSuggest3 => 'Combien puis-je dépenser cette semaine ?';
+
+  @override
+  String get asSuggest4 => 'Mon solde à la fin du mois ?';
+
+  @override
+  String get asSuggest5 => 'Puis-je acheter un téléphone à 150 000 ?';
+
+  @override
+  String get asFallback =>
+      'Je n\'ai pas bien compris. Tu peux me demander « Mes dépenses cette semaine » ou « Combien puis-je dépenser cette semaine ? ».';
+
+  @override
+  String get asError => 'Je n\'ai pas pu répondre. Réessaie.';
+
+  @override
+  String get asOffTitle => 'L\'assistant n\'est pas chargé';
+
+  @override
+  String get asOffBody =>
+      'Les questions en langage naturel sont indisponibles pour l\'instant. Tous tes chiffres restent accessibles.';
+
+  @override
+  String get asOffNotInstalled =>
+      'L\'assistant n\'est pas installé. Tous tes chiffres restent accessibles.';
+
+  @override
+  String get asOffUnavailable =>
+      'L\'assistant IA n\'est pas disponible sur ce téléphone. Tous tes chiffres restent accessibles.';
+
+  @override
+  String get asOffDownloading =>
+      'Téléchargement de l\'assistant en cours. Tous tes chiffres restent accessibles.';
+
+  @override
+  String get asLoad => 'Charger l\'assistant';
+
+  @override
+  String get asInstall => 'Installer l\'assistant';
+
+  @override
+  String get asLoading => 'Chargement de l\'assistant…';
+
+  @override
+  String get asShortcutDictate => 'Dicter';
+
+  @override
+  String get asLinkTransactions => 'Voir les opérations';
+
+  @override
+  String get asLinkBudgets => 'Voir mes budgets';
+
+  @override
+  String get asLinkAccounts => 'Voir mes comptes';
+
+  @override
+  String get asLinkForecast => 'Voir la prévision';
+
+  @override
+  String get asLinkSimulation => 'Ouvrir la simulation';
+
+  @override
+  String get asPeriodToday => 'aujourd\'hui';
+
+  @override
+  String get asPeriodWeek => 'cette semaine';
+
+  @override
+  String get asPeriodMonth => 'ce mois-ci';
+
+  @override
+  String get asPeriodLastMonth => 'le mois dernier';
+
+  @override
+  String asSpending(String amount, String period) {
+    return 'Tu as dépensé $amount FCFA $period.';
+  }
+
+  @override
+  String asSpendingCategory(String amount, String category, String period) {
+    return 'Tu as dépensé $amount FCFA en $category $period.';
+  }
+
+  @override
+  String asSpendingTop(String category, String amount, String percent) {
+    return 'Ta plus grosse dépense : $category, $amount FCFA ($percent %).';
+  }
+
+  @override
+  String asSpendingNone(String period) {
+    return 'Aucune dépense enregistrée $period.';
+  }
+
+  @override
+  String get asNoBudget =>
+      'Tu n\'as pas encore de budget. Crée-en un pour savoir combien tu peux dépenser.';
+
+  @override
+  String asNoBudgetCategory(String category) {
+    return 'Tu n\'as pas de budget pour $category.';
+  }
+
+  @override
+  String asBudget(String week, String perDay) {
+    return 'Pour rester dans tes budgets, tu peux dépenser environ $week FCFA sur les 7 prochains jours, soit $perDay FCFA par jour.';
+  }
+
+  @override
+  String asBudgetCategory(String category, String remaining, String limit) {
+    return 'Budget $category : il te reste $remaining FCFA sur $limit FCFA.';
+  }
+
+  @override
+  String asBudgetExceeded(String amount) {
+    return 'Tes budgets sont dépassés de $amount FCFA ce mois-ci.';
+  }
+
+  @override
+  String asBudgetCategoryExceeded(String category, String amount) {
+    return 'Le budget $category est dépassé de $amount FCFA.';
+  }
+
+  @override
+  String asRowRemaining(String month) {
+    return 'Reste du budget de $month';
+  }
+
+  @override
+  String get asRowDaysLeft => 'Jours restants';
+
+  @override
+  String get asRowWeek => 'Possible sur 7 jours';
+
+  @override
+  String asRowSpentOf(String spent, String limit) {
+    return '$spent sur $limit FCFA';
+  }
+
+  @override
+  String asBalance(String amount) {
+    return 'Tu as $amount FCFA sur tes comptes.';
+  }
+
+  @override
+  String asBalanceAccount(String amount, String account) {
+    return 'Tu as $amount FCFA sur $account.';
+  }
+
+  @override
+  String get asRowTotal => 'Total';
+
+  @override
+  String asForecast(String amount, String date, String level) {
+    return 'Ton solde devrait être d\'environ $amount FCFA le $date. Fiabilité $level : c\'est une estimation, pas une certitude.';
+  }
+
+  @override
+  String asForecastNegative(String date) {
+    return 'Attention : ton solde passerait sous zéro vers le $date.';
+  }
+
+  @override
+  String get asForecastTooEarly =>
+      'Les prévisions apparaîtront après environ deux semaines d\'opérations.';
+
+  @override
+  String asRowForecastOn(String date) {
+    return 'Solde prévu le $date';
+  }
+
+  @override
+  String get asRowRange => 'Fourchette probable';
+
+  @override
+  String asRowRangeValue(String low, String high) {
+    return '$low à $high FCFA';
+  }
+
+  @override
+  String get asRowReliability => 'Fiabilité';
+
+  @override
+  String asSimPossible(String lowest, String date) {
+    return 'C\'est possible : ton disponible le plus bas serait d\'environ $lowest FCFA, le $date.';
+  }
+
+  @override
+  String asSimTight(String lowest, String date) {
+    return 'C\'est possible, mais serré : ton disponible descendrait à environ $lowest FCFA le $date.';
+  }
+
+  @override
+  String asSimDiscouraged(String date) {
+    return 'Pas maintenant : ton disponible passerait sous zéro vers le $date.';
+  }
+
+  @override
+  String get asRowLowest => 'Disponible le plus bas';
+
+  @override
+  String asRowEndWith(String date) {
+    return 'Le $date, avec l\'achat';
+  }
+
+  @override
+  String asRowEndWithout(String date) {
+    return 'Le $date, sans l\'achat';
+  }
 
   @override
   String get txDuplicate => 'Dupliquer';

@@ -48,3 +48,19 @@ abstract final class TextSearch {
     );
   }
 }
+
+/// Code stable pour un modèle d'IA : « Orange Money » → « orange_money »,
+/// sans espace ni accent (le décodage contraint de Gemma plante sinon),
+/// rendu unique parmi [taken].
+String stableCode(String name, Iterable<String> taken) {
+  var code = TextSearch.normalize(name)
+      .replaceAll(RegExp('[^a-z0-9]+'), '_')
+      .replaceAll(RegExp(r'^_+|_+$'), '');
+  if (code.isEmpty || code == 'none') code = 'item';
+  final used = taken.toSet();
+  var unique = code;
+  for (var i = 2; used.contains(unique); i++) {
+    unique = '${code}_$i';
+  }
+  return unique;
+}

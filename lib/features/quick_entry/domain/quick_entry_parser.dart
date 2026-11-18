@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart' show immutable;
 
+import '../../../core/formatting/text_search.dart';
 import '../../../core/money/money.dart';
 import '../../../core/time/calendar_date.dart';
 import '../../accounts/domain/account.dart';
@@ -466,25 +467,7 @@ class QuickEntryParser {
 
   /// Minuscules, sans accents ni ponctuation, montants « 2.000 » → « 2 000 ».
   static String _normalize(String text) {
-    var s = text.toLowerCase();
-    const accents = {
-      'à': 'a',
-      'â': 'a',
-      'ä': 'a',
-      'é': 'e',
-      'è': 'e',
-      'ê': 'e',
-      'ë': 'e',
-      'î': 'i',
-      'ï': 'i',
-      'ô': 'o',
-      'ö': 'o',
-      'ù': 'u',
-      'û': 'u',
-      'ü': 'u',
-      'ç': 'c',
-    };
-    accents.forEach((from, to) => s = s.replaceAll(from, to));
+    var s = TextSearch.normalize(text);
     s = s
         .replaceAll(RegExp(r"[’'\-]"), ' ')
         .replaceAll(RegExp(r'(?<=\d)[.  ](?=\d{3}\b)'), ' ')
