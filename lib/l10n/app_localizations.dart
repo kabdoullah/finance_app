@@ -1618,6 +1618,312 @@ abstract class AppLocalizations {
   /// **'Récurrente'**
   String get entryRecurring;
 
+  /// No description provided for @qeDictate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dicter'**
+  String get qeDictate;
+
+  /// No description provided for @qeDictateHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une ou plusieurs opérations'**
+  String get qeDictateHint;
+
+  /// No description provided for @qeWrite.
+  ///
+  /// In fr, this message translates to:
+  /// **'Écrire'**
+  String get qeWrite;
+
+  /// No description provided for @qeOrWrite.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ou écris-le simplement'**
+  String get qeOrWrite;
+
+  /// No description provided for @qeWriteExample.
+  ///
+  /// In fr, this message translates to:
+  /// **'« Taxi 2 500 ce matin avec Wave »'**
+  String get qeWriteExample;
+
+  /// No description provided for @qeWriteNote.
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'application prépare les opérations, tu vérifies avant d\'enregistrer.'**
+  String get qeWriteNote;
+
+  /// No description provided for @qeListening.
+  ///
+  /// In fr, this message translates to:
+  /// **'Écoute en cours · reconnaissance hors ligne'**
+  String get qeListening;
+
+  /// No description provided for @qeListenHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu peux dicter plusieurs opérations d\'un coup, avec le compte et la date : « Hier, 2 000 de crédit Orange et 1 500 de pain en espèces ».'**
+  String get qeListenHint;
+
+  /// No description provided for @qeTapToFinish.
+  ///
+  /// In fr, this message translates to:
+  /// **'Touche pour terminer'**
+  String get qeTapToFinish;
+
+  /// No description provided for @qeTapToRetry.
+  ///
+  /// In fr, this message translates to:
+  /// **'Touche pour réessayer'**
+  String get qeTapToRetry;
+
+  /// No description provided for @qeInputPrompt.
+  ///
+  /// In fr, this message translates to:
+  /// **'Décris tes opérations avec tes mots'**
+  String get qeInputPrompt;
+
+  /// No description provided for @qeExamples.
+  ///
+  /// In fr, this message translates to:
+  /// **'Exemples'**
+  String get qeExamples;
+
+  /// No description provided for @qeExample1.
+  ///
+  /// In fr, this message translates to:
+  /// **'Déjeuner 2 500 et taxi 1 000 avec Wave'**
+  String get qeExample1;
+
+  /// No description provided for @qeExample2.
+  ///
+  /// In fr, this message translates to:
+  /// **'Reçu 45 000 de mon client sur Orange Money'**
+  String get qeExample2;
+
+  /// No description provided for @qeExample3.
+  ///
+  /// In fr, this message translates to:
+  /// **'Hier, recharge crédit 2 000 en espèces'**
+  String get qeExample3;
+
+  /// No description provided for @qeAnalyse.
+  ///
+  /// In fr, this message translates to:
+  /// **'Analyser'**
+  String get qeAnalyse;
+
+  /// No description provided for @qeRecapHeading.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vérifier'**
+  String get qeRecapHeading;
+
+  /// No description provided for @qeRecapTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Récapitulatif à vérifier'**
+  String get qeRecapTitle;
+
+  /// No description provided for @qeSimplified.
+  ///
+  /// In fr, this message translates to:
+  /// **'Analyse simplifiée par l\'application : vérifie bien chaque champ.'**
+  String get qeSimplified;
+
+  /// No description provided for @qeCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucune opération détectée} =1{1 opération détectée} other{{count} opérations détectées}}'**
+  String qeCount(int count);
+
+  /// No description provided for @qeToCheck.
+  ///
+  /// In fr, this message translates to:
+  /// **'À vérifier'**
+  String get qeToCheck;
+
+  /// No description provided for @qeAmount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Montant'**
+  String get qeAmount;
+
+  /// No description provided for @qeDescription.
+  ///
+  /// In fr, this message translates to:
+  /// **'Description'**
+  String get qeDescription;
+
+  /// No description provided for @qeAccount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compte'**
+  String get qeAccount;
+
+  /// No description provided for @qeFrom.
+  ///
+  /// In fr, this message translates to:
+  /// **'Depuis'**
+  String get qeFrom;
+
+  /// No description provided for @qeTo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vers'**
+  String get qeTo;
+
+  /// No description provided for @qeDate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Date'**
+  String get qeDate;
+
+  /// No description provided for @qeDayBeforeYesterday.
+  ///
+  /// In fr, this message translates to:
+  /// **'avant-hier'**
+  String get qeDayBeforeYesterday;
+
+  /// No description provided for @qeRemove.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer cette opération'**
+  String get qeRemove;
+
+  /// No description provided for @qeAddOperation.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter une opération'**
+  String get qeAddOperation;
+
+  /// No description provided for @qeTotal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Total'**
+  String get qeTotal;
+
+  /// No description provided for @qeSave.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{Enregistrer l\'opération} other{Enregistrer {count} opérations}}'**
+  String qeSave(int count);
+
+  /// No description provided for @qeNothingSaved.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rien n\'est enregistré avant ta confirmation.'**
+  String get qeNothingSaved;
+
+  /// No description provided for @qeSaveFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'enregistrement a échoué. Vérifie les opérations et réessaie.'**
+  String get qeSaveFailed;
+
+  /// No description provided for @qeDoneHeading.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistré'**
+  String get qeDoneHeading;
+
+  /// No description provided for @qeDoneTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{Opération enregistrée} other{{count} opérations enregistrées}}'**
+  String qeDoneTitle(int count);
+
+  /// No description provided for @qeDoneSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoutées à tes opérations.'**
+  String get qeDoneSubtitle;
+
+  /// No description provided for @qeSeeTransactions.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir dans Transactions'**
+  String get qeSeeTransactions;
+
+  /// No description provided for @qeDictateAnother.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dicter une autre opération'**
+  String get qeDictateAnother;
+
+  /// No description provided for @qeWriteAnother.
+  ///
+  /// In fr, this message translates to:
+  /// **'Écrire une autre opération'**
+  String get qeWriteAnother;
+
+  /// No description provided for @qeNothingHeard.
+  ///
+  /// In fr, this message translates to:
+  /// **'Je n\'ai rien entendu.'**
+  String get qeNothingHeard;
+
+  /// No description provided for @qeNoOperation.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun montant trouvé. Ajoute une opération ou réessaie.'**
+  String get qeNoOperation;
+
+  /// No description provided for @qeMicDenied.
+  ///
+  /// In fr, this message translates to:
+  /// **'Autorise le micro pour dicter, ou écris tes opérations.'**
+  String get qeMicDenied;
+
+  /// No description provided for @qeUnsupported.
+  ///
+  /// In fr, this message translates to:
+  /// **'La dictée hors connexion n\'est pas disponible sur ce téléphone. Écris tes opérations, c\'est aussi rapide.'**
+  String get qeUnsupported;
+
+  /// No description provided for @qeLangTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Installe le français pour dicter'**
+  String get qeLangTitle;
+
+  /// No description provided for @qeLangBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'La dictée se fait sur ton téléphone, sans Internet. Elle a besoin du français hors connexion, à installer une seule fois.'**
+  String get qeLangBody;
+
+  /// No description provided for @qeLangInstall.
+  ///
+  /// In fr, this message translates to:
+  /// **'Installer le français'**
+  String get qeLangInstall;
+
+  /// No description provided for @qeLangManual.
+  ///
+  /// In fr, this message translates to:
+  /// **'Si rien ne se passe : ouvre les paramètres de Gboard › Saisie vocale › Reconnaissance hors connexion, puis ajoute Français.'**
+  String get qeLangManual;
+
+  /// No description provided for @qeLangCheck.
+  ///
+  /// In fr, this message translates to:
+  /// **'C\'est installé'**
+  String get qeLangCheck;
+
+  /// No description provided for @qeWriteInstead.
+  ///
+  /// In fr, this message translates to:
+  /// **'Écrire plutôt'**
+  String get qeWriteInstead;
+
+  /// No description provided for @qeLangDownloading.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le français est en cours de téléchargement. Réessaie dans un instant.'**
+  String get qeLangDownloading;
+
   /// No description provided for @txDuplicate.
   ///
   /// In fr, this message translates to:

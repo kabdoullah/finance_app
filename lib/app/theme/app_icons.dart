@@ -60,6 +60,9 @@ abstract final class AppIcons {
   static const wallet = IconData(0xe68a, fontFamily: _regular);
   static const tray = IconData(0xe4aa, fontFamily: _regular);
   static const info = IconData(0xe2ce, fontFamily: _regular);
+  static const microphoneBold = IconData(0xe326, fontFamily: _bold);
+  static const keyboard = IconData(0xe2d8, fontFamily: _regular);
+  static const arrowUpBold = IconData(0xe08e, fontFamily: _bold);
 
   // Catégories (clés de la table categories).
   static const basket = IconData(0xe964, fontFamily: _regular);

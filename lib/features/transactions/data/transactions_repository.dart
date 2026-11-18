@@ -72,7 +72,33 @@ class TransactionsRepository {
   }) => _guard(() async {
     final errors = await _validate(draft);
     if (errors.isNotEmpty) return Err(ValidationFailure(errors));
+    final id = await _insert(draft, entryMethod, recurringId);
+    return Ok((await _get(id))!);
+  });
 
+  /// Enregistre plusieurs opérations d'un coup (saisie rapide) : toutes ou
+  /// aucune.
+  Future<Result<List<Transaction>>> createAll(
+    List<TransactionDraft> drafts, {
+    required EntryMethod entryMethod,
+  }) => _guard(() async {
+    for (final draft in drafts) {
+      final errors = await _validate(draft);
+      if (errors.isNotEmpty) return Err(ValidationFailure(errors));
+    }
+    final ids = await _db.transaction(
+      () async => [
+        for (final draft in drafts) await _insert(draft, entryMethod, null),
+      ],
+    );
+    return Ok([for (final id in ids) (await _get(id))!]);
+  });
+
+  Future<String> _insert(
+    TransactionDraft draft,
+    EntryMethod entryMethod,
+    String? recurringId,
+  ) async {
     final id = _newId();
     final now = _nowMs();
     await _db
@@ -86,8 +112,8 @@ class TransactionsRepository {
             updatedAt: Value(now),
           ),
         );
-    return Ok((await _get(id))!);
-  });
+    return id;
+  }
 
   Future<Result<Transaction>> update(String id, TransactionDraft draft) =>
       _guard(() async {

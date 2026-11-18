@@ -983,6 +983,194 @@ class AppLocalizationsFr extends AppLocalizations {
   String get entryRecurring => 'Récurrente';
 
   @override
+  String get qeDictate => 'Dicter';
+
+  @override
+  String get qeDictateHint => 'Une ou plusieurs opérations';
+
+  @override
+  String get qeWrite => 'Écrire';
+
+  @override
+  String get qeOrWrite => 'Ou écris-le simplement';
+
+  @override
+  String get qeWriteExample => '« Taxi 2 500 ce matin avec Wave »';
+
+  @override
+  String get qeWriteNote =>
+      'L\'application prépare les opérations, tu vérifies avant d\'enregistrer.';
+
+  @override
+  String get qeListening => 'Écoute en cours · reconnaissance hors ligne';
+
+  @override
+  String get qeListenHint =>
+      'Tu peux dicter plusieurs opérations d\'un coup, avec le compte et la date : « Hier, 2 000 de crédit Orange et 1 500 de pain en espèces ».';
+
+  @override
+  String get qeTapToFinish => 'Touche pour terminer';
+
+  @override
+  String get qeTapToRetry => 'Touche pour réessayer';
+
+  @override
+  String get qeInputPrompt => 'Décris tes opérations avec tes mots';
+
+  @override
+  String get qeExamples => 'Exemples';
+
+  @override
+  String get qeExample1 => 'Déjeuner 2 500 et taxi 1 000 avec Wave';
+
+  @override
+  String get qeExample2 => 'Reçu 45 000 de mon client sur Orange Money';
+
+  @override
+  String get qeExample3 => 'Hier, recharge crédit 2 000 en espèces';
+
+  @override
+  String get qeAnalyse => 'Analyser';
+
+  @override
+  String get qeRecapHeading => 'Vérifier';
+
+  @override
+  String get qeRecapTitle => 'Récapitulatif à vérifier';
+
+  @override
+  String get qeSimplified =>
+      'Analyse simplifiée par l\'application : vérifie bien chaque champ.';
+
+  @override
+  String qeCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count opérations détectées',
+      one: '1 opération détectée',
+      zero: 'Aucune opération détectée',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get qeToCheck => 'À vérifier';
+
+  @override
+  String get qeAmount => 'Montant';
+
+  @override
+  String get qeDescription => 'Description';
+
+  @override
+  String get qeAccount => 'Compte';
+
+  @override
+  String get qeFrom => 'Depuis';
+
+  @override
+  String get qeTo => 'Vers';
+
+  @override
+  String get qeDate => 'Date';
+
+  @override
+  String get qeDayBeforeYesterday => 'avant-hier';
+
+  @override
+  String get qeRemove => 'Retirer cette opération';
+
+  @override
+  String get qeAddOperation => 'Ajouter une opération';
+
+  @override
+  String get qeTotal => 'Total';
+
+  @override
+  String qeSave(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Enregistrer $count opérations',
+      one: 'Enregistrer l\'opération',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get qeNothingSaved => 'Rien n\'est enregistré avant ta confirmation.';
+
+  @override
+  String get qeSaveFailed =>
+      'L\'enregistrement a échoué. Vérifie les opérations et réessaie.';
+
+  @override
+  String get qeDoneHeading => 'Enregistré';
+
+  @override
+  String qeDoneTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count opérations enregistrées',
+      one: 'Opération enregistrée',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get qeDoneSubtitle => 'Ajoutées à tes opérations.';
+
+  @override
+  String get qeSeeTransactions => 'Voir dans Transactions';
+
+  @override
+  String get qeDictateAnother => 'Dicter une autre opération';
+
+  @override
+  String get qeWriteAnother => 'Écrire une autre opération';
+
+  @override
+  String get qeNothingHeard => 'Je n\'ai rien entendu.';
+
+  @override
+  String get qeNoOperation =>
+      'Aucun montant trouvé. Ajoute une opération ou réessaie.';
+
+  @override
+  String get qeMicDenied =>
+      'Autorise le micro pour dicter, ou écris tes opérations.';
+
+  @override
+  String get qeUnsupported =>
+      'La dictée hors connexion n\'est pas disponible sur ce téléphone. Écris tes opérations, c\'est aussi rapide.';
+
+  @override
+  String get qeLangTitle => 'Installe le français pour dicter';
+
+  @override
+  String get qeLangBody =>
+      'La dictée se fait sur ton téléphone, sans Internet. Elle a besoin du français hors connexion, à installer une seule fois.';
+
+  @override
+  String get qeLangInstall => 'Installer le français';
+
+  @override
+  String get qeLangManual =>
+      'Si rien ne se passe : ouvre les paramètres de Gboard › Saisie vocale › Reconnaissance hors connexion, puis ajoute Français.';
+
+  @override
+  String get qeLangCheck => 'C\'est installé';
+
+  @override
+  String get qeWriteInstead => 'Écrire plutôt';
+
+  @override
+  String get qeLangDownloading =>
+      'Le français est en cours de téléchargement. Réessaie dans un instant.';
+
+  @override
   String get txDuplicate => 'Dupliquer';
 
   @override

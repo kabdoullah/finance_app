@@ -14,6 +14,7 @@ import '../features/forecast/presentation/simulation_page.dart';
 import '../features/goals/presentation/goal_detail_page.dart';
 import '../features/goals/presentation/goal_form_page.dart';
 import '../features/goals/presentation/goals_page.dart';
+import '../features/quick_entry/presentation/quick_entry_page.dart';
 import '../features/recurring/presentation/recurring_auto_recorder.dart';
 import '../features/recurring/presentation/recurring_form_page.dart';
 import '../features/recurring/presentation/recurring_page.dart';
@@ -58,6 +59,12 @@ abstract final class AppRoutes {
         queryParameters: {'kind': ?kind?.storageValue, 'account': ?accountId},
       ).toString();
   static String transactionDetail(String id) => '/transactions/$id';
+
+  /// Saisie rapide : dictée, ou texte avec [text].
+  static String quickEntry({bool text = false}) => Uri(
+    path: '/quick-entry',
+    queryParameters: {if (text) 'mode': 'text'},
+  ).toString();
   static const recurring = '/transactions/recurring';
   static String newRecurring({String? fromTransactionId}) => Uri(
     path: '/recurring/new',
@@ -95,6 +102,17 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             ),
           );
         },
+      ),
+      GoRoute(
+        path: '/quick-entry',
+        pageBuilder: (context, state) => MaterialPage(
+          fullscreenDialog: true,
+          child: QuickEntryPage(
+            initialMode: state.uri.queryParameters['mode'] == 'text'
+                ? QuickEntryMode.text
+                : QuickEntryMode.voice,
+          ),
+        ),
       ),
       GoRoute(
         path: '/accounts/:id/edit',
