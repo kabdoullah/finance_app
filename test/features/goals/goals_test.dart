@@ -51,6 +51,18 @@ void main() {
       expect(overdue.isOverdue(now), isTrue);
     });
 
+    test('repousser : première fin de mois où l’effort tient le rythme', () {
+      final goal = _goal(targetDate: DateTime(2027, 1, 31));
+      // 90 000 restants, rythme de 13 300 par mois : fin mai demanderait
+      // ≈ 14 000, fin juin ≈ 12 100.
+      expect(goal.postponeFor(now, const Money(13300)), (
+        DateTime(2027, 6, 30),
+        const Money(12100),
+      ));
+      expect(goal.postponeFor(now, Money.zero), isNull);
+      expect(_goal(saved: 0).postponeFor(now, const Money(13300)), isNull);
+    });
+
     test('en retard sur le plan linéaire création → date cible', () {
       // Du 1er sept. au 1er janv. (122 j) ; au 15 nov. (75 j) on attend
       // ≈ 61,5 % de 100 000.
@@ -65,10 +77,7 @@ void main() {
       );
       // Sans date ou atteint : jamais en retard.
       expect(_goal(saved: 0).isLate(now), isFalse);
-      expect(
-        _goal(saved: 150000, targetDate: target()).isLate(now),
-        isFalse,
-      );
+      expect(_goal(saved: 150000, targetDate: target()).isLate(now), isFalse);
     });
   });
 
@@ -166,16 +175,16 @@ void main() {
         await goals.withdraw(phone.id, wave.id, const Money(20000)),
       );
       expect(after.saved, const Money(40000));
-      expect(
-        await goals.watchReservedByAccount(goalId: phone.id).first,
-        {bank.id: const Money(40000)},
-      );
+      expect(await goals.watchReservedByAccount(goalId: phone.id).first, {
+        bank.id: const Money(40000),
+      });
       final history = await goals.watchMovements(phone.id).first;
       expect(history, hasLength(3));
-      expect(
-        history.map((m) => m.signed.value).toSet(),
-        {-20000, 40000, 20000},
-      );
+      expect(history.map((m) => m.signed.value).toSet(), {
+        -20000,
+        40000,
+        20000,
+      });
     });
 
     test('supprimer l’objectif libère ses réserves', () async {
@@ -185,6 +194,50 @@ void main() {
       expect(await goals.availableOn(wave.id), const Money(42000));
       expect(await goals.watchAll().first, isEmpty);
     });
+
+    test('dépenses moyennes : 3 mois complets, rien sous 30 jours', () async {
+      final transactions = TransactionsRepository(db, () => now);
+      Future<void> expense(int amount, DateTime at) async => ok(
+        await transactions.create(
+          TransactionDraft(
+            kind: TransactionKind.expense,
+            amount: Money(amount),
+            occurredAt: at,
+            accountId: bank.id,
+            categoryId: 'exp.food',
+          ),
+        ),
+      );
+      await expense(5000, DateTime(2026, 10, 20));
+      // Première opération il y a 26 jours : trop peu d'historique.
+      expect(await goals.averageMonthlyExpenses(), isNull);
+
+      await expense(90000, DateTime(2026, 8, 10));
+      await expense(55000, DateTime(2026, 9, 10));
+      await expense(99999, DateTime(2026, 11, 2)); // mois en cours : ignoré
+      // (90 000 + 55 000 + 5 000) ÷ 3 = 50 000.
+      expect(await goals.averageMonthlyExpenses(), const Money(50000));
+    });
+
+    test(
+      'rythme : rien avant 30 jours, puis moyenne sur les mois écoulés',
+      () async {
+        final phone = await create('Téléphone');
+        ok(await goals.contribute(phone.id, bank.id, const Money(30000)));
+        expect(await goals.averageMonthlyContribution(phone.id), isNull);
+
+        final later = GoalsRepository(
+          db,
+          () => now.add(const Duration(days: 45)),
+          AccountsRepository(db, () => now),
+        );
+        // 30 000 en 45 jours ≈ 1,48 mois → ≈ 20 292 par mois.
+        expect(
+          await later.averageMonthlyContribution(phone.id),
+          const Money(20292),
+        );
+      },
+    );
 
     test('il te reste en moyenne : revenus − dépenses sur 3 mois', () async {
       expect(await goals.averageMonthlySurplus(), isNull);

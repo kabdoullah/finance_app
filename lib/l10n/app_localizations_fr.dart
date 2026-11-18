@@ -986,6 +986,55 @@ class AppLocalizationsFr extends AppLocalizations {
   String get txDuplicate => 'Dupliquer';
 
   @override
+  String goalAdviceIncome(String amount, String name, String day) {
+    return 'Pour tenir la date : verse $amount FCFA le jour de « $name » (le $day)';
+  }
+
+  @override
+  String goalAdviceMonthly(String amount) {
+    return 'Pour tenir la date : verse $amount FCFA chaque mois';
+  }
+
+  @override
+  String goalAdvicePostpone(String date, String amount) {
+    return ', ou repousse la date au $date (≈ $amount par mois)';
+  }
+
+  @override
+  String goalPostponeButton(String date) {
+    return 'Repousser au $date';
+  }
+
+  @override
+  String goalPostponed(String date) {
+    return 'Date repoussée au $date.';
+  }
+
+  @override
+  String goalEmergencyAdvice(String amount) {
+    return 'Objectif conseillé : 3 mois de dépenses (≈ $amount FCFA).';
+  }
+
+  @override
+  String get goalEmergencyAdviceNoData =>
+      'Objectif conseillé : 3 mois de dépenses.';
+
+  @override
+  String goalEmergencySuggestion(String amount) {
+    return '3 mois de tes dépenses ≈ $amount FCFA.';
+  }
+
+  @override
+  String accountReserved(String amount) {
+    return 'dont $amount réservés';
+  }
+
+  @override
+  String accountAvailable(String available, String reserved) {
+    return 'Disponible : $available FCFA · $reserved réservés aux objectifs';
+  }
+
+  @override
   String get forecastTitle => 'Prévisions';
 
   @override

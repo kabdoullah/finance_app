@@ -48,10 +48,20 @@ final averageSurplusProvider = FutureProvider.autoDispose<Money?>(
 
 /// Rythme d'épargne moyen de l'objectif sur 3 mois, recalculé à chaque
 /// mouvement.
-final goalPaceProvider = FutureProvider.autoDispose.family<Money, String>((
+final goalPaceProvider = FutureProvider.autoDispose.family<Money?, String>((
   ref,
   goalId,
 ) {
   ref.watch(goalMovementsProvider(goalId));
   return ref.watch(goalsRepositoryProvider).averageMonthlyContribution(goalId);
+});
+
+/// Montant conseillé d'un fonds d'urgence : 3 mois de dépenses, arrondi au
+/// millier supérieur (`null` sans historique suffisant).
+final emergencyTargetProvider = FutureProvider.autoDispose<Money?>((ref) async {
+  final monthly = await ref
+      .watch(goalsRepositoryProvider)
+      .averageMonthlyExpenses();
+  if (monthly == null || monthly.value <= 0) return null;
+  return Money((monthly.value * 3 + 999) ~/ 1000 * 1000);
 });

@@ -82,6 +82,26 @@ class SavingsGoal {
     return saved.value * total < target.value * elapsed;
   }
 
+  /// « Repousse la date au … (≈ X par mois) » : première fin de mois après
+  /// la date cible où l'effort mensuel ne dépasse plus [capacity] (rythme
+  /// réel ou reste moyen). `null` si l'objectif n'est pas en retard ou si
+  /// aucune date raisonnable (10 ans) ne convient.
+  (DateTime, Money)? postponeFor(DateTime now, Money capacity) {
+    final date = targetDate;
+    if (date == null || isReached || capacity.value <= 0) return null;
+    final today = _day(now);
+    for (var i = 1; i <= 120; i++) {
+      final end = DateTime(today.year, today.month + i + 1, 0);
+      if (!end.isAfter(date)) continue;
+      final months = end.difference(today).inHours / 24 / _daysPerMonth;
+      final perMonth = roundUpToHundred(
+        Money((left.value / (months < 1 ? 1 : months)).ceil()),
+      );
+      if (perMonth.value <= capacity.value) return (end, perMonth);
+    }
+    return null;
+  }
+
   static DateTime _day(DateTime d) {
     final local = d.toLocal();
     return DateTime(local.year, local.month, local.day);

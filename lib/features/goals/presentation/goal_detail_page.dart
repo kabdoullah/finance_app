@@ -6,11 +6,17 @@ import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
 import '../../../core/clock.dart';
+import '../../../core/errors/result.dart';
 import '../../../core/formatting/date_format.dart';
 import '../../../core/formatting/relative_date.dart';
 import '../../../core/money/money.dart';
 import '../../../l10n/l10n.dart';
+import '../../recurring/domain/recurring_operation.dart';
+import '../../recurring/presentation/recurring_providers.dart';
+import '../../transactions/domain/transaction.dart';
+import '../domain/goal_draft.dart';
 import '../domain/savings_goal.dart';
+import 'goal_icons.dart';
 import 'goal_movement_sheet.dart';
 import 'goals_page.dart';
 import 'goals_providers.dart';
@@ -33,7 +39,17 @@ class GoalDetailPage extends ConsumerWidget {
     final perMonth = goal.perMonth(now);
     final perWeek = goal.perWeek(now);
     final pace = ref.watch(goalPaceProvider(goalId)).value;
-    final (note, late) = goalNote(goal, now, l10n);
+    final (note, late) = goalNote(
+      goal,
+      now,
+      l10n,
+      emergencyTarget: goal.iconKey == emergencyGoalIcon
+          ? ref.watch(emergencyTargetProvider).value
+          : null,
+    );
+    final advice = late && !goal.isOverdue(now)
+        ? _Advice.of(ref, goal, now, pace)
+        : null;
 
     return Scaffold(
       appBar: AppBar(
@@ -80,13 +96,16 @@ class GoalDetailPage extends ConsumerWidget {
                   style: TextStyle(fontSize: 13, color: colors.inkSecondary),
                 ),
               ),
-              Text(
-                date == null
-                    ? l10n.goalNoDue
-                    : l10n.goalTargetDateValue(
-                        AppDateFormat.dayMonthYear(date, locale),
-                      ),
-                style: TextStyle(fontSize: 13, color: colors.inkSecondary),
+              Flexible(
+                child: Text(
+                  date == null
+                      ? l10n.goalNoDue
+                      : l10n.goalTargetDateValue(
+                          AppDateFormat.dayMonthYear(date, locale),
+                        ),
+                  textAlign: TextAlign.end,
+                  style: TextStyle(fontSize: 13, color: colors.inkSecondary),
+                ),
               ),
             ],
           ),
@@ -183,6 +202,7 @@ class GoalDetailPage extends ConsumerWidget {
                             note,
                             if (pace != null && pace.value > 0)
                               l10n.goalPace(MoneyFormat.amount(pace)),
+                            ?advice?.text(l10n, locale),
                           ].join(' '),
                           style: TextStyle(
                             fontSize: 13.5,
@@ -194,6 +214,15 @@ class GoalDetailPage extends ConsumerWidget {
                     ],
                   ),
                 ),
+                if (advice?.postpone case (final newDate, _)?)
+                  OutlinedButton(
+                    onPressed: () => _postpone(context, ref, goal, newDate),
+                    child: Text(
+                      l10n.goalPostponeButton(
+                        AppDateFormat.dayMonthYear(newDate, locale),
+                      ),
+                    ),
+                  ),
                 Text(
                   l10n.goalComputedBy,
                   style: TextStyle(fontSize: 12, color: colors.inkTertiary),
@@ -211,6 +240,98 @@ class GoalDetailPage extends ConsumerWidget {
         ],
       ),
     );
+  }
+}
+
+/// Repousse la date cible (bouton « Repousser au … »).
+Future<void> _postpone(
+  BuildContext context,
+  WidgetRef ref,
+  SavingsGoal goal,
+  DateTime date,
+) async {
+  final l10n = context.l10n;
+  final locale = Localizations.localeOf(context).toLanguageTag();
+  final messenger = ScaffoldMessenger.of(context);
+  final result = await ref
+      .read(goalsRepositoryProvider)
+      .update(
+        goal.id,
+        GoalDraft(
+          name: goal.name,
+          target: goal.target,
+          iconKey: goal.iconKey,
+          targetDate: date,
+        ),
+      );
+  messenger
+    ..hideCurrentSnackBar()
+    ..showSnackBar(
+      SnackBar(
+        content: Text(
+          result is Ok
+              ? l10n.goalPostponed(AppDateFormat.dayMonthYear(date, locale))
+              : l10n.errorGeneric,
+        ),
+      ),
+    );
+}
+
+/// Conseil « Pour tenir la date : verse X FCFA le jour de « Salaire »
+/// (le 1er), ou repousse la date au … (≈ Y par mois). »
+class _Advice {
+  const _Advice({
+    required this.perMonth,
+    required this.income,
+    required this.postpone,
+  });
+
+  /// [pace] : rythme réel (3 mois) ; à défaut, le reste moyen par mois.
+  static _Advice? of(
+    WidgetRef ref,
+    SavingsGoal goal,
+    DateTime now,
+    Money? pace,
+  ) {
+    final perMonth = goal.perMonth(now);
+    if (perMonth == null) return null;
+    final incomes =
+        (ref.watch(recurringOperationsProvider).value ?? const [])
+            .where((o) => o.kind == TransactionKind.income && o.isActive)
+            .toList()
+          ..sort((a, b) => a.nextDue!.compareTo(b.nextDue!));
+    final capacity = pace != null && pace.value > 0
+        ? pace
+        : ref.watch(averageSurplusProvider).value;
+    return _Advice(
+      perMonth: perMonth,
+      income: incomes.firstOrNull,
+      postpone: capacity == null ? null : goal.postponeFor(now, capacity),
+    );
+  }
+
+  final Money perMonth;
+  final RecurringOperation? income;
+  final (DateTime, Money)? postpone;
+
+  String text(AppLocalizations l10n, String locale) {
+    final amount = MoneyFormat.amount(perMonth);
+    final first = switch (income) {
+      final op? => l10n.goalAdviceIncome(
+        amount,
+        op.name,
+        op.nextDue!.day == 1 ? '1er' : '${op.nextDue!.day}',
+      ),
+      null => l10n.goalAdviceMonthly(amount),
+    };
+    final second = switch (postpone) {
+      (final date, final cost)? => l10n.goalAdvicePostpone(
+        AppDateFormat.dayMonth(date, locale),
+        MoneyFormat.amount(cost),
+      ),
+      null => '',
+    };
+    return AppDateFormat.sentence('$first$second.');
   }
 }
 

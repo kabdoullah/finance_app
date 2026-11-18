@@ -12,6 +12,7 @@ import '../../../core/money/money.dart';
 import '../../../core/widgets/amount_display.dart';
 import '../../../l10n/l10n.dart';
 import '../../goals/presentation/goals_page.dart';
+import '../../goals/presentation/goals_providers.dart';
 import '../domain/account.dart';
 import '../domain/account_type.dart';
 import '../domain/accounts_summary.dart';
@@ -277,6 +278,7 @@ class _AccountTile extends ConsumerWidget {
     final l10n = context.l10n;
     final locale = Localizations.localeOf(context).toLanguageTag();
     final archived = account.isArchived;
+    final reserved = ref.watch(reservedByAccountProvider).value?[account.id];
     final lastOperation = account.lastOperationAt;
     final subtitle = archived
         ? l10n.accountArchivedOn(
@@ -323,9 +325,25 @@ class _AccountTile extends ConsumerWidget {
                 ],
               ),
             ),
-            Text(
-              MoneyFormat.amount(account.balance),
-              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              spacing: 2,
+              children: [
+                Text(
+                  MoneyFormat.amount(account.balance),
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                // Part réservée aux objectifs d'épargne (le solde ne change
+                // pas : l'argent est toujours sur le compte).
+                if (reserved != null)
+                  Text(
+                    l10n.accountReserved(MoneyFormat.amount(reserved)),
+                    style: TextStyle(fontSize: 12, color: colors.inkTertiary),
+                  ),
+              ],
             ),
             Icon(AppIcons.caretRight, size: 14, color: colors.inkTertiary),
           ],

@@ -14,6 +14,7 @@ import '../../../core/time/month.dart';
 import '../../../core/widgets/amount_display.dart';
 import '../../../core/widgets/confirm_dialog.dart';
 import '../../../l10n/l10n.dart';
+import '../../goals/presentation/goals_providers.dart';
 import '../../transactions/domain/transaction.dart';
 import '../../transactions/domain/transaction_stats.dart';
 import '../../transactions/presentation/transaction_labels.dart';
@@ -107,6 +108,19 @@ class _AccountDetail extends ConsumerWidget {
                 ),
               ),
               AmountDisplay(amount: account.balance),
+              if (ref.watch(reservedByAccountProvider).value?[account.id]
+                  case final reserved?)
+                Text(
+                  l10n.accountAvailable(
+                    // Négatif si de l'argent réservé a été dépensé depuis.
+                    (account.balance - reserved).isNegative
+                        ? MoneyFormat.signed(account.balance - reserved)
+                        : MoneyFormat.amount(account.balance - reserved),
+                    MoneyFormat.amount(reserved),
+                  ),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 13, color: colors.inkSecondary),
+                ),
             ],
           ),
           const SizedBox(height: 20),

@@ -3,6 +3,10 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/theme/app_icons.dart';
 import '../../../l10n/l10n.dart';
 
+/// Icône de la suggestion « Fonds d'urgence » (objectif conseillé :
+/// 3 mois de dépenses).
+const emergencyGoalIcon = 'umbrella';
+
 /// Icône par défaut d'un objectif sans suggestion reconnue.
 const defaultGoalIcon = 'piggy';
 

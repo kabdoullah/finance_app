@@ -279,6 +279,13 @@ class _GoalFormPageState extends ConsumerState<GoalFormPage> {
                 : null,
           ),
         ),
+        if (!_isEdit && goalIconKeyFor(_name.text, l10n) == emergencyGoalIcon)
+          if (ref.watch(emergencyTargetProvider).value case final suggested?)
+            _EmergencySuggestion(
+              amount: suggested,
+              onUse: () =>
+                  _change(() => _target.text = MoneyFormat.amount(suggested)),
+            ),
         const SizedBox(height: 20),
         _FieldLabel(l10n.goalDueLabel),
         if (_isEdit) ...[
@@ -347,6 +354,54 @@ class _GoalFormPageState extends ConsumerState<GoalFormPage> {
             ),
         ],
       ],
+    );
+  }
+}
+
+/// Fonds d'urgence : « 3 mois de tes dépenses ≈ X FCFA. Utiliser ce
+/// montant ».
+class _EmergencySuggestion extends StatelessWidget {
+  const _EmergencySuggestion({required this.amount, required this.onUse});
+
+  final Money amount;
+  final VoidCallback onUse;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final l10n = context.l10n;
+    return Container(
+      margin: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.fromLTRB(14, 12, 8, 6),
+      decoration: BoxDecoration(
+        color: colors.primarySoft,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l10n.goalEmergencySuggestion(MoneyFormat.amount(amount)),
+            style: TextStyle(
+              fontSize: 13.5,
+              height: 1.45,
+              color: colors.onPrimarySoft,
+            ),
+          ),
+          TextButton(
+            onPressed: onUse,
+            style: TextButton.styleFrom(
+              foregroundColor: colors.onPrimarySoft,
+              padding: EdgeInsets.zero,
+              textStyle: const TextStyle(
+                fontSize: 13.5,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            child: Text(l10n.budgetUseAmount),
+          ),
+        ],
+      ),
     );
   }
 }

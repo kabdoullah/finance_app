@@ -1624,6 +1624,66 @@ abstract class AppLocalizations {
   /// **'Dupliquer'**
   String get txDuplicate;
 
+  /// No description provided for @goalAdviceIncome.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pour tenir la date : verse {amount} FCFA le jour de « {name} » (le {day})'**
+  String goalAdviceIncome(String amount, String name, String day);
+
+  /// No description provided for @goalAdviceMonthly.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pour tenir la date : verse {amount} FCFA chaque mois'**
+  String goalAdviceMonthly(String amount);
+
+  /// No description provided for @goalAdvicePostpone.
+  ///
+  /// In fr, this message translates to:
+  /// **', ou repousse la date au {date} (≈ {amount} par mois)'**
+  String goalAdvicePostpone(String date, String amount);
+
+  /// No description provided for @goalPostponeButton.
+  ///
+  /// In fr, this message translates to:
+  /// **'Repousser au {date}'**
+  String goalPostponeButton(String date);
+
+  /// No description provided for @goalPostponed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Date repoussée au {date}.'**
+  String goalPostponed(String date);
+
+  /// No description provided for @goalEmergencyAdvice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Objectif conseillé : 3 mois de dépenses (≈ {amount} FCFA).'**
+  String goalEmergencyAdvice(String amount);
+
+  /// No description provided for @goalEmergencyAdviceNoData.
+  ///
+  /// In fr, this message translates to:
+  /// **'Objectif conseillé : 3 mois de dépenses.'**
+  String get goalEmergencyAdviceNoData;
+
+  /// No description provided for @goalEmergencySuggestion.
+  ///
+  /// In fr, this message translates to:
+  /// **'3 mois de tes dépenses ≈ {amount} FCFA.'**
+  String goalEmergencySuggestion(String amount);
+
+  /// No description provided for @accountReserved.
+  ///
+  /// In fr, this message translates to:
+  /// **'dont {amount} réservés'**
+  String accountReserved(String amount);
+
+  /// No description provided for @accountAvailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Disponible : {available} FCFA · {reserved} réservés aux objectifs'**
+  String accountAvailable(String available, String reserved);
+
   /// No description provided for @forecastTitle.
   ///
   /// In fr, this message translates to:

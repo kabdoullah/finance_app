@@ -153,10 +153,19 @@ class GoalsRepository {
     return Money(row.read<int>('net') ~/ 3);
   }
 
+  /// Historique minimal avant d'afficher un rythme ou un montant conseillé.
+  static const minHistoryDays = 30;
+
   /// Rythme d'épargne moyen de l'objectif sur les 3 derniers mois
-  /// (contributions − retraits) ÷ 3.
-  Future<Money> averageMonthlyContribution(String goalId) async {
+  /// (contributions − retraits), divisé par les mois réellement écoulés
+  /// depuis sa création (au plus 3). `null` si l'objectif a moins de
+  /// [minHistoryDays] jours.
+  Future<Money?> averageMonthlyContribution(String goalId) async {
+    final goal = await _get(goalId);
+    if (goal == null) return null;
     final now = _clock();
+    final age = now.difference(goal.createdAt).inHours / 24;
+    if (age < minHistoryDays) return null;
     final from = DateTime(now.year, now.month - 3, now.day);
     final row = await _db
         .customSelect(
@@ -166,7 +175,44 @@ class GoalsRepository {
           readsFrom: {_movements},
         )
         .getSingle();
-    return Money(row.read<int>('net') ~/ 3);
+    final months = (age / (365.25 / 12)).clamp(1.0, 3.0);
+    return Money((row.read<int>('net') / months).round());
+  }
+
+  /// Dépenses moyennes par mois sur les 3 derniers mois complets
+  /// (transferts exclus), divisées par les mois couverts par l'historique.
+  /// `null` avec moins de [minHistoryDays] jours d'historique.
+  Future<Money?> averageMonthlyExpenses() async {
+    final now = _clock();
+    final current = Month.of(now);
+    final firstRow = await _db
+        .customSelect(
+          'SELECT MIN(occurred_at) AS first FROM transactions',
+          readsFrom: {_db.transactions},
+        )
+        .getSingle();
+    final firstMs = firstRow.readNullable<int>('first');
+    if (firstMs == null) return null;
+    final first = DateTime.fromMillisecondsSinceEpoch(firstMs, isUtc: true);
+    if (now.difference(first).inHours / 24 < minHistoryDays) return null;
+    final months = [
+      current.previous,
+      current.previous.previous,
+      current.previous.previous.previous,
+    ].where((m) => first.toLocal().isBefore(m.end)).toList();
+    if (months.isEmpty) return null;
+    final row = await _db
+        .customSelect(
+          'SELECT COALESCE(SUM(amount), 0) AS total FROM transactions '
+          "WHERE kind = 'expense' AND occurred_at >= ? AND occurred_at < ?",
+          variables: [
+            Variable.withInt(_ms(months.last.start)),
+            Variable.withInt(_ms(current.start)),
+          ],
+          readsFrom: {_db.transactions},
+        )
+        .getSingle();
+    return Money(row.read<int>('total') ~/ months.length);
   }
 
   Future<Result<SavingsGoal>> _move(

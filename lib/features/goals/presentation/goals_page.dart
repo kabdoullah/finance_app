@@ -137,7 +137,14 @@ class GoalCard extends ConsumerWidget {
     final locale = Localizations.localeOf(context).toLanguageTag();
     final now = ref.watch(clockProvider)();
     final date = goal.targetDate;
-    final (note, late) = goalNote(goal, now, l10n);
+    final (note, late) = goalNote(
+      goal,
+      now,
+      l10n,
+      emergencyTarget: goal.iconKey == emergencyGoalIcon
+          ? ref.watch(emergencyTargetProvider).value
+          : null,
+    );
 
     // Lignes séparées par un trait, pas de cartes (maquette Objectifs).
     return Container(
@@ -282,9 +289,23 @@ class GoalCard extends ConsumerWidget {
 }
 
 /// Note sous la barre d'un objectif ; `true` si elle signale un retard.
-(String, bool) goalNote(SavingsGoal goal, DateTime now, AppLocalizations l10n) {
+///
+/// Un fonds d'urgence sans date ajoute « Objectif conseillé : 3 mois de
+/// dépenses (≈ [emergencyTarget]) ».
+(String, bool) goalNote(
+  SavingsGoal goal,
+  DateTime now,
+  AppLocalizations l10n, {
+  Money? emergencyTarget,
+}) {
   if (goal.isReached) return (l10n.goalNoteReached, false);
-  if (goal.targetDate == null) return (l10n.goalNoteNoDate, false);
+  if (goal.targetDate == null) {
+    if (goal.iconKey != emergencyGoalIcon) return (l10n.goalNoteNoDate, false);
+    final advice = emergencyTarget == null
+        ? l10n.goalEmergencyAdviceNoData
+        : l10n.goalEmergencyAdvice(MoneyFormat.amount(emergencyTarget));
+    return ('${l10n.goalNoteNoDate} $advice', false);
+  }
   if (goal.isOverdue(now)) {
     return (l10n.goalNoteOverdue(MoneyFormat.amount(goal.left)), true);
   }
