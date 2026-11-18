@@ -74,3 +74,57 @@ franiers ». 5 à 7,5 s pour 5 s d'audio.
    session ouverte, raccourcir les consignes, ne pas utiliser Gemma pour la
    saisie rapide courante.
 4. La reconnaissance vocale doit venir d'ailleurs que Whisper tiny.
+
+---
+
+# 2e série (18 novembre 2026)
+
+## A. Assistant en conversation ouverte (5 questions, CPU)
+
+| Consigne | Q1 | Q2 | Q3 | Q4 | Q5 |
+|---|---|---|---|---|---|
+| Complète — délai jusqu'à l'outil | 15,0 s | 4,5 s | 4,0 s | 4,0 s | 5,4 s |
+| Courte — délai jusqu'à l'outil | 13,3 s | 4,5 s | 3,8 s | 3,7 s | 5,4 s |
+
+10/10 outils corrects. Réponse complète : 8 à 15 s. Garder la conversation
+ouverte divise le délai par ≈ 3 à partir de la 2e question (≈ 4 s, à la
+limite du critère) ; raccourcir la consigne ne change presque rien.
+
+## B. Audio natif de Gemma 4 (CPU, 9 essais)
+
+Transcription meilleure que Whisper tiny sur les montants et les comptes
+(« Salut 380000 sur ÉcoBank », « Transfère 50000 de EcoBank vers Wave »,
+« Crédit téléphone téléphone 1000 francs Orange Money ») mais irrégulière
+(« Goro goro sing sing space… », « Maman, maman, », « 266 »).
+JSON direct depuis l'audio : **2/9** phrases avec montant, catégorie et
+compte justes. Délais : 3 à 15 s (transcription), 9 à 29 s (JSON). ❌
+
+## C. Reconnaissance hors ligne d'Android (createOnDeviceSpeechRecognizer)
+
+Pack français à installer à la main (Gboard → Saisie vocale →
+Reconnaissance hors connexion) : `triggerModelDownload` est ignoré sur
+MIUI. Service : Speech Services by Google.
+
+Résultats (remis en face de la phrase lue ; le 1er essai a donné « rien
+reconnu ») : « taxi 2000 sur waze », « salaire 380000 sur Ecobank »,
+« GABA 1000 francs », « 500 espèces », « tantine 40000 », « BG » (essai
+raté), « maman m'a envoyé 20000 sur wave », « transfert 50000/ 8 ».
+
+- **Résultat dès la fin de la parole** (0 à 7 ms mesurés après
+  `onEndOfSpeech`), montants **en chiffres**.
+- Brut : **2/8** phrases justes ; les erreurs portent sur le vocabulaire
+  ivoirien (garba → GABA, tontine → tantine, wôrô-wôrô absent) et les
+  noms de comptes (Wave → waze).
+- Avec un dictionnaire de variantes (waze → Wave, gaba → garba,
+  tantine → tontine), on passerait à ≈ 5/8.
+
+## Conclusion de la 2e série
+
+- **Voix** : la reconnaissance Android hors ligne est la meilleure base
+  (instantanée, chiffres corrects). À compléter par un analyseur
+  déterministe avec dictionnaire de variantes ivoiriennes, et par l'écran de
+  confirmation de la maquette (l'utilisateur valide toujours). Dépend des
+  services vocaux Google (présents sur la plupart des Android) : la saisie
+  au clavier reste la solution de repli.
+- **Gemma** : réservé à l'assistant, en conversation gardée ouverte
+  (≈ 4 s dès la 2e question, avec un indicateur « réflexion »).

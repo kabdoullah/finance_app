@@ -196,3 +196,58 @@ final entryCases = [
     _e('expense', 6500, 'Alimentation', 'Orange Money'),
   ),
 ];
+
+/// Phrases lues à voix haute (2e série), avec l'opération attendue en codes
+/// stables (catégorie, compte).
+class VoicePhrase {
+  const VoicePhrase(this.text, this.expected);
+
+  final String text;
+  final Map<String, Object?> expected;
+}
+
+Map<String, Object?> _v(
+  String kind,
+  int amount,
+  String? category,
+  String? account, [
+  String date = 'today',
+]) => {
+  'kind': kind,
+  'amount': amount,
+  'category': category,
+  'account': account,
+  'date': date,
+};
+
+final voicePhrases = [
+  VoicePhrase(
+    'taxi deux mille sur Wave',
+    _v('expense', 2000, 'transport', 'wave'),
+  ),
+  VoicePhrase(
+    'salaire trois cent quatre-vingt mille sur Ecobank',
+    _v('income', 380000, 'salary', 'ecobank'),
+  ),
+  VoicePhrase(
+    'garba mille hier',
+    _v('expense', 1000, 'food', null, 'yesterday'),
+  ),
+  VoicePhrase(
+    'wôrô-wôrô cinq cents espèces',
+    _v('expense', 500, 'transport', 'cash'),
+  ),
+  VoicePhrase('tontine quarante mille', _v('expense', 40000, 'tontine', null)),
+  VoicePhrase(
+    'crédit téléphone mille francs Orange Money',
+    _v('expense', 1000, 'bills', 'orange_money'),
+  ),
+  VoicePhrase(
+    "maman m'a envoyé vingt mille sur Wave",
+    _v('income', 20000, 'money_received', 'wave'),
+  ),
+  VoicePhrase(
+    'transfert cinquante mille de Ecobank vers Wave',
+    _v('transfer', 50000, null, 'ecobank'),
+  ),
+];

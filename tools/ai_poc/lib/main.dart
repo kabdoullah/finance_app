@@ -8,8 +8,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math' as math;
 import 'dart:typed_data';
 
+import 'package:flutter/services.dart';
 import 'package:flutter_edge_ai/flutter_edge_ai.dart';
 import 'package:flutter_edge_ai_litertlm/flutter_edge_ai_litertlm.dart';
 import 'package:flutter_edge_ai_speech/flutter_edge_ai_speech.dart';
@@ -18,6 +20,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
 
 import 'test_cases.dart';
+
+part 'series2.dart';
 
 /// Révision épinglée par la documentation de flutter_edge_ai.
 const _modelUrl =
@@ -64,6 +68,12 @@ class _PocPageState extends State<PocPage> {
   bool _busy = false;
   int? _progress;
   RunConfig _config = RunConfig.cpu;
+
+  // 2e série : phrase suivante à lire pour chaque moteur, et Gemma audio
+  // gardé chargé entre les phrases.
+  int _gemmaPhrase = 0;
+  int _androidPhrase = 0;
+  InferenceModel? _audioModel;
 
   // ---------------------------------------------------------------------------
   // Utilitaires : journal, rapport, mémoire.
@@ -623,6 +633,11 @@ class _PocPageState extends State<PocPage> {
             ("3. Appels d'outils", _toolsTest),
             ('4. Saisie → JSON', _entriesTest),
             ('5. Voix (5 s, Whisper)', _speech),
+            ('6. Session ouverte (assistant)', _sessionTest),
+            ('7. Voix Gemma — phrase suivante', _gemmaVoice),
+            ('8. Reco Android — vérifier le français', _androidSupport),
+            ('9. Reco Android — installer le français', _androidDownload),
+            ('10. Voix Android — phrase suivante', _androidVoice),
           ])
             Padding(
               padding: const EdgeInsets.only(bottom: 8),
@@ -631,6 +646,14 @@ class _PocPageState extends State<PocPage> {
                 child: Text(label),
               ),
             ),
+          const Divider(),
+          Text(
+            'Gemma, prochaine phrase (${_gemmaPhrase + 1}/8) : '
+            '« ${voicePhrases[_gemmaPhrase % 8].text} »\n'
+            'Android, prochaine phrase (${_androidPhrase + 1}/8) : '
+            '« ${voicePhrases[_androidPhrase % 8].text} »',
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          ),
           const Divider(),
           for (final line in _log)
             Padding(
