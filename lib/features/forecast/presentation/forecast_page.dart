@@ -75,6 +75,21 @@ class _ForecastPageState extends ConsumerState<ForecastPage> {
               _Expected(forecast: forecast),
               const SizedBox(height: 24),
               _HowItWorks(forecast: forecast),
+              const SizedBox(height: 24),
+              OutlinedButton.icon(
+                onPressed: () => context.go(AppRoutes.simulation),
+                icon: const Icon(AppIcons.target, size: 18),
+                label: Text(l10n.forecastSimulate),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                l10n.forecastSimulateExample,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 13,
+                  color: context.colors.inkTertiary,
+                ),
+              ),
             ],
           ],
         ),

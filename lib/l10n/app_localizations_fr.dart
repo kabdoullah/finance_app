@@ -986,6 +986,140 @@ class AppLocalizationsFr extends AppLocalizations {
   String get txDuplicate => 'Dupliquer';
 
   @override
+  String get simTitle => 'Simuler un achat';
+
+  @override
+  String get simWhat => 'Achat envisagé';
+
+  @override
+  String get simWhatHint => 'Ex. : Téléphone';
+
+  @override
+  String get simPrice => 'Prix';
+
+  @override
+  String get simWhen => 'Quand ?';
+
+  @override
+  String get simToday => 'Aujourd\'hui';
+
+  @override
+  String simAfterIncome(String name, String date) {
+    return 'Après « $name » ($date)';
+  }
+
+  @override
+  String simUseSavings(String name) {
+    return 'Utiliser mon épargne « $name »';
+  }
+
+  @override
+  String simSavingsHelp(String amount) {
+    return '$amount FCFA déjà mis de côté';
+  }
+
+  @override
+  String get simPossible => 'Possible';
+
+  @override
+  String get simTight => 'Possible, mais serré';
+
+  @override
+  String get simDiscouraged => 'Déconseillé';
+
+  @override
+  String simExplainOk(String amount, String date) {
+    return 'Ton solde disponible resterait au-dessus de $amount FCFA jusqu\'au $date.';
+  }
+
+  @override
+  String simExplainTight(String amount, String date) {
+    return 'Ton solde disponible resterait positif, mais descendrait à ≈ $amount FCFA le $date. Garde une marge pour les imprévus.';
+  }
+
+  @override
+  String simExplainNeg(String what, String when, String date) {
+    return 'Si tu achètes $what $when, ton solde disponible passerait sous zéro à partir du $date.';
+  }
+
+  @override
+  String get simExplainNegAdvice =>
+      'Utiliser ton épargne ou attendre réduirait le risque.';
+
+  @override
+  String get simThisPurchase => 'cet achat';
+
+  @override
+  String get simTodayLower => 'aujourd\'hui';
+
+  @override
+  String simOnDate(String date) {
+    return 'le $date';
+  }
+
+  @override
+  String get simLowest => 'Solde le plus bas';
+
+  @override
+  String simLowestOn(String date) {
+    return 'le $date';
+  }
+
+  @override
+  String simBalanceOn(String date) {
+    return 'Solde au $date';
+  }
+
+  @override
+  String simWithout(String amount) {
+    return 'sans achat : ≈ $amount';
+  }
+
+  @override
+  String simReliability(String level, String period) {
+    return 'Fiabilité $level · estimation basée sur $period, pas une certitude.';
+  }
+
+  @override
+  String simPeriodDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'tes $count derniers jours',
+      one: 'ton dernier jour',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String simPeriodMonths(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'tes $count derniers mois',
+      one: 'ton dernier mois',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get simCreateGoal => 'Créer un objectif pour cet achat';
+
+  @override
+  String get simEnterPrice => 'Indique un prix pour voir le résultat.';
+
+  @override
+  String get simAvailableNote =>
+      'Calculé sur ton solde disponible : l\'argent réservé à tes objectifs est mis de côté.';
+
+  @override
+  String get forecastSimulate => 'Simuler un achat';
+
+  @override
+  String get forecastSimulateExample =>
+      '« Puis-je acheter un téléphone à 150 000 FCFA ? »';
+
+  @override
   String goalAdviceIncome(String amount, String name, String day) {
     return 'Pour tenir la date : verse $amount FCFA le jour de « $name » (le $day)';
   }

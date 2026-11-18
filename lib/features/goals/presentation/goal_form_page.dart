@@ -22,10 +22,19 @@ import 'goals_providers.dart';
 
 /// Création (maquette Objectif-Creer) ou modification d'un objectif.
 class GoalFormPage extends ConsumerStatefulWidget {
-  const GoalFormPage({this.goalId, super.key});
+  const GoalFormPage({
+    this.goalId,
+    this.initialName,
+    this.initialTarget,
+    super.key,
+  });
 
   /// `null` = création.
   final String? goalId;
+
+  /// Création pré-remplie (« Créer un objectif pour cet achat »).
+  final String? initialName;
+  final int? initialTarget;
 
   @override
   ConsumerState<GoalFormPage> createState() => _GoalFormPageState();
@@ -49,6 +58,15 @@ class _GoalFormPageState extends ConsumerState<GoalFormPage> {
   SavingsGoal? _created;
 
   bool get _isEdit => widget.goalId != null;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialName case final name?) _name.text = name;
+    if (widget.initialTarget case final target? when target > 0) {
+      _target.text = MoneyFormat.amount(Money(target));
+    }
+  }
 
   @override
   void dispose() {

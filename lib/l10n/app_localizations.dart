@@ -1624,6 +1624,192 @@ abstract class AppLocalizations {
   /// **'Dupliquer'**
   String get txDuplicate;
 
+  /// No description provided for @simTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Simuler un achat'**
+  String get simTitle;
+
+  /// No description provided for @simWhat.
+  ///
+  /// In fr, this message translates to:
+  /// **'Achat envisagé'**
+  String get simWhat;
+
+  /// No description provided for @simWhatHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex. : Téléphone'**
+  String get simWhatHint;
+
+  /// No description provided for @simPrice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix'**
+  String get simPrice;
+
+  /// No description provided for @simWhen.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quand ?'**
+  String get simWhen;
+
+  /// No description provided for @simToday.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aujourd\'hui'**
+  String get simToday;
+
+  /// No description provided for @simAfterIncome.
+  ///
+  /// In fr, this message translates to:
+  /// **'Après « {name} » ({date})'**
+  String simAfterIncome(String name, String date);
+
+  /// No description provided for @simUseSavings.
+  ///
+  /// In fr, this message translates to:
+  /// **'Utiliser mon épargne « {name} »'**
+  String simUseSavings(String name);
+
+  /// No description provided for @simSavingsHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'{amount} FCFA déjà mis de côté'**
+  String simSavingsHelp(String amount);
+
+  /// No description provided for @simPossible.
+  ///
+  /// In fr, this message translates to:
+  /// **'Possible'**
+  String get simPossible;
+
+  /// No description provided for @simTight.
+  ///
+  /// In fr, this message translates to:
+  /// **'Possible, mais serré'**
+  String get simTight;
+
+  /// No description provided for @simDiscouraged.
+  ///
+  /// In fr, this message translates to:
+  /// **'Déconseillé'**
+  String get simDiscouraged;
+
+  /// No description provided for @simExplainOk.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton solde disponible resterait au-dessus de {amount} FCFA jusqu\'au {date}.'**
+  String simExplainOk(String amount, String date);
+
+  /// No description provided for @simExplainTight.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton solde disponible resterait positif, mais descendrait à ≈ {amount} FCFA le {date}. Garde une marge pour les imprévus.'**
+  String simExplainTight(String amount, String date);
+
+  /// No description provided for @simExplainNeg.
+  ///
+  /// In fr, this message translates to:
+  /// **'Si tu achètes {what} {when}, ton solde disponible passerait sous zéro à partir du {date}.'**
+  String simExplainNeg(String what, String when, String date);
+
+  /// No description provided for @simExplainNegAdvice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Utiliser ton épargne ou attendre réduirait le risque.'**
+  String get simExplainNegAdvice;
+
+  /// No description provided for @simThisPurchase.
+  ///
+  /// In fr, this message translates to:
+  /// **'cet achat'**
+  String get simThisPurchase;
+
+  /// No description provided for @simTodayLower.
+  ///
+  /// In fr, this message translates to:
+  /// **'aujourd\'hui'**
+  String get simTodayLower;
+
+  /// No description provided for @simOnDate.
+  ///
+  /// In fr, this message translates to:
+  /// **'le {date}'**
+  String simOnDate(String date);
+
+  /// No description provided for @simLowest.
+  ///
+  /// In fr, this message translates to:
+  /// **'Solde le plus bas'**
+  String get simLowest;
+
+  /// No description provided for @simLowestOn.
+  ///
+  /// In fr, this message translates to:
+  /// **'le {date}'**
+  String simLowestOn(String date);
+
+  /// No description provided for @simBalanceOn.
+  ///
+  /// In fr, this message translates to:
+  /// **'Solde au {date}'**
+  String simBalanceOn(String date);
+
+  /// No description provided for @simWithout.
+  ///
+  /// In fr, this message translates to:
+  /// **'sans achat : ≈ {amount}'**
+  String simWithout(String amount);
+
+  /// No description provided for @simReliability.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fiabilité {level} · estimation basée sur {period}, pas une certitude.'**
+  String simReliability(String level, String period);
+
+  /// No description provided for @simPeriodDays.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{ton dernier jour} other{tes {count} derniers jours}}'**
+  String simPeriodDays(int count);
+
+  /// No description provided for @simPeriodMonths.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{ton dernier mois} other{tes {count} derniers mois}}'**
+  String simPeriodMonths(int count);
+
+  /// No description provided for @simCreateGoal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Créer un objectif pour cet achat'**
+  String get simCreateGoal;
+
+  /// No description provided for @simEnterPrice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Indique un prix pour voir le résultat.'**
+  String get simEnterPrice;
+
+  /// No description provided for @simAvailableNote.
+  ///
+  /// In fr, this message translates to:
+  /// **'Calculé sur ton solde disponible : l\'argent réservé à tes objectifs est mis de côté.'**
+  String get simAvailableNote;
+
+  /// No description provided for @forecastSimulate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Simuler un achat'**
+  String get forecastSimulate;
+
+  /// No description provided for @forecastSimulateExample.
+  ///
+  /// In fr, this message translates to:
+  /// **'« Puis-je acheter un téléphone à 150 000 FCFA ? »'**
+  String get forecastSimulateExample;
+
   /// No description provided for @goalAdviceIncome.
   ///
   /// In fr, this message translates to:

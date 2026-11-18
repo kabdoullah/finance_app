@@ -27,6 +27,8 @@ abstract final class AppIcons {
   static const xBold = IconData(0xe4f6, fontFamily: _bold);
   static const plusBold = IconData(0xe3d4, fontFamily: _bold);
   static const checkBold = IconData(0xe182, fontFamily: _bold);
+  static const xCircleBold = IconData(0xe4f8, fontFamily: _bold);
+  static const target = IconData(0xe47c, fontFamily: _regular);
   static const checkCircleBold = IconData(0xe184, fontFamily: _bold);
   static const minusBold = IconData(0xe32a, fontFamily: _bold);
   static const umbrella = IconData(0xe684, fontFamily: _regular);

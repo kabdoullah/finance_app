@@ -10,6 +10,7 @@ import '../features/budgets/presentation/budgets_page.dart';
 import '../features/categories/presentation/categories_page.dart';
 import '../features/dashboard/presentation/dashboard_page.dart';
 import '../features/forecast/presentation/forecast_page.dart';
+import '../features/forecast/presentation/simulation_page.dart';
 import '../features/goals/presentation/goal_detail_page.dart';
 import '../features/goals/presentation/goal_form_page.dart';
 import '../features/goals/presentation/goals_page.dart';
@@ -33,6 +34,11 @@ abstract final class AppRoutes {
   static const goals = '/budgets/goals';
   static String goalDetail(String id) => '/budgets/goals/$id';
   static const newGoal = '/goals/new';
+  static String newGoalFor({required String name, required int target}) => Uri(
+    path: newGoal,
+    queryParameters: {'name': name, 'target': '$target'},
+  ).toString();
+  static const simulation = '/forecast/simulate';
   static String editGoal(String id) => '/goals/$id/edit';
   static const newBudget = '/budgets/new';
   static String editBudget(String id) => '/budgets/$id/edit';
@@ -127,8 +133,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: AppRoutes.newGoal,
-        pageBuilder: (context, state) =>
-            const MaterialPage(fullscreenDialog: true, child: GoalFormPage()),
+        pageBuilder: (context, state) => MaterialPage(
+          fullscreenDialog: true,
+          child: GoalFormPage(
+            initialName: state.uri.queryParameters['name'],
+            initialTarget: int.tryParse(
+              state.uri.queryParameters['target'] ?? '',
+            ),
+          ),
+        ),
       ),
       GoRoute(
         path: '/goals/:id/edit',
@@ -211,6 +224,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: AppRoutes.forecast,
                 builder: (context, state) => const ForecastPage(),
+                routes: [
+                  GoRoute(
+                    path: 'simulate',
+                    builder: (context, state) => const SimulationPage(),
+                  ),
+                ],
               ),
             ],
           ),

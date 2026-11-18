@@ -1,6 +1,7 @@
 import 'package:finance_app/core/money/money.dart';
 import 'package:finance_app/features/categories/domain/category.dart';
 import 'package:finance_app/features/forecast/domain/forecast.dart';
+import 'package:finance_app/features/forecast/domain/purchase_simulation.dart';
 import 'package:finance_app/features/recurring/domain/recurrence.dart';
 import 'package:finance_app/features/recurring/domain/recurring_operation.dart';
 import 'package:finance_app/features/transactions/domain/transaction.dart';
@@ -141,5 +142,42 @@ void main() {
   test('jours d’historique', () {
     expect(SpendingHistory.empty.daysOfHistory(_now), 0);
     expect(_history(days: 6).daysOfHistory(_now), 6);
+  });
+
+  group('PurchaseSimulation', () {
+    // 217 500, 8 000 par jour, salaire de 380 000 le 1er déc. (j+16),
+    // 60 000 réservés aux objectifs.
+    PurchaseSimulation simulate(int price, {int day = 0, int savings = 0}) =>
+        PurchaseSimulation.compute(
+          forecast: _compute(recurring: [_salary()]),
+          reserved: const Money(60000),
+          price: Money(price),
+          purchaseDay: day,
+          savingsUsed: Money(savings),
+        );
+
+    test('aujourd’hui : le disponible passe sous zéro dès demain', () {
+      final s = simulate(150000);
+      expect(s.verdict, PurchaseVerdict.discouraged);
+      // 217 500 − 60 000 − 150 000 − 8 000 = −500 le 16 nov.
+      expect(s.negativeOn, DateTime(2026, 11, 16));
+      // Sans achat : 217 500 − 30 × 8 000 + 380 000 − 60 000 = 297 500.
+      expect(s.endWithout, const Money(298000));
+    });
+
+    test('après le salaire : possible, ou serré si la marge est faible', () {
+      final after = simulate(150000, day: 16);
+      expect(after.verdict, PurchaseVerdict.possible);
+      expect(after.lowest, const Money(148000));
+      expect(after.lowestDate, DateTime(2026, 12, 15));
+
+      // 297 500 − 250 000 = 47 500 < 7 jours de dépenses (56 000).
+      expect(simulate(250000, day: 16).verdict, PurchaseVerdict.tight);
+    });
+
+    test('l’épargne utilisée réduit le coût de l’achat', () {
+      // Coût 90 000 au lieu de 150 000 : 297 500 − 90 000 = 207 500.
+      expect(simulate(150000, savings: 60000).endBalance, const Money(208000));
+    });
   });
 }
