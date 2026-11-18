@@ -114,3 +114,9 @@ class SpeechService {
 }
 
 final speechServiceProvider = Provider<SpeechService>((ref) => SpeechService());
+
+/// État de la dictée, relu à chaque ouverture d'un écran qui l'affiche.
+final speechAvailabilityProvider =
+    FutureProvider.autoDispose<SpeechAvailability>(
+      (ref) => ref.watch(speechServiceProvider).availability(),
+    );

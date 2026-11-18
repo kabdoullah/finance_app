@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../features/assistant/presentation/ai_model_controller.dart';
 import '../l10n/l10n.dart';
 import 'router.dart';
 import 'theme/app_theme.dart';
@@ -10,6 +11,9 @@ class FinanceApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Démarre le suivi du modèle IA dès le lancement (compatibilité, et
+    // chargement si « Charger l'IA au démarrage » est activé).
+    ref.listen(aiModelControllerProvider, (_, _) {});
     return MaterialApp.router(
       onGenerateTitle: (context) => context.l10n.appTitle,
       debugShowCheckedModeBanner: false,

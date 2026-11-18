@@ -1,6 +1,9 @@
 package com.example.finance_app
 
 import android.Manifest
+import android.app.ActivityManager
+import android.net.ConnectivityManager
+import android.os.StatFs
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -55,6 +58,13 @@ class MainActivity : FlutterActivity() {
                     releaseRecognizer()
                     result.success(null)
                 }
+                else -> result.notImplemented()
+            }
+        }
+        MethodChannel(messenger, "finance_app/device").setMethodCallHandler { call, result ->
+            when (call.method) {
+                "info" -> result.success(deviceInfo())
+                "requestNotifications" -> requestNotifications(result)
                 else -> result.notImplemented()
             }
         }
@@ -122,6 +132,34 @@ class MainActivity : FlutterActivity() {
         result.success(null)
     }
 
+    /** Ce qu'il faut pour décider si l'IA peut tourner sur ce téléphone. */
+    private fun deviceInfo(): Map<String, Any> {
+        val memory = ActivityManager.MemoryInfo()
+        (getSystemService(ACTIVITY_SERVICE) as ActivityManager).getMemoryInfo(memory)
+        val connectivity = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+        return mapOf(
+            "sdk" to Build.VERSION.SDK_INT,
+            "is64Bit" to Build.SUPPORTED_64_BIT_ABIS.isNotEmpty(),
+            "totalRam" to memory.totalMem,
+            "availableRam" to memory.availMem,
+            "freeStorage" to StatFs(filesDir.path).availableBytes,
+            "metered" to connectivity.isActiveNetworkMetered,
+        )
+    }
+
+    /** Notification du téléchargement (Android 13+) ; un refus ne bloque rien. */
+    private fun requestNotifications(result: MethodChannel.Result) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+            checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) ==
+            PackageManager.PERMISSION_GRANTED
+        ) {
+            result.success(true)
+            return
+        }
+        pendingPermission = result
+        requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), REQUEST_NOTIFICATIONS)
+    }
+
     private fun requestPermission(result: MethodChannel.Result) {
         if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) ==
             PackageManager.PERMISSION_GRANTED
@@ -139,7 +177,7 @@ class MainActivity : FlutterActivity() {
         grantResults: IntArray,
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_AUDIO) {
+        if (requestCode == REQUEST_AUDIO || requestCode == REQUEST_NOTIFICATIONS) {
             pendingPermission?.success(
                 grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED,
             )
@@ -207,5 +245,6 @@ class MainActivity : FlutterActivity() {
 
     private companion object {
         const val REQUEST_AUDIO = 4201
+        const val REQUEST_NOTIFICATIONS = 4202
     }
 }

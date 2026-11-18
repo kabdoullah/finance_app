@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../features/accounts/presentation/account_detail_page.dart';
 import '../features/accounts/presentation/account_form_page.dart';
 import '../features/accounts/presentation/accounts_page.dart';
+import '../features/assistant/presentation/ai_model_page.dart';
 import '../features/budgets/presentation/budget_form_page.dart';
 import '../features/budgets/presentation/budgets_page.dart';
 import '../features/categories/presentation/categories_page.dart';
@@ -47,6 +48,7 @@ abstract final class AppRoutes {
   static const assistant = '/assistant';
   static const settings = '/settings';
   static const categories = '/settings/categories';
+  static const aiModel = '/settings/ai-model';
 
   static const accounts = '/accounts';
   static const newAccount = '/accounts/new';
@@ -269,6 +271,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: 'categories',
             builder: (context, state) => const CategoriesPage(),
+          ),
+          GoRoute(
+            path: 'ai-model',
+            builder: (context, state) => const AiModelPage(),
           ),
         ],
       ),

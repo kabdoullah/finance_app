@@ -24,3 +24,7 @@ void _log(Object error, StackTrace? stack) {
     stackTrace: stack,
   );
 }
+
+/// Erreur rattrapée mais à garder dans le journal local (ex. échec de
+/// chargement du modèle IA).
+void reportError(Object error, StackTrace stack) => _log(error, stack);

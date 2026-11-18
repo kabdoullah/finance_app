@@ -1171,6 +1171,211 @@ class AppLocalizationsFr extends AppLocalizations {
       'Le français est en cours de téléchargement. Réessaie dans un instant.';
 
   @override
+  String get aiModelTitle => 'Modèle IA';
+
+  @override
+  String get aiModelName => 'Gemma 4';
+
+  @override
+  String get aiModelMeta => 'Modèle embarqué · 2,5 Go · français';
+
+  @override
+  String get aiStatusChecking => 'Vérification…';
+
+  @override
+  String get aiStatusUnavailable => 'Indisponible';
+
+  @override
+  String get aiStatusNone => 'Non installé';
+
+  @override
+  String get aiStatusDownloading => 'Téléchargement';
+
+  @override
+  String get aiStatusInstalled => 'Installé';
+
+  @override
+  String get aiStatusLoading => 'Chargement';
+
+  @override
+  String get aiStatusReady => 'Prêt';
+
+  @override
+  String get aiStatusError => 'Erreur';
+
+  @override
+  String get aiDescChecking => 'Vérification de ton téléphone…';
+
+  @override
+  String get aiDescUnavailable =>
+      'L\'assistant IA n\'est pas disponible sur ce téléphone. L\'application reste complète.';
+
+  @override
+  String get aiReasonAndroid => 'Il demande Android 11 ou plus récent.';
+
+  @override
+  String get aiReason64Bit => 'Il demande un téléphone 64 bits.';
+
+  @override
+  String get aiReasonRam => 'Il demande au moins 6 Go de mémoire.';
+
+  @override
+  String get aiDescNone =>
+      'Téléchargement unique de 2,5 Go (Wi-Fi conseillé). Ensuite, tout fonctionne hors connexion.';
+
+  @override
+  String get aiDescDownloading =>
+      'Tu peux continuer à utiliser l\'application pendant le téléchargement.';
+
+  @override
+  String get aiDescInstalled =>
+      'Installé mais pas chargé. Il se charge en quelques secondes à la première question.';
+
+  @override
+  String get aiDescLoading =>
+      'Chargement du modèle en mémoire, quelques secondes…';
+
+  @override
+  String get aiDescReady =>
+      'Chargé en mémoire. L\'assistant répond hors connexion.';
+
+  @override
+  String get aiDescError => 'Le modèle est installé mais n\'a pas pu démarrer.';
+
+  @override
+  String get aiInstall => 'Installer (2,5 Go)';
+
+  @override
+  String get aiCancelDownload => 'Annuler le téléchargement';
+
+  @override
+  String get aiLoadNow => 'Charger maintenant';
+
+  @override
+  String get aiUnload => 'Libérer la mémoire';
+
+  @override
+  String get aiRetry => 'Réessayer';
+
+  @override
+  String get aiContinueWithout => 'Continuer sans IA';
+
+  @override
+  String aiProgress(String received, int percent) {
+    return '$received Go sur 2,5 Go · $percent %';
+  }
+
+  @override
+  String get aiLoadingBar => 'Chargement en mémoire…';
+
+  @override
+  String get aiLowMemory =>
+      'Mémoire insuffisante. Il faut environ 2 Go libres. Ferme d\'autres applications puis réessaie.';
+
+  @override
+  String get aiDownloadFailed =>
+      'Le téléchargement a échoué. Vérifie ta connexion et réessaie.';
+
+  @override
+  String get aiNoStorage =>
+      'Espace insuffisant : il faut environ 3 Go libres sur le téléphone.';
+
+  @override
+  String get aiMeteredTitle => 'Tu n\'es pas en Wi-Fi';
+
+  @override
+  String get aiMeteredBody =>
+      'Le téléchargement utilisera 2,5 Go de données mobiles.';
+
+  @override
+  String get aiMeteredConfirm => 'Télécharger quand même';
+
+  @override
+  String get aiRoleGemma =>
+      'Comprend tes phrases, explique tes chiffres, répond à tes questions.';
+
+  @override
+  String get aiRoleAppTitle => 'L\'application';
+
+  @override
+  String get aiRoleApp => 'Calcule soldes, budgets, prévisions et simulations.';
+
+  @override
+  String get aiWithout =>
+      'Sans l\'IA, l\'application reste complète : saisie manuelle et vocale, budgets, prévisions. Seules les réponses en langage naturel sont indisponibles.';
+
+  @override
+  String get aiVoiceSection => 'Reconnaissance vocale';
+
+  @override
+  String get aiVoiceEngine => 'Moteur de dictée';
+
+  @override
+  String get aiVoiceEngineHint => 'Hors ligne, distinct de Gemma';
+
+  @override
+  String get aiVoiceReady => 'Prêt';
+
+  @override
+  String get aiVoiceMissing => 'Français à installer';
+
+  @override
+  String get aiVoiceDownloading => 'Téléchargement';
+
+  @override
+  String get aiVoiceUnavailable => 'Indisponible';
+
+  @override
+  String get aiVoiceLanguage => 'Langue de dictée';
+
+  @override
+  String get aiVoiceFrench => 'Français';
+
+  @override
+  String get aiPrefsSection => 'Préférences';
+
+  @override
+  String get aiLoadOnStartup => 'Charger l\'IA au démarrage';
+
+  @override
+  String get aiLoadOnStartupHint =>
+      'Réponses plus rapides, un peu plus de mémoire utilisée';
+
+  @override
+  String get aiDelete => 'Supprimer le modèle';
+
+  @override
+  String get aiDeleteHint => 'Libère 2,5 Go. Tes données ne sont pas touchées.';
+
+  @override
+  String get aiDeleteTitle => 'Supprimer Gemma 4 ?';
+
+  @override
+  String get aiDeleteBody =>
+      'Le modèle sera retiré du téléphone (2,5 Go libérés). Tes opérations, budgets et objectifs restent intacts. Il faudra le réinstaller pour utiliser l\'assistant.';
+
+  @override
+  String get aiDeleteConfirm => 'Supprimer';
+
+  @override
+  String get settingsAiSection => 'Assistant IA';
+
+  @override
+  String get settingsAiModel => 'Modèle Gemma 4';
+
+  @override
+  String get settingsAiModelHint => 'Sur l\'appareil, hors connexion · 2,5 Go';
+
+  @override
+  String get settingsVoice => 'Reconnaissance vocale';
+
+  @override
+  String get settingsVoiceHint => 'Moteur hors ligne distinct · français';
+
+  @override
+  String get settingsVoiceReady => 'Prête';
+
+  @override
   String get txDuplicate => 'Dupliquer';
 
   @override

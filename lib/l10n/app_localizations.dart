@@ -1924,6 +1924,384 @@ abstract class AppLocalizations {
   /// **'Le français est en cours de téléchargement. Réessaie dans un instant.'**
   String get qeLangDownloading;
 
+  /// No description provided for @aiModelTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modèle IA'**
+  String get aiModelTitle;
+
+  /// No description provided for @aiModelName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Gemma 4'**
+  String get aiModelName;
+
+  /// No description provided for @aiModelMeta.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modèle embarqué · 2,5 Go · français'**
+  String get aiModelMeta;
+
+  /// No description provided for @aiStatusChecking.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vérification…'**
+  String get aiStatusChecking;
+
+  /// No description provided for @aiStatusUnavailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Indisponible'**
+  String get aiStatusUnavailable;
+
+  /// No description provided for @aiStatusNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Non installé'**
+  String get aiStatusNone;
+
+  /// No description provided for @aiStatusDownloading.
+  ///
+  /// In fr, this message translates to:
+  /// **'Téléchargement'**
+  String get aiStatusDownloading;
+
+  /// No description provided for @aiStatusInstalled.
+  ///
+  /// In fr, this message translates to:
+  /// **'Installé'**
+  String get aiStatusInstalled;
+
+  /// No description provided for @aiStatusLoading.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chargement'**
+  String get aiStatusLoading;
+
+  /// No description provided for @aiStatusReady.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prêt'**
+  String get aiStatusReady;
+
+  /// No description provided for @aiStatusError.
+  ///
+  /// In fr, this message translates to:
+  /// **'Erreur'**
+  String get aiStatusError;
+
+  /// No description provided for @aiDescChecking.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vérification de ton téléphone…'**
+  String get aiDescChecking;
+
+  /// No description provided for @aiDescUnavailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'assistant IA n\'est pas disponible sur ce téléphone. L\'application reste complète.'**
+  String get aiDescUnavailable;
+
+  /// No description provided for @aiReasonAndroid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Il demande Android 11 ou plus récent.'**
+  String get aiReasonAndroid;
+
+  /// No description provided for @aiReason64Bit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Il demande un téléphone 64 bits.'**
+  String get aiReason64Bit;
+
+  /// No description provided for @aiReasonRam.
+  ///
+  /// In fr, this message translates to:
+  /// **'Il demande au moins 6 Go de mémoire.'**
+  String get aiReasonRam;
+
+  /// No description provided for @aiDescNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Téléchargement unique de 2,5 Go (Wi-Fi conseillé). Ensuite, tout fonctionne hors connexion.'**
+  String get aiDescNone;
+
+  /// No description provided for @aiDescDownloading.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu peux continuer à utiliser l\'application pendant le téléchargement.'**
+  String get aiDescDownloading;
+
+  /// No description provided for @aiDescInstalled.
+  ///
+  /// In fr, this message translates to:
+  /// **'Installé mais pas chargé. Il se charge en quelques secondes à la première question.'**
+  String get aiDescInstalled;
+
+  /// No description provided for @aiDescLoading.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chargement du modèle en mémoire, quelques secondes…'**
+  String get aiDescLoading;
+
+  /// No description provided for @aiDescReady.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chargé en mémoire. L\'assistant répond hors connexion.'**
+  String get aiDescReady;
+
+  /// No description provided for @aiDescError.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le modèle est installé mais n\'a pas pu démarrer.'**
+  String get aiDescError;
+
+  /// No description provided for @aiInstall.
+  ///
+  /// In fr, this message translates to:
+  /// **'Installer (2,5 Go)'**
+  String get aiInstall;
+
+  /// No description provided for @aiCancelDownload.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annuler le téléchargement'**
+  String get aiCancelDownload;
+
+  /// No description provided for @aiLoadNow.
+  ///
+  /// In fr, this message translates to:
+  /// **'Charger maintenant'**
+  String get aiLoadNow;
+
+  /// No description provided for @aiUnload.
+  ///
+  /// In fr, this message translates to:
+  /// **'Libérer la mémoire'**
+  String get aiUnload;
+
+  /// No description provided for @aiRetry.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réessayer'**
+  String get aiRetry;
+
+  /// No description provided for @aiContinueWithout.
+  ///
+  /// In fr, this message translates to:
+  /// **'Continuer sans IA'**
+  String get aiContinueWithout;
+
+  /// No description provided for @aiProgress.
+  ///
+  /// In fr, this message translates to:
+  /// **'{received} Go sur 2,5 Go · {percent} %'**
+  String aiProgress(String received, int percent);
+
+  /// No description provided for @aiLoadingBar.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chargement en mémoire…'**
+  String get aiLoadingBar;
+
+  /// No description provided for @aiLowMemory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mémoire insuffisante. Il faut environ 2 Go libres. Ferme d\'autres applications puis réessaie.'**
+  String get aiLowMemory;
+
+  /// No description provided for @aiDownloadFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le téléchargement a échoué. Vérifie ta connexion et réessaie.'**
+  String get aiDownloadFailed;
+
+  /// No description provided for @aiNoStorage.
+  ///
+  /// In fr, this message translates to:
+  /// **'Espace insuffisant : il faut environ 3 Go libres sur le téléphone.'**
+  String get aiNoStorage;
+
+  /// No description provided for @aiMeteredTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu n\'es pas en Wi-Fi'**
+  String get aiMeteredTitle;
+
+  /// No description provided for @aiMeteredBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le téléchargement utilisera 2,5 Go de données mobiles.'**
+  String get aiMeteredBody;
+
+  /// No description provided for @aiMeteredConfirm.
+  ///
+  /// In fr, this message translates to:
+  /// **'Télécharger quand même'**
+  String get aiMeteredConfirm;
+
+  /// No description provided for @aiRoleGemma.
+  ///
+  /// In fr, this message translates to:
+  /// **'Comprend tes phrases, explique tes chiffres, répond à tes questions.'**
+  String get aiRoleGemma;
+
+  /// No description provided for @aiRoleAppTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'application'**
+  String get aiRoleAppTitle;
+
+  /// No description provided for @aiRoleApp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Calcule soldes, budgets, prévisions et simulations.'**
+  String get aiRoleApp;
+
+  /// No description provided for @aiWithout.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sans l\'IA, l\'application reste complète : saisie manuelle et vocale, budgets, prévisions. Seules les réponses en langage naturel sont indisponibles.'**
+  String get aiWithout;
+
+  /// No description provided for @aiVoiceSection.
+  ///
+  /// In fr, this message translates to:
+  /// **'Reconnaissance vocale'**
+  String get aiVoiceSection;
+
+  /// No description provided for @aiVoiceEngine.
+  ///
+  /// In fr, this message translates to:
+  /// **'Moteur de dictée'**
+  String get aiVoiceEngine;
+
+  /// No description provided for @aiVoiceEngineHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Hors ligne, distinct de Gemma'**
+  String get aiVoiceEngineHint;
+
+  /// No description provided for @aiVoiceReady.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prêt'**
+  String get aiVoiceReady;
+
+  /// No description provided for @aiVoiceMissing.
+  ///
+  /// In fr, this message translates to:
+  /// **'Français à installer'**
+  String get aiVoiceMissing;
+
+  /// No description provided for @aiVoiceDownloading.
+  ///
+  /// In fr, this message translates to:
+  /// **'Téléchargement'**
+  String get aiVoiceDownloading;
+
+  /// No description provided for @aiVoiceUnavailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Indisponible'**
+  String get aiVoiceUnavailable;
+
+  /// No description provided for @aiVoiceLanguage.
+  ///
+  /// In fr, this message translates to:
+  /// **'Langue de dictée'**
+  String get aiVoiceLanguage;
+
+  /// No description provided for @aiVoiceFrench.
+  ///
+  /// In fr, this message translates to:
+  /// **'Français'**
+  String get aiVoiceFrench;
+
+  /// No description provided for @aiPrefsSection.
+  ///
+  /// In fr, this message translates to:
+  /// **'Préférences'**
+  String get aiPrefsSection;
+
+  /// No description provided for @aiLoadOnStartup.
+  ///
+  /// In fr, this message translates to:
+  /// **'Charger l\'IA au démarrage'**
+  String get aiLoadOnStartup;
+
+  /// No description provided for @aiLoadOnStartupHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réponses plus rapides, un peu plus de mémoire utilisée'**
+  String get aiLoadOnStartupHint;
+
+  /// No description provided for @aiDelete.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer le modèle'**
+  String get aiDelete;
+
+  /// No description provided for @aiDeleteHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Libère 2,5 Go. Tes données ne sont pas touchées.'**
+  String get aiDeleteHint;
+
+  /// No description provided for @aiDeleteTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer Gemma 4 ?'**
+  String get aiDeleteTitle;
+
+  /// No description provided for @aiDeleteBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le modèle sera retiré du téléphone (2,5 Go libérés). Tes opérations, budgets et objectifs restent intacts. Il faudra le réinstaller pour utiliser l\'assistant.'**
+  String get aiDeleteBody;
+
+  /// No description provided for @aiDeleteConfirm.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer'**
+  String get aiDeleteConfirm;
+
+  /// No description provided for @settingsAiSection.
+  ///
+  /// In fr, this message translates to:
+  /// **'Assistant IA'**
+  String get settingsAiSection;
+
+  /// No description provided for @settingsAiModel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modèle Gemma 4'**
+  String get settingsAiModel;
+
+  /// No description provided for @settingsAiModelHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sur l\'appareil, hors connexion · 2,5 Go'**
+  String get settingsAiModelHint;
+
+  /// No description provided for @settingsVoice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Reconnaissance vocale'**
+  String get settingsVoice;
+
+  /// No description provided for @settingsVoiceHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Moteur hors ligne distinct · français'**
+  String get settingsVoiceHint;
+
+  /// No description provided for @settingsVoiceReady.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prête'**
+  String get settingsVoiceReady;
+
   /// No description provided for @txDuplicate.
   ///
   /// In fr, this message translates to:
