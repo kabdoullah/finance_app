@@ -36,3 +36,20 @@ final transactionProvider = StreamProvider.family<Transaction?, String>(
 final hasTransactionsProvider = StreamProvider<bool>(
   (ref) => ref.watch(transactionsRepositoryProvider).watchHasAny(),
 );
+
+/// Demande d'ouverture de l'onglet Transactions filtré sur une catégorie
+/// principale (« Voir les opérations » d'un budget). La page l'applique sur
+/// le mois en cours puis la consomme.
+final transactionsCategoryRequestProvider =
+    NotifierProvider<TransactionsCategoryRequest, String?>(
+      TransactionsCategoryRequest.new,
+    );
+
+class TransactionsCategoryRequest extends Notifier<String?> {
+  @override
+  String? build() => null;
+
+  void request(String categoryId) => state = categoryId;
+
+  void clear() => state = null;
+}

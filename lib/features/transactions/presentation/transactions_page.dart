@@ -51,6 +51,25 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
   void initState() {
     super.initState();
     _search.addListener(() => setState(() {}));
+    final requested = ref.read(transactionsCategoryRequestProvider);
+    if (requested != null) {
+      _categoryId = requested;
+      Future.microtask(
+        () => ref.read(transactionsCategoryRequestProvider.notifier).clear(),
+      );
+    }
+  }
+
+  /// Filtre demandé depuis un budget : catégorie, mois en cours, tous comptes.
+  void _applyRequest(String categoryId) {
+    setState(() {
+      _categoryId = categoryId;
+      _accountId = null;
+      _kind = null;
+      _search.clear();
+      _month = Month.of(ref.read(clockProvider)());
+    });
+    ref.read(transactionsCategoryRequestProvider.notifier).clear();
   }
 
   @override
@@ -74,6 +93,10 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Onglet déjà ouvert : applique une demande venue d'un budget.
+    ref.listen(transactionsCategoryRequestProvider, (_, requested) {
+      if (requested != null) _applyRequest(requested);
+    });
     final colors = context.colors;
     final l10n = context.l10n;
     final relative = RelativeDate(

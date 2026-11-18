@@ -785,6 +785,38 @@ class AppLocalizationsFr extends AppLocalizations {
   String get budgetByCategory => 'Par catégorie';
 
   @override
+  String budgetDriver(String name, int count, String amount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count opérations',
+      one: '1 opération',
+    );
+    return 'Surtout à cause de $name : $_temp0, $amount FCFA ce mois-ci.';
+  }
+
+  @override
+  String get budgetForecastLabel => 'Prévision :';
+
+  @override
+  String budgetForecastLead(String items) {
+    return 'au rythme actuel, $items.';
+  }
+
+  @override
+  String budgetForecastCategory(String name, String date) {
+    return '$name dépassera son budget vers le $date';
+  }
+
+  @override
+  String budgetForecastGlobal(String date) {
+    return 'le budget du mois sera dépassé vers le $date';
+  }
+
+  @override
+  String get listAnd => 'et';
+
+  @override
   String budgetSpentOf(String spent, String limit) {
     return '$spent sur $limit';
   }

@@ -28,9 +28,10 @@ void main() {
       Err(:final failure) => fail('$failure'),
     };
     final transactions = TransactionsRepository(db, () => testNow);
-    for (final (amount, at) in [
-      (48000, testNow), // ce mois-ci
-      (27000, DateTime(2026, 10, 8)), // historique → moyenne 9 000
+    for (final (amount, at, category) in [
+      (48000, testNow, 'exp.transport.taxi'), // ce mois-ci
+      // Historique → moyenne 9 000.
+      (27000, DateTime(2026, 10, 8), 'exp.transport'),
     ]) {
       await transactions.create(
         TransactionDraft(
@@ -38,7 +39,7 @@ void main() {
           amount: Money(amount),
           occurredAt: at,
           accountId: wave.id,
-          categoryId: 'exp.transport',
+          categoryId: category,
         ),
       );
     }
@@ -80,10 +81,21 @@ void main() {
 
     expect(find.text('Dépassé de 3 000'), findsOneWidget);
     expect(
-      find.text('Transport : budget dépassé de 3 000 FCFA.'),
+      find.textContaining('Transport : budget dépassé de 3 000 FCFA.'),
       findsOneWidget,
     );
     expect(find.text('48 000 sur 45 000'), findsOneWidget);
+    expect(
+      find.textContaining('Surtout à cause de Taxi : 1 opération, 48 000 FCFA'),
+      findsOneWidget,
+    );
+
+    // « Voir les opérations » de l'alerte : Transactions filtré sur Transport.
+    await tester.tap(find.text('Voir les opérations').first);
+    await tester.pumpAndSettle();
+    expect(find.text('Toutes catégories'), findsNothing);
+    await tester.tap(find.text('Budgets').last);
+    await tester.pumpAndSettle();
 
     await tester.tap(find.text('Accueil'));
     await tester.pumpAndSettle();
@@ -110,6 +122,10 @@ void main() {
     // 15 novembre : 16 jours restants, aujourd'hui compris ;
     // 252 000 / 16 = 15 750 → 15 700 par jour.
     expect(find.text('Encore 16 jours'), findsOneWidget);
+    // Repères sous la barre du mois.
+    expect(find.text('1er nov.'), findsOneWidget);
+    expect(find.text("Aujourd'hui"), findsOneWidget);
+    expect(find.text('30 nov.'), findsOneWidget);
     expect(
       find.text(
         "Il te reste 252 000 FCFA jusqu'à la fin du mois, "

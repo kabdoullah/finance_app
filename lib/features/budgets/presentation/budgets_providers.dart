@@ -23,7 +23,8 @@ final budgetsProvider = StreamProvider<List<Budget>>(
 
 /// Vue des budgets du mois en cours (`null` tant que les données chargent).
 final budgetsOverviewProvider = Provider<BudgetsOverview?>((ref) {
-  final month = Month.of(ref.watch(clockProvider)());
+  final now = ref.watch(clockProvider)();
+  final month = Month.of(now);
   final budgets = ref.watch(budgetsProvider).value;
   final transactions = ref.watch(monthTransactionsProvider(month)).value;
   final groups = ref.watch(categoryGroupsProvider(CategoryKind.expense)).value;
@@ -35,6 +36,7 @@ final budgetsOverviewProvider = Provider<BudgetsOverview?>((ref) {
       for (final g in groups)
         if (!g.category.isHidden) g.category,
     ],
+    now: now,
   );
 });
 

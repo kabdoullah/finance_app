@@ -92,6 +92,8 @@ class BudgetsOverview {
     required this.global,
     required this.categories,
     required this.withoutBudget,
+    required this.forecasts,
+    required this.monthTransactions,
   });
 
   /// [expenseCategories] : catégories principales de dépenses (non masquées).
@@ -99,18 +101,27 @@ class BudgetsOverview {
     required List<Budget> budgets,
     required Iterable<Transaction> monthTransactions,
     required List<Category> expenseCategories,
+    required DateTime now,
   }) {
     final spending = MonthSpending.of(monthTransactions);
     BudgetStatus status(Budget b) => BudgetStatus.of(b, spending.spentFor(b));
+    final transactions = List<Transaction>.of(monthTransactions);
     final global = budgets.where((b) => b.isGlobal).firstOrNull;
     final byCategory = [
       for (final b in budgets)
         if (!b.isGlobal) status(b),
     ];
     final budgeted = {for (final s in byCategory) s.budget.category!.id};
+    final globalStatus = global == null ? null : status(global);
+    final forecasts = [
+      for (final s in [?globalStatus, ...byCategory])
+        if (projectedOverrun(s, now) case final date?) (s, date),
+    ]..sort((a, b) => a.$2.compareTo(b.$2));
     return BudgetsOverview._(
-      global: global == null ? null : status(global),
+      global: globalStatus,
       categories: byCategory,
+      forecasts: forecasts,
+      monthTransactions: transactions,
       withoutBudget: [
         for (final c in expenseCategories)
           if (!budgeted.contains(c.id)) c,
@@ -121,6 +132,16 @@ class BudgetsOverview {
   final BudgetStatus? global;
   final List<BudgetStatus> categories;
   final List<Category> withoutBudget;
+
+  /// Budgets qui seraient dépassés avant la fin du mois, du plus proche au
+  /// plus lointain.
+  final List<(BudgetStatus, DateTime)> forecasts;
+
+  /// Opérations du mois (pour l'explication des dépassements).
+  final List<Transaction> monthTransactions;
+
+  BudgetDriver? driverOf(BudgetStatus status) =>
+      BudgetDriver.of(status.budget, monthTransactions);
 
   /// Budgets dépassés (alertes de l'onglet).
   List<BudgetStatus> get exceeded => [
@@ -135,4 +156,58 @@ Money dailyAllowance(Money remaining, int daysLeft) {
   if (remaining.value <= 0 || daysLeft <= 0) return Money.zero;
   final perDay = remaining.value ~/ daysLeft;
   return Money(perDay - perDay % 100);
+}
+
+/// Jour du mois à partir duquel la prévision est affichée : avant, une seule
+/// grosse dépense (loyer le 1er…) fausserait le rythme.
+const forecastFirstDay = 5;
+
+/// Date prévue de dépassement au rythme moyen du mois (dépensé ÷ jours
+/// écoulés, aujourd'hui compris). `null` si le budget est déjà dépassé,
+/// avant le [forecastFirstDay], sans dépense, ou si le dépassement tomberait
+/// après la fin du mois.
+DateTime? projectedOverrun(BudgetStatus status, DateTime now) {
+  final spent = status.spent.value;
+  final remaining = status.remaining.value;
+  if (remaining < 0 || spent <= 0 || now.day < forecastFirstDay) return null;
+  // Plus petit k ≥ 1 tel que spent + (spent / day) × k > limit.
+  final days = remaining * now.day ~/ spent + 1;
+  final date = DateTime(now.year, now.month, now.day + days);
+  return date.month == now.month ? date : null;
+}
+
+/// Sous-catégorie qui pèse le plus dans un budget (« Surtout à cause
+/// de Taxi : 6 opérations, 18 000 FCFA ce mois-ci »).
+@immutable
+class BudgetDriver {
+  const BudgetDriver(this.category, this.count, this.total);
+
+  final Category category;
+  final int count;
+  final Money total;
+
+  /// `null` si le budget est global, s'il n'y a pas de dépense, ou si les
+  /// dépenses rangées directement dans la catégorie principale pèsent plus.
+  static BudgetDriver? of(Budget budget, Iterable<Transaction> month) {
+    final main = budget.category;
+    if (main == null) return null;
+    final byCategory = <String, (Category, int, Money)>{};
+    for (final t in month) {
+      final category = t.category;
+      if (t.kind != TransactionKind.expense ||
+          category == null ||
+          t.mainCategory?.id != main.id) {
+        continue;
+      }
+      final (_, count, total) =
+          byCategory[category.id] ?? (category, 0, Money.zero);
+      byCategory[category.id] = (category, count + 1, total + t.amount);
+    }
+    final top = byCategory.values.fold<(Category, int, Money)?>(
+      null,
+      (best, e) => best == null || e.$3.value > best.$3.value ? e : best,
+    );
+    if (top == null || top.$1.id == main.id) return null;
+    return BudgetDriver(top.$1, top.$2, top.$3);
+  }
 }

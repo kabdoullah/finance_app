@@ -59,6 +59,79 @@ void main() {
     expect(dailyAllowance(const Money(-3000), 15), Money.zero);
   });
 
+  group('prévision de dépassement', () {
+    BudgetStatus status(int spent) =>
+        BudgetStatus.of(_budget(30000), Money(spent));
+
+    test('au rythme moyen du mois', () {
+      // 10 jours, 20 000 dépensés → 2 000 / jour ; reste 10 000 → le 6e
+      // jour suivant franchit la limite : 16 nov.
+      expect(
+        projectedOverrun(status(20000), DateTime(2026, 11, 10, 9)),
+        DateTime(2026, 11, 16),
+      );
+    });
+
+    test('rien avant le 5, ni si déjà dépassé, ni après la fin du mois', () {
+      expect(projectedOverrun(status(20000), DateTime(2026, 11, 4)), isNull);
+      expect(projectedOverrun(status(31000), DateTime(2026, 11, 10)), isNull);
+      // 1 000 en 10 jours → 100 / jour : dépassement bien après le 30.
+      expect(projectedOverrun(status(1000), DateTime(2026, 11, 10)), isNull);
+    });
+  });
+
+  group('BudgetDriver', () {
+    const transport = Category(
+      id: 'exp.transport',
+      name: 'Transport',
+      kind: CategoryKind.expense,
+      iconKey: 'taxi',
+    );
+    Category sub(String id, String name) => Category(
+      id: id,
+      name: name,
+      kind: CategoryKind.expense,
+      iconKey: 'taxi',
+      parentId: transport.id,
+    );
+    Transaction expense(int amount, Category category) => Transaction(
+      id: '$amount',
+      kind: TransactionKind.expense,
+      amount: Money(amount),
+      accountId: 'a',
+      accountName: 'Wave',
+      category: category,
+      parentCategory: category.parentId == null ? null : transport,
+      occurredAt: DateTime(2026, 11, 10),
+      entryMethod: EntryMethod.manual,
+    );
+    final budget = _budget(30000, category: transport);
+
+    test('la sous-catégorie qui pèse le plus', () {
+      final taxi = sub('exp.transport.taxi', 'Taxi');
+      final driver = BudgetDriver.of(budget, [
+        expense(3000, taxi),
+        expense(4000, taxi),
+        expense(5000, sub('exp.transport.fuel', 'Carburant')),
+        expense(2000, transport),
+      ])!;
+
+      expect(driver.category.name, 'Taxi');
+      expect(driver.count, 2);
+      expect(driver.total, const Money(7000));
+    });
+
+    test('rien si la catégorie principale elle-même pèse le plus', () {
+      expect(
+        BudgetDriver.of(budget, [
+          expense(9000, transport),
+          expense(3000, sub('exp.transport.taxi', 'Taxi')),
+        ]),
+        isNull,
+      );
+    });
+  });
+
   group('BudgetsRepository', () {
     late AppDatabase db;
     late BudgetsRepository budgets;

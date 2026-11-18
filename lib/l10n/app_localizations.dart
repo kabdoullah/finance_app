@@ -1306,6 +1306,42 @@ abstract class AppLocalizations {
   /// **'Par catégorie'**
   String get budgetByCategory;
 
+  /// No description provided for @budgetDriver.
+  ///
+  /// In fr, this message translates to:
+  /// **'Surtout à cause de {name} : {count, plural, =1{1 opération} other{{count} opérations}}, {amount} FCFA ce mois-ci.'**
+  String budgetDriver(String name, int count, String amount);
+
+  /// No description provided for @budgetForecastLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prévision :'**
+  String get budgetForecastLabel;
+
+  /// No description provided for @budgetForecastLead.
+  ///
+  /// In fr, this message translates to:
+  /// **'au rythme actuel, {items}.'**
+  String budgetForecastLead(String items);
+
+  /// No description provided for @budgetForecastCategory.
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} dépassera son budget vers le {date}'**
+  String budgetForecastCategory(String name, String date);
+
+  /// No description provided for @budgetForecastGlobal.
+  ///
+  /// In fr, this message translates to:
+  /// **'le budget du mois sera dépassé vers le {date}'**
+  String budgetForecastGlobal(String date);
+
+  /// No description provided for @listAnd.
+  ///
+  /// In fr, this message translates to:
+  /// **'et'**
+  String get listAnd;
+
   /// No description provided for @budgetSpentOf.
   ///
   /// In fr, this message translates to:

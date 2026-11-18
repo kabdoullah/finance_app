@@ -6,10 +6,12 @@ import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
 import '../../../core/clock.dart';
+import '../../../core/formatting/date_format.dart';
 import '../../../core/formatting/relative_date.dart';
 import '../../../core/money/money.dart';
 import '../../../core/time/month.dart';
 import '../../../l10n/l10n.dart';
+import '../../transactions/presentation/transactions_providers.dart';
 import '../domain/budget.dart';
 import 'budget_widgets.dart';
 import 'budgets_providers.dart';
@@ -53,16 +55,40 @@ class BudgetsPage extends ConsumerWidget {
                   label: Text(l10n.budgetNoGlobal),
                 ),
               for (final status in overview.exceeded)
-                if (!status.budget.isGlobal)
+                if (status.budget.category case final category?)
                   Padding(
                     padding: const EdgeInsets.only(top: 16),
                     child: _Alert(
-                      text: l10n.budgetExceededAlert(
-                        status.budget.category!.name,
+                      icon: AppIcons.warningCircleBold,
+                      background: colors.negativeSoft,
+                      foreground: colors.negative,
+                      title: l10n.budgetExceededAlert(
+                        category.name,
                         MoneyFormat.amount(-status.remaining),
                       ),
+                      body: switch (overview.driverOf(status)) {
+                        final driver? => l10n.budgetDriver(
+                          driver.category.name,
+                          driver.count,
+                          MoneyFormat.amount(driver.total),
+                        ),
+                        null => null,
+                      },
+                      linkLabel: l10n.budgetSeeOperations,
+                      onLink: () => _showOperations(context, ref, category.id),
                     ),
                   ),
+              if (overview.forecasts.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: _Alert(
+                    icon: AppIcons.chartLineBold,
+                    background: colors.warningSoft,
+                    foreground: colors.warning,
+                    title: l10n.budgetForecastLabel,
+                    body: _forecastText(context, overview.forecasts),
+                  ),
+                ),
               const SizedBox(height: 28),
               if (overview.categories.isEmpty && overview.global == null)
                 Text(
@@ -124,6 +150,37 @@ class BudgetsPage extends ConsumerWidget {
   }
 }
 
+/// Ouvre l'onglet Transactions filtré sur [categoryId], mois en cours.
+void _showOperations(BuildContext context, WidgetRef ref, String categoryId) {
+  ref.read(transactionsCategoryRequestProvider.notifier).request(categoryId);
+  context.go(AppRoutes.transactions);
+}
+
+/// « au rythme actuel, Loisirs dépassera son budget vers le 17 nov. et le
+/// budget du mois sera dépassé vers le 20 nov. »
+String _forecastText(
+  BuildContext context,
+  List<(BudgetStatus, DateTime)> forecasts,
+) {
+  final l10n = context.l10n;
+  final locale = Localizations.localeOf(context).toLanguageTag();
+  final items = [
+    for (final (status, date) in forecasts)
+      switch (status.budget.category) {
+        final c? => l10n.budgetForecastCategory(
+          c.name,
+          AppDateFormat.dayMonth(date, locale),
+        ),
+        null => l10n.budgetForecastGlobal(AppDateFormat.dayMonth(date, locale)),
+      },
+  ];
+  final joined = items.length == 1
+      ? items.single
+      : '${items.sublist(0, items.length - 1).join(', ')} '
+            '${l10n.listAnd} ${items.last}';
+  return l10n.budgetForecastLead(joined);
+}
+
 /// « Budget de novembre » : dépensé / limite, barre, reste par jour.
 class _MonthBudget extends StatelessWidget {
   const _MonthBudget({required this.status, required this.now});
@@ -141,8 +198,11 @@ class _MonthBudget extends StatelessWidget {
       Localizations.localeOf(context).toLanguageTag(),
       now,
     );
+    final locale = Localizations.localeOf(context).toLanguageTag();
+    final lastDay = DateTime(now.year, now.month + 1, 0);
     // Jours restants, aujourd'hui compris.
-    final daysLeft = DateTime(now.year, now.month + 1, 0).day - now.day + 1;
+    final daysLeft = lastDay.day - now.day + 1;
+    final small = TextStyle(fontSize: 12, color: colors.inkTertiary);
     final over = status.level == BudgetLevel.exceeded;
 
     return InkWell(
@@ -151,12 +211,19 @@ class _MonthBudget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         spacing: 8,
         children: [
-          Text(
-            l10n.budgetMonthTitle(relative.month(month)),
+          DefaultTextStyle.merge(
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 13.5,
               fontWeight: FontWeight.w500,
               color: colors.inkSecondary,
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(l10n.budgetMonthTitle(relative.month(month))),
+                ),
+                Text(l10n.budgetDaysLeft(daysLeft)),
+              ],
             ),
           ),
           Text.rich(
@@ -177,15 +244,30 @@ class _MonthBudget extends StatelessWidget {
               ],
             ),
             style: const TextStyle(
-              fontSize: 34,
+              fontSize: 38,
               fontWeight: FontWeight.w600,
               letterSpacing: -1,
             ),
           ),
-          BudgetBar(status: status, height: 10),
-          Text(
-            l10n.budgetDaysLeft(daysLeft),
-            style: TextStyle(fontSize: 12.5, color: colors.inkTertiary),
+          _TodayMarker(
+            fraction: now.day / lastDay.day,
+            child: BudgetBar(status: status, height: 10),
+          ),
+          Row(
+            children: [
+              Text(AppDateFormat.dayMonth(month.start, locale), style: small),
+              Expanded(
+                child: Text(
+                  RelativeDate.capitalize(relative.day(now)),
+                  textAlign: TextAlign.center,
+                  style: small.copyWith(
+                    color: colors.inkSecondary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              Text(AppDateFormat.dayMonth(lastDay, locale), style: small),
+            ],
           ),
           Text(
             over
@@ -208,33 +290,105 @@ class _MonthBudget extends StatelessWidget {
   }
 }
 
-class _Alert extends StatelessWidget {
-  const _Alert({required this.text});
+/// Trait vertical à la position d'aujourd'hui sur la barre du mois.
+class _TodayMarker extends StatelessWidget {
+  const _TodayMarker({required this.fraction, required this.child});
 
-  final String text;
+  final double fraction;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) => Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Padding(padding: const EdgeInsets.only(top: 4), child: child),
+        Positioned(
+          left: (constraints.maxWidth * fraction - 1).clamp(
+            0,
+            constraints.maxWidth - 2,
+          ),
+          top: 0,
+          width: 2,
+          height: 18,
+          child: ColoredBox(color: context.colors.ink),
+        ),
+      ],
+    ),
+  );
+}
+
+/// Encadré d'alerte des maquettes : icône, titre en gras, explication et
+/// lien facultatifs.
+class _Alert extends StatelessWidget {
+  const _Alert({
+    required this.icon,
+    required this.background,
+    required this.foreground,
+    required this.title,
+    this.body,
+    this.linkLabel,
+    this.onLink,
+  });
+
+  final IconData icon;
+  final Color background;
+  final Color foreground;
+  final String title;
+  final String? body;
+  final String? linkLabel;
+  final VoidCallback? onLink;
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colors;
+    final style = TextStyle(fontSize: 13.5, height: 1.45, color: foreground);
+    final link = linkLabel;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: colors.warningSoft,
+        color: background,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 10,
         children: [
-          Icon(AppIcons.info, size: 17, color: colors.warning),
+          Padding(
+            padding: const EdgeInsets.only(top: 1),
+            child: Icon(icon, size: 17, color: foreground),
+          ),
           Expanded(
-            child: Text(
-              text,
-              style: TextStyle(
-                fontSize: 13.5,
-                height: 1.45,
-                color: colors.warning,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: title,
+                        style: const TextStyle(fontWeight: FontWeight.w700),
+                      ),
+                      if (body case final body?) TextSpan(text: ' $body'),
+                    ],
+                  ),
+                  style: style,
+                ),
+                if (link != null)
+                  InkWell(
+                    onTap: onLink,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      child: Text(
+                        link,
+                        style: style.copyWith(
+                          fontWeight: FontWeight.w600,
+                          decoration: TextDecoration.underline,
+                          decorationColor: foreground,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
             ),
           ),
         ],
