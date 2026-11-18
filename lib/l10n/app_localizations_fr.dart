@@ -1376,6 +1376,28 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settingsVoiceReady => 'Prête';
 
   @override
+  String get qeAnalyseHeading => 'Analyse';
+
+  @override
+  String get qeStepVoice => 'Transcription terminée sur ton téléphone';
+
+  @override
+  String get qeStepText => 'Texte reçu';
+
+  @override
+  String get qeStepGemma =>
+      'Gemma 4 repère les montants, catégories et comptes…';
+
+  @override
+  String get qeSkip => 'Passer';
+
+  @override
+  String get qeAiUnavailable => 'Assistant IA indisponible.';
+
+  @override
+  String get qeManageAi => 'Gérer le modèle IA';
+
+  @override
   String get txDuplicate => 'Dupliquer';
 
   @override

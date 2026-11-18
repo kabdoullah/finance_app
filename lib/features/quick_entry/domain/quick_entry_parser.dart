@@ -17,6 +17,7 @@ class ParsedOperation {
     required this.kind,
     required this.date,
     required this.description,
+    this.source = '',
     this.amount,
     this.categoryId,
     this.accountId,
@@ -35,8 +36,11 @@ class ParsedOperation {
   /// Jour de l'opération (date calendaire locale).
   final DateTime date;
 
-  /// Morceau de phrase d'origine (sert de description).
+  /// Description proposée (morceau de phrase sans montant ni date).
   final String description;
+
+  /// Morceau de phrase d'origine, tel que dit ou écrit (envoyé à Gemma).
+  final String source;
   final Set<ParsedField> uncertain;
 }
 
@@ -187,6 +191,7 @@ class QuickEntryParser {
                 accountId: cited.single,
                 date: op.date,
                 description: op.description,
+                source: op.source,
                 uncertain: op.uncertain.difference({ParsedField.account}),
               )
             : op,
@@ -258,6 +263,7 @@ class QuickEntryParser {
         toAccountId: mentioned[1].id,
         date: date,
         description: _description(original),
+        source: original.trim(),
         uncertain: uncertain,
       );
     }
@@ -301,6 +307,7 @@ class QuickEntryParser {
       accountId: accountId,
       date: date,
       description: _description(original),
+      source: original.trim(),
       uncertain: uncertain,
     );
   }

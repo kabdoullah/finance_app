@@ -5,6 +5,7 @@ import 'package:finance_app/core/clock.dart';
 import 'package:finance_app/core/database/app_database.dart';
 import 'package:finance_app/core/database/database_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -18,20 +19,27 @@ AppDatabase newTestDatabase() => AppDatabase(
 
 /// Lance l'application sur un écran de téléphone (390 × 844, comme les
 /// maquettes) et attend la fin des animations.
-Future<void> pumpTestApp(WidgetTester tester, AppDatabase db) async {
+Future<void> pumpTestApp(
+  WidgetTester tester,
+  AppDatabase db, {
+  List<Override> overrides = const [],
+}) async {
   tester.view
     ..physicalSize = const Size(1170, 2532)
     ..devicePixelRatio = 3;
   addTearDown(tester.view.reset);
-  await tester.pumpWidget(buildTestApp(db));
+  await tester.pumpWidget(buildTestApp(db, overrides: overrides));
   await tester.pumpAndSettle();
 }
 
-/// Application complète sur [db] (pas de chiffrement ni de Keychain en test).
-Widget buildTestApp(AppDatabase db) => ProviderScope(
-  overrides: [
-    appDatabaseProvider.overrideWithValue(db),
-    clockProvider.overrideWithValue(() => testNow),
-  ],
-  child: const FinanceApp(),
-);
+/// Application complète sur [db] (pas de chiffrement ni de Keychain en test),
+/// avec d'éventuels [overrides] en plus (ex. faux Gemma).
+Widget buildTestApp(AppDatabase db, {List<Override> overrides = const []}) =>
+    ProviderScope(
+      overrides: [
+        appDatabaseProvider.overrideWithValue(db),
+        clockProvider.overrideWithValue(() => testNow),
+        ...overrides,
+      ],
+      child: const FinanceApp(),
+    );

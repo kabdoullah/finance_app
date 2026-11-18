@@ -17,6 +17,8 @@ import '../../../core/widgets/choice_pill.dart';
 import '../../../l10n/l10n.dart';
 import '../../accounts/domain/account.dart';
 import '../../accounts/presentation/accounts_providers.dart';
+import '../../assistant/data/gemma_entry_assistant.dart';
+import '../../assistant/presentation/ai_model_controller.dart';
 import '../../categories/domain/category.dart';
 import '../../categories/presentation/categories_providers.dart';
 import '../../categories/presentation/category_icons.dart';
@@ -25,11 +27,24 @@ import '../../transactions/domain/transaction_draft.dart';
 import '../../transactions/presentation/transaction_labels.dart';
 import '../../transactions/presentation/transactions_providers.dart';
 import '../data/speech_service.dart';
+import '../domain/entry_assist.dart';
 import '../domain/quick_entry_parser.dart';
 
 enum QuickEntryMode { voice, text }
 
-enum _Stage { listen, input, recap, done }
+enum _Stage { listen, input, analyse, recap, done }
+
+/// Bandeau du récapitulatif selon l'aide reçue de Gemma.
+enum _AiBanner {
+  /// Gemma chargé : rien à signaler.
+  none,
+
+  /// Téléphone sans IA possible : analyse simplifiée.
+  simplified,
+
+  /// IA possible mais pas chargée : lien vers l'écran du modèle.
+  manage,
+}
 
 /// Saisie rapide (maquette Saisie-Vocale) : dicter ou écrire une ou
 /// plusieurs opérations, vérifier le récapitulatif, enregistrer. Sans IA :
@@ -72,6 +87,13 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
   final _operations = <_EditableOperation>[];
   bool _saving = false;
   List<Transaction> _saved = const [];
+  _AiBanner _banner = _AiBanner.simplified;
+
+  /// Numéro de l'analyse en cours : « Passer » invalide la réponse de Gemma.
+  int _analysisRun = 0;
+
+  /// Résultat de l'analyseur, gardé pendant l'étape « Analyse ».
+  List<ParsedOperation> _parsed = const [];
 
   @override
   void initState() {
@@ -207,18 +229,47 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
         .read(transactionsRepositoryProvider)
         .lastUsedAccountId();
     final now = ref.read(clockProvider)();
-    final parsed = const QuickEntryParser().parse(
-      text,
-      QuickEntryContext(
-        now: now,
-        accounts: accounts,
-        expenseGroups: expense,
-        incomeGroups: income,
-        defaultAccountId:
-            lastUsed ?? (accounts.isEmpty ? null : accounts.first.id),
-      ),
+    final entryContext = QuickEntryContext(
+      now: now,
+      accounts: accounts,
+      expenseGroups: expense,
+      incomeGroups: income,
+      defaultAccountId:
+          lastUsed ?? (accounts.isEmpty ? null : accounts.first.id),
     );
+    final parsed = const QuickEntryParser().parse(text, entryContext);
     if (!mounted) return;
+    _source = text.trim();
+    final ai = ref.read(aiModelControllerProvider);
+    final model = ref.read(aiModelControllerProvider.notifier).model;
+    if (model == null) {
+      _banner = ai.status == AiModelStatus.unavailable
+          ? _AiBanner.simplified
+          : _AiBanner.manage;
+      return _showRecap(parsed);
+    }
+    _banner = _AiBanner.none;
+    if (!parsed.any(EntryAssistPrompt.needsHelp)) return _showRecap(parsed);
+
+    // Gemma complète les champs « À vérifier » (≈ 10 s), sauf si l'utilisateur
+    // passe cette étape.
+    final run = ++_analysisRun;
+    _parsed = parsed;
+    setState(() => _stage = _Stage.analyse);
+    final completed = await GemmaEntryAssistant(model)
+        .complete(parsed, EntryAssistPrompt.build(entryContext));
+    if (!mounted || run != _analysisRun || _stage != _Stage.analyse) return;
+    _showRecap(completed);
+  }
+
+  /// « Passer » : récapitulatif de l'analyseur seul.
+  void _skipAnalysis() {
+    _analysisRun++;
+    _showRecap(_parsed);
+  }
+
+  void _showRecap(List<ParsedOperation> parsed) {
+    final now = ref.read(clockProvider)();
     final today = DateTime(now.year, now.month, now.day);
     setState(() {
       for (final op in _operations) {
@@ -230,7 +281,6 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
           for (final p in parsed)
             _EditableOperation.parsed(p, today.difference(p.date).inDays),
         ]);
-      _source = text.trim();
       _stage = _Stage.recap;
     });
   }
@@ -338,6 +388,7 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
     final heading = switch (_stage) {
       _Stage.listen => l10n.qeDictate,
       _Stage.input => l10n.qeWrite,
+      _Stage.analyse => l10n.qeAnalyseHeading,
       _Stage.recap => l10n.qeRecapHeading,
       _Stage.done => l10n.qeDoneHeading,
     };
@@ -388,6 +439,7 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
           child: switch (_stage) {
             _Stage.listen => _listenStage(context),
             _Stage.input => _inputStage(context),
+            _Stage.analyse => _analyseStage(context),
             _Stage.recap => _recapStage(context, accounts),
             _Stage.done => _doneStage(context),
           },
@@ -641,6 +693,70 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
     );
   }
 
+  /// Étape « Analyse » de la maquette : Gemma complète les champs
+  /// incertains.
+  Widget _analyseStage(BuildContext context) {
+    final colors = context.colors;
+    final l10n = context.l10n;
+    Widget step(Widget leading, String label, {bool done = false}) => Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        spacing: 14,
+        children: [
+          SizedBox(width: 24, height: 24, child: Center(child: leading)),
+          Expanded(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: 15,
+                color: done ? colors.inkSecondary : colors.ink,
+                fontWeight: done ? FontWeight.w400 : FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            '« $_source »',
+            style: TextStyle(
+              fontSize: 15,
+              color: colors.inkSecondary,
+              height: 1.4,
+            ),
+          ),
+          const SizedBox(height: 24),
+          step(
+            Icon(AppIcons.checkBold, size: 18, color: colors.positive),
+            _mode == QuickEntryMode.voice ? l10n.qeStepVoice : l10n.qeStepText,
+            done: true,
+          ),
+          step(
+            SizedBox.square(
+              dimension: 20,
+              child: CircularProgressIndicator(
+                strokeWidth: 2.5,
+                color: colors.primary,
+              ),
+            ),
+            l10n.qeStepGemma,
+          ),
+          const Spacer(),
+          TextButton(
+            onPressed: _skipAnalysis,
+            style: TextButton.styleFrom(minimumSize: const Size(0, 48)),
+            child: Text(l10n.qeSkip),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _recapStage(BuildContext context, List<Account> accounts) {
     final colors = context.colors;
     final l10n = context.l10n;
@@ -672,7 +788,15 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
                   ),
                 ),
               const SizedBox(height: 14),
-              _Notice(text: l10n.qeSimplified),
+              switch (_banner) {
+                _AiBanner.none => const SizedBox.shrink(),
+                _AiBanner.simplified => _Notice(text: l10n.qeSimplified),
+                _AiBanner.manage => _Notice(
+                  text: '${l10n.qeAiUnavailable} ${l10n.qeSimplified}',
+                  action: l10n.qeManageAi,
+                  onAction: () => context.push(AppRoutes.aiModel),
+                ),
+              },
               const SizedBox(height: 18),
               Text(
                 l10n.qeCount(_operations.length),
@@ -1224,9 +1348,11 @@ class _ToCheck extends StatelessWidget {
 }
 
 class _Notice extends StatelessWidget {
-  const _Notice({required this.text});
+  const _Notice({required this.text, this.action, this.onAction});
 
   final String text;
+  final String? action;
+  final VoidCallback? onAction;
 
   @override
   Widget build(BuildContext context) {
@@ -1243,13 +1369,28 @@ class _Notice extends StatelessWidget {
         children: [
           Icon(AppIcons.info, size: 18, color: colors.inkSecondary),
           Expanded(
-            child: Text(
-              text,
-              style: TextStyle(
-                fontSize: 13.5,
-                color: colors.inkSecondary,
-                height: 1.4,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  text,
+                  style: TextStyle(
+                    fontSize: 13.5,
+                    color: colors.inkSecondary,
+                    height: 1.4,
+                  ),
+                ),
+                if (action case final label?)
+                  TextButton(
+                    onPressed: onAction,
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      minimumSize: const Size(0, 40),
+                      alignment: Alignment.centerLeft,
+                    ),
+                    child: Text(label),
+                  ),
+              ],
             ),
           ),
         ],

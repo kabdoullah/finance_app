@@ -2302,6 +2302,48 @@ abstract class AppLocalizations {
   /// **'Prête'**
   String get settingsVoiceReady;
 
+  /// No description provided for @qeAnalyseHeading.
+  ///
+  /// In fr, this message translates to:
+  /// **'Analyse'**
+  String get qeAnalyseHeading;
+
+  /// No description provided for @qeStepVoice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Transcription terminée sur ton téléphone'**
+  String get qeStepVoice;
+
+  /// No description provided for @qeStepText.
+  ///
+  /// In fr, this message translates to:
+  /// **'Texte reçu'**
+  String get qeStepText;
+
+  /// No description provided for @qeStepGemma.
+  ///
+  /// In fr, this message translates to:
+  /// **'Gemma 4 repère les montants, catégories et comptes…'**
+  String get qeStepGemma;
+
+  /// No description provided for @qeSkip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Passer'**
+  String get qeSkip;
+
+  /// No description provided for @qeAiUnavailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Assistant IA indisponible.'**
+  String get qeAiUnavailable;
+
+  /// No description provided for @qeManageAi.
+  ///
+  /// In fr, this message translates to:
+  /// **'Gérer le modèle IA'**
+  String get qeManageAi;
+
   /// No description provided for @txDuplicate.
   ///
   /// In fr, this message translates to:
