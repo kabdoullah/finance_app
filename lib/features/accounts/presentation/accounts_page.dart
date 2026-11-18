@@ -11,6 +11,7 @@ import '../../../core/formatting/relative_date.dart';
 import '../../../core/money/money.dart';
 import '../../../core/widgets/amount_display.dart';
 import '../../../l10n/l10n.dart';
+import '../../goals/presentation/goals_page.dart';
 import '../domain/account.dart';
 import '../domain/account_type.dart';
 import '../domain/accounts_summary.dart';
@@ -91,6 +92,10 @@ class _AccountsList extends StatelessWidget {
             trailing: '${archived.length}',
           ),
           for (final account in archived) _AccountTile(account: account),
+        ],
+        if (active.isNotEmpty) ...[
+          const SizedBox(height: 20),
+          const GoalsAccountsLink(),
         ],
       ],
     );

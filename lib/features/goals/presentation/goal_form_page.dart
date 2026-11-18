@@ -1,0 +1,481 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
+
+import '../../../app/router.dart';
+import '../../../app/theme/app_colors.dart';
+import '../../../app/theme/app_icons.dart';
+import '../../../core/clock.dart';
+import '../../../core/errors/result.dart';
+import '../../../core/formatting/date_format.dart';
+import '../../../core/money/amount_input_formatter.dart';
+import '../../../core/money/money.dart';
+import '../../../core/time/calendar_date.dart';
+import '../../../core/widgets/choice_pill.dart';
+import '../../../core/widgets/confirm_dialog.dart';
+import '../../../core/widgets/segmented_choice.dart';
+import '../../../l10n/l10n.dart';
+import '../domain/goal_draft.dart';
+import '../domain/savings_goal.dart';
+import 'goal_icons.dart';
+import 'goals_providers.dart';
+
+/// Création (maquette Objectif-Creer) ou modification d'un objectif.
+class GoalFormPage extends ConsumerStatefulWidget {
+  const GoalFormPage({this.goalId, super.key});
+
+  /// `null` = création.
+  final String? goalId;
+
+  @override
+  ConsumerState<GoalFormPage> createState() => _GoalFormPageState();
+}
+
+class _GoalFormPageState extends ConsumerState<GoalFormPage> {
+  /// Échéances proposées à la création, en mois (0 = sans date).
+  static const _dueMonths = [3, 6, 12, 0];
+
+  final _name = TextEditingController();
+  final _target = TextEditingController();
+  late bool _initialized = widget.goalId == null;
+  bool _saving = false;
+
+  /// Création : nombre de mois choisi.
+  int _months = 6;
+
+  /// Modification : date précise (`null` = sans date).
+  DateTime? _date;
+  Set<GoalFieldError> _errors = const {};
+  SavingsGoal? _created;
+
+  bool get _isEdit => widget.goalId != null;
+
+  @override
+  void dispose() {
+    _name.dispose();
+    _target.dispose();
+    super.dispose();
+  }
+
+  DateTime get _today => CalendarDate.of(ref.read(clockProvider)());
+
+  /// Ajoute [months] mois ; un 31 tombe le dernier jour d'un mois court.
+  static DateTime _addMonths(DateTime date, int months) {
+    final lastDay = DateTime(date.year, date.month + months + 1, 0).day;
+    return DateTime(
+      date.year,
+      date.month + months,
+      date.day < lastDay ? date.day : lastDay,
+    );
+  }
+
+  DateTime? get _targetDate =>
+      _isEdit ? _date : (_months == 0 ? null : _addMonths(_today, _months));
+
+  GoalDraft get _draft => GoalDraft(
+    name: _name.text,
+    target: AmountInputFormatter.parse(_target.text),
+    iconKey: goalIconKeyFor(_name.text, context.l10n),
+    targetDate: _targetDate,
+  );
+
+  Future<void> _submit() async {
+    setState(() => _saving = true);
+    final repository = ref.read(goalsRepositoryProvider);
+    final result = _isEdit
+        ? await repository.update(widget.goalId!, _draft)
+        : await repository.create(_draft);
+    if (!mounted) return;
+    setState(() => _saving = false);
+    switch (result) {
+      case Ok(:final value):
+        if (_isEdit) {
+          context.pop();
+        } else {
+          setState(() => _created = value);
+        }
+      case Err(failure: ValidationFailure<GoalFieldError>(:final errors)):
+        setState(() => _errors = errors);
+      case Err():
+        _showMessage(context.l10n.errorGeneric);
+    }
+  }
+
+  Future<void> _delete(SavingsGoal goal) async {
+    final l10n = context.l10n;
+    final confirmed = await showConfirmDialog(
+      context,
+      title: l10n.goalDeleteTitle,
+      message: l10n.goalDeleteBody(MoneyFormat.amount(goal.saved)),
+      confirmLabel: l10n.goalDelete,
+      destructive: true,
+    );
+    if (!confirmed || !mounted) return;
+    final result = await ref.read(goalsRepositoryProvider).delete(goal.id);
+    if (!mounted) return;
+    _showMessage(result is Ok ? l10n.goalDeleted : l10n.errorGeneric);
+    if (result is Ok) context.go(AppRoutes.goals);
+  }
+
+  Future<void> _pickDate() async {
+    final tomorrow = _today.add(const Duration(days: 1));
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _date ?? _addMonths(_today, 6),
+      firstDate: tomorrow,
+      lastDate: DateTime(2100),
+    );
+    if (picked == null || !mounted) return;
+    setState(() {
+      _date = CalendarDate.of(picked);
+      _errors = const {};
+    });
+  }
+
+  void _showMessage(String message) => ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
+
+  void _change(VoidCallback update) => setState(() {
+    update();
+    _errors = const {};
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final edited = _isEdit ? ref.watch(goalProvider(widget.goalId!)) : null;
+    if (!_initialized) {
+      if (edited == null) {
+        return Scaffold(appBar: AppBar(leading: const CloseButton()));
+      }
+      _initialized = true;
+      _name.text = edited.name;
+      _target.text = MoneyFormat.amount(edited.target);
+      _date = edited.targetDate;
+    }
+
+    final created = _created;
+    final draft = _draft;
+    final canSubmit =
+        !_saving && draft.normalizedName.isNotEmpty && draft.target.value > 0;
+
+    return Scaffold(
+      appBar: AppBar(
+        leading: const CloseButton(),
+        title: Text(
+          created != null
+              ? l10n.goalCreatedTitle
+              : _isEdit
+              ? l10n.goalEditTitle
+              : l10n.goalNewTitle,
+        ),
+      ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: created != null
+                  ? _CreatedMessage(goal: created)
+                  : _buildForm(context),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 12, 24, 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                spacing: 8,
+                children: [
+                  if (created != null)
+                    FilledButton(
+                      onPressed: () => context.go(AppRoutes.goals),
+                      child: Text(l10n.goalSeeAll),
+                    )
+                  else
+                    FilledButton(
+                      onPressed: canSubmit ? _submit : null,
+                      child: Text(_isEdit ? l10n.goalSave : l10n.goalCreate),
+                    ),
+                  if (edited != null)
+                    TextButton(
+                      onPressed: _saving ? null : () => _delete(edited),
+                      style: TextButton.styleFrom(
+                        foregroundColor: context.colors.negative,
+                        minimumSize: const Size(0, 48),
+                      ),
+                      child: Text(l10n.goalDelete),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildForm(BuildContext context) {
+    final colors = context.colors;
+    final l10n = context.l10n;
+    final locale = Localizations.localeOf(context).toLanguageTag();
+    final target = AmountInputFormatter.parse(_target.text);
+    final surplus = ref.watch(averageSurplusProvider).value;
+    final date = _date;
+
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+      children: [
+        _FieldLabel(l10n.goalNameQuestion),
+        TextField(
+          controller: _name,
+          textCapitalization: TextCapitalization.sentences,
+          maxLength: GoalDraft.maxNameLength,
+          onChanged: (_) => _change(() {}),
+          decoration: InputDecoration(
+            hintText: l10n.goalNameHint,
+            counterText: '',
+            errorText:
+                _errors.contains(GoalFieldError.nameMissing) ||
+                    _errors.contains(GoalFieldError.nameTooLong)
+                ? l10n.goalErrorName
+                : null,
+          ),
+        ),
+        if (!_isEdit) ...[
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final (label, iconKey) in goalSuggestions(l10n))
+                ChoicePill(
+                  label: label,
+                  icon: goalIcon(iconKey),
+                  selected: _name.text.trim() == label,
+                  onTap: () => _change(() => _name.text = label),
+                ),
+            ],
+          ),
+        ],
+        const SizedBox(height: 20),
+        _FieldLabel(l10n.goalTarget),
+        TextField(
+          controller: _target,
+          keyboardType: TextInputType.number,
+          inputFormatters: const [AmountInputFormatter()],
+          onChanged: (_) => _change(() {}),
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+          decoration: InputDecoration(
+            hintText: '0',
+            suffixText: l10n.currencyLabel,
+            suffixStyle: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: colors.inkSecondary,
+            ),
+            errorText:
+                _errors.contains(GoalFieldError.targetMissing) ||
+                    _errors.contains(GoalFieldError.targetTooLarge)
+                ? l10n.goalErrorTarget
+                : null,
+          ),
+        ),
+        const SizedBox(height: 20),
+        _FieldLabel(l10n.goalDueLabel),
+        if (_isEdit) ...[
+          SegmentedChoice<bool>(
+            options: [(true, l10n.goalTargetDate), (false, l10n.goalDueNone)],
+            selected: date != null,
+            onChanged: (withDate) => _change(
+              () => _date = withDate ? (_date ?? _addMonths(_today, 6)) : null,
+            ),
+          ),
+          if (date != null)
+            InkWell(
+              onTap: _pickDate,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                child: Row(
+                  spacing: 12,
+                  children: [
+                    Icon(AppIcons.calendarBlank, size: 18, color: colors.ink),
+                    Expanded(
+                      child: Text(
+                        AppDateFormat.dayMonthYear(date, locale),
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    Icon(
+                      AppIcons.caretDownBold,
+                      size: 14,
+                      color: colors.inkTertiary,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          if (_errors.contains(GoalFieldError.dateInPast))
+            Text(
+              l10n.goalErrorDate,
+              style: TextStyle(fontSize: 12.5, color: colors.negative),
+            ),
+        ] else ...[
+          SegmentedChoice<int>(
+            options: [
+              for (final m in _dueMonths)
+                (
+                  m,
+                  switch (m) {
+                    3 => l10n.goalDue3,
+                    6 => l10n.goalDue6,
+                    12 => l10n.goalDue12,
+                    _ => l10n.goalDueNone,
+                  },
+                ),
+            ],
+            selected: _months,
+            onChanged: (m) => _change(() => _months = m),
+          ),
+          if (target.value > 0 && _months > 0)
+            _Plan(
+              perMonth: roundUpToHundred(
+                Money((target.value / _months).ceil()),
+              ),
+              surplus: surplus,
+            ),
+        ],
+      ],
+    );
+  }
+}
+
+/// « Il faudra mettre de côté environ X FCFA par mois », comparé à ce qu'il
+/// reste en moyenne après les dépenses.
+class _Plan extends StatelessWidget {
+  const _Plan({required this.perMonth, required this.surplus});
+
+  final Money perMonth;
+  final Money? surplus;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final l10n = context.l10n;
+    final average = surplus;
+    final tooMuch = average != null && perMonth.value > average.value;
+    final text = tooMuch
+        ? l10n.goalTooMuch(
+            MoneyFormat.amount(perMonth),
+            MoneyFormat.amount(average),
+          )
+        : [
+            l10n.goalPlan(MoneyFormat.amount(perMonth)),
+            if (average != null && average.value > 0)
+              l10n.goalSurplus(MoneyFormat.amount(average)),
+          ].join(' ');
+    return Container(
+      margin: const EdgeInsets.only(top: 14),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        color: tooMuch ? colors.warningSoft : colors.primarySoft,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 10,
+        children: [
+          Icon(
+            tooMuch ? AppIcons.warningCircleBold : AppIcons.info,
+            size: 17,
+            color: tooMuch ? colors.warning : colors.onPrimarySoft,
+          ),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: 13.5,
+                height: 1.45,
+                color: tooMuch ? colors.warning : colors.onPrimarySoft,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Écran de succès : « Objectif « Téléphone » créé ».
+class _CreatedMessage extends StatelessWidget {
+  const _CreatedMessage({required this.goal});
+
+  final SavingsGoal goal;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final l10n = context.l10n;
+    final locale = Localizations.localeOf(context).toLanguageTag();
+    final date = goal.targetDate;
+    return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(32, 80, 32, 24),
+      child: Column(
+        spacing: 10,
+        children: [
+          Container(
+            width: 72,
+            height: 72,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: colors.primarySoft,
+            ),
+            child: Icon(
+              goalIcon(goal.iconKey),
+              size: 30,
+              color: colors.onPrimarySoft,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            l10n.goalCreatedMessage(goal.name),
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+          ),
+          Text(
+            l10n.goalCreatedDetail(
+              MoneyFormat.amount(goal.target),
+              date == null
+                  ? l10n.goalCreatedNoDue
+                  : l10n.goalCreatedDue(
+                      AppDateFormat.dayMonthYear(date, locale),
+                    ),
+            ),
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 14.5, color: colors.inkSecondary),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _FieldLabel extends StatelessWidget {
+  const _FieldLabel(this.text);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(bottom: 8),
+    child: Text(
+      text,
+      style: TextStyle(
+        fontSize: 13,
+        fontWeight: FontWeight.w500,
+        color: context.colors.inkSecondary,
+      ),
+    ),
+  );
+}

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart' show immutable;
 
 import '../../../core/money/money.dart';
+import '../../../core/time/calendar_date.dart';
 import '../../categories/domain/category.dart';
 import '../../transactions/domain/transaction.dart';
 import 'recurrence.dart';

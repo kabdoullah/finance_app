@@ -11,6 +11,7 @@ import '../../../core/formatting/relative_date.dart';
 import '../../../core/money/money.dart';
 import '../../../core/time/month.dart';
 import '../../../l10n/l10n.dart';
+import '../../goals/presentation/budgets_goals_switch.dart';
 import '../../transactions/presentation/transactions_providers.dart';
 import '../domain/budget.dart';
 import 'budget_widgets.dart';
@@ -44,7 +45,9 @@ class BudgetsPage extends ConsumerWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
+            const BudgetsGoalsSwitch(showGoals: false),
+            const SizedBox(height: 24),
             if (overview != null) ...[
               if (overview.global case final global?)
                 _MonthBudget(status: global, now: now)

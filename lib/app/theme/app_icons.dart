@@ -27,6 +27,11 @@ abstract final class AppIcons {
   static const xBold = IconData(0xe4f6, fontFamily: _bold);
   static const plusBold = IconData(0xe3d4, fontFamily: _bold);
   static const checkBold = IconData(0xe182, fontFamily: _bold);
+  static const minusBold = IconData(0xe32a, fontFamily: _bold);
+  static const umbrella = IconData(0xe684, fontFamily: _regular);
+  static const airplane = IconData(0xe002, fontFamily: _regular);
+  static const heart = IconData(0xe2a8, fontFamily: _regular);
+  static const motorcycle = IconData(0xe80a, fontFamily: _regular);
   static const clockBold = IconData(0xe19a, fontFamily: _bold);
   static const repeatBold = IconData(0xe3f6, fontFamily: _bold);
   static const repeat = IconData(0xe3f6, fontFamily: _regular);

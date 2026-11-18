@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart' show immutable;
 
+import '../../../core/time/calendar_date.dart';
+
 /// Fréquence d'une opération récurrente ; l'échéance découle de la date de
 /// début (jour de la semaine, jour du mois, ou jour et mois).
 enum RecurrenceFrequency {
@@ -13,22 +15,6 @@ enum RecurrenceFrequency {
 
   static RecurrenceFrequency fromStorage(String value) =>
       values.firstWhere((f) => f.storageValue == value);
-}
-
-/// Date calendaire locale (sans heure), stockée en « AAAA-MM-JJ ».
-abstract final class CalendarDate {
-  static DateTime of(DateTime date) =>
-      DateTime(date.year, date.month, date.day);
-
-  static String format(DateTime date) =>
-      '${date.year.toString().padLeft(4, '0')}-'
-      '${date.month.toString().padLeft(2, '0')}-'
-      '${date.day.toString().padLeft(2, '0')}';
-
-  static DateTime parse(String value) {
-    final parts = value.split('-').map(int.parse).toList();
-    return DateTime(parts[0], parts[1], parts[2]);
-  }
 }
 
 /// Calendrier d'échéances : la k-ième échéance est calculée depuis la date

@@ -9,6 +9,9 @@ import '../features/budgets/presentation/budget_form_page.dart';
 import '../features/budgets/presentation/budgets_page.dart';
 import '../features/categories/presentation/categories_page.dart';
 import '../features/dashboard/presentation/dashboard_page.dart';
+import '../features/goals/presentation/goal_detail_page.dart';
+import '../features/goals/presentation/goal_form_page.dart';
+import '../features/goals/presentation/goals_page.dart';
 import '../features/recurring/presentation/recurring_auto_recorder.dart';
 import '../features/recurring/presentation/recurring_form_page.dart';
 import '../features/recurring/presentation/recurring_page.dart';
@@ -26,6 +29,10 @@ abstract final class AppRoutes {
   static const home = '/';
   static const transactions = '/transactions';
   static const budgets = '/budgets';
+  static const goals = '/budgets/goals';
+  static String goalDetail(String id) => '/budgets/goals/$id';
+  static const newGoal = '/goals/new';
+  static String editGoal(String id) => '/goals/$id/edit';
   static const newBudget = '/budgets/new';
   static String editBudget(String id) => '/budgets/$id/edit';
   static const forecast = '/forecast';
@@ -117,6 +124,18 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           child: RecurringFormPage(recurringId: state.pathParameters['id']),
         ),
       ),
+      GoRoute(
+        path: AppRoutes.newGoal,
+        pageBuilder: (context, state) =>
+            const MaterialPage(fullscreenDialog: true, child: GoalFormPage()),
+      ),
+      GoRoute(
+        path: '/goals/:id/edit',
+        pageBuilder: (context, state) => MaterialPage(
+          fullscreenDialog: true,
+          child: GoalFormPage(goalId: state.pathParameters['id']),
+        ),
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, shell) =>
             RecurringAutoRecorder(child: AppShell(navigationShell: shell)),
@@ -170,6 +189,19 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: AppRoutes.budgets,
                 builder: (context, state) => const BudgetsPage(),
+                routes: [
+                  GoRoute(
+                    path: 'goals',
+                    builder: (context, state) => const GoalsPage(),
+                    routes: [
+                      GoRoute(
+                        path: ':id',
+                        builder: (context, state) =>
+                            GoalDetailPage(goalId: state.pathParameters['id']!),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ],
           ),

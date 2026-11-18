@@ -1,0 +1,341 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
+
+import '../../../app/router.dart';
+import '../../../app/theme/app_colors.dart';
+import '../../../app/theme/app_icons.dart';
+import '../../../core/clock.dart';
+import '../../../core/formatting/date_format.dart';
+import '../../../core/formatting/relative_date.dart';
+import '../../../core/money/money.dart';
+import '../../../l10n/l10n.dart';
+import '../domain/savings_goal.dart';
+import 'goal_movement_sheet.dart';
+import 'goals_page.dart';
+import 'goals_providers.dart';
+
+/// Détail d'un objectif (maquette Objectif-Detail).
+class GoalDetailPage extends ConsumerWidget {
+  const GoalDetailPage({required this.goalId, super.key});
+
+  final String goalId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.colors;
+    final l10n = context.l10n;
+    final locale = Localizations.localeOf(context).toLanguageTag();
+    final goal = ref.watch(goalProvider(goalId));
+    if (goal == null) return Scaffold(appBar: AppBar());
+    final now = ref.watch(clockProvider)();
+    final date = goal.targetDate;
+    final perMonth = goal.perMonth(now);
+    final perWeek = goal.perWeek(now);
+    final pace = ref.watch(goalPaceProvider(goalId)).value;
+    final (note, late) = goalNote(goal, now, l10n);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(goal.name),
+        actions: [
+          TextButton(
+            onPressed: () => context.push(AppRoutes.editGoal(goalId)),
+            child: Text(l10n.goalEdit),
+          ),
+        ],
+      ),
+      body: ListView(
+        padding: const EdgeInsets.fromLTRB(24, 8, 24, 40),
+        children: [
+          Text.rich(
+            TextSpan(
+              text: '${MoneyFormat.amount(goal.saved)} ',
+              children: [
+                TextSpan(
+                  text: l10n.goalsOfTarget(MoneyFormat.amount(goal.target)),
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0,
+                    color: colors.inkSecondary,
+                  ),
+                ),
+              ],
+            ),
+            style: const TextStyle(
+              fontSize: 38,
+              fontWeight: FontWeight.w600,
+              letterSpacing: -1,
+            ),
+          ),
+          const SizedBox(height: 12),
+          GoalBar(goal: goal, height: 10),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  l10n.goalLeft(MoneyFormat.amount(goal.left)),
+                  style: TextStyle(fontSize: 13, color: colors.inkSecondary),
+                ),
+              ),
+              Text(
+                date == null
+                    ? l10n.goalNoDue
+                    : l10n.goalTargetDateValue(
+                        AppDateFormat.dayMonthYear(date, locale),
+                      ),
+                style: TextStyle(fontSize: 13, color: colors.inkSecondary),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Row(
+            spacing: 8,
+            children: [
+              Expanded(
+                child: FilledButton.icon(
+                  onPressed: () => showGoalMovementSheet(
+                    context,
+                    goal,
+                    GoalMovementKind.contribution,
+                  ),
+                  icon: const Icon(AppIcons.plusBold, size: 16),
+                  label: Text(l10n.goalAdd),
+                ),
+              ),
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: goal.saved.value <= 0
+                      ? null
+                      : () => showGoalMovementSheet(
+                          context,
+                          goal,
+                          GoalMovementKind.withdrawal,
+                        ),
+                  icon: const Icon(AppIcons.minusBold, size: 16),
+                  label: Text(l10n.goalWithdraw),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          // Un seul panneau : effort, note et mention du calcul.
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: colors.surface,
+              border: Border.all(color: colors.line),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: 12,
+              children: [
+                if (perMonth != null && perWeek != null) ...[
+                  Text(
+                    l10n.goalEffort,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Row(
+                    spacing: 12,
+                    children: [
+                      Expanded(
+                        child: _EffortCell(
+                          value: '≈ ${MoneyFormat.amount(perMonth)}',
+                          unit: l10n.goalPerMonth,
+                        ),
+                      ),
+                      Expanded(
+                        child: _EffortCell(
+                          value: '≈ ${MoneyFormat.amount(perWeek)}',
+                          unit: l10n.goalPerWeek,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 12,
+                  ),
+                  decoration: BoxDecoration(
+                    color: late ? colors.warningSoft : colors.chip,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 10,
+                    children: [
+                      Icon(
+                        late ? AppIcons.warningCircleBold : AppIcons.info,
+                        size: 17,
+                        color: late ? colors.warning : colors.inkSecondary,
+                      ),
+                      Expanded(
+                        child: Text(
+                          [
+                            note,
+                            if (pace != null && pace.value > 0)
+                              l10n.goalPace(MoneyFormat.amount(pace)),
+                          ].join(' '),
+                          style: TextStyle(
+                            fontSize: 13.5,
+                            height: 1.45,
+                            color: late ? colors.warning : colors.inkSecondary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Text(
+                  l10n.goalComputedBy,
+                  style: TextStyle(fontSize: 12, color: colors.inkTertiary),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 28),
+          Text(
+            l10n.goalHistory,
+            style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(height: 4),
+          _History(goalId: goalId),
+        ],
+      ),
+    );
+  }
+}
+
+class _EffortCell extends StatelessWidget {
+  const _EffortCell({required this.value, required this.unit});
+
+  final String value;
+  final String unit;
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    spacing: 2,
+    children: [
+      Text(
+        value,
+        style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+      ),
+      Text(
+        unit,
+        style: TextStyle(fontSize: 12.5, color: context.colors.inkSecondary),
+      ),
+    ],
+  );
+}
+
+class _History extends ConsumerWidget {
+  const _History({required this.goalId});
+
+  final String goalId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.colors;
+    final l10n = context.l10n;
+    final movements = ref.watch(goalMovementsProvider(goalId)).value;
+    if (movements == null) return const SizedBox.shrink();
+    if (movements.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        child: Text(
+          l10n.goalHistoryEmpty,
+          style: TextStyle(fontSize: 14, color: colors.inkSecondary),
+        ),
+      );
+    }
+    final relative = RelativeDate(
+      l10n,
+      Localizations.localeOf(context).toLanguageTag(),
+      ref.watch(clockProvider)(),
+    );
+    return Column(
+      children: [
+        for (final m in movements)
+          _MovementRow(movement: m, relative: relative),
+      ],
+    );
+  }
+}
+
+class _MovementRow extends StatelessWidget {
+  const _MovementRow({required this.movement, required this.relative});
+
+  final GoalMovement movement;
+  final RelativeDate relative;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final l10n = context.l10n;
+    final isIn = movement.kind == GoalMovementKind.contribution;
+    final day = RelativeDate.capitalize(relative.day(movement.occurredAt));
+    final account = isIn
+        ? l10n.goalFromAccount(movement.accountName)
+        : l10n.goalToAccount(movement.accountName);
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: colors.line)),
+      ),
+      child: Row(
+        spacing: 12,
+        children: [
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: isIn ? colors.primarySoft : colors.chip,
+            ),
+            child: Icon(
+              isIn ? AppIcons.plusBold : AppIcons.minusBold,
+              size: 15,
+              color: isIn ? colors.onPrimarySoft : colors.inkSecondary,
+            ),
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 2,
+              children: [
+                Text(
+                  isIn ? l10n.goalContribution : l10n.goalWithdrawal,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  '$day · $account',
+                  style: TextStyle(fontSize: 12.5, color: colors.inkSecondary),
+                ),
+              ],
+            ),
+          ),
+          Text(
+            MoneyFormat.signed(movement.signed),
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              color: isIn ? colors.positive : colors.ink,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

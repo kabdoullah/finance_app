@@ -34,6 +34,13 @@ class AccountsRepository {
     Variable.withString(id),
   ]).map((accounts) => accounts.isEmpty ? null : accounts.single);
 
+  /// Lecture ponctuelle d'un compte avec son solde (sans abonnement).
+  Future<Account?> getById(String id) async {
+    return _selectAccounts('WHERE a.id = ?', [
+      Variable.withString(id),
+    ]).getSingleOrNull();
+  }
+
   /// Le solde n'est jamais stocké : solde initial + revenus − dépenses
   /// − transferts sortants + transferts entrants. Réévalué à chaque
   /// changement des comptes ou des opérations.
@@ -57,23 +64,24 @@ FROM accounts a
   Stream<List<Account>> _watchAccounts(
     String clauses, [
     List<Variable<Object>> variables = const [],
+  ]) => _selectAccounts(clauses, variables).watch();
+
+  Selectable<Account> _selectAccounts(
+    String clauses, [
+    List<Variable<Object>> variables = const [],
   ]) => _db
       .customSelect(
         '$_accountsWithBalance $clauses',
         variables: variables,
         readsFrom: {_accounts, _db.transactions},
       )
-      .watch()
       .map(
-        (rows) => [
-          for (final row in rows)
-            _toAccount(
-              _accounts.map(row.data),
-              balance: Money(row.read<int>('balance')),
-              lastOperationAtMs: row.readNullable<int>('last_operation_at'),
-              operationCount: row.read<int>('operation_count'),
-            ),
-        ],
+        (row) => _toAccount(
+          _accounts.map(row.data),
+          balance: Money(row.read<int>('balance')),
+          lastOperationAtMs: row.readNullable<int>('last_operation_at'),
+          operationCount: row.read<int>('operation_count'),
+        ),
       );
 
   Future<Result<Account>> create(AccountDraft draft) => _guard(() async {

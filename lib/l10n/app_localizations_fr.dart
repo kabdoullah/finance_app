@@ -986,6 +986,346 @@ class AppLocalizationsFr extends AppLocalizations {
   String get txDuplicate => 'Dupliquer';
 
   @override
+  String get budgetsSegment => 'Budgets';
+
+  @override
+  String get goalsSegment => 'Objectifs';
+
+  @override
+  String get goalsSaved => 'Mis de côté';
+
+  @override
+  String goalsOfTarget(String target) {
+    return '/ $target FCFA';
+  }
+
+  @override
+  String goalsInProgress(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count objectifs en cours',
+      one: '1 objectif en cours',
+      zero: 'Aucun objectif en cours',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String goalDue(String date) {
+    return 'Échéance : $date';
+  }
+
+  @override
+  String get goalNoDue => 'Sans échéance';
+
+  @override
+  String goalDueHistory(String due) {
+    return '$due · historique et retraits';
+  }
+
+  @override
+  String get goalAdd => 'Ajouter';
+
+  @override
+  String get goalWithdraw => 'Retirer';
+
+  @override
+  String goalSavedOf(String target) {
+    return 'sur $target FCFA';
+  }
+
+  @override
+  String goalNoteOnTrack(String amount) {
+    return 'Environ $amount FCFA par mois pour y arriver à temps.';
+  }
+
+  @override
+  String goalNoteLate(String amount) {
+    return 'En retard sur le rythme prévu : il faudrait $amount FCFA par mois.';
+  }
+
+  @override
+  String get goalNoteNoDate => 'Ajoute ce que tu peux, quand tu peux.';
+
+  @override
+  String get goalNoteReached => 'Objectif atteint. Bravo !';
+
+  @override
+  String goalNoteOverdue(String amount) {
+    return 'Date dépassée : il reste $amount FCFA à mettre de côté.';
+  }
+
+  @override
+  String get goalNew => 'Nouvel objectif';
+
+  @override
+  String get goalsEmpty =>
+      'Aucun objectif pour l\'instant. Mets de l\'argent de côté pour un projet : il reste sur ton compte, simplement réservé.';
+
+  @override
+  String goalAddTitle(String name) {
+    return 'Ajouter à « $name »';
+  }
+
+  @override
+  String goalWithdrawTitle(String name) {
+    return 'Retirer de « $name »';
+  }
+
+  @override
+  String goalAlreadySaved(String saved, String target) {
+    return 'Déjà épargné : $saved sur $target FCFA';
+  }
+
+  @override
+  String get goalOtherAmount => 'Autre montant';
+
+  @override
+  String get goalFrom => 'Depuis';
+
+  @override
+  String get goalTo => 'Vers';
+
+  @override
+  String goalAccountValue(String name, String amount) {
+    return '$name · $amount FCFA';
+  }
+
+  @override
+  String get goalReservedNote =>
+      'L\'argent reste sur ton compte : il est simplement réservé à cet objectif.';
+
+  @override
+  String goalAddCta(String amount) {
+    return 'Ajouter $amount FCFA';
+  }
+
+  @override
+  String goalWithdrawCta(String amount) {
+    return 'Retirer $amount FCFA';
+  }
+
+  @override
+  String goalWithdrawDelay(int weeks) {
+    String _temp0 = intl.Intl.pluralLogic(
+      weeks,
+      locale: localeName,
+      other: '$weeks semaines',
+      one: '1 semaine',
+    );
+    return 'Ce retrait repousse ta date estimée d\'environ $_temp0.';
+  }
+
+  @override
+  String goalAddedToast(
+    String amount,
+    String name,
+    String saved,
+    String target,
+  ) {
+    return '$amount FCFA ajoutés à « $name » · $saved / $target';
+  }
+
+  @override
+  String goalWithdrawnToast(String amount) {
+    return '$amount FCFA retirés. Effort mis à jour.';
+  }
+
+  @override
+  String get goalAmountTooLarge =>
+      'Montant supérieur à ce qui est disponible sur ce compte.';
+
+  @override
+  String get goalNoAccount => 'Aucun compte disponible.';
+
+  @override
+  String get goalNewTitle => 'Nouvel objectif';
+
+  @override
+  String get goalEditTitle => 'Modifier l\'objectif';
+
+  @override
+  String get goalCreatedTitle => 'Objectif créé';
+
+  @override
+  String get goalNameQuestion => 'Pour quoi épargnes-tu ?';
+
+  @override
+  String get goalNameHint => 'Ex. : Téléphone';
+
+  @override
+  String get goalTarget => 'Montant à atteindre';
+
+  @override
+  String get goalDueLabel => 'Échéance';
+
+  @override
+  String get goalDue3 => '3 mois';
+
+  @override
+  String get goalDue6 => '6 mois';
+
+  @override
+  String get goalDue12 => '1 an';
+
+  @override
+  String get goalDueNone => 'Sans date';
+
+  @override
+  String goalPlan(String amount) {
+    return 'Il faudra mettre de côté environ $amount FCFA par mois.';
+  }
+
+  @override
+  String goalSurplus(String amount) {
+    return 'En moyenne, il te reste $amount FCFA par mois après tes dépenses.';
+  }
+
+  @override
+  String goalTooMuch(String amount, String surplus) {
+    return 'Il faudrait $amount FCFA par mois, plus que ce qu\'il te reste en moyenne ($surplus FCFA). Choisis une échéance plus lointaine.';
+  }
+
+  @override
+  String get goalCreate => 'Créer l\'objectif';
+
+  @override
+  String get goalSave => 'Enregistrer';
+
+  @override
+  String goalCreatedMessage(String name) {
+    return 'Objectif « $name » créé';
+  }
+
+  @override
+  String goalCreatedDetail(String amount, String due) {
+    return '$amount FCFA · $due';
+  }
+
+  @override
+  String goalCreatedDue(String date) {
+    return 'échéance le $date';
+  }
+
+  @override
+  String get goalCreatedNoDue => 'sans échéance';
+
+  @override
+  String get goalSeeAll => 'Voir mes objectifs';
+
+  @override
+  String get goalTargetDate => 'Date cible';
+
+  @override
+  String goalTargetDateValue(String date) {
+    return 'Date cible : $date';
+  }
+
+  @override
+  String get goalDelete => 'Supprimer cet objectif';
+
+  @override
+  String get goalDeleteTitle => 'Supprimer cet objectif ?';
+
+  @override
+  String goalDeleteBody(String amount) {
+    return 'Les $amount FCFA réservés sont libérés sur tes comptes. Aucun solde ne change.';
+  }
+
+  @override
+  String get goalDeleted => 'Objectif supprimé.';
+
+  @override
+  String get goalErrorName => 'Donne un nom à cet objectif.';
+
+  @override
+  String get goalErrorTarget => 'Indique un montant supérieur à 0.';
+
+  @override
+  String get goalErrorDate => 'Choisis une date après aujourd\'hui.';
+
+  @override
+  String goalLeft(String amount) {
+    return 'Reste $amount FCFA';
+  }
+
+  @override
+  String get goalEffort => 'Effort nécessaire';
+
+  @override
+  String get goalPerMonth => 'FCFA par mois';
+
+  @override
+  String get goalPerWeek => 'FCFA par semaine';
+
+  @override
+  String goalPace(String amount) {
+    return 'Ces 3 derniers mois, tu as mis de côté ≈ $amount FCFA par mois.';
+  }
+
+  @override
+  String get goalComputedBy =>
+      'Calcul fait par l\'application à partir de tes contributions et retraits.';
+
+  @override
+  String get goalHistory => 'Historique';
+
+  @override
+  String get goalContribution => 'Contribution';
+
+  @override
+  String get goalWithdrawal => 'Retrait';
+
+  @override
+  String goalFromAccount(String name) {
+    return 'Depuis $name';
+  }
+
+  @override
+  String goalToAccount(String name) {
+    return 'Vers $name';
+  }
+
+  @override
+  String get goalHistoryEmpty => 'Aucun mouvement pour l\'instant.';
+
+  @override
+  String get goalEdit => 'Modifier';
+
+  @override
+  String get goalsAccountsLink => 'Objectifs d\'épargne';
+
+  @override
+  String goalsAccountsSummary(int count, String amount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count objectifs',
+      one: '1 objectif',
+    );
+    return '$_temp0 · $amount FCFA mis de côté';
+  }
+
+  @override
+  String get goalSuggestPhone => 'Téléphone';
+
+  @override
+  String get goalSuggestEmergency => 'Fonds d\'urgence';
+
+  @override
+  String get goalSuggestTravel => 'Voyage';
+
+  @override
+  String get goalSuggestStudies => 'Études';
+
+  @override
+  String get goalSuggestWedding => 'Mariage';
+
+  @override
+  String get goalSuggestMoto => 'Moto';
+
+  @override
   String get recurringTitle => 'Opérations récurrentes';
 
   @override

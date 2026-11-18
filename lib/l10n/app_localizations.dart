@@ -1624,6 +1624,515 @@ abstract class AppLocalizations {
   /// **'Dupliquer'**
   String get txDuplicate;
 
+  /// No description provided for @budgetsSegment.
+  ///
+  /// In fr, this message translates to:
+  /// **'Budgets'**
+  String get budgetsSegment;
+
+  /// No description provided for @goalsSegment.
+  ///
+  /// In fr, this message translates to:
+  /// **'Objectifs'**
+  String get goalsSegment;
+
+  /// No description provided for @goalsSaved.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mis de côté'**
+  String get goalsSaved;
+
+  /// No description provided for @goalsOfTarget.
+  ///
+  /// In fr, this message translates to:
+  /// **'/ {target} FCFA'**
+  String goalsOfTarget(String target);
+
+  /// No description provided for @goalsInProgress.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucun objectif en cours} =1{1 objectif en cours} other{{count} objectifs en cours}}'**
+  String goalsInProgress(int count);
+
+  /// No description provided for @goalDue.
+  ///
+  /// In fr, this message translates to:
+  /// **'Échéance : {date}'**
+  String goalDue(String date);
+
+  /// No description provided for @goalNoDue.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sans échéance'**
+  String get goalNoDue;
+
+  /// No description provided for @goalDueHistory.
+  ///
+  /// In fr, this message translates to:
+  /// **'{due} · historique et retraits'**
+  String goalDueHistory(String due);
+
+  /// No description provided for @goalAdd.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter'**
+  String get goalAdd;
+
+  /// No description provided for @goalWithdraw.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer'**
+  String get goalWithdraw;
+
+  /// No description provided for @goalSavedOf.
+  ///
+  /// In fr, this message translates to:
+  /// **'sur {target} FCFA'**
+  String goalSavedOf(String target);
+
+  /// No description provided for @goalNoteOnTrack.
+  ///
+  /// In fr, this message translates to:
+  /// **'Environ {amount} FCFA par mois pour y arriver à temps.'**
+  String goalNoteOnTrack(String amount);
+
+  /// No description provided for @goalNoteLate.
+  ///
+  /// In fr, this message translates to:
+  /// **'En retard sur le rythme prévu : il faudrait {amount} FCFA par mois.'**
+  String goalNoteLate(String amount);
+
+  /// No description provided for @goalNoteNoDate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoute ce que tu peux, quand tu peux.'**
+  String get goalNoteNoDate;
+
+  /// No description provided for @goalNoteReached.
+  ///
+  /// In fr, this message translates to:
+  /// **'Objectif atteint. Bravo !'**
+  String get goalNoteReached;
+
+  /// No description provided for @goalNoteOverdue.
+  ///
+  /// In fr, this message translates to:
+  /// **'Date dépassée : il reste {amount} FCFA à mettre de côté.'**
+  String goalNoteOverdue(String amount);
+
+  /// No description provided for @goalNew.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvel objectif'**
+  String get goalNew;
+
+  /// No description provided for @goalsEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun objectif pour l\'instant. Mets de l\'argent de côté pour un projet : il reste sur ton compte, simplement réservé.'**
+  String get goalsEmpty;
+
+  /// No description provided for @goalAddTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter à « {name} »'**
+  String goalAddTitle(String name);
+
+  /// No description provided for @goalWithdrawTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer de « {name} »'**
+  String goalWithdrawTitle(String name);
+
+  /// No description provided for @goalAlreadySaved.
+  ///
+  /// In fr, this message translates to:
+  /// **'Déjà épargné : {saved} sur {target} FCFA'**
+  String goalAlreadySaved(String saved, String target);
+
+  /// No description provided for @goalOtherAmount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Autre montant'**
+  String get goalOtherAmount;
+
+  /// No description provided for @goalFrom.
+  ///
+  /// In fr, this message translates to:
+  /// **'Depuis'**
+  String get goalFrom;
+
+  /// No description provided for @goalTo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vers'**
+  String get goalTo;
+
+  /// No description provided for @goalAccountValue.
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} · {amount} FCFA'**
+  String goalAccountValue(String name, String amount);
+
+  /// No description provided for @goalReservedNote.
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'argent reste sur ton compte : il est simplement réservé à cet objectif.'**
+  String get goalReservedNote;
+
+  /// No description provided for @goalAddCta.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter {amount} FCFA'**
+  String goalAddCta(String amount);
+
+  /// No description provided for @goalWithdrawCta.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer {amount} FCFA'**
+  String goalWithdrawCta(String amount);
+
+  /// No description provided for @goalWithdrawDelay.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce retrait repousse ta date estimée d\'environ {weeks, plural, =1{1 semaine} other{{weeks} semaines}}.'**
+  String goalWithdrawDelay(int weeks);
+
+  /// No description provided for @goalAddedToast.
+  ///
+  /// In fr, this message translates to:
+  /// **'{amount} FCFA ajoutés à « {name} » · {saved} / {target}'**
+  String goalAddedToast(
+    String amount,
+    String name,
+    String saved,
+    String target,
+  );
+
+  /// No description provided for @goalWithdrawnToast.
+  ///
+  /// In fr, this message translates to:
+  /// **'{amount} FCFA retirés. Effort mis à jour.'**
+  String goalWithdrawnToast(String amount);
+
+  /// No description provided for @goalAmountTooLarge.
+  ///
+  /// In fr, this message translates to:
+  /// **'Montant supérieur à ce qui est disponible sur ce compte.'**
+  String get goalAmountTooLarge;
+
+  /// No description provided for @goalNoAccount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun compte disponible.'**
+  String get goalNoAccount;
+
+  /// No description provided for @goalNewTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvel objectif'**
+  String get goalNewTitle;
+
+  /// No description provided for @goalEditTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier l\'objectif'**
+  String get goalEditTitle;
+
+  /// No description provided for @goalCreatedTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Objectif créé'**
+  String get goalCreatedTitle;
+
+  /// No description provided for @goalNameQuestion.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pour quoi épargnes-tu ?'**
+  String get goalNameQuestion;
+
+  /// No description provided for @goalNameHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex. : Téléphone'**
+  String get goalNameHint;
+
+  /// No description provided for @goalTarget.
+  ///
+  /// In fr, this message translates to:
+  /// **'Montant à atteindre'**
+  String get goalTarget;
+
+  /// No description provided for @goalDueLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Échéance'**
+  String get goalDueLabel;
+
+  /// No description provided for @goalDue3.
+  ///
+  /// In fr, this message translates to:
+  /// **'3 mois'**
+  String get goalDue3;
+
+  /// No description provided for @goalDue6.
+  ///
+  /// In fr, this message translates to:
+  /// **'6 mois'**
+  String get goalDue6;
+
+  /// No description provided for @goalDue12.
+  ///
+  /// In fr, this message translates to:
+  /// **'1 an'**
+  String get goalDue12;
+
+  /// No description provided for @goalDueNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sans date'**
+  String get goalDueNone;
+
+  /// No description provided for @goalPlan.
+  ///
+  /// In fr, this message translates to:
+  /// **'Il faudra mettre de côté environ {amount} FCFA par mois.'**
+  String goalPlan(String amount);
+
+  /// No description provided for @goalSurplus.
+  ///
+  /// In fr, this message translates to:
+  /// **'En moyenne, il te reste {amount} FCFA par mois après tes dépenses.'**
+  String goalSurplus(String amount);
+
+  /// No description provided for @goalTooMuch.
+  ///
+  /// In fr, this message translates to:
+  /// **'Il faudrait {amount} FCFA par mois, plus que ce qu\'il te reste en moyenne ({surplus} FCFA). Choisis une échéance plus lointaine.'**
+  String goalTooMuch(String amount, String surplus);
+
+  /// No description provided for @goalCreate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Créer l\'objectif'**
+  String get goalCreate;
+
+  /// No description provided for @goalSave.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer'**
+  String get goalSave;
+
+  /// No description provided for @goalCreatedMessage.
+  ///
+  /// In fr, this message translates to:
+  /// **'Objectif « {name} » créé'**
+  String goalCreatedMessage(String name);
+
+  /// No description provided for @goalCreatedDetail.
+  ///
+  /// In fr, this message translates to:
+  /// **'{amount} FCFA · {due}'**
+  String goalCreatedDetail(String amount, String due);
+
+  /// No description provided for @goalCreatedDue.
+  ///
+  /// In fr, this message translates to:
+  /// **'échéance le {date}'**
+  String goalCreatedDue(String date);
+
+  /// No description provided for @goalCreatedNoDue.
+  ///
+  /// In fr, this message translates to:
+  /// **'sans échéance'**
+  String get goalCreatedNoDue;
+
+  /// No description provided for @goalSeeAll.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir mes objectifs'**
+  String get goalSeeAll;
+
+  /// No description provided for @goalTargetDate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Date cible'**
+  String get goalTargetDate;
+
+  /// No description provided for @goalTargetDateValue.
+  ///
+  /// In fr, this message translates to:
+  /// **'Date cible : {date}'**
+  String goalTargetDateValue(String date);
+
+  /// No description provided for @goalDelete.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer cet objectif'**
+  String get goalDelete;
+
+  /// No description provided for @goalDeleteTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer cet objectif ?'**
+  String get goalDeleteTitle;
+
+  /// No description provided for @goalDeleteBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les {amount} FCFA réservés sont libérés sur tes comptes. Aucun solde ne change.'**
+  String goalDeleteBody(String amount);
+
+  /// No description provided for @goalDeleted.
+  ///
+  /// In fr, this message translates to:
+  /// **'Objectif supprimé.'**
+  String get goalDeleted;
+
+  /// No description provided for @goalErrorName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Donne un nom à cet objectif.'**
+  String get goalErrorName;
+
+  /// No description provided for @goalErrorTarget.
+  ///
+  /// In fr, this message translates to:
+  /// **'Indique un montant supérieur à 0.'**
+  String get goalErrorTarget;
+
+  /// No description provided for @goalErrorDate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisis une date après aujourd\'hui.'**
+  String get goalErrorDate;
+
+  /// No description provided for @goalLeft.
+  ///
+  /// In fr, this message translates to:
+  /// **'Reste {amount} FCFA'**
+  String goalLeft(String amount);
+
+  /// No description provided for @goalEffort.
+  ///
+  /// In fr, this message translates to:
+  /// **'Effort nécessaire'**
+  String get goalEffort;
+
+  /// No description provided for @goalPerMonth.
+  ///
+  /// In fr, this message translates to:
+  /// **'FCFA par mois'**
+  String get goalPerMonth;
+
+  /// No description provided for @goalPerWeek.
+  ///
+  /// In fr, this message translates to:
+  /// **'FCFA par semaine'**
+  String get goalPerWeek;
+
+  /// No description provided for @goalPace.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ces 3 derniers mois, tu as mis de côté ≈ {amount} FCFA par mois.'**
+  String goalPace(String amount);
+
+  /// No description provided for @goalComputedBy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Calcul fait par l\'application à partir de tes contributions et retraits.'**
+  String get goalComputedBy;
+
+  /// No description provided for @goalHistory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Historique'**
+  String get goalHistory;
+
+  /// No description provided for @goalContribution.
+  ///
+  /// In fr, this message translates to:
+  /// **'Contribution'**
+  String get goalContribution;
+
+  /// No description provided for @goalWithdrawal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retrait'**
+  String get goalWithdrawal;
+
+  /// No description provided for @goalFromAccount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Depuis {name}'**
+  String goalFromAccount(String name);
+
+  /// No description provided for @goalToAccount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vers {name}'**
+  String goalToAccount(String name);
+
+  /// No description provided for @goalHistoryEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun mouvement pour l\'instant.'**
+  String get goalHistoryEmpty;
+
+  /// No description provided for @goalEdit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier'**
+  String get goalEdit;
+
+  /// No description provided for @goalsAccountsLink.
+  ///
+  /// In fr, this message translates to:
+  /// **'Objectifs d\'épargne'**
+  String get goalsAccountsLink;
+
+  /// No description provided for @goalsAccountsSummary.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 objectif} other{{count} objectifs}} · {amount} FCFA mis de côté'**
+  String goalsAccountsSummary(int count, String amount);
+
+  /// No description provided for @goalSuggestPhone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Téléphone'**
+  String get goalSuggestPhone;
+
+  /// No description provided for @goalSuggestEmergency.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fonds d\'urgence'**
+  String get goalSuggestEmergency;
+
+  /// No description provided for @goalSuggestTravel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voyage'**
+  String get goalSuggestTravel;
+
+  /// No description provided for @goalSuggestStudies.
+  ///
+  /// In fr, this message translates to:
+  /// **'Études'**
+  String get goalSuggestStudies;
+
+  /// No description provided for @goalSuggestWedding.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mariage'**
+  String get goalSuggestWedding;
+
+  /// No description provided for @goalSuggestMoto.
+  ///
+  /// In fr, this message translates to:
+  /// **'Moto'**
+  String get goalSuggestMoto;
+
   /// No description provided for @recurringTitle.
   ///
   /// In fr, this message translates to:
