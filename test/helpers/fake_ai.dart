@@ -8,14 +8,16 @@ const gb = 1000 * 1000 * 1000;
 
 /// Téléphone de test (par défaut : compatible, en Wi-Fi).
 DeviceCapabilities fakeDevice({
-  int sdk = 34,
+  bool isIos = false,
+  int osVersion = 34,
   bool is64Bit = true,
   int totalRam = 8 * gb,
   int availableRam = 4 * gb,
   int freeStorage = 20 * gb,
   bool metered = false,
 }) => DeviceCapabilities(
-  sdk: sdk,
+  isIos: isIos,
+  osVersion: osVersion,
   is64Bit: is64Bit,
   totalRamBytes: totalRam,
   availableRamBytes: availableRam,

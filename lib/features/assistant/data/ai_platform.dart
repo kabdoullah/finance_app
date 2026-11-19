@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_edge_ai/flutter_edge_ai.dart';
 import 'package:flutter_edge_ai_litertlm/flutter_edge_ai_litertlm.dart';
@@ -18,7 +19,9 @@ class DeviceInfoService {
       final raw = await _channel.invokeMapMethod<String, Object?>('info');
       if (raw == null) return null;
       return DeviceCapabilities(
-        sdk: raw['sdk']! as int,
+        isIos: defaultTargetPlatform == TargetPlatform.iOS,
+        // Android : niveau d'API ; iOS : version majeure.
+        osVersion: raw['sdk']! as int,
         is64Bit: raw['is64Bit']! as bool,
         totalRamBytes: raw['totalRam']! as int,
         availableRamBytes: raw['availableRam']! as int,

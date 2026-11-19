@@ -4,7 +4,8 @@ import 'package:flutter/foundation.dart' show immutable;
 @immutable
 class DeviceCapabilities {
   const DeviceCapabilities({
-    required this.sdk,
+    required this.isIos,
+    required this.osVersion,
     required this.is64Bit,
     required this.totalRamBytes,
     required this.availableRamBytes,
@@ -12,8 +13,10 @@ class DeviceCapabilities {
     required this.metered,
   });
 
-  /// Version d'Android (API).
-  final int sdk;
+  final bool isIos;
+
+  /// Version du système : niveau d'API Android, ou version majeure d'iOS.
+  final int osVersion;
   final bool is64Bit;
   final int totalRamBytes;
   final int availableRamBytes;
@@ -24,15 +27,16 @@ class DeviceCapabilities {
 }
 
 /// Pourquoi l'IA n'est pas proposée sur ce téléphone.
-enum AiIncompatibility { androidTooOld, not64Bit, notEnoughRam }
+enum AiIncompatibility { systemTooOld, not64Bit, notEnoughRam }
 
 /// Règles de compatibilité de Gemma 4 E2B (mesures du POC : 1,9 Go de
 /// mémoire au pic, 2,47 Go de fichier).
 abstract final class AiRequirements {
   static const _gb = 1000 * 1000 * 1000;
 
-  /// LiteRT-LM demande Android 11.
-  static const minSdk = 30;
+  /// LiteRT-LM demande Android 11 (API 30) ou iOS 15.
+  static const minAndroidSdk = 30;
+  static const minIosVersion = 15;
 
   /// 6 Go annoncés : Android en déclare un peu moins (≈ 5,5 Go).
   static const minTotalRamBytes = 5 * _gb + _gb ~/ 2;
@@ -47,7 +51,8 @@ abstract final class AiRequirements {
   static const minFreeStorageBytes = 3 * _gb;
 
   static Set<AiIncompatibility> check(DeviceCapabilities device) => {
-    if (device.sdk < minSdk) AiIncompatibility.androidTooOld,
+    if (device.osVersion < (device.isIos ? minIosVersion : minAndroidSdk))
+      AiIncompatibility.systemTooOld,
     if (!device.is64Bit) AiIncompatibility.not64Bit,
     if (device.totalRamBytes < minTotalRamBytes) AiIncompatibility.notEnoughRam,
   };

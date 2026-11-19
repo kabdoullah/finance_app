@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart'
+    show TargetPlatform, defaultTargetPlatform;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
@@ -80,6 +82,8 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
   bool _listening = false;
   String _transcript = '';
   double _level = 0;
+
+  static bool get _isIos => defaultTargetPlatform == TargetPlatform.iOS;
   _VoiceIssue? _issue;
   bool _downloadRequested = false;
   final _stopwatch = Stopwatch();
@@ -606,7 +610,9 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
             height: 1.45,
           ),
         ),
-        if (_downloadRequested || downloading) ...[
+        // iOS ne laisse pas une application installer une langue : les
+        // étapes sont montrées d'emblée.
+        if (_isIos || _downloadRequested || downloading) ...[
           const SizedBox(height: 16),
           Container(
             padding: const EdgeInsets.all(14),
@@ -615,13 +621,13 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
               borderRadius: BorderRadius.circular(14),
             ),
             child: Text(
-              l10n.qeLangManual,
+              _isIos ? l10n.qeLangManualIos : l10n.qeLangManual,
               style: const TextStyle(fontSize: 14, height: 1.45),
             ),
           ),
         ],
         const SizedBox(height: 24),
-        if (!downloading && !_downloadRequested)
+        if (!_isIos && !downloading && !_downloadRequested)
           FilledButton(
             onPressed: () async {
               await _speech.requestFrenchDownload();

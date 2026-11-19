@@ -15,14 +15,24 @@ void main() {
     test('Android 10, 32 bits, 4 Go : trois raisons', () {
       expect(
         AiRequirements.check(
-          fakeDevice(sdk: 29, is64Bit: false, totalRam: 4 * gb),
+          fakeDevice(osVersion: 29, is64Bit: false, totalRam: 4 * gb),
         ),
         {
-          AiIncompatibility.androidTooOld,
+          AiIncompatibility.systemTooOld,
           AiIncompatibility.not64Bit,
           AiIncompatibility.notEnoughRam,
         },
       );
+    });
+
+    test('iPhone : iOS 15 minimum', () {
+      expect(
+        AiRequirements.check(fakeDevice(isIos: true, osVersion: 15)),
+        isEmpty,
+      );
+      expect(AiRequirements.check(fakeDevice(isIos: true, osVersion: 14)), {
+        AiIncompatibility.systemTooOld,
+      });
     });
 
     test('6 Go annoncés (5,7 Go déclarés) : compatible', () {

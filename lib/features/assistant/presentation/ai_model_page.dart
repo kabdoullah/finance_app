@@ -104,7 +104,7 @@ class AiModelPage extends ConsumerWidget {
         l10n.aiDescUnavailable,
         for (final reason in state.incompatibilities)
           switch (reason) {
-            AiIncompatibility.androidTooOld => l10n.aiReasonAndroid,
+            AiIncompatibility.systemTooOld => l10n.aiReasonSystem,
             AiIncompatibility.not64Bit => l10n.aiReason64Bit,
             AiIncompatibility.notEnoughRam => l10n.aiReasonRam,
           },

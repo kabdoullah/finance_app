@@ -1894,6 +1894,12 @@ abstract class AppLocalizations {
   /// **'Installer le français'**
   String get qeLangInstall;
 
+  /// No description provided for @qeLangManualIos.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvre Réglages › Général › Clavier : active Dictée, puis ajoute le clavier Français. Le français hors connexion se télécharge ensuite automatiquement.'**
+  String get qeLangManualIos;
+
   /// No description provided for @qeLangManual.
   ///
   /// In fr, this message translates to:
@@ -1996,11 +2002,11 @@ abstract class AppLocalizations {
   /// **'L\'assistant IA n\'est pas disponible sur ce téléphone. L\'application reste complète.'**
   String get aiDescUnavailable;
 
-  /// No description provided for @aiReasonAndroid.
+  /// No description provided for @aiReasonSystem.
   ///
   /// In fr, this message translates to:
-  /// **'Il demande Android 11 ou plus récent.'**
-  String get aiReasonAndroid;
+  /// **'Il demande une version plus récente du système (Android 11 ou iOS 15 au minimum).'**
+  String get aiReasonSystem;
 
   /// No description provided for @aiReason64Bit.
   ///

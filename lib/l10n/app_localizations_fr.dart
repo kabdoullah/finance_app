@@ -1154,6 +1154,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get qeLangInstall => 'Installer le français';
 
   @override
+  String get qeLangManualIos =>
+      'Ouvre Réglages › Général › Clavier : active Dictée, puis ajoute le clavier Français. Le français hors connexion se télécharge ensuite automatiquement.';
+
+  @override
   String get qeLangManual =>
       'Si rien ne se passe : ouvre les paramètres de Gboard › Saisie vocale › Reconnaissance hors connexion, puis ajoute Français.';
 
@@ -1208,7 +1212,8 @@ class AppLocalizationsFr extends AppLocalizations {
       'L\'assistant IA n\'est pas disponible sur ce téléphone. L\'application reste complète.';
 
   @override
-  String get aiReasonAndroid => 'Il demande Android 11 ou plus récent.';
+  String get aiReasonSystem =>
+      'Il demande une version plus récente du système (Android 11 ou iOS 15 au minimum).';
 
   @override
   String get aiReason64Bit => 'Il demande un téléphone 64 bits.';

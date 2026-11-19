@@ -47,6 +47,10 @@
 			</array>
 		</dict>
 	</dict>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Finao utilise le micro pour la dictée de tes opérations. L'audio ne quitte pas ton iPhone.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Finao transcrit ta dictée sur ton iPhone, sans l'envoyer sur Internet.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Finao utilise Face ID pour déverrouiller l'application à la place de ton code.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
