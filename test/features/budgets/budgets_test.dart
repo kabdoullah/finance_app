@@ -2,6 +2,7 @@ import 'package:drift/native.dart';
 import 'package:finance_app/core/database/app_database.dart';
 import 'package:finance_app/core/errors/result.dart';
 import 'package:finance_app/core/money/money.dart';
+import 'package:finance_app/core/time/month.dart';
 import 'package:finance_app/features/accounts/data/accounts_repository.dart';
 import 'package:finance_app/features/accounts/domain/account.dart';
 import 'package:finance_app/features/accounts/domain/account_draft.dart';
@@ -67,16 +68,43 @@ void main() {
       // 10 jours, 20 000 dépensés → 2 000 / jour ; reste 10 000 → le 6e
       // jour suivant franchit la limite : 16 nov.
       expect(
-        projectedOverrun(status(20000), DateTime(2026, 11, 10, 9)),
+        projectedOverrun(
+          status(20000),
+          DateTime(2026, 11, 10, 9),
+          const Month(2026, 11),
+        ),
         DateTime(2026, 11, 16),
       );
     });
 
+    test('mois budgétaire commençant le 25', () {
+      // Du 25 oct. au 4 nov. : 11 jours, 20 000 dépensés ; reste 10 000 →
+      // 6 jours plus tard, le 10 nov., avant la fin de la période (24 nov.).
+      expect(
+        projectedOverrun(
+          status(20000),
+          DateTime(2026, 11, 4, 9),
+          const Month(2026, 11, startDay: 25),
+        ),
+        DateTime(2026, 11, 10),
+      );
+    });
+
     test('rien avant le 5, ni si déjà dépassé, ni après la fin du mois', () {
-      expect(projectedOverrun(status(20000), DateTime(2026, 11, 4)), isNull);
-      expect(projectedOverrun(status(31000), DateTime(2026, 11, 10)), isNull);
+      const november = Month(2026, 11);
+      expect(
+        projectedOverrun(status(20000), DateTime(2026, 11, 4), november),
+        isNull,
+      );
+      expect(
+        projectedOverrun(status(31000), DateTime(2026, 11, 10), november),
+        isNull,
+      );
       // 1 000 en 10 jours → 100 / jour : dépassement bien après le 30.
-      expect(projectedOverrun(status(1000), DateTime(2026, 11, 10)), isNull);
+      expect(
+        projectedOverrun(status(1000), DateTime(2026, 11, 10), november),
+        isNull,
+      );
     });
   });
 

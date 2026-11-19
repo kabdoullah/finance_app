@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/clock.dart';
 import '../../../core/database/database_providers.dart';
 import '../../../core/money/money.dart';
-import '../../../core/time/month.dart';
 import '../../categories/domain/category.dart';
 import '../../categories/presentation/categories_providers.dart';
+import '../../settings/presentation/settings_providers.dart';
 import '../../transactions/presentation/transactions_providers.dart';
 import '../data/budgets_repository.dart';
 import '../domain/budget.dart';
@@ -14,6 +14,7 @@ final budgetsRepositoryProvider = Provider<BudgetsRepository>(
   (ref) => BudgetsRepository(
     ref.watch(appDatabaseProvider),
     ref.watch(clockProvider),
+    monthStartDay: ref.watch(budgetMonthStartProvider),
   ),
 );
 
@@ -24,7 +25,7 @@ final budgetsProvider = StreamProvider<List<Budget>>(
 /// Vue des budgets du mois en cours (`null` tant que les données chargent).
 final budgetsOverviewProvider = Provider<BudgetsOverview?>((ref) {
   final now = ref.watch(clockProvider)();
-  final month = Month.of(now);
+  final month = ref.watch(monthOfProvider)(now);
   final budgets = ref.watch(budgetsProvider).value;
   final transactions = ref.watch(monthTransactionsProvider(month)).value;
   final groups = ref.watch(categoryGroupsProvider(CategoryKind.expense)).value;
@@ -37,6 +38,7 @@ final budgetsOverviewProvider = Provider<BudgetsOverview?>((ref) {
         if (!g.category.isHidden) g.category,
     ],
     now: now,
+    month: month,
   );
 });
 

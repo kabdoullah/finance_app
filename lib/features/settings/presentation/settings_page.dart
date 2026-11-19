@@ -10,6 +10,7 @@ import '../../../core/clock.dart';
 import '../../../core/errors/error_reporter.dart';
 import '../../../core/formatting/date_format.dart';
 import '../../../core/formatting/relative_date.dart';
+import '../../../core/time/month.dart';
 import '../../../core/widgets/confirm_dialog.dart';
 import '../../../l10n/l10n.dart';
 import '../../assistant/presentation/ai_model_controller.dart';
@@ -113,6 +114,13 @@ class SettingsPage extends ConsumerWidget {
             onTap: () => context.push(AppRoutes.categories),
           ),
           _SettingsRow(
+            icon: AppIcons.calendarBlank,
+            title: l10n.settingsMonthStart,
+            subtitle: l10n.settingsMonthStartHint,
+            value: _monthStartLabel(ref.watch(budgetMonthStartProvider), l10n),
+            onTap: () => _chooseMonthStart(context, ref),
+          ),
+          _SettingsRow(
             icon: AppIcons.repeat,
             title: l10n.settingsRecurring,
             value: l10n.settingsRecurringCount(activeRecurring),
@@ -206,6 +214,47 @@ class SettingsPage extends ConsumerWidget {
         ],
       ),
     );
+  }
+}
+
+String _monthStartLabel(int day, AppLocalizations l10n) =>
+    day == 1 ? l10n.settingsMonthStartFirst : l10n.settingsMonthStartDay(day);
+
+Future<void> _chooseMonthStart(BuildContext context, WidgetRef ref) async {
+  final l10n = context.l10n;
+  final current = ref.read(budgetMonthStartProvider);
+  final picked = await showDialog<int>(
+    context: context,
+    builder: (context) => SimpleDialog(
+      title: Text(l10n.settingsMonthStart),
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
+          child: Text(
+            l10n.settingsMonthStartExplain,
+            style: TextStyle(
+              fontSize: 13.5,
+              height: 1.4,
+              color: context.colors.inkSecondary,
+            ),
+          ),
+        ),
+        for (var day = 1; day <= Month.maxStartDay; day++)
+          SimpleDialogOption(
+            onPressed: () => Navigator.of(context).pop(day),
+            child: Row(
+              spacing: 12,
+              children: [
+                Expanded(child: Text(_monthStartLabel(day, l10n))),
+                if (day == current) const Icon(AppIcons.checkBold, size: 18),
+              ],
+            ),
+          ),
+      ],
+    ),
+  );
+  if (picked != null) {
+    await ref.read(budgetMonthStartProvider.notifier).set(picked);
   }
 }
 

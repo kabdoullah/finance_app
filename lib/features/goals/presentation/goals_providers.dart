@@ -4,6 +4,7 @@ import '../../../core/clock.dart';
 import '../../../core/database/database_providers.dart';
 import '../../../core/money/money.dart';
 import '../../accounts/presentation/accounts_providers.dart';
+import '../../settings/presentation/settings_providers.dart';
 import '../data/goals_repository.dart';
 import '../domain/savings_goal.dart';
 
@@ -12,6 +13,7 @@ final goalsRepositoryProvider = Provider<GoalsRepository>(
     ref.watch(appDatabaseProvider),
     ref.watch(clockProvider),
     ref.watch(accountsRepositoryProvider),
+    monthStartDay: ref.watch(budgetMonthStartProvider),
   ),
 );
 

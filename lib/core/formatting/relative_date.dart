@@ -61,9 +61,22 @@ class RelativeDate {
   );
 
   /// « novembre », ou « novembre 2025 » hors de l'année en cours.
+  /// Nom du mois budgétaire (« novembre », « novembre 2025 »).
   String month(Month month) {
     final pattern = month.year == now.year ? 'MMMM' : 'MMMM y';
-    return DateFormat(pattern, locale).format(month.start);
+    return DateFormat(
+      pattern,
+      locale,
+    ).format(DateTime(month.year, month.month));
+  }
+
+  /// Dates d'un mois budgétaire décalé (« 25 oct. – 24 nov. »), `null` pour
+  /// un mois calendaire.
+  String? monthRange(Month month) {
+    if (!month.isShifted) return null;
+    final last = month.end.subtract(const Duration(days: 1));
+    return '${AppDateFormat.dayMonth(month.start, locale)} – '
+        '${AppDateFormat.dayMonth(last, locale)}';
   }
 
   static String capitalize(String text) =>

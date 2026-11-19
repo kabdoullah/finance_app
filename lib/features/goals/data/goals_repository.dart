@@ -18,11 +18,15 @@ class GoalsRepository {
     this._db,
     this._clock,
     this._accounts, {
+    this.monthStartDay = 1,
     String Function()? newId,
   }) : _newId = newId ?? const Uuid().v4;
 
   final AppDatabase _db;
   final Clock _clock;
+
+  /// Début du mois budgétaire (moyennes sur les 3 derniers mois).
+  final int monthStartDay;
   final AccountsRepository _accounts;
   final String Function() _newId;
 
@@ -134,7 +138,7 @@ class GoalsRepository {
   /// revenus − dépenses, moyenne des 3 derniers mois complets (transferts
   /// exclus). `null` sans opération sur la période.
   Future<Money?> averageMonthlySurplus() async {
-    final current = Month.of(_clock());
+    final current = Month.of(_clock(), startDay: monthStartDay);
     final from = current.previous.previous.previous.start;
     final row = await _db
         .customSelect(
@@ -184,7 +188,7 @@ class GoalsRepository {
   /// `null` avec moins de [minHistoryDays] jours d'historique.
   Future<Money?> averageMonthlyExpenses() async {
     final now = _clock();
-    final current = Month.of(now);
+    final current = Month.of(now, startDay: monthStartDay);
     final firstRow = await _db
         .customSelect(
           'SELECT MIN(occurred_at) AS first FROM transactions',

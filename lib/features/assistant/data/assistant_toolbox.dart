@@ -27,6 +27,7 @@ import '../../goals/presentation/goals_providers.dart';
 import '../../quick_entry/domain/quick_entry_parser.dart';
 import '../../recurring/domain/recurring_operation.dart';
 import '../../recurring/presentation/recurring_providers.dart';
+import '../../settings/presentation/settings_providers.dart';
 import '../../transactions/domain/expense_breakdown.dart';
 import '../../transactions/domain/transaction.dart';
 import '../../transactions/presentation/transactions_providers.dart';
@@ -203,6 +204,7 @@ class AssistantToolbox {
       };
 
   DateTime get _now => _ref.read(clockProvider)();
+  Month _monthOf(DateTime date) => _ref.read(monthOfProvider)(date);
 
   /// Première valeur d'un fournisseur asynchrone, en l'écoutant le temps de
   /// la lecture (non écouté, il serait libéré avant d'avoir répondu).
@@ -243,13 +245,13 @@ class AssistantToolbox {
         _l10n.asPeriodWeek,
       ),
       'last_month' => (
-        Month.of(now).previous.start,
-        Month.of(now).start,
+        _monthOf(now).previous.start,
+        _monthOf(now).start,
         _l10n.asPeriodLastMonth,
       ),
-      _ => (Month.of(now).start, now, _l10n.asPeriodMonth),
+      _ => (_monthOf(now).start, now, _l10n.asPeriodMonth),
     };
-    final months = {Month.of(start), Month.of(end), Month.of(now)};
+    final months = {_monthOf(start), _monthOf(end), _monthOf(now)};
     final transactions = <Transaction>[
       for (final month in months)
         ...await _read(monthTransactionsProvider(month)),
@@ -346,7 +348,7 @@ class AssistantToolbox {
 
   Future<ToolOutcome> _budgets(Map<String, dynamic> args) async {
     final now = _now;
-    final month = Month.of(now);
+    final month = _monthOf(now);
     final groups = await _read(categoryGroupsProvider(CategoryKind.expense));
     final overview = BudgetsOverview.of(
       budgets: await _read(budgetsProvider),
@@ -356,11 +358,10 @@ class AssistantToolbox {
           if (!g.category.isHidden) g.category,
       ],
       now: now,
+      month: month,
     );
     const link = ReplyLink(ReplyLinkTarget.budgets);
-    final daysLeft = month.end
-        .difference(DateTime(now.year, now.month, now.day))
-        .inDays;
+    final daysLeft = month.daysLeft(now);
     final monthName = RelativeDate(_l10n, _locale, now).month(month);
 
     final category = _categories[args['category']];

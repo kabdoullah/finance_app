@@ -13,11 +13,18 @@ import '../domain/budget_draft.dart';
 
 /// Budgets mensuels (global et par catégorie principale de dépenses).
 class BudgetsRepository {
-  BudgetsRepository(this._db, this._clock, {String Function()? newId})
-    : _newId = newId ?? const Uuid().v4;
+  BudgetsRepository(
+    this._db,
+    this._clock, {
+    this.monthStartDay = 1,
+    String Function()? newId,
+  }) : _newId = newId ?? const Uuid().v4;
 
   final AppDatabase _db;
   final Clock _clock;
+
+  /// Début du mois budgétaire.
+  final int monthStartDay;
   final String Function() _newId;
 
   $BudgetsTable get _budgets => _db.budgets;
@@ -104,7 +111,7 @@ class BudgetsRepository {
   /// « Ces 3 derniers mois, tu as dépensé en moyenne… »), arrondie à la
   /// centaine. [categoryId] `null` = toutes les dépenses.
   Future<Money> averageMonthlySpending(String? categoryId) async {
-    final current = Month.of(_clock());
+    final current = Month.of(_clock(), startDay: monthStartDay);
     final from = current.previous.previous.previous.start;
     final t = _db.transactions;
     final total = t.amount.sum();

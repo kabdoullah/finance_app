@@ -10,11 +10,11 @@ import '../../../core/errors/result.dart';
 import '../../../core/formatting/date_format.dart';
 import '../../../core/formatting/relative_date.dart';
 import '../../../core/money/money.dart';
-import '../../../core/time/month.dart';
 import '../../../core/widgets/amount_display.dart';
 import '../../../core/widgets/confirm_dialog.dart';
 import '../../../l10n/l10n.dart';
 import '../../goals/presentation/goals_providers.dart';
+import '../../settings/presentation/settings_providers.dart';
 import '../../transactions/domain/transaction.dart';
 import '../../transactions/domain/transaction_stats.dart';
 import '../../transactions/presentation/transaction_labels.dart';
@@ -63,7 +63,7 @@ class _AccountDetail extends ConsumerWidget {
     final locale = Localizations.localeOf(context).toLanguageTag();
     final now = ref.watch(clockProvider)();
     final relative = RelativeDate(l10n, locale, now);
-    final month = Month.of(now);
+    final month = ref.watch(monthOfProvider)(now);
     final history =
         ref.watch(accountTransactionsProvider(account.id)).value ?? const [];
     final balances = runningBalances(

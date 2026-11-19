@@ -63,8 +63,8 @@ class DashboardPage extends ConsumerWidget {
                 onToggleMask: ref.read(amountsHiddenProvider.notifier).toggle,
               ),
               if (active) ...[
-                _MonthTotals(month: Month.of(now)),
-                _WhereMoneyGoes(month: Month.of(now)),
+                _MonthTotals(month: ref.watch(monthOfProvider)(now)),
+                _WhereMoneyGoes(month: ref.watch(monthOfProvider)(now)),
                 const _Budgets(),
                 const _RecentOperations(),
               ] else ...[
@@ -183,13 +183,15 @@ class _WhereMoneyGoes extends ConsumerWidget {
     );
     if (breakdown.isEmpty) return const SizedBox.shrink();
 
-    final monthName = RelativeDate.capitalize(
-      RelativeDate(
-        l10n,
-        Localizations.localeOf(context).toLanguageTag(),
-        ref.watch(clockProvider)(),
-      ).month(month),
+    final relative = RelativeDate(
+      l10n,
+      Localizations.localeOf(context).toLanguageTag(),
+      ref.watch(clockProvider)(),
     );
+    final monthName = [
+      RelativeDate.capitalize(relative.month(month)),
+      ?relative.monthRange(month),
+    ].join(' · ');
     String name(ExpenseShare share) =>
         share.category?.name ?? l10n.accountsOthers;
 
@@ -213,9 +215,13 @@ class _WhereMoneyGoes extends ConsumerWidget {
                 ),
               ),
             ),
-            Text(
-              monthName,
-              style: TextStyle(fontSize: 13, color: colors.inkTertiary),
+            // Mois budgétaire décalé : dates en plus, sur deux lignes si besoin.
+            Flexible(
+              child: Text(
+                monthName,
+                textAlign: TextAlign.end,
+                style: TextStyle(fontSize: 13, color: colors.inkTertiary),
+              ),
             ),
           ],
         ),

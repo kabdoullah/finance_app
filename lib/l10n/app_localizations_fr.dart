@@ -2252,6 +2252,24 @@ class AppLocalizationsFr extends AppLocalizations {
       'Tu n\'as encore jamais sauvegardé tes opérations.';
 
   @override
+  String get settingsMonthStart => 'Début du mois budgétaire';
+
+  @override
+  String get settingsMonthStartHint => 'Budgets et totaux du mois';
+
+  @override
+  String get settingsMonthStartFirst => 'Le 1er';
+
+  @override
+  String settingsMonthStartDay(int day) {
+    return 'Le $day';
+  }
+
+  @override
+  String get settingsMonthStartExplain =>
+      'Par exemple le 25 si ton salaire arrive le 25 : ton mois va alors du 25 au 24 du mois suivant. Les prévisions, échéances et objectifs gardent leurs dates.';
+
+  @override
   String get txDuplicate => 'Dupliquer';
 
   @override

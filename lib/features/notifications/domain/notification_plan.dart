@@ -213,8 +213,4 @@ abstract final class NotificationPlan {
       route: route,
     );
   }
-
-  /// Clé du mois pour mémoriser les alertes déjà envoyées (« 2026-11 »).
-  static String monthKey(DateTime now) =>
-      '${now.year}-${now.month.toString().padLeft(2, '0')}';
 }

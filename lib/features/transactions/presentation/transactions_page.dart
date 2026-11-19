@@ -18,6 +18,7 @@ import '../../accounts/presentation/accounts_providers.dart';
 import '../../categories/domain/category.dart';
 import '../../categories/presentation/categories_providers.dart';
 import '../../categories/presentation/category_icons.dart';
+import '../../settings/presentation/settings_providers.dart';
 import '../domain/transaction.dart';
 import '../domain/transaction_stats.dart';
 import 'new_operation_sheet.dart';
@@ -34,7 +35,9 @@ class TransactionsPage extends ConsumerStatefulWidget {
 
 class _TransactionsPageState extends ConsumerState<TransactionsPage> {
   final _search = TextEditingController();
-  late Month _month = Month.of(ref.read(clockProvider)());
+  late Month _month = _currentMonth();
+
+  Month _currentMonth() => ref.read(monthOfProvider)(ref.read(clockProvider)());
 
   /// `null` = tous les types.
   TransactionKind? _kind;
@@ -67,7 +70,7 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
       _accountId = null;
       _kind = null;
       _search.clear();
-      _month = Month.of(ref.read(clockProvider)());
+      _month = _currentMonth();
     });
     ref.read(transactionsCategoryRequestProvider.notifier).clear();
   }
@@ -93,6 +96,10 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Début du mois budgétaire changé : retour au mois en cours.
+    ref.listen(budgetMonthStartProvider, (_, _) {
+      setState(() => _month = _currentMonth());
+    });
     // Onglet déjà ouvert : applique une demande venue d'un budget.
     ref.listen(transactionsCategoryRequestProvider, (_, requested) {
       if (requested != null) _applyRequest(requested);
@@ -196,7 +203,10 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
                 spacing: 8,
                 children: [
                   _FilterChip(
-                    label: RelativeDate.capitalize(monthName),
+                    label: [
+                      RelativeDate.capitalize(monthName),
+                      ?relative.monthRange(_month),
+                    ].join(' · '),
                     onTap: () => _chooseMonth(relative),
                   ),
                   _FilterChip(
@@ -322,7 +332,7 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
 
   /// Les 12 derniers mois.
   Future<void> _chooseMonth(RelativeDate relative) async {
-    final current = Month.of(ref.read(clockProvider)());
+    final current = _currentMonth();
     final picked = await _showChoices<Month>(
       title: context.l10n.txChooseMonth,
       selected: _month,

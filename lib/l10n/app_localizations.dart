@@ -3742,6 +3742,36 @@ abstract class AppLocalizations {
   /// **'Tu n\'as encore jamais sauvegardé tes opérations.'**
   String get ntBackupBodyNever;
 
+  /// No description provided for @settingsMonthStart.
+  ///
+  /// In fr, this message translates to:
+  /// **'Début du mois budgétaire'**
+  String get settingsMonthStart;
+
+  /// No description provided for @settingsMonthStartHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Budgets et totaux du mois'**
+  String get settingsMonthStartHint;
+
+  /// No description provided for @settingsMonthStartFirst.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le 1er'**
+  String get settingsMonthStartFirst;
+
+  /// No description provided for @settingsMonthStartDay.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le {day}'**
+  String settingsMonthStartDay(int day);
+
+  /// No description provided for @settingsMonthStartExplain.
+  ///
+  /// In fr, this message translates to:
+  /// **'Par exemple le 25 si ton salaire arrive le 25 : ton mois va alors du 25 au 24 du mois suivant. Les prévisions, échéances et objectifs gardent leurs dates.'**
+  String get settingsMonthStartExplain;
+
   /// No description provided for @txDuplicate.
   ///
   /// In fr, this message translates to:

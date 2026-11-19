@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart' show immutable;
 
 import '../../../core/money/money.dart';
+import '../../../core/time/month.dart';
 import '../../categories/domain/category.dart';
 import '../../transactions/domain/transaction.dart';
 
@@ -94,6 +95,7 @@ class BudgetsOverview {
     required this.withoutBudget,
     required this.forecasts,
     required this.monthTransactions,
+    required this.month,
   });
 
   /// [expenseCategories] : catégories principales de dépenses (non masquées).
@@ -102,7 +104,9 @@ class BudgetsOverview {
     required Iterable<Transaction> monthTransactions,
     required List<Category> expenseCategories,
     required DateTime now,
+    Month? month,
   }) {
+    final period = month ?? Month.of(now);
     final spending = MonthSpending.of(monthTransactions);
     BudgetStatus status(Budget b) => BudgetStatus.of(b, spending.spentFor(b));
     final transactions = List<Transaction>.of(monthTransactions);
@@ -115,13 +119,14 @@ class BudgetsOverview {
     final globalStatus = global == null ? null : status(global);
     final forecasts = [
       for (final s in [?globalStatus, ...byCategory])
-        if (projectedOverrun(s, now) case final date?) (s, date),
+        if (projectedOverrun(s, now, period) case final date?) (s, date),
     ]..sort((a, b) => a.$2.compareTo(b.$2));
     return BudgetsOverview._(
       global: globalStatus,
       categories: byCategory,
       forecasts: forecasts,
       monthTransactions: transactions,
+      month: period,
       withoutBudget: [
         for (final c in expenseCategories)
           if (!budgeted.contains(c.id)) c,
@@ -139,6 +144,9 @@ class BudgetsOverview {
 
   /// Opérations du mois (pour l'explication des dépassements).
   final List<Transaction> monthTransactions;
+
+  /// Mois budgétaire de la vue.
+  final Month month;
 
   BudgetDriver? driverOf(BudgetStatus status) =>
       BudgetDriver.of(status.budget, monthTransactions);
@@ -158,22 +166,24 @@ Money dailyAllowance(Money remaining, int daysLeft) {
   return Money(perDay - perDay % 100);
 }
 
-/// Jour du mois à partir duquel la prévision est affichée : avant, une seule
-/// grosse dépense (loyer le 1er…) fausserait le rythme.
+/// Jour du mois budgétaire à partir duquel la prévision est affichée :
+/// avant, une seule grosse dépense (loyer en début de mois…) fausserait le
+/// rythme.
 const forecastFirstDay = 5;
 
 /// Date prévue de dépassement au rythme moyen du mois (dépensé ÷ jours
 /// écoulés, aujourd'hui compris). `null` si le budget est déjà dépassé,
 /// avant le [forecastFirstDay], sans dépense, ou si le dépassement tomberait
 /// après la fin du mois.
-DateTime? projectedOverrun(BudgetStatus status, DateTime now) {
+DateTime? projectedOverrun(BudgetStatus status, DateTime now, Month month) {
   final spent = status.spent.value;
   final remaining = status.remaining.value;
-  if (remaining < 0 || spent <= 0 || now.day < forecastFirstDay) return null;
-  // Plus petit k ≥ 1 tel que spent + (spent / day) × k > limit.
-  final days = remaining * now.day ~/ spent + 1;
+  final elapsed = month.dayOf(now);
+  if (remaining < 0 || spent <= 0 || elapsed < forecastFirstDay) return null;
+  // Plus petit k ≥ 1 tel que spent + (spent / jours écoulés) × k > limit.
+  final days = remaining * elapsed ~/ spent + 1;
   final date = DateTime(now.year, now.month, now.day + days);
-  return date.month == now.month ? date : null;
+  return month.contains(date) ? date : null;
 }
 
 /// Sous-catégorie qui pèse le plus dans un budget (« Surtout à cause

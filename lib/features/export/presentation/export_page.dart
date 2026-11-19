@@ -14,6 +14,7 @@ import '../../../core/files/file_output.dart';
 import '../../../core/time/month.dart';
 import '../../../core/widgets/segmented_choice.dart';
 import '../../../l10n/l10n.dart';
+import '../../settings/presentation/settings_providers.dart';
 import '../../transactions/presentation/transactions_providers.dart';
 import '../data/csv_export.dart';
 import '../data/pdf_statement.dart';
@@ -31,7 +32,7 @@ class ExportPage extends ConsumerStatefulWidget {
 
 class _ExportPageState extends ConsumerState<ExportPage> {
   _Format _format = _Format.csv;
-  late Month _month = Month.of(ref.read(clockProvider)());
+  late Month _month = ref.read(monthOfProvider)(ref.read(clockProvider)());
   bool _busy = false;
 
   /// Fichier à produire (nom, contenu, type), ou `null` si rien à exporter.
@@ -104,7 +105,7 @@ class _ExportPageState extends ConsumerState<ExportPage> {
     final colors = context.colors;
     final l10n = context.l10n;
     final locale = Localizations.localeOf(context).toLanguageTag();
-    final current = Month.of(ref.watch(clockProvider)());
+    final current = ref.watch(monthOfProvider)(ref.watch(clockProvider)());
     final months = [current];
     while (months.length < 12) {
       months.add(months.last.previous);

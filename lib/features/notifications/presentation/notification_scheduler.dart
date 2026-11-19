@@ -147,7 +147,8 @@ class NotificationScheduler extends Notifier<NotificationSettings> {
     _budgetCheck = _budgetCheck.then((_) async {
       try {
         final now = ref.read(clockProvider)();
-        final month = NotificationPlan.monthKey(now);
+        // Une fois par niveau, par budget et par mois budgétaire.
+        final month = overview.month.toString();
         final notified = await _prefs.notifiedLevels(month);
         final crossings = NotificationPlan.budgetCrossings(
           overview: overview,

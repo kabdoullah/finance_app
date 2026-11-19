@@ -50,7 +50,7 @@ class BudgetsPage extends ConsumerWidget {
             const SizedBox(height: 24),
             if (overview != null) ...[
               if (overview.global case final global?)
-                _MonthBudget(status: global, now: now)
+                _MonthBudget(status: global, now: now, month: overview.month)
               else
                 OutlinedButton.icon(
                   onPressed: () => context.push(AppRoutes.newBudget),
@@ -188,25 +188,29 @@ String _forecastText(
 
 /// « Budget de novembre » : dépensé / limite, barre, reste par jour.
 class _MonthBudget extends StatelessWidget {
-  const _MonthBudget({required this.status, required this.now});
+  const _MonthBudget({
+    required this.status,
+    required this.now,
+    required this.month,
+  });
 
   final BudgetStatus status;
   final DateTime now;
+  final Month month;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     final l10n = context.l10n;
-    final month = Month.of(now);
     final relative = RelativeDate(
       l10n,
       Localizations.localeOf(context).toLanguageTag(),
       now,
     );
     final locale = Localizations.localeOf(context).toLanguageTag();
-    final lastDay = DateTime(now.year, now.month + 1, 0);
     // Jours restants, aujourd'hui compris.
-    final daysLeft = lastDay.day - now.day + 1;
+    final daysLeft = month.daysLeft(now);
+    final range = relative.monthRange(month);
     final small = TextStyle(fontSize: 12, color: colors.inkTertiary);
     final over = status.level == BudgetLevel.exceeded;
 
@@ -225,7 +229,12 @@ class _MonthBudget extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                  child: Text(l10n.budgetMonthTitle(relative.month(month))),
+                  child: Text(
+                    [
+                      l10n.budgetMonthTitle(relative.month(month)),
+                      ?range,
+                    ].join(' · '),
+                  ),
                 ),
                 Text(l10n.budgetDaysLeft(daysLeft)),
               ],
@@ -255,7 +264,7 @@ class _MonthBudget extends StatelessWidget {
             ),
           ),
           _TodayMarker(
-            fraction: now.day / lastDay.day,
+            fraction: month.dayOf(now) / month.length,
             child: BudgetBar(status: status, height: 10),
           ),
           Row(
@@ -271,7 +280,13 @@ class _MonthBudget extends StatelessWidget {
                   ),
                 ),
               ),
-              Text(AppDateFormat.dayMonth(lastDay, locale), style: small),
+              Text(
+                AppDateFormat.dayMonth(
+                  month.end.subtract(const Duration(days: 1)),
+                  locale,
+                ),
+                style: small,
+              ),
             ],
           ),
           Text(

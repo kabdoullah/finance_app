@@ -421,10 +421,10 @@ class _Risks extends ConsumerWidget {
     final colors = context.colors;
     final l10n = context.l10n;
     final now = ref.watch(clockProvider)();
+    final overview = ref.watch(budgetsOverviewProvider);
     final budgets = [
       for (final (status, date)
-          in ref.watch(budgetsOverviewProvider)?.forecasts ??
-              const <(BudgetStatus, DateTime)>[])
+          in overview?.forecasts ?? const <(BudgetStatus, DateTime)>[])
         if (!date.isAfter(forecast.endDate) && status.budget.category != null)
           (status, date),
     ];
@@ -501,7 +501,9 @@ class _Risks extends ConsumerWidget {
               _day(context, date),
             ),
             body: l10n.forecastBudgetPace(
-              MoneyFormat.amount(Money(status.spent.value ~/ now.day)),
+              MoneyFormat.amount(
+                Money(status.spent.value ~/ overview!.month.dayOf(now)),
+              ),
             ),
             linkLabel: l10n.forecastSeeBudget,
             onLink: () => context.go(AppRoutes.budgets),
