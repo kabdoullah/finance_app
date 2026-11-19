@@ -85,14 +85,18 @@ class GemmaRuntime {
         .install();
   }
 
-  /// Charge le modèle en mémoire, sur le CPU (le GPU Mali n'apporte rien et
-  /// se charge en ~40 s, voir tools/ai_poc/RAPPORT.md). 4 096 jetons : la
+  /// Charge le modèle en mémoire : CPU sur Android (le GPU Mali n'apporte
+  /// rien et se charge en ~40 s, voir tools/ai_poc/RAPPORT.md), GPU Metal sur
+  /// iPhone. 4 096 jetons : la
   /// conversation de l'assistant (consigne, outils, questions) dépasse 2 048.
   Future<InferenceModel> load() async {
     await _init();
     return FlutterEdgeAi.getActiveModel(
       maxTokens: 4096,
-      preferredBackend: PreferredBackend.cpu,
+      // iPhone : GPU Metal, annoncé rapide par LiteRT-LM (à mesurer).
+      preferredBackend: defaultTargetPlatform == TargetPlatform.iOS
+          ? PreferredBackend.gpu
+          : PreferredBackend.cpu,
     );
   }
 
