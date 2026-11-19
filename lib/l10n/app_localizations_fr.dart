@@ -2270,6 +2270,101 @@ class AppLocalizationsFr extends AppLocalizations {
       'Par exemple le 25 si ton salaire arrive le 25 : ton mois va alors du 25 au 24 du mois suivant. Les prévisions, échéances et objectifs gardent leurs dates.';
 
   @override
+  String inBudgetExceeded(String category, String amount) {
+    return 'Ton budget $category est dépassé de $amount FCFA.';
+  }
+
+  @override
+  String inBudgetExceededDriver(
+    String category,
+    String amount,
+    String driver,
+    String count,
+  ) {
+    return 'Ton budget $category est dépassé de $amount FCFA, surtout à cause de $driver ($count opérations).';
+  }
+
+  @override
+  String inBudgetExceededGlobal(String amount) {
+    return 'Ton budget du mois est dépassé de $amount FCFA.';
+  }
+
+  @override
+  String inBudgetWarning(
+    String category,
+    String percent,
+    String remaining,
+    String days,
+  ) {
+    return 'Ton budget $category est utilisé à $percent % : il te reste $remaining FCFA pour $days jours.';
+  }
+
+  @override
+  String inBudgetWarningGlobal(String percent, String remaining, String days) {
+    return 'Ton budget du mois est utilisé à $percent % : il te reste $remaining FCFA pour $days jours.';
+  }
+
+  @override
+  String inLowBalance(String date, String amount) {
+    return 'Solde bas possible le $date (≈ $amount FCFA).';
+  }
+
+  @override
+  String inLowBalanceBeforeIncome(String date, String amount) {
+    return 'Solde bas possible le $date (≈ $amount FCFA), juste avant ton salaire.';
+  }
+
+  @override
+  String inPending(String name, String amount) {
+    return '$name ($amount FCFA) attend ta confirmation.';
+  }
+
+  @override
+  String inSpendingUp(String percent, String current, String previous) {
+    return 'Tu as dépensé $percent % de plus que le mois dernier à la même date : $current FCFA contre $previous FCFA.';
+  }
+
+  @override
+  String inAskBudget(String category) {
+    return 'Pourquoi mon budget $category est dépassé ?';
+  }
+
+  @override
+  String get inAskBudgetGlobal => 'Pourquoi mon budget du mois est dépassé ?';
+
+  @override
+  String get inAskSpend => 'Combien puis-je dépenser cette semaine ?';
+
+  @override
+  String get inAskForecast => 'Mon solde à la fin du mois ?';
+
+  @override
+  String get inAskSpendingUp => 'Quelle catégorie me coûte le plus ?';
+
+  @override
+  String get inAskCopilot => 'Demander au Copilote';
+
+  @override
+  String get inSeePending => 'Voir l\'échéance';
+
+  @override
+  String get homeForecastTitle => 'Dans 30 jours';
+
+  @override
+  String homeForecastRange(String low, String high) {
+    return 'Probablement entre $low et $high FCFA';
+  }
+
+  @override
+  String get homeForecastLink => 'Comprendre cette prévision';
+
+  @override
+  String get settingsSuggestions => 'Suggestions du Copilote';
+
+  @override
+  String get settingsSuggestionsHint => 'Phrases factuelles sur l\'accueil';
+
+  @override
   String get txDuplicate => 'Dupliquer';
 
   @override

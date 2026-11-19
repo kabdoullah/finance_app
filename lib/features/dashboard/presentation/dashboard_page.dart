@@ -7,6 +7,7 @@ import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
 import '../../../core/clock.dart';
+import '../../../core/formatting/date_format.dart';
 import '../../../core/formatting/relative_date.dart';
 import '../../../core/money/money.dart';
 import '../../../core/time/month.dart';
@@ -14,14 +15,21 @@ import '../../../core/widgets/amount_display.dart';
 import '../../../l10n/l10n.dart';
 import '../../accounts/domain/accounts_summary.dart';
 import '../../accounts/presentation/accounts_providers.dart';
+import '../../assistant/presentation/ai_model_controller.dart';
+import '../../assistant/presentation/assistant_controller.dart';
 import '../../budgets/presentation/budget_widgets.dart';
 import '../../budgets/presentation/budgets_providers.dart';
+import '../../forecast/domain/forecast.dart';
+import '../../forecast/presentation/forecast_chart.dart';
+import '../../forecast/presentation/forecast_providers.dart';
+import '../../recurring/presentation/recurring_providers.dart';
 import '../../settings/presentation/settings_providers.dart';
 import '../../transactions/domain/expense_breakdown.dart';
 import '../../transactions/domain/transaction_stats.dart';
 import '../../transactions/presentation/new_operation_sheet.dart';
 import '../../transactions/presentation/transaction_labels.dart';
 import '../../transactions/presentation/transactions_providers.dart';
+import '../domain/home_insight.dart';
 
 /// Tableau de bord.
 ///
@@ -65,7 +73,9 @@ class DashboardPage extends ConsumerWidget {
               if (active) ...[
                 _MonthTotals(month: ref.watch(monthOfProvider)(now)),
                 _WhereMoneyGoes(month: ref.watch(monthOfProvider)(now)),
+                const _CopilotInsight(),
                 const _Budgets(),
+                const _ForecastCard(),
                 const _RecentOperations(),
               ] else ...[
                 _GetStarted(hasAccounts: hasAccounts),
@@ -735,6 +745,190 @@ class _PrivacyNote extends StatelessWidget {
           child: Icon(AppIcons.lockSimple, size: 15, color: colors.inkTertiary),
         ),
         Expanded(child: Text(context.l10n.dashboardPrivacyNote, style: style)),
+      ],
+    );
+  }
+}
+
+/// Suggestion du Copilote (maquette Accueil) : phrase factuelle calculée par
+/// l'application, puis « Demander au Copilote ».
+class _CopilotInsight extends ConsumerWidget {
+  const _CopilotInsight();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Coupées dans les Paramètres, ou montants masqués : la phrase en cite.
+    if (!ref.watch(suggestionsSettingProvider) ||
+        ref.watch(amountsHiddenProvider)) {
+      return const SizedBox.shrink();
+    }
+    final colors = context.colors;
+    final l10n = context.l10n;
+    final now = ref.watch(clockProvider)();
+    final month = ref.watch(monthOfProvider)(now);
+    final history = ref.watch(spendingHistoryProvider).value;
+    final insight = HomeInsights.pick(
+      budgets: ref.watch(budgetsOverviewProvider),
+      forecast:
+          history != null &&
+              history.daysOfHistory(now) >= Forecast.minHistoryDays
+          ? ref.watch(forecastProvider(ForecastHorizon.month))
+          : null,
+      pending: ref.watch(pendingOccurrencesProvider),
+      currentMonth:
+          ref.watch(monthTransactionsProvider(month)).value ?? const [],
+      previousMonth:
+          ref.watch(monthTransactionsProvider(month.previous)).value ??
+          const [],
+      month: month,
+      now: now,
+      l10n: l10n,
+    );
+    if (insight == null) return const SizedBox.shrink();
+    final question = insight.question;
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 4),
+      decoration: BoxDecoration(
+        color: colors.primarySoft,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 10,
+            children: [
+              Icon(
+                AppIcons.chatCircleText,
+                size: 18,
+                color: colors.onPrimarySoft,
+              ),
+              Expanded(
+                child: Text(
+                  insight.text,
+                  style: TextStyle(
+                    fontSize: 14.5,
+                    height: 1.4,
+                    color: colors.onPrimarySoft,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton(
+              onPressed: () {
+                if (question == null) {
+                  context.go(AppRoutes.recurring);
+                  return;
+                }
+                // Question posée seulement si l'assistant est prêt.
+                if (ref.read(aiModelControllerProvider).status ==
+                    AiModelStatus.ready) {
+                  ref.read(assistantRequestProvider.notifier).ask(question);
+                }
+                context.go(AppRoutes.assistant);
+              },
+              child: Text(
+                question == null ? l10n.inSeePending : l10n.inAskCopilot,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// « Dans 30 jours » (maquette Accueil) : solde prévu, fourchette, courbe.
+class _ForecastCard extends ConsumerWidget {
+  const _ForecastCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.colors;
+    final l10n = context.l10n;
+    final now = ref.watch(clockProvider)();
+    final history = ref.watch(spendingHistoryProvider).value;
+    if (history == null ||
+        history.daysOfHistory(now) < Forecast.minHistoryDays) {
+      return const SizedBox.shrink();
+    }
+    final forecast = ref.watch(forecastProvider(ForecastHorizon.month));
+    if (forecast == null) return const SizedBox.shrink();
+    final masked = ref.watch(amountsHiddenProvider);
+    final locale = Localizations.localeOf(context).toLanguageTag();
+    final (low, high) = forecast.endRange;
+    String amount(Money m) => masked
+        ? MoneyFormat.masked
+        : m.isNegative
+        ? MoneyFormat.signed(m)
+        : MoneyFormat.amount(m);
+    final level = switch (forecast.reliability) {
+      ForecastReliability.high => l10n.forecastReliabilityHigh,
+      ForecastReliability.medium => l10n.forecastReliabilityMedium,
+      ForecastReliability.low => l10n.forecastReliabilityLow,
+    };
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: 6,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
+          children: [
+            Expanded(
+              child: Semantics(
+                header: true,
+                child: Text(
+                  l10n.homeForecastTitle,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+            Text(
+              RelativeDate.capitalize(l10n.forecastReliability(level)),
+              style: TextStyle(fontSize: 13, color: colors.inkTertiary),
+            ),
+          ],
+        ),
+        Text(
+          '≈ ${amount(forecast.endBalance)} ${l10n.currencyLabel}',
+          style: const TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
+            letterSpacing: -0.4,
+          ),
+        ),
+        Text(
+          l10n.homeForecastRange(amount(low), amount(high)),
+          style: TextStyle(fontSize: 13, color: colors.inkSecondary),
+        ),
+        if (!masked)
+          ForecastChart(
+            forecast: forecast,
+            height: 110,
+            semanticLabel: l10n.forecastChartLabel(
+              AppDateFormat.dayMonth(forecast.endDate, locale),
+              MoneyFormat.amount(forecast.endBalance),
+            ),
+          ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: TextButton(
+            onPressed: () => context.go(AppRoutes.forecast),
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.zero,
+              minimumSize: const Size(0, 44),
+            ),
+            child: Text(l10n.homeForecastLink),
+          ),
+        ),
       ],
     );
   }

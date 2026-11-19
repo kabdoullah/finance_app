@@ -129,3 +129,29 @@ final monthOfProvider = Provider<MonthOf>((ref) {
   final startDay = ref.watch(budgetMonthStartProvider);
   return (date) => Month.of(date, startDay: startDay);
 });
+
+/// « Suggestions du Copilote · Phrases factuelles sur l'accueil ».
+class SuggestionsSetting extends Notifier<bool> {
+  @override
+  bool build() {
+    unawaited(_load());
+    return true;
+  }
+
+  Future<void> _load() async {
+    try {
+      state = await ref.read(appPreferencesProvider).suggestions();
+    } on Object catch (error, stack) {
+      reportError(error, stack);
+    }
+  }
+
+  Future<void> set(bool value) async {
+    state = value;
+    await ref.read(appPreferencesProvider).setSuggestions(value);
+  }
+}
+
+final suggestionsSettingProvider = NotifierProvider<SuggestionsSetting, bool>(
+  SuggestionsSetting.new,
+);

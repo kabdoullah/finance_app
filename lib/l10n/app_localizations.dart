@@ -3772,6 +3772,142 @@ abstract class AppLocalizations {
   /// **'Par exemple le 25 si ton salaire arrive le 25 : ton mois va alors du 25 au 24 du mois suivant. Les prévisions, échéances et objectifs gardent leurs dates.'**
   String get settingsMonthStartExplain;
 
+  /// No description provided for @inBudgetExceeded.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton budget {category} est dépassé de {amount} FCFA.'**
+  String inBudgetExceeded(String category, String amount);
+
+  /// No description provided for @inBudgetExceededDriver.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton budget {category} est dépassé de {amount} FCFA, surtout à cause de {driver} ({count} opérations).'**
+  String inBudgetExceededDriver(
+    String category,
+    String amount,
+    String driver,
+    String count,
+  );
+
+  /// No description provided for @inBudgetExceededGlobal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton budget du mois est dépassé de {amount} FCFA.'**
+  String inBudgetExceededGlobal(String amount);
+
+  /// No description provided for @inBudgetWarning.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton budget {category} est utilisé à {percent} % : il te reste {remaining} FCFA pour {days} jours.'**
+  String inBudgetWarning(
+    String category,
+    String percent,
+    String remaining,
+    String days,
+  );
+
+  /// No description provided for @inBudgetWarningGlobal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton budget du mois est utilisé à {percent} % : il te reste {remaining} FCFA pour {days} jours.'**
+  String inBudgetWarningGlobal(String percent, String remaining, String days);
+
+  /// No description provided for @inLowBalance.
+  ///
+  /// In fr, this message translates to:
+  /// **'Solde bas possible le {date} (≈ {amount} FCFA).'**
+  String inLowBalance(String date, String amount);
+
+  /// No description provided for @inLowBalanceBeforeIncome.
+  ///
+  /// In fr, this message translates to:
+  /// **'Solde bas possible le {date} (≈ {amount} FCFA), juste avant ton salaire.'**
+  String inLowBalanceBeforeIncome(String date, String amount);
+
+  /// No description provided for @inPending.
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} ({amount} FCFA) attend ta confirmation.'**
+  String inPending(String name, String amount);
+
+  /// No description provided for @inSpendingUp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu as dépensé {percent} % de plus que le mois dernier à la même date : {current} FCFA contre {previous} FCFA.'**
+  String inSpendingUp(String percent, String current, String previous);
+
+  /// No description provided for @inAskBudget.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pourquoi mon budget {category} est dépassé ?'**
+  String inAskBudget(String category);
+
+  /// No description provided for @inAskBudgetGlobal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pourquoi mon budget du mois est dépassé ?'**
+  String get inAskBudgetGlobal;
+
+  /// No description provided for @inAskSpend.
+  ///
+  /// In fr, this message translates to:
+  /// **'Combien puis-je dépenser cette semaine ?'**
+  String get inAskSpend;
+
+  /// No description provided for @inAskForecast.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mon solde à la fin du mois ?'**
+  String get inAskForecast;
+
+  /// No description provided for @inAskSpendingUp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quelle catégorie me coûte le plus ?'**
+  String get inAskSpendingUp;
+
+  /// No description provided for @inAskCopilot.
+  ///
+  /// In fr, this message translates to:
+  /// **'Demander au Copilote'**
+  String get inAskCopilot;
+
+  /// No description provided for @inSeePending.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir l\'échéance'**
+  String get inSeePending;
+
+  /// No description provided for @homeForecastTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dans 30 jours'**
+  String get homeForecastTitle;
+
+  /// No description provided for @homeForecastRange.
+  ///
+  /// In fr, this message translates to:
+  /// **'Probablement entre {low} et {high} FCFA'**
+  String homeForecastRange(String low, String high);
+
+  /// No description provided for @homeForecastLink.
+  ///
+  /// In fr, this message translates to:
+  /// **'Comprendre cette prévision'**
+  String get homeForecastLink;
+
+  /// No description provided for @settingsSuggestions.
+  ///
+  /// In fr, this message translates to:
+  /// **'Suggestions du Copilote'**
+  String get settingsSuggestions;
+
+  /// No description provided for @settingsSuggestionsHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Phrases factuelles sur l\'accueil'**
+  String get settingsSuggestionsHint;
+
   /// No description provided for @txDuplicate.
   ///
   /// In fr, this message translates to:

@@ -200,6 +200,19 @@ class SettingsPage extends ConsumerWidget {
             status: (voiceLabel, voiceOk),
             onTap: () => context.push(AppRoutes.aiModel),
           ),
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            value: ref.watch(suggestionsSettingProvider),
+            onChanged: ref.read(suggestionsSettingProvider.notifier).set,
+            title: Text(
+              l10n.settingsSuggestions,
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+            ),
+            subtitle: Text(
+              l10n.settingsSuggestionsHint,
+              style: TextStyle(fontSize: 12.5, color: colors.inkTertiary),
+            ),
+          ),
           _SettingsRow(
             icon: AppIcons.trash,
             title: l10n.settingsClearHistory,

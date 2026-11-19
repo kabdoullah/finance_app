@@ -14,6 +14,7 @@ class AppPreferences {
   static const _themeKey = 'ui.themeMode';
   static const _hideAmountsKey = 'privacy.hideAmounts';
   static const _monthStartKey = 'budget.monthStart';
+  static const _suggestionsKey = 'home.suggestions';
 
   Future<ThemeMode> themeMode() async {
     final value = await _prefs.getString(_themeKey);
@@ -38,6 +39,13 @@ class AppPreferences {
 
   Future<void> setBudgetMonthStart(int day) =>
       _prefs.setInt(_monthStartKey, day);
+
+  /// « Suggestions du Copilote » sur l'accueil (activées par défaut).
+  Future<bool> suggestions() async =>
+      await _prefs.getBool(_suggestionsKey) ?? true;
+
+  Future<void> setSuggestions(bool value) =>
+      _prefs.setBool(_suggestionsKey, value);
 }
 
 final appPreferencesProvider = Provider<AppPreferences>(
