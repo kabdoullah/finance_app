@@ -2920,6 +2920,108 @@ abstract class AppLocalizations {
   /// **'Historique effacé.'**
   String get settingsHistoryCleared;
 
+  /// No description provided for @ntChannelReminders.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rappels d\'échéance'**
+  String get ntChannelReminders;
+
+  /// No description provided for @ntChannelRemindersHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le jour d\'une opération récurrente, à 9 h'**
+  String get ntChannelRemindersHint;
+
+  /// No description provided for @ntChannelBudgets.
+  ///
+  /// In fr, this message translates to:
+  /// **'Alertes de budget'**
+  String get ntChannelBudgets;
+
+  /// No description provided for @ntChannelBudgetsHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Au seuil d\'alerte et au dépassement'**
+  String get ntChannelBudgetsHint;
+
+  /// No description provided for @ntChannelLowBalance.
+  ///
+  /// In fr, this message translates to:
+  /// **'Solde bas'**
+  String get ntChannelLowBalance;
+
+  /// No description provided for @ntChannelLowBalanceHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'3 jours avant un solde bas possible'**
+  String get ntChannelLowBalanceHint;
+
+  /// No description provided for @ntReminderTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} · {amount} FCFA aujourd\'hui'**
+  String ntReminderTitle(String name, String amount);
+
+  /// No description provided for @ntReminderConfirm.
+  ///
+  /// In fr, this message translates to:
+  /// **'Touche pour l\'enregistrer.'**
+  String get ntReminderConfirm;
+
+  /// No description provided for @ntReminderAuto.
+  ///
+  /// In fr, this message translates to:
+  /// **'Elle sera enregistrée à l\'ouverture de l\'application.'**
+  String get ntReminderAuto;
+
+  /// No description provided for @ntBudgetWarningTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'{category} : {percent} % du budget utilisé'**
+  String ntBudgetWarningTitle(String category, String percent);
+
+  /// No description provided for @ntBudgetWarningBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Il te reste {remaining} FCFA jusqu\'à la fin du mois.'**
+  String ntBudgetWarningBody(String remaining);
+
+  /// No description provided for @ntBudgetReachedTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'{category} : budget atteint'**
+  String ntBudgetReachedTitle(String category);
+
+  /// No description provided for @ntBudgetExceededTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'{category} : budget dépassé de {amount} FCFA'**
+  String ntBudgetExceededTitle(String category, String amount);
+
+  /// No description provided for @ntBudgetBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Touche pour voir tes budgets.'**
+  String get ntBudgetBody;
+
+  /// No description provided for @ntLowBalanceTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Solde bas possible le {date}'**
+  String ntLowBalanceTitle(String date);
+
+  /// No description provided for @ntLowBalanceBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'≈ {amount} FCFA prévus. C\'est une estimation : touche pour voir la prévision.'**
+  String ntLowBalanceBody(String amount);
+
+  /// No description provided for @settingsNotifSection.
+  ///
+  /// In fr, this message translates to:
+  /// **'Notifications'**
+  String get settingsNotifSection;
+
   /// No description provided for @txDuplicate.
   ///
   /// In fr, this message translates to:

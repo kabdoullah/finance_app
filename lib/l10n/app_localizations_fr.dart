@@ -1774,6 +1774,73 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settingsHistoryCleared => 'Historique effacé.';
 
   @override
+  String get ntChannelReminders => 'Rappels d\'échéance';
+
+  @override
+  String get ntChannelRemindersHint =>
+      'Le jour d\'une opération récurrente, à 9 h';
+
+  @override
+  String get ntChannelBudgets => 'Alertes de budget';
+
+  @override
+  String get ntChannelBudgetsHint => 'Au seuil d\'alerte et au dépassement';
+
+  @override
+  String get ntChannelLowBalance => 'Solde bas';
+
+  @override
+  String get ntChannelLowBalanceHint => '3 jours avant un solde bas possible';
+
+  @override
+  String ntReminderTitle(String name, String amount) {
+    return '$name · $amount FCFA aujourd\'hui';
+  }
+
+  @override
+  String get ntReminderConfirm => 'Touche pour l\'enregistrer.';
+
+  @override
+  String get ntReminderAuto =>
+      'Elle sera enregistrée à l\'ouverture de l\'application.';
+
+  @override
+  String ntBudgetWarningTitle(String category, String percent) {
+    return '$category : $percent % du budget utilisé';
+  }
+
+  @override
+  String ntBudgetWarningBody(String remaining) {
+    return 'Il te reste $remaining FCFA jusqu\'à la fin du mois.';
+  }
+
+  @override
+  String ntBudgetReachedTitle(String category) {
+    return '$category : budget atteint';
+  }
+
+  @override
+  String ntBudgetExceededTitle(String category, String amount) {
+    return '$category : budget dépassé de $amount FCFA';
+  }
+
+  @override
+  String get ntBudgetBody => 'Touche pour voir tes budgets.';
+
+  @override
+  String ntLowBalanceTitle(String date) {
+    return 'Solde bas possible le $date';
+  }
+
+  @override
+  String ntLowBalanceBody(String amount) {
+    return '≈ $amount FCFA prévus. C\'est une estimation : touche pour voir la prévision.';
+  }
+
+  @override
+  String get settingsNotifSection => 'Notifications';
+
+  @override
   String get txDuplicate => 'Dupliquer';
 
   @override

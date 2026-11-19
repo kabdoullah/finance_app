@@ -9,6 +9,8 @@ import '../../../core/widgets/confirm_dialog.dart';
 import '../../../l10n/l10n.dart';
 import '../../assistant/presentation/ai_model_controller.dart';
 import '../../assistant/presentation/assistant_controller.dart';
+import '../../notifications/domain/notification_plan.dart';
+import '../../notifications/presentation/notification_scheduler.dart';
 import '../../quick_entry/data/speech_service.dart';
 
 /// Paramètres : catégories et assistant IA. Le reste (sécurité,
@@ -22,6 +24,7 @@ class SettingsPage extends ConsumerWidget {
     final l10n = context.l10n;
     final ai = ref.watch(aiModelControllerProvider).status;
     final voice = ref.watch(speechAvailabilityProvider).value;
+    final notifications = ref.watch(notificationSchedulerProvider);
 
     final (aiLabel, aiOk) = switch (ai) {
       AiModelStatus.ready => (l10n.aiStatusReady, true),
@@ -53,18 +56,43 @@ class SettingsPage extends ConsumerWidget {
             subtitle: l10n.settingsCategoriesHint,
             onTap: () => context.push(AppRoutes.categories),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 24, bottom: 4),
-            child: Text(
-              l10n.settingsAiSection.toUpperCase(),
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.6,
-                color: colors.inkTertiary,
+          _SectionLabel(l10n.settingsNotifSection),
+          for (final (kind, title, hint) in [
+            (
+              NoticeKind.reminder,
+              l10n.ntChannelReminders,
+              l10n.ntChannelRemindersHint,
+            ),
+            (
+              NoticeKind.budget,
+              l10n.ntChannelBudgets,
+              l10n.ntChannelBudgetsHint,
+            ),
+            (
+              NoticeKind.lowBalance,
+              l10n.ntChannelLowBalance,
+              l10n.ntChannelLowBalanceHint,
+            ),
+          ])
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              value: notifications.isEnabled(kind),
+              onChanged: (value) => ref
+                  .read(notificationSchedulerProvider.notifier)
+                  .setEnabled(kind, value),
+              title: Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              subtitle: Text(
+                hint,
+                style: TextStyle(fontSize: 12.5, color: colors.inkTertiary),
               ),
             ),
-          ),
+          _SectionLabel(l10n.settingsAiSection),
           _SettingsRow(
             icon: AppIcons.chatCircleText,
             title: l10n.settingsAiModel,
@@ -105,6 +133,26 @@ Future<void> _clearHistory(BuildContext context, WidgetRef ref) async {
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(l10n.settingsHistoryCleared)));
   }
+}
+
+class _SectionLabel extends StatelessWidget {
+  const _SectionLabel(this.label);
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(top: 24, bottom: 4),
+    child: Text(
+      label.toUpperCase(),
+      style: TextStyle(
+        fontSize: 12,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.6,
+        color: context.colors.inkTertiary,
+      ),
+    ),
+  );
 }
 
 class _SettingsRow extends StatelessWidget {
