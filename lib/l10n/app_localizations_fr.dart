@@ -10,7 +10,7 @@ class AppLocalizationsFr extends AppLocalizations {
   AppLocalizationsFr([String locale = 'fr']) : super(locale);
 
   @override
-  String get appTitle => 'Finance Copilot';
+  String get appTitle => 'Finao';
 
   @override
   String get navHome => 'Accueil';
@@ -1934,7 +1934,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get lockBiometricReason => 'Déverrouiller Finance Copilot';
+  String get lockBiometricReason => 'Déverrouiller Finao';
 
   @override
   String get lockBiometricButton => 'Empreinte ou visage';
@@ -2057,7 +2057,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get bkRestore => 'Restaurer une sauvegarde';
 
   @override
-  String get bkRestoreHint => 'Fichier .fcbak et son mot de passe';
+  String get bkRestoreHint => 'Fichier .finao et son mot de passe';
 
   @override
   String get bkDrive => 'Google Drive';

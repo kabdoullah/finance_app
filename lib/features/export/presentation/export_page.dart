@@ -47,7 +47,7 @@ class _ExportPageState extends ConsumerState<ExportPage> {
         final all = await repository.all();
         if (all.isEmpty) return null;
         return (
-          'finance-copilot-operations-${now.year}-${two(now.month)}-'
+          'finao-operations-${now.year}-${two(now.month)}-'
               '${two(now.day)}.csv',
           transactionsCsv(all, l10n),
           'text/csv',
@@ -58,7 +58,7 @@ class _ExportPageState extends ConsumerState<ExportPage> {
         Future<pw.Font> font(String file) async =>
             pw.Font.ttf(await rootBundle.load('assets/fonts/$file'));
         return (
-          'finance-copilot-releve-${_month.year}-${two(_month.month)}.pdf',
+          'finao-releve-${_month.year}-${two(_month.month)}.pdf',
           await monthStatementPdf(
             transactions: month,
             monthLabel: DateFormat('MMMM y', locale).format(_month.start),

@@ -117,7 +117,7 @@ class BackupController extends Notifier<BackupState> {
           '${now.year}-${now.month.toString().padLeft(2, '0')}-'
           '${now.day.toString().padLeft(2, '0')}';
       if (!await _env.save(
-        'finance-copilot-$day.${BackupFile.extension}',
+        'finao-$day.${BackupFile.extension}',
         bytes,
       )) {
         _set(BackupActivity.idle);

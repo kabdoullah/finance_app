@@ -1,4 +1,4 @@
-package com.example.finance_app
+package com.finao.app
 
 import android.Manifest
 import android.app.ActivityManager

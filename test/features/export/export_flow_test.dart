@@ -71,7 +71,7 @@ void main() {
     await tester.tap(find.text('Enregistrer'));
     await tester.pumpAndSettle();
     final (csvName, csv, csvMime) = output.saved.single;
-    expect(csvName, 'finance-copilot-operations-2026-11-15.csv');
+    expect(csvName, 'finao-operations-2026-11-15.csv');
     expect(csvMime, 'text/csv');
     expect(utf8.decode(csv.skip(3).toList()), contains(';-2500;Transport;'));
     expect(find.text('Fichier enregistré.'), findsOneWidget);
@@ -86,7 +86,7 @@ void main() {
     });
     await tester.pumpAndSettle();
     final (pdfName, pdf, pdfMime) = output.saved.last;
-    expect(pdfName, 'finance-copilot-releve-2026-11.pdf');
+    expect(pdfName, 'finao-releve-2026-11.pdf');
     expect(pdfMime, 'application/pdf');
     expect(ascii.decode(pdf.take(5).toList()), '%PDF-');
   });

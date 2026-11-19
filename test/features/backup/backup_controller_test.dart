@@ -100,7 +100,7 @@ void main() {
   test('sauvegarder, modifier, restaurer', () async {
     await addAccount('Wave');
     expect(await controller().backup('mot de passe 1'), isTrue);
-    expect(env.savedName, 'finance-copilot-2026-11-14.fcbak');
+    expect(env.savedName, 'finao-2026-11-14.finao');
     expect(container.read(backupControllerProvider).lastAt, now);
     expect(
       container.read(backupControllerProvider).lastSize,

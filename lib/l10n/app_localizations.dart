@@ -97,7 +97,7 @@ abstract class AppLocalizations {
   /// No description provided for @appTitle.
   ///
   /// In fr, this message translates to:
-  /// **'Finance Copilot'**
+  /// **'Finao'**
   String get appTitle;
 
   /// No description provided for @navHome.
@@ -3163,7 +3163,7 @@ abstract class AppLocalizations {
   /// No description provided for @lockBiometricReason.
   ///
   /// In fr, this message translates to:
-  /// **'Déverrouiller Finance Copilot'**
+  /// **'Déverrouiller Finao'**
   String get lockBiometricReason;
 
   /// No description provided for @lockBiometricButton.
@@ -3397,7 +3397,7 @@ abstract class AppLocalizations {
   /// No description provided for @bkRestoreHint.
   ///
   /// In fr, this message translates to:
-  /// **'Fichier .fcbak et son mot de passe'**
+  /// **'Fichier .finao et son mot de passe'**
   String get bkRestoreHint;
 
   /// No description provided for @bkDrive.

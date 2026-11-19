@@ -1,6 +1,6 @@
 {
   "@@locale": "fr",
-  "appTitle": "Finance Copilot",
+  "appTitle": "Finao",
 
   "navHome": "Accueil",
   "navTransactions": "Transactions",
@@ -634,7 +634,7 @@
   "lockEnter": "Saisis ton code",
   "lockWrong": "{count, plural, =1{Code incorrect. Encore 1 essai.} other{Code incorrect. Encore {count} essais.}}",
   "lockWait": "Trop d'essais. Réessaie dans {time}.",
-  "lockBiometricReason": "Déverrouiller Finance Copilot",
+  "lockBiometricReason": "Déverrouiller Finao",
   "lockBiometricButton": "Empreinte ou visage",
   "lockDelete": "Effacer",
   "lockForgot": "Code oublié ?",
@@ -675,7 +675,7 @@
   "bkRetry": "Réessayer",
   "bkDone": "Sauvegarde terminée.",
   "bkRestore": "Restaurer une sauvegarde",
-  "bkRestoreHint": "Fichier .fcbak et son mot de passe",
+  "bkRestoreHint": "Fichier .finao et son mot de passe",
   "bkDrive": "Google Drive",
   "bkDriveHint": "Sauvegarde, restauration et synchronisation chiffrées. Facultatif.",
   "bkComingSoon": "À venir",

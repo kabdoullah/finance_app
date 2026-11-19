@@ -41,7 +41,7 @@ class BackupInfo {
 /// Sans ce mot de passe, la sauvegarde est illisible.
 abstract final class BackupFile {
   static const minPasswordLength = 8;
-  static const extension = 'fcbak';
+  static const extension = 'finao';
 
   static const _infoTable = 'backup_info';
 
