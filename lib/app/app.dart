@@ -6,11 +6,15 @@ import '../features/notifications/presentation/notification_scheduler.dart';
 import '../features/security/presentation/lock_gate.dart';
 import '../features/settings/presentation/settings_providers.dart';
 import '../l10n/l10n.dart';
+import 'finao_splash.dart';
 import 'router.dart';
 import 'theme/app_theme.dart';
 
 class FinanceApp extends ConsumerWidget {
-  const FinanceApp({super.key});
+  const FinanceApp({super.key, this.systemSplashShowsCairn = false});
+
+  /// Android 12+ : le splash système a déjà affiché le cairn.
+  final bool systemSplashShowsCairn;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,8 +31,12 @@ class FinanceApp extends ConsumerWidget {
       darkTheme: AppTheme.dark,
       themeMode: ref.watch(themeModeProvider),
       routerConfig: ref.watch(appRouterProvider),
-      // Verrouillage par code PIN au-dessus de tous les écrans.
-      builder: (context, child) => LockGate(child: child ?? const SizedBox()),
+      // Splash animé au lancement, puis verrouillage par code PIN au-dessus
+      // de tous les écrans.
+      builder: (context, child) => FinaoSplash(
+        stonesAlreadyShown: systemSplashShowsCairn,
+        next: LockGate(child: child ?? const SizedBox()),
+      ),
       // Application en français uniquement pour le MVP.
       locale: const Locale('fr'),
       supportedLocales: AppLocalizations.supportedLocales,

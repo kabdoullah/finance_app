@@ -97,7 +97,16 @@ démarrage AppCompat (exigé par la biométrie), activité
 
 `main` lit le début du mois budgétaire **avant** le premier écran (aucun
 total calculé sur le mauvais mois), puis l'application démarre sous la
-« porte » de verrouillage. Au lancement : suivi du modèle IA, planification
+« porte » de verrouillage.
+
+Identité visuelle (`assets/brand/`, cairn sur ivoire `#F3F0E8` / forêt
+`#174D3A`) : icône et splash natif générés par `flutter_launcher_icons` et
+`flutter_native_splash` (configuration dans `pubspec.yaml`). Le splash
+natif n'est qu'un fond, sauf sur Android 12+ où le système affiche le
+cairn. Puis splash animé Flutter de 2,1 s (logo complet affiché 0,8 s) (`FinaoSplash`, au-dessus du
+verrouillage) : galets puis mot « Finao », seulement le mot sur Android 12+
+(version lue par `main`), position finale d'emblée si « Réduire les
+animations ». Il suit le thème du système, comme le splash natif. Au lancement : suivi du modèle IA, planification
 des notifications, enregistrement automatique des échéances récurrentes
 sans confirmation.
 
