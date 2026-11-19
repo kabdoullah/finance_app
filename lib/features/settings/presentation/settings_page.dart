@@ -15,6 +15,9 @@ import '../../notifications/domain/notification_plan.dart';
 import '../../notifications/presentation/notification_scheduler.dart';
 import '../../quick_entry/data/speech_service.dart';
 import '../../recurring/presentation/recurring_providers.dart';
+import '../../security/domain/pin_policy.dart';
+import '../../security/presentation/lock_controller.dart';
+import '../../security/presentation/pin_flow_page.dart';
 import 'settings_providers.dart';
 
 /// Paramètres (maquette Paramètres) : préférences, notifications,
@@ -157,6 +160,7 @@ class SettingsPage extends ConsumerWidget {
               ),
             ),
           _SectionLabel(l10n.settingsSecuritySection),
+          const _LockSettings(),
           _SettingsRow(
             icon: AppIcons.shieldCheck,
             title: l10n.settingsPrivacy,
@@ -247,6 +251,110 @@ Future<void> _clearHistory(BuildContext context, WidgetRef ref) async {
         .showSnackBar(SnackBar(content: Text(l10n.settingsHistoryCleared)));
   }
 }
+
+/// Verrouillage par code, biométrie et délai.
+class _LockSettings extends ConsumerWidget {
+  const _LockSettings();
+
+  Future<void> _toggle(BuildContext context, bool enable) => context.push<bool>(
+    AppRoutes.pin(enable ? PinFlow.create.name : PinFlow.disable.name),
+  );
+
+  Future<void> _biometric(
+    BuildContext context,
+    WidgetRef ref,
+    bool value,
+  ) async {
+    final l10n = context.l10n;
+    final ok = await ref
+        .read(lockControllerProvider.notifier)
+        .setBiometric(value, l10n.lockBiometricReason);
+    if (!ok && context.mounted) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(l10n.settingsBiometricFailed)));
+    }
+  }
+
+  Future<void> _delay(
+    BuildContext context,
+    WidgetRef ref,
+    LockDelay current,
+  ) async {
+    final l10n = context.l10n;
+    final picked = await showDialog<LockDelay>(
+      context: context,
+      builder: (context) => SimpleDialog(
+        title: Text(l10n.settingsLockDelay),
+        children: [
+          for (final delay in LockDelay.values)
+            SimpleDialogOption(
+              onPressed: () => Navigator.of(context).pop(delay),
+              child: Row(
+                spacing: 12,
+                children: [
+                  Expanded(child: Text(_delayLabel(delay, l10n))),
+                  if (delay == current)
+                    const Icon(AppIcons.checkBold, size: 18),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+    if (picked != null) {
+      await ref.read(lockControllerProvider.notifier).setDelay(picked);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.colors;
+    final l10n = context.l10n;
+    final lock = ref.watch(lockControllerProvider);
+    TextStyle subtitle() =>
+        TextStyle(fontSize: 12.5, color: colors.inkTertiary);
+    const title = TextStyle(fontSize: 15, fontWeight: FontWeight.w600);
+    return Column(
+      children: [
+        SwitchListTile(
+          contentPadding: EdgeInsets.zero,
+          value: lock.enabled,
+          onChanged: lock.loaded ? (value) => _toggle(context, value) : null,
+          title: Text(l10n.settingsLock, style: title),
+          subtitle: Text(l10n.settingsLockHint, style: subtitle()),
+        ),
+        if (lock.enabled) ...[
+          _SettingsRow(
+            icon: AppIcons.lockKey,
+            title: l10n.settingsPin,
+            value: l10n.settingsPinChange,
+            onTap: () => context.push<bool>(AppRoutes.pin(PinFlow.change.name)),
+          ),
+          if (lock.biometricAvailable)
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              value: lock.biometric,
+              onChanged: (value) => _biometric(context, ref, value),
+              title: Text(l10n.settingsBiometric, style: title),
+              subtitle: Text(l10n.settingsBiometricHint, style: subtitle()),
+            ),
+          _SettingsRow(
+            icon: AppIcons.clock,
+            title: l10n.settingsLockDelay,
+            value: _delayLabel(lock.delay, l10n),
+            onTap: () => _delay(context, ref, lock.delay),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+String _delayLabel(LockDelay delay, AppLocalizations l10n) => switch (delay) {
+  LockDelay.immediately => l10n.lockDelayImmediately,
+  LockDelay.oneMinute => l10n.lockDelayOneMinute,
+  LockDelay.fiveMinutes => l10n.lockDelayFiveMinutes,
+};
 
 class _SectionLabel extends StatelessWidget {
   const _SectionLabel(this.label);

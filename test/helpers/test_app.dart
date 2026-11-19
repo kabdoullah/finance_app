@@ -58,5 +58,8 @@ Future<void> tapSetting(WidgetTester tester, String text) async {
     200,
     scrollable: scrollableOf(SettingsPage),
   );
+  // Construite mais peut-être au-dessus de la zone visible.
+  await tester.ensureVisible(find.text(text));
+  await tester.pumpAndSettle();
   await tester.tap(find.text(text));
 }

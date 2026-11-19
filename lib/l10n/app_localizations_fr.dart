@@ -1915,6 +1915,112 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get lockEnter => 'Saisis ton code';
+
+  @override
+  String lockWrong(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Code incorrect. Encore $count essais.',
+      one: 'Code incorrect. Encore 1 essai.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String lockWait(String time) {
+    return 'Trop d\'essais. Réessaie dans $time.';
+  }
+
+  @override
+  String get lockBiometricReason => 'Déverrouiller Finance Copilot';
+
+  @override
+  String get lockBiometricButton => 'Empreinte ou visage';
+
+  @override
+  String get lockDelete => 'Effacer';
+
+  @override
+  String get lockForgot => 'Code oublié ?';
+
+  @override
+  String get lockForgotTitle => 'Code oublié';
+
+  @override
+  String get lockForgotBody =>
+      'Sans serveur, le code ne peut pas être récupéré. Si tu as activé l\'empreinte ou le visage, utilise-les. Sinon, la seule solution est d\'effacer les données de l\'application dans les réglages d\'Android : toutes tes opérations seront perdues.';
+
+  @override
+  String get lockForgotOk => 'Compris';
+
+  @override
+  String get pinCreateTitle => 'Choisis un code';
+
+  @override
+  String get pinCreateHint =>
+      '4 chiffres, demandés à l\'ouverture de l\'application.';
+
+  @override
+  String get pinCreateWarning =>
+      'Retiens-le bien : sans serveur, un code oublié ne peut pas être récupéré. Active aussi l\'empreinte ou le visage si ton téléphone le permet.';
+
+  @override
+  String get pinConfirmTitle => 'Confirme ton code';
+
+  @override
+  String get pinMismatch => 'Les deux codes ne correspondent pas. Recommence.';
+
+  @override
+  String get pinCurrentTitle => 'Code actuel';
+
+  @override
+  String get pinNewTitle => 'Nouveau code';
+
+  @override
+  String get pinChanged => 'Code modifié.';
+
+  @override
+  String get pinEnabled => 'Verrouillage activé.';
+
+  @override
+  String get pinDisabled => 'Verrouillage désactivé.';
+
+  @override
+  String get settingsLock => 'Verrouillage de l\'application';
+
+  @override
+  String get settingsLockHint => 'Demandé à chaque ouverture';
+
+  @override
+  String get settingsPin => 'Code PIN';
+
+  @override
+  String get settingsPinChange => 'Modifier';
+
+  @override
+  String get settingsBiometric => 'Biométrie (facultatif)';
+
+  @override
+  String get settingsBiometricHint => 'Empreinte ou visage à la place du code';
+
+  @override
+  String get settingsBiometricFailed => 'Empreinte ou visage non reconnu.';
+
+  @override
+  String get settingsLockDelay => 'Verrouiller après';
+
+  @override
+  String get lockDelayImmediately => 'Immédiatement';
+
+  @override
+  String get lockDelayOneMinute => '1 minute';
+
+  @override
+  String get lockDelayFiveMinutes => '5 minutes';
+
+  @override
   String get txDuplicate => 'Dupliquer';
 
   @override

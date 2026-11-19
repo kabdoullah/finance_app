@@ -13,7 +13,8 @@ import android.speech.RecognitionSupport
 import android.speech.RecognitionSupportCallback
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
-import io.flutter.embedding.android.FlutterActivity
+import android.view.WindowManager
+import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
@@ -23,7 +24,7 @@ import io.flutter.plugin.common.MethodChannel
  * (SpeechRecognizer.createOnDeviceSpeechRecognizer, Android 12+). L'audio ne
  * quitte jamais le téléphone ; sans elle, l'application propose le clavier.
  */
-class MainActivity : FlutterActivity() {
+class MainActivity : FlutterFragmentActivity() {
     private var recognizer: SpeechRecognizer? = null
     private var events: EventChannel.EventSink? = null
     private var pendingPermission: MethodChannel.Result? = null
@@ -65,6 +66,16 @@ class MainActivity : FlutterActivity() {
             when (call.method) {
                 "info" -> result.success(deviceInfo())
                 "requestNotifications" -> requestNotifications(result)
+                "setSecure" -> {
+                    // Verrouillage actif : contenu masqué dans les applications
+                    // récentes (et captures d'écran bloquées).
+                    if (call.arguments == true) {
+                        window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+                    } else {
+                        window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+                    }
+                    result.success(null)
+                }
                 else -> result.notImplemented()
             }
         }

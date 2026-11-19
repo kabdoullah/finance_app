@@ -20,6 +20,7 @@ import '../features/quick_entry/presentation/quick_entry_page.dart';
 import '../features/recurring/presentation/recurring_auto_recorder.dart';
 import '../features/recurring/presentation/recurring_form_page.dart';
 import '../features/recurring/presentation/recurring_page.dart';
+import '../features/security/presentation/pin_flow_page.dart';
 import '../features/settings/presentation/settings_page.dart';
 import '../features/transactions/domain/transaction.dart';
 import '../features/transactions/presentation/add_transaction_page.dart';
@@ -60,6 +61,7 @@ abstract final class AppRoutes {
   static const settings = '/settings';
   static const categories = '/settings/categories';
   static const aiModel = '/settings/ai-model';
+  static String pin(String flow) => '/settings/pin?flow=$flow';
 
   static const accounts = '/accounts';
   static const newAccount = '/accounts/new';
@@ -298,6 +300,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: 'ai-model',
             builder: (context, state) => const AiModelPage(),
+          ),
+          GoRoute(
+            path: 'pin',
+            builder: (context, state) => PinFlowPage(
+              flow: PinFlow.values.firstWhere(
+                (f) => f.name == state.uri.queryParameters['flow'],
+                orElse: () => PinFlow.create,
+              ),
+            ),
           ),
         ],
       ),

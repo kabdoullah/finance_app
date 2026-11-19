@@ -23,6 +23,8 @@ abstract final class AppIcons {
   static const caretRight = IconData(0xe13a, fontFamily: _regular);
   static const gearSix = IconData(0xe272, fontFamily: _regular);
   static const lockSimple = IconData(0xe308, fontFamily: _regular);
+  static const lockKey = IconData(0xe2fe, fontFamily: _regular);
+  static const fingerprint = IconData(0xe23e, fontFamily: _regular);
   static const caretLeftBold = IconData(0xe138, fontFamily: _bold);
   static const xBold = IconData(0xe4f6, fontFamily: _bold);
   static const plusBold = IconData(0xe3d4, fontFamily: _bold);
@@ -36,6 +38,7 @@ abstract final class AppIcons {
   static const heart = IconData(0xe2a8, fontFamily: _regular);
   static const motorcycle = IconData(0xe80a, fontFamily: _regular);
   static const clockBold = IconData(0xe19a, fontFamily: _bold);
+  static const clock = IconData(0xe19a, fontFamily: _regular);
   static const repeatBold = IconData(0xe3f6, fontFamily: _bold);
   static const repeat = IconData(0xe3f6, fontFamily: _regular);
   static const play = IconData(0xe3d0, fontFamily: _regular);

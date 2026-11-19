@@ -3142,6 +3142,192 @@ abstract class AppLocalizations {
   /// **'{app} {version} · données stockées localement'**
   String settingsFooter(String app, String version);
 
+  /// No description provided for @lockEnter.
+  ///
+  /// In fr, this message translates to:
+  /// **'Saisis ton code'**
+  String get lockEnter;
+
+  /// No description provided for @lockWrong.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{Code incorrect. Encore 1 essai.} other{Code incorrect. Encore {count} essais.}}'**
+  String lockWrong(int count);
+
+  /// No description provided for @lockWait.
+  ///
+  /// In fr, this message translates to:
+  /// **'Trop d\'essais. Réessaie dans {time}.'**
+  String lockWait(String time);
+
+  /// No description provided for @lockBiometricReason.
+  ///
+  /// In fr, this message translates to:
+  /// **'Déverrouiller Finance Copilot'**
+  String get lockBiometricReason;
+
+  /// No description provided for @lockBiometricButton.
+  ///
+  /// In fr, this message translates to:
+  /// **'Empreinte ou visage'**
+  String get lockBiometricButton;
+
+  /// No description provided for @lockDelete.
+  ///
+  /// In fr, this message translates to:
+  /// **'Effacer'**
+  String get lockDelete;
+
+  /// No description provided for @lockForgot.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code oublié ?'**
+  String get lockForgot;
+
+  /// No description provided for @lockForgotTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code oublié'**
+  String get lockForgotTitle;
+
+  /// No description provided for @lockForgotBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sans serveur, le code ne peut pas être récupéré. Si tu as activé l\'empreinte ou le visage, utilise-les. Sinon, la seule solution est d\'effacer les données de l\'application dans les réglages d\'Android : toutes tes opérations seront perdues.'**
+  String get lockForgotBody;
+
+  /// No description provided for @lockForgotOk.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compris'**
+  String get lockForgotOk;
+
+  /// No description provided for @pinCreateTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisis un code'**
+  String get pinCreateTitle;
+
+  /// No description provided for @pinCreateHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'4 chiffres, demandés à l\'ouverture de l\'application.'**
+  String get pinCreateHint;
+
+  /// No description provided for @pinCreateWarning.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retiens-le bien : sans serveur, un code oublié ne peut pas être récupéré. Active aussi l\'empreinte ou le visage si ton téléphone le permet.'**
+  String get pinCreateWarning;
+
+  /// No description provided for @pinConfirmTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Confirme ton code'**
+  String get pinConfirmTitle;
+
+  /// No description provided for @pinMismatch.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les deux codes ne correspondent pas. Recommence.'**
+  String get pinMismatch;
+
+  /// No description provided for @pinCurrentTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code actuel'**
+  String get pinCurrentTitle;
+
+  /// No description provided for @pinNewTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveau code'**
+  String get pinNewTitle;
+
+  /// No description provided for @pinChanged.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code modifié.'**
+  String get pinChanged;
+
+  /// No description provided for @pinEnabled.
+  ///
+  /// In fr, this message translates to:
+  /// **'Verrouillage activé.'**
+  String get pinEnabled;
+
+  /// No description provided for @pinDisabled.
+  ///
+  /// In fr, this message translates to:
+  /// **'Verrouillage désactivé.'**
+  String get pinDisabled;
+
+  /// No description provided for @settingsLock.
+  ///
+  /// In fr, this message translates to:
+  /// **'Verrouillage de l\'application'**
+  String get settingsLock;
+
+  /// No description provided for @settingsLockHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Demandé à chaque ouverture'**
+  String get settingsLockHint;
+
+  /// No description provided for @settingsPin.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code PIN'**
+  String get settingsPin;
+
+  /// No description provided for @settingsPinChange.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier'**
+  String get settingsPinChange;
+
+  /// No description provided for @settingsBiometric.
+  ///
+  /// In fr, this message translates to:
+  /// **'Biométrie (facultatif)'**
+  String get settingsBiometric;
+
+  /// No description provided for @settingsBiometricHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Empreinte ou visage à la place du code'**
+  String get settingsBiometricHint;
+
+  /// No description provided for @settingsBiometricFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Empreinte ou visage non reconnu.'**
+  String get settingsBiometricFailed;
+
+  /// No description provided for @settingsLockDelay.
+  ///
+  /// In fr, this message translates to:
+  /// **'Verrouiller après'**
+  String get settingsLockDelay;
+
+  /// No description provided for @lockDelayImmediately.
+  ///
+  /// In fr, this message translates to:
+  /// **'Immédiatement'**
+  String get lockDelayImmediately;
+
+  /// No description provided for @lockDelayOneMinute.
+  ///
+  /// In fr, this message translates to:
+  /// **'1 minute'**
+  String get lockDelayOneMinute;
+
+  /// No description provided for @lockDelayFiveMinutes.
+  ///
+  /// In fr, this message translates to:
+  /// **'5 minutes'**
+  String get lockDelayFiveMinutes;
+
   /// No description provided for @txDuplicate.
   ///
   /// In fr, this message translates to:
