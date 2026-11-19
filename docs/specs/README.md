@@ -6,7 +6,7 @@ calculs, prévisions et assistant IA tournent hors connexion, sans compte et
 sans serveur.
 
 Ces specs décrivent **ce que fait l'application aujourd'hui** (état au
-19 novembre 2026, commit `f854820`). Elles sont la référence pour toute
+19 novembre 2026, commit `ecc1c1b`). Elles sont la référence pour toute
 évolution : une règle qui change ici change aussi dans le code et ses tests.
 
 ## Principes communs
