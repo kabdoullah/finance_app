@@ -1758,6 +1758,22 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get settingsClearHistory => 'Effacer l\'historique de conversation';
+
+  @override
+  String get settingsClearHistoryTitle => 'Effacer l\'historique ?';
+
+  @override
+  String get settingsClearHistoryBody =>
+      'Toutes tes conversations avec le Copilote seront supprimées. Tes opérations, budgets et objectifs ne changent pas.';
+
+  @override
+  String get settingsClearHistoryConfirm => 'Effacer';
+
+  @override
+  String get settingsHistoryCleared => 'Historique effacé.';
+
+  @override
   String get txDuplicate => 'Dupliquer';
 
   @override

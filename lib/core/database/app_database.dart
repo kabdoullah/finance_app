@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 
 import '../../features/accounts/data/accounts_table.dart';
+import '../../features/assistant/data/assistant_messages_table.dart';
 import '../../features/budgets/data/budgets_table.dart';
 import '../../features/categories/data/categories_table.dart';
 import '../../features/categories/data/default_categories.dart';
@@ -25,13 +26,14 @@ part 'app_database.g.dart';
     RecurringOperations,
     SavingsGoals,
     GoalMovements,
+    AssistantMessages,
   ],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   @override
-  int get schemaVersion => 7;
+  int get schemaVersion => 8;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -72,6 +74,10 @@ class AppDatabase extends _$AppDatabase {
         await m.createTable(schema.goalMovements);
         await m.createIndex(schema.goalMovementsGoal);
         await m.createIndex(schema.goalMovementsAccount);
+      },
+      from7To8: (m, schema) async {
+        await m.createTable(schema.assistantMessages);
+        await m.createIndex(schema.assistantMessagesCreated);
       },
     ),
     beforeOpen: (details) async {

@@ -81,11 +81,14 @@ enum PreparedState {
 /// Message de la conversation.
 @immutable
 sealed class ChatEntry {
-  const ChatEntry();
+  const ChatEntry({this.id});
+
+  /// Identifiant dans l'historique (`null` tant qu'il n'est pas enregistré).
+  final String? id;
 }
 
 final class UserEntry extends ChatEntry {
-  const UserEntry(this.text);
+  const UserEntry(this.text, {super.id});
 
   final String text;
 }
@@ -99,6 +102,7 @@ final class ReplyEntry extends ChatEntry {
     this.prepared = const [],
     this.preparedState = PreparedState.pending,
     this.note,
+    super.id,
   });
 
   final String text;
@@ -120,6 +124,18 @@ final class ReplyEntry extends ChatEntry {
     prepared: prepared,
     preparedState: state,
     note: note,
+    id: id,
+  );
+
+  ReplyEntry withId(String id) => ReplyEntry(
+    text: text,
+    rows: rows,
+    link: link,
+    fromTools: fromTools,
+    prepared: prepared,
+    preparedState: preparedState,
+    note: note,
+    id: id,
   );
 
   /// Vrai si des chiffres de l'application sont affichés (mention « Chiffres

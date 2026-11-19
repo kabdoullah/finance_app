@@ -2890,6 +2890,36 @@ abstract class AppLocalizations {
   /// **'{count} mois'**
   String goalDueMonths(int count);
 
+  /// No description provided for @settingsClearHistory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Effacer l\'historique de conversation'**
+  String get settingsClearHistory;
+
+  /// No description provided for @settingsClearHistoryTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Effacer l\'historique ?'**
+  String get settingsClearHistoryTitle;
+
+  /// No description provided for @settingsClearHistoryBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Toutes tes conversations avec le Copilote seront supprimées. Tes opérations, budgets et objectifs ne changent pas.'**
+  String get settingsClearHistoryBody;
+
+  /// No description provided for @settingsClearHistoryConfirm.
+  ///
+  /// In fr, this message translates to:
+  /// **'Effacer'**
+  String get settingsClearHistoryConfirm;
+
+  /// No description provided for @settingsHistoryCleared.
+  ///
+  /// In fr, this message translates to:
+  /// **'Historique effacé.'**
+  String get settingsHistoryCleared;
+
   /// No description provided for @txDuplicate.
   ///
   /// In fr, this message translates to:

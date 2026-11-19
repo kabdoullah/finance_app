@@ -6,8 +6,11 @@ import 'package:finance_app/features/accounts/domain/account.dart';
 import 'package:finance_app/features/accounts/domain/account_draft.dart';
 import 'package:finance_app/features/accounts/domain/account_type.dart';
 import 'package:finance_app/features/assistant/data/ai_platform.dart';
+import 'package:finance_app/features/assistant/data/assistant_history_repository.dart';
+import 'package:finance_app/features/assistant/domain/assistant_reply.dart';
 import 'package:finance_app/features/assistant/presentation/assistant_controller.dart';
 import 'package:finance_app/features/assistant/presentation/assistant_page.dart';
+import 'package:finance_app/features/quick_entry/domain/quick_entry_parser.dart';
 import 'package:finance_app/features/transactions/data/transactions_repository.dart';
 import 'package:finance_app/features/transactions/domain/transaction.dart';
 import 'package:finance_app/features/transactions/domain/transaction_draft.dart';
@@ -230,5 +233,52 @@ void main() {
     expect(model.lastChat!.queries, [
       'Puis-je acheter Téléphone à 150 000 FCFA ?',
     ]);
+  });
+
+  group('historique', () {
+    Future<void> seedHistory() async {
+      final history = AssistantHistoryRepository(db, () => testNow);
+      await history.add(const UserEntry('Taxi 2 500 avec Wave'));
+      await history.add(
+        ReplyEntry(
+          text: 'J\'ai préparé cette opération.',
+          prepared: [
+            ParsedOperation(
+              kind: TransactionKind.expense,
+              amount: const Money(2500),
+              categoryId: 'exp.transport',
+              date: DateTime(2026, 11, 14),
+              description: 'Taxi',
+            ),
+          ],
+        ),
+      );
+    }
+
+    testWidgets('réouverture : conversation affichée, carte non enregistrée', (
+      tester,
+    ) async {
+      await seedHistory();
+      await openAssistant(tester);
+      expect(find.text('Taxi 2 500 avec Wave'), findsOneWidget);
+      expect(find.text('Non enregistrée'), findsOneWidget);
+      expect(find.text('Enregistrer'), findsNothing);
+    });
+
+    testWidgets('« Effacer l\'historique » dans les Paramètres', (
+      tester,
+    ) async {
+      await seedHistory();
+      await pumpTestApp(tester, db);
+      await tester.tap(find.byTooltip('Paramètres'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Effacer l\'historique de conversation'));
+      await tester.pumpAndSettle();
+      expect(find.text('Effacer l\'historique ?'), findsOneWidget);
+      await tester.tap(find.text('Effacer'));
+      await tester.pumpAndSettle();
+      expect(await db.select(db.assistantMessages).get(), isEmpty);
+      expect(find.text('Historique effacé.'), findsOneWidget);
+    });
   });
 }

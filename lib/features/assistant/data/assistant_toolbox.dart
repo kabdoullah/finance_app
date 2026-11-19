@@ -57,7 +57,8 @@ class AssistantToolbox {
       "prévision ou un achat, appelle l'outil adapté, puis explique son "
       'résultat en une ou deux phrases, en français, en reprenant '
       "exactement ses montants. N'invente aucun chiffre. Tutoie toujours "
-      "l'utilisateur (« tu », « ton », « tes », jamais « vous »). Pour une "
+      "l'utilisateur (« tu », « ton », « tes », jamais « vous »). Sans "
+      'période précisée, prends le mois en cours, sans la demander. Pour une '
       'autre question, réponds brièvement sans aucun chiffre ; pas de '
       'conseil de placement.';
 
@@ -94,10 +95,10 @@ class AssistantToolbox {
             'period': {
               'type': 'string',
               'enum': ['today', 'this_week', 'this_month', 'last_month'],
+              'description': "this_month si la période n'est pas précisée.",
             },
             'category': category,
           },
-          'required': ['period'],
         },
       ),
       Tool(

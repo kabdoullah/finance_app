@@ -5,8 +5,10 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../core/widgets/confirm_dialog.dart';
 import '../../../l10n/l10n.dart';
 import '../../assistant/presentation/ai_model_controller.dart';
+import '../../assistant/presentation/assistant_controller.dart';
 import '../../quick_entry/data/speech_service.dart';
 
 /// Paramètres : catégories et assistant IA. Le reste (sécurité,
@@ -77,9 +79,31 @@ class SettingsPage extends ConsumerWidget {
             status: (voiceLabel, voiceOk),
             onTap: () => context.push(AppRoutes.aiModel),
           ),
+          _SettingsRow(
+            icon: AppIcons.trash,
+            title: l10n.settingsClearHistory,
+            onTap: () => _clearHistory(context, ref),
+          ),
         ],
       ),
     );
+  }
+}
+
+Future<void> _clearHistory(BuildContext context, WidgetRef ref) async {
+  final l10n = context.l10n;
+  final confirmed = await showConfirmDialog(
+    context,
+    title: l10n.settingsClearHistoryTitle,
+    message: l10n.settingsClearHistoryBody,
+    confirmLabel: l10n.settingsClearHistoryConfirm,
+    destructive: true,
+  );
+  if (!confirmed) return;
+  await ref.read(assistantControllerProvider.notifier).clearHistory();
+  if (context.mounted) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(l10n.settingsHistoryCleared)));
   }
 }
 
@@ -87,14 +111,14 @@ class _SettingsRow extends StatelessWidget {
   const _SettingsRow({
     required this.icon,
     required this.title,
-    required this.subtitle,
     required this.onTap,
+    this.subtitle,
     this.status,
   });
 
   final IconData icon;
   final String title;
-  final String subtitle;
+  final String? subtitle;
   final VoidCallback onTap;
 
   /// Pastille d'état : libellé, et vrai si l'état est « bon ».
@@ -131,10 +155,14 @@ class _SettingsRow extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  Text(
-                    subtitle,
-                    style: TextStyle(fontSize: 12.5, color: colors.inkTertiary),
-                  ),
+                  if (subtitle case final text?)
+                    Text(
+                      text,
+                      style: TextStyle(
+                        fontSize: 12.5,
+                        color: colors.inkTertiary,
+                      ),
+                    ),
                 ],
               ),
             ),

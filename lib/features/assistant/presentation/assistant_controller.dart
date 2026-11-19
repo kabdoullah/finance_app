@@ -14,6 +14,7 @@ import '../../accounts/presentation/accounts_providers.dart';
 import '../../transactions/domain/transaction.dart';
 import '../../transactions/presentation/transaction_labels.dart';
 import '../../transactions/presentation/transactions_providers.dart';
+import '../data/assistant_history_repository.dart';
 import '../data/assistant_toolbox.dart';
 import '../domain/assistant_reply.dart';
 import 'ai_model_controller.dart';
@@ -51,7 +52,44 @@ class AssistantController extends Notifier<AssistantState> {
         if (next.status != AiModelStatus.ready) unawaited(_closeChat());
       })
       ..onDispose(() => unawaited(_closeChat()));
+    unawaited(_loadHistory());
     return const AssistantState();
+  }
+
+  AssistantHistoryRepository get _history =>
+      ref.read(assistantHistoryRepositoryProvider);
+
+  /// Conversation des sessions précédentes (affichée ; Gemma, lui, repart
+  /// sans mémoire).
+  Future<void> _loadHistory() async {
+    try {
+      final history = await _history.load();
+      if (history.isEmpty) return;
+      state = AssistantState(
+        entries: [...history, ...state.entries],
+        busy: state.busy,
+      );
+    } on Object catch (error, stack) {
+      reportError(error, stack);
+    }
+  }
+
+  /// Enregistre [entry] dans l'historique ; en cas d'échec, la conversation
+  /// continue sans lui.
+  Future<T> _remember<T extends ChatEntry>(T entry) async {
+    try {
+      return await _history.add(entry);
+    } on Object catch (error, stack) {
+      reportError(error, stack);
+      return entry;
+    }
+  }
+
+  /// « Effacer l'historique de conversation » (Paramètres).
+  Future<void> clearHistory() async {
+    await _history.clear();
+    await _closeChat();
+    state = const AssistantState();
   }
 
   Future<void> ask(String question) async {
@@ -60,8 +98,14 @@ class AssistantController extends Notifier<AssistantState> {
     final model = ref.read(aiModelControllerProvider.notifier).model;
     if (model == null) return;
 
+    // Occupé tout de suite : pas de seconde question pendant l'écriture.
+    final pending = UserEntry(text);
+    state = AssistantState(entries: [...state.entries, pending], busy: true);
+    final user = await _remember(pending);
     state = AssistantState(
-      entries: [...state.entries, UserEntry(text)],
+      entries: [
+        for (final e in state.entries) identical(e, pending) ? user : e,
+      ],
       busy: true,
     );
     ReplyEntry reply;
@@ -72,6 +116,7 @@ class AssistantController extends Notifier<AssistantState> {
       await _closeChat();
       reply = ReplyEntry(text: _l10n.asError);
     }
+    reply = await _remember(reply);
     state = AssistantState(entries: [...state.entries, reply]);
   }
 
@@ -140,6 +185,11 @@ class AssistantController extends Notifier<AssistantState> {
       ],
       busy: state.busy,
     );
+    try {
+      await _history.update(updated);
+    } on Object catch (error, stack) {
+      reportError(error, stack);
+    }
   }
 
   Future<InferenceChat> _openChat(InferenceModel model) async {
