@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import 'package:sqlite3/common.dart';
 
 import 'database_key_store.dart';
@@ -9,13 +13,25 @@ const databaseName = 'app_database';
 
 final _safeKey = RegExp(r'^[A-Za-z0-9_-]{32,}$');
 
+/// Fichier de la base (emplacement par défaut de drift_flutter), partagé
+/// avec la sauvegarde et la restauration.
+Future<File> databaseFile() async => File(
+  p.join(
+    (await getApplicationDocumentsDirectory()).path,
+    '$databaseName.sqlite',
+  ),
+);
+
 /// Ouvre la base chiffrée. La clé est lue au premier accès à la base.
 QueryExecutor openEncryptedConnection(DatabaseKeyStore keyStore) {
   return LazyDatabase(() async {
     final key = await keyStore.readOrCreateKey();
     return driftDatabase(
       name: databaseName,
-      native: DriftNativeOptions(setup: (db) => applyEncryptionKey(db, key)),
+      native: DriftNativeOptions(
+        databasePath: () async => (await databaseFile()).path,
+        setup: (db) => applyEncryptionKey(db, key),
+      ),
     );
   });
 }

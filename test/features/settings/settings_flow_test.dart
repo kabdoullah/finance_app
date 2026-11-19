@@ -3,6 +3,7 @@ import 'package:finance_app/core/money/money.dart';
 import 'package:finance_app/features/accounts/data/accounts_repository.dart';
 import 'package:finance_app/features/accounts/domain/account_draft.dart';
 import 'package:finance_app/features/accounts/domain/account_type.dart';
+import 'package:finance_app/features/settings/presentation/settings_page.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -76,5 +77,37 @@ void main() {
     await tester.tap(find.text('Automatique').last);
     await tester.pumpAndSettle();
     expect(mode(), ThemeMode.system);
+  });
+
+  testWidgets('section Sauvegarde et données', (tester) async {
+    await pumpTestApp(tester, db);
+    await openSettings(tester);
+    await tester.scrollUntilVisible(
+      find.text('Google Drive'),
+      200,
+      scrollable: scrollableOf(SettingsPage),
+    );
+    expect(find.text('Aucune sauvegarde pour l\'instant'), findsOneWidget);
+    expect(find.text('Restaurer une sauvegarde'), findsOneWidget);
+    expect(find.text('À venir'), findsOneWidget);
+
+    // Mot de passe trop court, puis différent.
+    await tapSetting(tester, 'Sauvegarde');
+    await tester.pumpAndSettle();
+    expect(find.text('Mot de passe de la sauvegarde'), findsOneWidget);
+    await tester.enterText(find.byType(TextField).first, 'court');
+    await tester.tap(find.text('Sauvegarder'));
+    await tester.pump();
+    expect(find.text('Au moins 8 caractères.'), findsOneWidget);
+    await tester.enterText(find.byType(TextField).first, 'assez long');
+    await tester.enterText(find.byType(TextField).last, 'autre chose');
+    await tester.tap(find.text('Sauvegarder'));
+    await tester.pump();
+    expect(
+      find.text('Les deux mots de passe ne correspondent pas.'),
+      findsOneWidget,
+    );
+    await tester.tap(find.text('Annuler'));
+    await tester.pumpAndSettle();
   });
 }

@@ -2021,6 +2021,115 @@ class AppLocalizationsFr extends AppLocalizations {
   String get lockDelayFiveMinutes => '5 minutes';
 
   @override
+  String get bkSection => 'Sauvegarde et données';
+
+  @override
+  String get bkBackup => 'Sauvegarde';
+
+  @override
+  String get bkNever => 'Aucune sauvegarde pour l\'instant';
+
+  @override
+  String bkLast(String day, String time, String size) {
+    return '$day à $time · $size, chiffrée';
+  }
+
+  @override
+  String get bkSaving => 'Sauvegarde en cours…';
+
+  @override
+  String get bkRestoring => 'Restauration en cours…';
+
+  @override
+  String get bkFailedStorage =>
+      'La sauvegarde a échoué. Espace de stockage insuffisant. Libère de l\'espace puis réessaie.';
+
+  @override
+  String get bkFailedOther => 'La sauvegarde a échoué. Réessaie.';
+
+  @override
+  String get bkRetry => 'Réessayer';
+
+  @override
+  String get bkDone => 'Sauvegarde terminée.';
+
+  @override
+  String get bkRestore => 'Restaurer une sauvegarde';
+
+  @override
+  String get bkRestoreHint => 'Fichier .fcbak et son mot de passe';
+
+  @override
+  String get bkDrive => 'Google Drive';
+
+  @override
+  String get bkDriveHint =>
+      'Sauvegarde, restauration et synchronisation chiffrées. Facultatif.';
+
+  @override
+  String get bkComingSoon => 'À venir';
+
+  @override
+  String get bkPasswordTitle => 'Mot de passe de la sauvegarde';
+
+  @override
+  String get bkPasswordWarning =>
+      'Il protège le fichier. Sans lui, la sauvegarde ne pourra pas être restaurée : il ne peut pas être récupéré.';
+
+  @override
+  String get bkPassword => 'Mot de passe';
+
+  @override
+  String get bkPasswordConfirm => 'Confirme le mot de passe';
+
+  @override
+  String get bkPasswordTooShort => 'Au moins 8 caractères.';
+
+  @override
+  String get bkPasswordMismatch =>
+      'Les deux mots de passe ne correspondent pas.';
+
+  @override
+  String get bkPasswordShow => 'Afficher le mot de passe';
+
+  @override
+  String get bkSave => 'Sauvegarder';
+
+  @override
+  String get bkContinue => 'Continuer';
+
+  @override
+  String get bkCancel => 'Annuler';
+
+  @override
+  String get bkUnreadable =>
+      'Mot de passe incorrect, ou ce fichier n\'est pas une sauvegarde.';
+
+  @override
+  String get bkTooNew =>
+      'Cette sauvegarde vient d\'une version plus récente de l\'application. Mets l\'application à jour puis réessaie.';
+
+  @override
+  String bkConfirmTitle(String day) {
+    return 'Restaurer la sauvegarde du $day ?';
+  }
+
+  @override
+  String bkConfirmBody(String day, String time) {
+    return 'Tes données actuelles seront remplacées par celles du $day à $time. Les opérations saisies depuis seront perdues.';
+  }
+
+  @override
+  String get bkConfirm => 'Restaurer';
+
+  @override
+  String get bkRestored => 'Sauvegarde restaurée.';
+
+  @override
+  String get bkRestoreFailed =>
+      'La restauration a échoué. Tes données actuelles n\'ont pas changé.';
+
+  @override
   String get txDuplicate => 'Dupliquer';
 
   @override

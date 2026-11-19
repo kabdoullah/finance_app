@@ -1,14 +1,22 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart' show DateFormat;
 import 'package:material_ui/material_ui.dart';
 
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../core/clock.dart';
+import '../../../core/errors/error_reporter.dart';
+import '../../../core/formatting/date_format.dart';
+import '../../../core/formatting/relative_date.dart';
 import '../../../core/widgets/confirm_dialog.dart';
 import '../../../l10n/l10n.dart';
 import '../../assistant/presentation/ai_model_controller.dart';
 import '../../assistant/presentation/assistant_controller.dart';
+import '../../backup/data/backup_file.dart';
+import '../../backup/presentation/backup_controller.dart';
+import '../../backup/presentation/backup_password_dialog.dart';
 import '../../categories/domain/category.dart';
 import '../../categories/presentation/categories_providers.dart';
 import '../../notifications/domain/notification_plan.dart';
@@ -166,6 +174,8 @@ class SettingsPage extends ConsumerWidget {
             title: l10n.settingsPrivacy,
             subtitle: l10n.settingsPrivacyHint,
           ),
+          _SectionLabel(l10n.bkSection),
+          const _BackupSettings(),
           _SectionLabel(l10n.settingsAiSection),
           _SettingsRow(
             icon: AppIcons.chatCircleText,
@@ -249,6 +259,143 @@ Future<void> _clearHistory(BuildContext context, WidgetRef ref) async {
   if (context.mounted) {
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(l10n.settingsHistoryCleared)));
+  }
+}
+
+/// Sauvegarde chiffrée, restauration et Google Drive (à venir).
+class _BackupSettings extends ConsumerWidget {
+  const _BackupSettings();
+
+  Future<void> _backup(BuildContext context, WidgetRef ref) async {
+    final l10n = context.l10n;
+    final password = await showBackupPasswordDialog(context, create: true);
+    if (password == null) return;
+    final saved = await ref
+        .read(backupControllerProvider.notifier)
+        .backup(password);
+    if (saved && context.mounted) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(l10n.bkDone)));
+    }
+  }
+
+  Future<void> _restore(BuildContext context, WidgetRef ref) async {
+    final l10n = context.l10n;
+    final locale = Localizations.localeOf(context).toLanguageTag();
+    final controller = ref.read(backupControllerProvider.notifier);
+    void say(String text) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(text)));
+      }
+    }
+
+    final bytes = await controller.pickBackup();
+    if (bytes == null || !context.mounted) return;
+    final password = await showBackupPasswordDialog(context, create: false);
+    if (password == null || !context.mounted) return;
+    final BackupInfo info;
+    try {
+      info = await controller.inspect(bytes, password);
+    } on BackupException catch (e) {
+      say(switch (e.error) {
+        BackupError.unreadable => l10n.bkUnreadable,
+        BackupError.tooNew => l10n.bkTooNew,
+      });
+      return;
+    }
+    if (!context.mounted) return;
+    final day = AppDateFormat.dayMonth(info.createdAt, locale);
+    final confirmed = await showConfirmDialog(
+      context,
+      title: AppDateFormat.sentence(l10n.bkConfirmTitle(day)),
+      message: l10n.bkConfirmBody(
+        day,
+        DateFormat.Hm(locale).format(info.createdAt),
+      ),
+      confirmLabel: l10n.bkConfirm,
+      destructive: true,
+    );
+    if (!confirmed) return;
+    try {
+      await controller.restore(bytes, password);
+      say(l10n.bkRestored);
+    } on Object catch (error, stack) {
+      reportError(error, stack);
+      say(l10n.bkRestoreFailed);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.colors;
+    final l10n = context.l10n;
+    final backup = ref.watch(backupControllerProvider);
+    final locale = Localizations.localeOf(context).toLanguageTag();
+    final now = ref.watch(clockProvider)();
+    final subtitle = switch (backup) {
+      BackupState(activity: BackupActivity.saving) => l10n.bkSaving,
+      BackupState(activity: BackupActivity.restoring) => l10n.bkRestoring,
+      BackupState(:final lastAt?, :final lastSize) => l10n.bkLast(
+        RelativeDate.capitalize(RelativeDate(l10n, locale, now).day(lastAt)),
+        DateFormat.Hm(locale).format(lastAt),
+        _formatSize(lastSize ?? 0),
+      ),
+      _ => l10n.bkNever,
+    };
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _SettingsRow(
+          icon: AppIcons.cloudArrowUp,
+          title: l10n.bkBackup,
+          subtitle: subtitle,
+          onTap: backup.busy ? null : () => _backup(context, ref),
+        ),
+        if (backup.failure case final failure?)
+          Container(
+            margin: const EdgeInsets.only(bottom: 8),
+            padding: const EdgeInsets.fromLTRB(14, 12, 8, 4),
+            decoration: BoxDecoration(
+              color: colors.negativeSoft,
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  failure == BackupFailure.storageFull
+                      ? l10n.bkFailedStorage
+                      : l10n.bkFailedOther,
+                  style: const TextStyle(fontSize: 13.5, height: 1.4),
+                ),
+                TextButton(
+                  onPressed: () => _backup(context, ref),
+                  child: Text(l10n.bkRetry),
+                ),
+              ],
+            ),
+          ),
+        _SettingsRow(
+          icon: AppIcons.clockCounterClockwise,
+          title: l10n.bkRestore,
+          subtitle: l10n.bkRestoreHint,
+          onTap: backup.busy ? null : () => _restore(context, ref),
+        ),
+        _SettingsRow(
+          icon: AppIcons.googleDriveLogo,
+          title: l10n.bkDrive,
+          subtitle: l10n.bkDriveHint,
+          value: l10n.bkComingSoon,
+        ),
+      ],
+    );
+  }
+
+  /// « 2,4 Mo », « 850 ko ».
+  static String _formatSize(int bytes) {
+    if (bytes < 1000 * 1000) return '${(bytes / 1000).ceil()} ko';
+    return '${(bytes / 1000000).toStringAsFixed(1).replaceAll('.', ',')} Mo';
   }
 }
 

@@ -3328,6 +3328,198 @@ abstract class AppLocalizations {
   /// **'5 minutes'**
   String get lockDelayFiveMinutes;
 
+  /// No description provided for @bkSection.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sauvegarde et données'**
+  String get bkSection;
+
+  /// No description provided for @bkBackup.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sauvegarde'**
+  String get bkBackup;
+
+  /// No description provided for @bkNever.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune sauvegarde pour l\'instant'**
+  String get bkNever;
+
+  /// No description provided for @bkLast.
+  ///
+  /// In fr, this message translates to:
+  /// **'{day} à {time} · {size}, chiffrée'**
+  String bkLast(String day, String time, String size);
+
+  /// No description provided for @bkSaving.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sauvegarde en cours…'**
+  String get bkSaving;
+
+  /// No description provided for @bkRestoring.
+  ///
+  /// In fr, this message translates to:
+  /// **'Restauration en cours…'**
+  String get bkRestoring;
+
+  /// No description provided for @bkFailedStorage.
+  ///
+  /// In fr, this message translates to:
+  /// **'La sauvegarde a échoué. Espace de stockage insuffisant. Libère de l\'espace puis réessaie.'**
+  String get bkFailedStorage;
+
+  /// No description provided for @bkFailedOther.
+  ///
+  /// In fr, this message translates to:
+  /// **'La sauvegarde a échoué. Réessaie.'**
+  String get bkFailedOther;
+
+  /// No description provided for @bkRetry.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réessayer'**
+  String get bkRetry;
+
+  /// No description provided for @bkDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sauvegarde terminée.'**
+  String get bkDone;
+
+  /// No description provided for @bkRestore.
+  ///
+  /// In fr, this message translates to:
+  /// **'Restaurer une sauvegarde'**
+  String get bkRestore;
+
+  /// No description provided for @bkRestoreHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fichier .fcbak et son mot de passe'**
+  String get bkRestoreHint;
+
+  /// No description provided for @bkDrive.
+  ///
+  /// In fr, this message translates to:
+  /// **'Google Drive'**
+  String get bkDrive;
+
+  /// No description provided for @bkDriveHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sauvegarde, restauration et synchronisation chiffrées. Facultatif.'**
+  String get bkDriveHint;
+
+  /// No description provided for @bkComingSoon.
+  ///
+  /// In fr, this message translates to:
+  /// **'À venir'**
+  String get bkComingSoon;
+
+  /// No description provided for @bkPasswordTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mot de passe de la sauvegarde'**
+  String get bkPasswordTitle;
+
+  /// No description provided for @bkPasswordWarning.
+  ///
+  /// In fr, this message translates to:
+  /// **'Il protège le fichier. Sans lui, la sauvegarde ne pourra pas être restaurée : il ne peut pas être récupéré.'**
+  String get bkPasswordWarning;
+
+  /// No description provided for @bkPassword.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mot de passe'**
+  String get bkPassword;
+
+  /// No description provided for @bkPasswordConfirm.
+  ///
+  /// In fr, this message translates to:
+  /// **'Confirme le mot de passe'**
+  String get bkPasswordConfirm;
+
+  /// No description provided for @bkPasswordTooShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'Au moins 8 caractères.'**
+  String get bkPasswordTooShort;
+
+  /// No description provided for @bkPasswordMismatch.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les deux mots de passe ne correspondent pas.'**
+  String get bkPasswordMismatch;
+
+  /// No description provided for @bkPasswordShow.
+  ///
+  /// In fr, this message translates to:
+  /// **'Afficher le mot de passe'**
+  String get bkPasswordShow;
+
+  /// No description provided for @bkSave.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sauvegarder'**
+  String get bkSave;
+
+  /// No description provided for @bkContinue.
+  ///
+  /// In fr, this message translates to:
+  /// **'Continuer'**
+  String get bkContinue;
+
+  /// No description provided for @bkCancel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annuler'**
+  String get bkCancel;
+
+  /// No description provided for @bkUnreadable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mot de passe incorrect, ou ce fichier n\'est pas une sauvegarde.'**
+  String get bkUnreadable;
+
+  /// No description provided for @bkTooNew.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette sauvegarde vient d\'une version plus récente de l\'application. Mets l\'application à jour puis réessaie.'**
+  String get bkTooNew;
+
+  /// No description provided for @bkConfirmTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Restaurer la sauvegarde du {day} ?'**
+  String bkConfirmTitle(String day);
+
+  /// No description provided for @bkConfirmBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tes données actuelles seront remplacées par celles du {day} à {time}. Les opérations saisies depuis seront perdues.'**
+  String bkConfirmBody(String day, String time);
+
+  /// No description provided for @bkConfirm.
+  ///
+  /// In fr, this message translates to:
+  /// **'Restaurer'**
+  String get bkConfirm;
+
+  /// No description provided for @bkRestored.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sauvegarde restaurée.'**
+  String get bkRestored;
+
+  /// No description provided for @bkRestoreFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'La restauration a échoué. Tes données actuelles n\'ont pas changé.'**
+  String get bkRestoreFailed;
+
   /// No description provided for @txDuplicate.
   ///
   /// In fr, this message translates to:
