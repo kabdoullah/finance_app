@@ -1,17 +1,21 @@
-# finance_app
+# Finao
 
-A new Flutter project.
+Application de finances personnelles pour la Côte d'Ivoire (FCFA), qui
+fonctionne entièrement sur le téléphone : comptes, opérations, budgets,
+prévisions, objectifs d'épargne, saisie par la voix et assistant IA
+(Gemma 4) hors connexion. Android et iOS, Flutter.
 
-## Getting Started
+- **Spécifications** : [docs/specs/](docs/specs/README.md)
+- **Identifiant** : `com.finao.app`
 
-This project is a starting point for a Flutter application.
+## Développement
 
-A few resources to get you started if this is your first Flutter project:
+```sh
+flutter pub get
+flutter test                      # ~260 tests
+flutter run                       # Android
+flutter build ios --release       # iPhone (signature Xcode requise)
+```
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Après une modification du schéma de la base :
+`dart run build_runner build` puis `dart run drift_dev make-migrations`.
