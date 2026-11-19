@@ -2130,6 +2130,128 @@ class AppLocalizationsFr extends AppLocalizations {
       'La restauration a échoué. Tes données actuelles n\'ont pas changé.';
 
   @override
+  String get exExport => 'Exporter mes données';
+
+  @override
+  String get exExportHint => 'CSV, PDF';
+
+  @override
+  String get exTitle => 'Exporter';
+
+  @override
+  String get exWarning =>
+      'Le fichier exporté n\'est pas chiffré : toute personne qui l\'ouvre voit tes opérations. Partage-le avec prudence.';
+
+  @override
+  String get exCsv => 'Toutes les opérations (CSV)';
+
+  @override
+  String get exCsvHint => 'Pour Excel ou Google Sheets';
+
+  @override
+  String get exPdf => 'Relevé du mois (PDF)';
+
+  @override
+  String get exPdfHint => 'Totaux, répartition et opérations';
+
+  @override
+  String get exMonth => 'Mois';
+
+  @override
+  String get exShare => 'Partager';
+
+  @override
+  String get exSave => 'Enregistrer';
+
+  @override
+  String get exSaved => 'Fichier enregistré.';
+
+  @override
+  String get exFailed => 'L\'export a échoué. Réessaie.';
+
+  @override
+  String get exEmpty => 'Aucune opération à exporter.';
+
+  @override
+  String get exCsvDate => 'Date';
+
+  @override
+  String get exCsvKind => 'Type';
+
+  @override
+  String get exCsvAmount => 'Montant (FCFA)';
+
+  @override
+  String get exCsvCategory => 'Catégorie';
+
+  @override
+  String get exCsvSubcategory => 'Sous-catégorie';
+
+  @override
+  String get exCsvAccount => 'Compte';
+
+  @override
+  String get exCsvToAccount => 'Vers le compte';
+
+  @override
+  String get exCsvDescription => 'Description';
+
+  @override
+  String get exCsvEntry => 'Saisie';
+
+  @override
+  String exPdfTitle(String month) {
+    return 'Relevé de $month';
+  }
+
+  @override
+  String exPdfGenerated(String date) {
+    return 'Généré le $date · données de ce téléphone';
+  }
+
+  @override
+  String get exPdfIncome => 'Revenus';
+
+  @override
+  String get exPdfExpenses => 'Dépenses';
+
+  @override
+  String get exPdfNet => 'Solde du mois';
+
+  @override
+  String get exPdfBreakdown => 'Répartition des dépenses';
+
+  @override
+  String exPdfOperations(int count) {
+    return 'Opérations ($count)';
+  }
+
+  @override
+  String get exPdfTransfersNote =>
+      'Transferts entre tes comptes exclus des totaux.';
+
+  @override
+  String get exPdfOthers => 'Autres';
+
+  @override
+  String get ntChannelBackup => 'Rappel de sauvegarde';
+
+  @override
+  String get ntChannelBackupHint => 'Un mois après la dernière sauvegarde';
+
+  @override
+  String get ntBackupTitle => 'Pense à sauvegarder tes données';
+
+  @override
+  String ntBackupBodyLast(String date) {
+    return 'Ta dernière sauvegarde date du $date.';
+  }
+
+  @override
+  String get ntBackupBodyNever =>
+      'Tu n\'as encore jamais sauvegardé tes opérations.';
+
+  @override
   String get txDuplicate => 'Dupliquer';
 
   @override

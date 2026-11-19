@@ -27,6 +27,12 @@ class TransactionsRepository {
     (t) => t.occurredAt.isBetweenValues(_ms(month.start), _ms(month.end) - 1),
   );
 
+  /// Toutes les opérations, de la plus récente à la plus ancienne (export).
+  Future<List<Transaction>> all() =>
+      _query((t) => const Constant(true))
+          .get()
+          .then((rows) => rows.map(_toTransaction).toList());
+
   /// Dernières opérations, tous mois confondus.
   Stream<List<Transaction>> watchRecent(int limit) =>
       _watch((t) => const Constant(true), limit: limit);

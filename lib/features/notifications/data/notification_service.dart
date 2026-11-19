@@ -87,11 +87,13 @@ class NotificationService {
             NoticeKind.reminder => l10n.ntChannelReminders,
             NoticeKind.budget => l10n.ntChannelBudgets,
             NoticeKind.lowBalance => l10n.ntChannelLowBalance,
+            NoticeKind.backup => l10n.ntChannelBackup,
           },
           channelDescription: switch (kind) {
             NoticeKind.reminder => l10n.ntChannelRemindersHint,
             NoticeKind.budget => l10n.ntChannelBudgetsHint,
             NoticeKind.lowBalance => l10n.ntChannelLowBalanceHint,
+            NoticeKind.backup => l10n.ntChannelBackupHint,
           },
           // Montants masqués sur l'écran verrouillé.
           visibility: NotificationVisibility.private,

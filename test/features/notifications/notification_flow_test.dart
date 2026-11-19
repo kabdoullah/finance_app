@@ -102,10 +102,16 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
     await tester.pumpAndSettle();
 
-    expect(service.scheduled.map((n) => n.title), [
-      'Loyer · 75 000 FCFA aujourd\'hui',
+    // Échéance du loyer, puis rappel de sauvegarde 30 jours après la
+    // première opération (10 nov.), aucune sauvegarde n'ayant été faite.
+    expect(service.scheduled.map((n) => (n.title, n.at)), [
+      ('Loyer · 75\u00a0000 FCFA aujourd\'hui', DateTime(2026, 12, 1, 9)),
+      ('Pense à sauvegarder tes données', DateTime(2026, 12, 10, 9)),
     ]);
-    expect(service.scheduled.single.at, DateTime(2026, 12, 1, 9));
+    expect(
+      service.scheduled.last.body,
+      'Tu n\'as encore jamais sauvegardé tes opérations.',
+    );
     expect(service.shown.single.title, 'Alimentation : 84 % du budget utilisé');
     expect(service.permissionRequests, 1);
 
@@ -115,7 +121,9 @@ void main() {
     await tapSetting(tester, 'Rappels d\'échéance');
     await tester.pump(const Duration(seconds: 1));
     await tester.pumpAndSettle();
-    expect(service.scheduled, isEmpty);
+    expect(service.scheduled.map((n) => n.title), [
+      'Pense à sauvegarder tes données',
+    ]);
     // Alerte déjà envoyée ce mois-ci : pas de seconde notification.
     expect(service.shown, hasLength(1));
     expect(service.permissionRequests, 1);

@@ -11,6 +11,7 @@ import '../features/budgets/presentation/budget_form_page.dart';
 import '../features/budgets/presentation/budgets_page.dart';
 import '../features/categories/presentation/categories_page.dart';
 import '../features/dashboard/presentation/dashboard_page.dart';
+import '../features/export/presentation/export_page.dart';
 import '../features/forecast/presentation/forecast_page.dart';
 import '../features/forecast/presentation/simulation_page.dart';
 import '../features/goals/presentation/goal_detail_page.dart';
@@ -61,6 +62,7 @@ abstract final class AppRoutes {
   static const settings = '/settings';
   static const categories = '/settings/categories';
   static const aiModel = '/settings/ai-model';
+  static const export = '/settings/export';
   static String pin(String flow) => '/settings/pin?flow=$flow';
 
   static const accounts = '/accounts';
@@ -300,6 +302,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: 'ai-model',
             builder: (context, state) => const AiModelPage(),
+          ),
+          GoRoute(
+            path: 'export',
+            builder: (context, state) => const ExportPage(),
           ),
           GoRoute(
             path: 'pin',

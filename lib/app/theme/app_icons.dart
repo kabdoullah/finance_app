@@ -87,6 +87,7 @@ abstract final class AppIcons {
   static const eyeSlash = IconData(0xe224, fontFamily: _regular);
   static const eye = IconData(0xe220, fontFamily: _regular);
   static const cloudArrowUp = IconData(0xe1ae, fontFamily: _regular);
+  static const export = IconData(0xeaf0, fontFamily: _regular);
   static const clockCounterClockwise = IconData(0xe1a0, fontFamily: _regular);
   static const googleDriveLogo = IconData(0xe8f6, fontFamily: _regular);
   static const pencilSimple = IconData(0xe3b4, fontFamily: _regular);

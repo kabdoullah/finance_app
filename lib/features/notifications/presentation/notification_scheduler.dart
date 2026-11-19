@@ -8,6 +8,7 @@ import '../../../app/router.dart';
 import '../../../core/clock.dart';
 import '../../../core/errors/error_reporter.dart';
 import '../../../l10n/l10n.dart';
+import '../../backup/presentation/backup_controller.dart';
 import '../../budgets/domain/budget.dart';
 import '../../budgets/presentation/budgets_providers.dart';
 import '../../forecast/domain/forecast.dart';
@@ -17,29 +18,18 @@ import '../data/notification_service.dart';
 import '../domain/notification_plan.dart';
 
 /// Interrupteurs de la section « Notifications » des Paramètres.
+/// Toutes activées par défaut.
 @immutable
 class NotificationSettings {
-  const NotificationSettings({
-    this.reminder = true,
-    this.budget = true,
-    this.lowBalance = true,
-  });
+  const NotificationSettings([this._disabled = const {}]);
 
-  final bool reminder;
-  final bool budget;
-  final bool lowBalance;
+  final Set<NoticeKind> _disabled;
 
-  bool isEnabled(NoticeKind kind) => switch (kind) {
-    NoticeKind.reminder => reminder,
-    NoticeKind.budget => budget,
-    NoticeKind.lowBalance => lowBalance,
-  };
+  bool isEnabled(NoticeKind kind) => !_disabled.contains(kind);
 
   NotificationSettings withKind(NoticeKind kind, bool value) =>
       NotificationSettings(
-        reminder: kind == NoticeKind.reminder ? value : reminder,
-        budget: kind == NoticeKind.budget ? value : budget,
-        lowBalance: kind == NoticeKind.lowBalance ? value : lowBalance,
+        value ? (_disabled.toSet()..remove(kind)) : {..._disabled, kind},
       );
 }
 
@@ -63,6 +53,10 @@ class NotificationScheduler extends Notifier<NotificationSettings> {
     ref
       ..onDispose(() => _debounce?.cancel())
       ..listen(recurringOperationsProvider, (_, _) => _rescheduleSoon())
+      ..listen(
+        backupControllerProvider.select((s) => s.lastAt),
+        (_, _) => _rescheduleSoon(),
+      )
       ..listen(forecastProvider(ForecastHorizon.month), (_, _) {
         _rescheduleSoon();
       })
@@ -77,11 +71,10 @@ class NotificationScheduler extends Notifier<NotificationSettings> {
     final router = ref.read(appRouterProvider);
     await _service.initialize(router.go);
     try {
-      state = NotificationSettings(
-        reminder: await _prefs.isEnabled(NoticeKind.reminder),
-        budget: await _prefs.isEnabled(NoticeKind.budget),
-        lowBalance: await _prefs.isEnabled(NoticeKind.lowBalance),
-      );
+      state = NotificationSettings({
+        for (final kind in NoticeKind.values)
+          if (!await _prefs.isEnabled(kind)) kind,
+      });
     } on Object catch (error, stack) {
       reportError(error, stack);
     }
@@ -122,19 +115,27 @@ class NotificationScheduler extends Notifier<NotificationSettings> {
         ? ref.read(forecastProvider(ForecastHorizon.month))
         : null;
     final notices = [
-      if (state.reminder)
+      if (state.isEnabled(NoticeKind.reminder))
         ...NotificationPlan.reminders(
           operations: recurring,
           now: now,
           l10n: _l10n,
           route: AppRoutes.recurring,
         ),
-      if (state.lowBalance)
+      if (state.isEnabled(NoticeKind.lowBalance))
         ?NotificationPlan.lowBalance(
           forecast: forecast,
           now: now,
           l10n: _l10n,
           route: AppRoutes.forecast,
+        ),
+      if (state.isEnabled(NoticeKind.backup))
+        ?NotificationPlan.backupReminder(
+          lastBackup: ref.read(backupControllerProvider).lastAt,
+          firstOperation: history?.firstDay,
+          now: now,
+          l10n: _l10n,
+          route: AppRoutes.settings,
         ),
     ];
     if (notices.isNotEmpty) await _askPermissionOnce();
@@ -160,7 +161,7 @@ class NotificationScheduler extends Notifier<NotificationSettings> {
           // Niveau mémorisé même interrupteur coupé : pas de rafale le jour
           // où il est réactivé.
           notified[status.budget.id] = NotificationPlan.alertLevel(status);
-          if (state.budget) {
+          if (state.isEnabled(NoticeKind.budget)) {
             await _askPermissionOnce();
             await _service.show(notice, _l10n);
           }

@@ -148,6 +148,7 @@ class SettingsPage extends ConsumerWidget {
               l10n.ntChannelLowBalance,
               l10n.ntChannelLowBalanceHint,
             ),
+            (NoticeKind.backup, l10n.ntChannelBackup, l10n.ntChannelBackupHint),
           ])
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
@@ -381,6 +382,12 @@ class _BackupSettings extends ConsumerWidget {
           title: l10n.bkRestore,
           subtitle: l10n.bkRestoreHint,
           onTap: backup.busy ? null : () => _restore(context, ref),
+        ),
+        _SettingsRow(
+          icon: AppIcons.export,
+          title: l10n.exExport,
+          subtitle: l10n.exExportHint,
+          onTap: () => context.push(AppRoutes.export),
         ),
         _SettingsRow(
           icon: AppIcons.googleDriveLogo,

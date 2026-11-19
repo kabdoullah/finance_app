@@ -223,4 +223,37 @@ void main() {
       );
     });
   });
+
+  group('rappel de sauvegarde', () {
+    PlannedNotice? reminder({DateTime? last, DateTime? first}) =>
+        NotificationPlan.backupReminder(
+          lastBackup: last,
+          firstOperation: first,
+          now: _now,
+          l10n: _l10n,
+          route: '/s',
+        );
+
+    test('30 jours après la dernière sauvegarde, à 9 h', () {
+      final notice = reminder(
+        last: DateTime(2026, 11, 2, 21, 14),
+        first: DateTime(2026, 9, 1),
+      );
+      expect(notice?.at, DateTime(2026, 12, 2, 9));
+      expect(notice?.body, 'Ta dernière sauvegarde date du 2 nov.');
+    });
+
+    test('jamais sauvegardé : depuis la première opération ; en retard : '
+        'le lendemain', () {
+      expect(
+        reminder(first: DateTime(2026, 11, 10))?.at,
+        DateTime(2026, 12, 10, 9),
+      );
+      expect(
+        reminder(first: DateTime(2026, 9, 1))?.at,
+        DateTime(2026, 11, 16, 9),
+      );
+      expect(reminder(), isNull);
+    });
+  });
 }

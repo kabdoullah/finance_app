@@ -3520,6 +3520,228 @@ abstract class AppLocalizations {
   /// **'La restauration a échoué. Tes données actuelles n\'ont pas changé.'**
   String get bkRestoreFailed;
 
+  /// No description provided for @exExport.
+  ///
+  /// In fr, this message translates to:
+  /// **'Exporter mes données'**
+  String get exExport;
+
+  /// No description provided for @exExportHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'CSV, PDF'**
+  String get exExportHint;
+
+  /// No description provided for @exTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Exporter'**
+  String get exTitle;
+
+  /// No description provided for @exWarning.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le fichier exporté n\'est pas chiffré : toute personne qui l\'ouvre voit tes opérations. Partage-le avec prudence.'**
+  String get exWarning;
+
+  /// No description provided for @exCsv.
+  ///
+  /// In fr, this message translates to:
+  /// **'Toutes les opérations (CSV)'**
+  String get exCsv;
+
+  /// No description provided for @exCsvHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pour Excel ou Google Sheets'**
+  String get exCsvHint;
+
+  /// No description provided for @exPdf.
+  ///
+  /// In fr, this message translates to:
+  /// **'Relevé du mois (PDF)'**
+  String get exPdf;
+
+  /// No description provided for @exPdfHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Totaux, répartition et opérations'**
+  String get exPdfHint;
+
+  /// No description provided for @exMonth.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mois'**
+  String get exMonth;
+
+  /// No description provided for @exShare.
+  ///
+  /// In fr, this message translates to:
+  /// **'Partager'**
+  String get exShare;
+
+  /// No description provided for @exSave.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer'**
+  String get exSave;
+
+  /// No description provided for @exSaved.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fichier enregistré.'**
+  String get exSaved;
+
+  /// No description provided for @exFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'export a échoué. Réessaie.'**
+  String get exFailed;
+
+  /// No description provided for @exEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune opération à exporter.'**
+  String get exEmpty;
+
+  /// No description provided for @exCsvDate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Date'**
+  String get exCsvDate;
+
+  /// No description provided for @exCsvKind.
+  ///
+  /// In fr, this message translates to:
+  /// **'Type'**
+  String get exCsvKind;
+
+  /// No description provided for @exCsvAmount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Montant (FCFA)'**
+  String get exCsvAmount;
+
+  /// No description provided for @exCsvCategory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Catégorie'**
+  String get exCsvCategory;
+
+  /// No description provided for @exCsvSubcategory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sous-catégorie'**
+  String get exCsvSubcategory;
+
+  /// No description provided for @exCsvAccount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compte'**
+  String get exCsvAccount;
+
+  /// No description provided for @exCsvToAccount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vers le compte'**
+  String get exCsvToAccount;
+
+  /// No description provided for @exCsvDescription.
+  ///
+  /// In fr, this message translates to:
+  /// **'Description'**
+  String get exCsvDescription;
+
+  /// No description provided for @exCsvEntry.
+  ///
+  /// In fr, this message translates to:
+  /// **'Saisie'**
+  String get exCsvEntry;
+
+  /// No description provided for @exPdfTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Relevé de {month}'**
+  String exPdfTitle(String month);
+
+  /// No description provided for @exPdfGenerated.
+  ///
+  /// In fr, this message translates to:
+  /// **'Généré le {date} · données de ce téléphone'**
+  String exPdfGenerated(String date);
+
+  /// No description provided for @exPdfIncome.
+  ///
+  /// In fr, this message translates to:
+  /// **'Revenus'**
+  String get exPdfIncome;
+
+  /// No description provided for @exPdfExpenses.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépenses'**
+  String get exPdfExpenses;
+
+  /// No description provided for @exPdfNet.
+  ///
+  /// In fr, this message translates to:
+  /// **'Solde du mois'**
+  String get exPdfNet;
+
+  /// No description provided for @exPdfBreakdown.
+  ///
+  /// In fr, this message translates to:
+  /// **'Répartition des dépenses'**
+  String get exPdfBreakdown;
+
+  /// No description provided for @exPdfOperations.
+  ///
+  /// In fr, this message translates to:
+  /// **'Opérations ({count})'**
+  String exPdfOperations(int count);
+
+  /// No description provided for @exPdfTransfersNote.
+  ///
+  /// In fr, this message translates to:
+  /// **'Transferts entre tes comptes exclus des totaux.'**
+  String get exPdfTransfersNote;
+
+  /// No description provided for @exPdfOthers.
+  ///
+  /// In fr, this message translates to:
+  /// **'Autres'**
+  String get exPdfOthers;
+
+  /// No description provided for @ntChannelBackup.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rappel de sauvegarde'**
+  String get ntChannelBackup;
+
+  /// No description provided for @ntChannelBackupHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un mois après la dernière sauvegarde'**
+  String get ntChannelBackupHint;
+
+  /// No description provided for @ntBackupTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pense à sauvegarder tes données'**
+  String get ntBackupTitle;
+
+  /// No description provided for @ntBackupBodyLast.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ta dernière sauvegarde date du {date}.'**
+  String ntBackupBodyLast(String date);
+
+  /// No description provided for @ntBackupBodyNever.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu n\'as encore jamais sauvegardé tes opérations.'**
+  String get ntBackupBodyNever;
+
   /// No description provided for @txDuplicate.
   ///
   /// In fr, this message translates to:

@@ -13,20 +13,23 @@ import '../../../core/clock.dart';
 import '../../../core/database/database_connection.dart' as connection;
 import '../../../core/database/database_providers.dart';
 import '../../../core/errors/error_reporter.dart';
+import '../../../core/files/file_output.dart';
 import '../data/backup_file.dart';
 import '../data/database_swap.dart';
 
 /// Emplacements et sélecteur de fichiers (remplacés dans les tests).
 class BackupEnvironment {
-  const BackupEnvironment();
+  const BackupEnvironment([this._output = const FileOutput()]);
+
+  final FileOutput _output;
 
   Future<Directory> workDir() => getTemporaryDirectory();
 
   Future<File> databaseFile() => connection.databaseFile();
 
   /// Enregistre [bytes] à l'emplacement choisi ; `false` si annulé.
-  Future<bool> save(String fileName, Uint8List bytes) async =>
-      await FilePicker.saveFile(fileName: fileName, bytes: bytes) != null;
+  Future<bool> save(String fileName, Uint8List bytes) =>
+      _output.save(fileName, bytes, 'application/octet-stream');
 
   /// Contenu du fichier choisi, ou `null` si annulé.
   Future<Uint8List?> pick() async {
@@ -37,7 +40,7 @@ class BackupEnvironment {
 }
 
 final backupEnvironmentProvider = Provider<BackupEnvironment>(
-  (ref) => const BackupEnvironment(),
+  (ref) => BackupEnvironment(ref.watch(fileOutputProvider)),
 );
 
 enum BackupActivity { idle, saving, restoring }

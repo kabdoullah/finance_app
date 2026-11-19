@@ -10,7 +10,7 @@ import '../../recurring/domain/recurring_operation.dart';
 import '../../transactions/domain/transaction.dart';
 
 /// Famille de notification (une chaîne Android et un interrupteur chacune).
-enum NoticeKind { reminder, budget, lowBalance }
+enum NoticeKind { reminder, budget, lowBalance, backup }
 
 /// Notification calculée par l'application, à afficher à [at] (heure
 /// locale). [route] : écran ouvert au toucher.
@@ -48,6 +48,11 @@ abstract final class NotificationPlan {
   /// Identifiants : rappels à partir de 1000, solde bas 900, budgets 2000+.
   static const _reminderBaseId = 1000;
   static const lowBalanceId = 900;
+  static const backupId = 901;
+
+  /// Rappel de sauvegarde : ce délai après la dernière sauvegarde (ou la
+  /// première opération s'il n'y en a jamais eu).
+  static const backupInterval = Duration(days: 30);
   static const _budgetBaseId = 2000;
 
   static const _locale = 'fr';
@@ -119,6 +124,39 @@ abstract final class NotificationPlan {
         l10n.ntLowBalanceTitle(AppDateFormat.dayMonth(risk.date, _locale)),
       ),
       body: l10n.ntLowBalanceBody(MoneyFormat.amount(risk.balance)),
+      route: route,
+    );
+  }
+
+  /// « Pense à sauvegarder tes données », à 9 h, 30 jours après la dernière
+  /// sauvegarde, ou après la première opération s'il n'y en a jamais eu ;
+  /// le lendemain si ce moment est passé. Rien sans opération.
+  static PlannedNotice? backupReminder({
+    required DateTime? lastBackup,
+    required DateTime? firstOperation,
+    required DateTime now,
+    required AppLocalizations l10n,
+    required String route,
+  }) {
+    final anchor = lastBackup ?? firstOperation;
+    if (anchor == null) return null;
+    final due = anchor.add(backupInterval);
+    var at = DateTime(due.year, due.month, due.day, hour);
+    if (!at.isAfter(now)) {
+      at = DateTime(now.year, now.month, now.day + 1, hour);
+    }
+    return PlannedNotice(
+      id: backupId,
+      kind: NoticeKind.backup,
+      at: at,
+      title: l10n.ntBackupTitle,
+      body: lastBackup == null
+          ? l10n.ntBackupBodyNever
+          : AppDateFormat.sentence(
+              l10n.ntBackupBodyLast(
+                AppDateFormat.dayMonth(lastBackup, _locale),
+              ),
+            ),
       route: route,
     );
   }
