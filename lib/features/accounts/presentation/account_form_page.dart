@@ -254,6 +254,8 @@ class _AccountFormPageState extends ConsumerState<AccountFormPage> {
         ),
         TextField(
           controller: _balance,
+          // Le solde initial ne se modifie plus après la création.
+          enabled: !_isEdit,
           keyboardType: TextInputType.number,
           inputFormatters: const [AmountInputFormatter()],
           onChanged: (_) => _onChanged(),
@@ -273,7 +275,9 @@ class _AccountFormPageState extends ConsumerState<AccountFormPage> {
         ),
         const SizedBox(height: 6),
         Text(
-          l10n.accountOpeningBalanceHelp,
+          _isEdit
+              ? l10n.accountOpeningBalanceLocked
+              : l10n.accountOpeningBalanceHelp,
           style: TextStyle(
             fontSize: 12.5,
             height: 1.45,

@@ -190,6 +190,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Ce montant de départ n\'est pas compté comme un revenu.';
 
   @override
+  String get accountOpeningBalanceLocked =>
+      'Le solde initial ne peut plus être modifié après la création du compte.';
+
+  @override
   String get accountNameHintNone => 'Choisis d\'abord un type';
 
   @override

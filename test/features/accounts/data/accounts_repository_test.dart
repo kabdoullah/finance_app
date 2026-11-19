@@ -100,7 +100,7 @@ void main() {
     );
   });
 
-  test('modifie un compte en gardant son propre nom', () async {
+  test('modifie un compte en gardant son nom et son solde initial', () async {
     final wave = created(await repository.create(_wave));
 
     final updated = created(
@@ -114,7 +114,10 @@ void main() {
       ),
     );
 
-    expect(updated.balance, const Money(20000));
+    expect(updated.name, 'Wave');
+    // Le solde initial reste celui de la création.
+    expect(updated.openingBalance, const Money(15000));
+    expect(updated.balance, const Money(15000));
   });
 
   test('archiver retire le compte des actifs ; restaurer le remet', () async {

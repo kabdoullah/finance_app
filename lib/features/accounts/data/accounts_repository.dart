@@ -102,6 +102,8 @@ FROM accounts a
     return Ok(await _reload(row.id));
   });
 
+  /// Modifie le nom et le type. Le solde initial est figé à la création :
+  /// celui du [draft] est ignoré.
   Future<Result<Account>> update(
     String id,
     AccountDraft draft,
@@ -114,7 +116,6 @@ FROM accounts a
           AccountsCompanion(
             name: Value(draft.normalizedName),
             type: Value(draft.type!.storageValue),
-            openingBalance: Value(draft.openingBalance.value),
             updatedAt: Value(_nowMs()),
           ),
         );

@@ -63,6 +63,7 @@
   "accountFieldCurrentBalance": "Solde actuel",
   "accountFieldOpeningBalance": "Solde initial",
   "accountOpeningBalanceHelp": "Ce montant de départ n'est pas compté comme un revenu.",
+  "accountOpeningBalanceLocked": "Le solde initial ne peut plus être modifié après la création du compte.",
   "accountNameHintNone": "Choisis d'abord un type",
   "accountNameHintCash": "Portefeuille",
   "accountNameHintMobileMoney": "Ex. : Wave",

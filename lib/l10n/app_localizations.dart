@@ -394,6 +394,12 @@ abstract class AppLocalizations {
   /// **'Ce montant de départ n\'est pas compté comme un revenu.'**
   String get accountOpeningBalanceHelp;
 
+  /// No description provided for @accountOpeningBalanceLocked.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le solde initial ne peut plus être modifié après la création du compte.'**
+  String get accountOpeningBalanceLocked;
+
   /// No description provided for @accountNameHintNone.
   ///
   /// In fr, this message translates to:
