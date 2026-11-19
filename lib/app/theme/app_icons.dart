@@ -63,6 +63,9 @@ abstract final class AppIcons {
   static const microphoneBold = IconData(0xe326, fontFamily: _bold);
   static const keyboard = IconData(0xe2d8, fontFamily: _regular);
   static const arrowUpBold = IconData(0xe08e, fontFamily: _bold);
+  static const globeSimple = IconData(0xe28e, fontFamily: _regular);
+  static const palette = IconData(0xe6c8, fontFamily: _regular);
+  static const shieldCheck = IconData(0xe40c, fontFamily: _regular);
 
   // Catégories (clés de la table categories).
   static const basket = IconData(0xe964, fontFamily: _regular);

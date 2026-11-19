@@ -9,12 +9,17 @@ import '../../../core/widgets/confirm_dialog.dart';
 import '../../../l10n/l10n.dart';
 import '../../assistant/presentation/ai_model_controller.dart';
 import '../../assistant/presentation/assistant_controller.dart';
+import '../../categories/domain/category.dart';
+import '../../categories/presentation/categories_providers.dart';
 import '../../notifications/domain/notification_plan.dart';
 import '../../notifications/presentation/notification_scheduler.dart';
 import '../../quick_entry/data/speech_service.dart';
+import '../../recurring/presentation/recurring_providers.dart';
+import 'settings_providers.dart';
 
-/// Paramètres : catégories et assistant IA. Le reste (sécurité,
-/// sauvegarde…) viendra avec la fonctionnalité « Sécurité et paramètres ».
+/// Paramètres (maquette Paramètres) : préférences, notifications,
+/// confidentialité et assistant IA. Le verrouillage et la sauvegarde
+/// viendront ensuite.
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
 
@@ -25,6 +30,16 @@ class SettingsPage extends ConsumerWidget {
     final ai = ref.watch(aiModelControllerProvider).status;
     final voice = ref.watch(speechAvailabilityProvider).value;
     final notifications = ref.watch(notificationSchedulerProvider);
+    final themeMode = ref.watch(themeModeProvider);
+    int visible(List<CategoryGroup>? groups) =>
+        groups?.where((g) => !g.category.isHidden).length ?? 0;
+    final categoryCount =
+        visible(ref.watch(categoryGroupsProvider(CategoryKind.expense)).value) +
+        visible(ref.watch(categoryGroupsProvider(CategoryKind.income)).value);
+    final activeRecurring =
+        (ref.watch(recurringOperationsProvider).value ?? const [])
+            .where((o) => o.isActive)
+            .length;
 
     final (aiLabel, aiOk) = switch (ai) {
       AiModelStatus.ready => (l10n.aiStatusReady, true),
@@ -50,11 +65,60 @@ class SettingsPage extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(24, 12, 24, 40),
         children: [
+          Row(
+            spacing: 10,
+            children: [
+              Icon(AppIcons.lockSimple, size: 18, color: colors.inkSecondary),
+              Expanded(
+                child: Text(
+                  l10n.settingsLocalOnly,
+                  style: TextStyle(fontSize: 14, color: colors.inkSecondary),
+                ),
+              ),
+            ],
+          ),
+          _SectionLabel(l10n.settingsPrefsSection),
+          _SettingsRow(
+            icon: AppIcons.money,
+            title: l10n.settingsCurrency,
+            value: l10n.settingsCurrencyValue,
+          ),
+          _SettingsRow(
+            icon: AppIcons.globeSimple,
+            title: l10n.settingsLanguage,
+            value: l10n.settingsLanguageValue,
+          ),
+          _SettingsRow(
+            icon: AppIcons.palette,
+            title: l10n.settingsTheme,
+            value: _themeLabel(themeMode, l10n),
+            onTap: () => _chooseTheme(context, ref, themeMode),
+          ),
           _SettingsRow(
             icon: AppIcons.tag,
             title: l10n.categoriesTitle,
             subtitle: l10n.settingsCategoriesHint,
+            value: '$categoryCount',
             onTap: () => context.push(AppRoutes.categories),
+          ),
+          _SettingsRow(
+            icon: AppIcons.repeat,
+            title: l10n.settingsRecurring,
+            value: l10n.settingsRecurringCount(activeRecurring),
+            onTap: () => context.go(AppRoutes.recurring),
+          ),
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            value: ref.watch(hideAmountsSettingProvider),
+            onChanged: ref.read(hideAmountsSettingProvider.notifier).set,
+            title: Text(
+              l10n.settingsHideAmounts,
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+            ),
+            subtitle: Text(
+              l10n.settingsHideAmountsHint,
+              style: TextStyle(fontSize: 12.5, color: colors.inkTertiary),
+            ),
           ),
           _SectionLabel(l10n.settingsNotifSection),
           for (final (kind, title, hint) in [
@@ -92,6 +156,12 @@ class SettingsPage extends ConsumerWidget {
                 style: TextStyle(fontSize: 12.5, color: colors.inkTertiary),
               ),
             ),
+          _SectionLabel(l10n.settingsSecuritySection),
+          _SettingsRow(
+            icon: AppIcons.shieldCheck,
+            title: l10n.settingsPrivacy,
+            subtitle: l10n.settingsPrivacyHint,
+          ),
           _SectionLabel(l10n.settingsAiSection),
           _SettingsRow(
             icon: AppIcons.chatCircleText,
@@ -112,10 +182,53 @@ class SettingsPage extends ConsumerWidget {
             title: l10n.settingsClearHistory,
             onTap: () => _clearHistory(context, ref),
           ),
+          const SizedBox(height: 28),
+          Text(
+            l10n.settingsFooter(l10n.appTitle, _appVersion),
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 12, color: colors.inkTertiary),
+          ),
         ],
       ),
     );
   }
+}
+
+/// Version affichée en pied de page (pubspec : 1.0.0).
+const _appVersion = '1.0';
+
+String _themeLabel(ThemeMode mode, AppLocalizations l10n) => switch (mode) {
+  ThemeMode.system => l10n.settingsThemeSystem,
+  ThemeMode.light => l10n.settingsThemeLight,
+  ThemeMode.dark => l10n.settingsThemeDark,
+};
+
+Future<void> _chooseTheme(
+  BuildContext context,
+  WidgetRef ref,
+  ThemeMode current,
+) async {
+  final l10n = context.l10n;
+  final picked = await showDialog<ThemeMode>(
+    context: context,
+    builder: (context) => SimpleDialog(
+      title: Text(l10n.settingsTheme),
+      children: [
+        for (final mode in ThemeMode.values)
+          SimpleDialogOption(
+            onPressed: () => Navigator.of(context).pop(mode),
+            child: Row(
+              spacing: 12,
+              children: [
+                Expanded(child: Text(_themeLabel(mode, l10n))),
+                if (mode == current) const Icon(AppIcons.checkBold, size: 18),
+              ],
+            ),
+          ),
+      ],
+    ),
+  );
+  if (picked != null) await ref.read(themeModeProvider.notifier).set(picked);
 }
 
 Future<void> _clearHistory(BuildContext context, WidgetRef ref) async {
@@ -159,15 +272,21 @@ class _SettingsRow extends StatelessWidget {
   const _SettingsRow({
     required this.icon,
     required this.title,
-    required this.onTap,
+    this.onTap,
     this.subtitle,
+    this.value,
     this.status,
   });
 
   final IconData icon;
   final String title;
   final String? subtitle;
-  final VoidCallback onTap;
+
+  /// Valeur affichée à droite (« FCFA (XOF) », « 3 actives »).
+  final String? value;
+
+  /// `null` : ligne d'information, sans chevron.
+  final VoidCallback? onTap;
 
   /// Pastille d'état : libellé, et vrai si l'état est « bon ».
   final (String, bool)? status;
@@ -233,7 +352,13 @@ class _SettingsRow extends StatelessWidget {
                   ),
                 ),
               ),
-            Icon(AppIcons.caretRight, size: 14, color: colors.inkTertiary),
+            if (value case final text?)
+              Text(
+                text,
+                style: TextStyle(fontSize: 14, color: colors.inkSecondary),
+              ),
+            if (onTap != null)
+              Icon(AppIcons.caretRight, size: 14, color: colors.inkTertiary),
           ],
         ),
       ),

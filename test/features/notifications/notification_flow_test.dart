@@ -112,7 +112,7 @@ void main() {
     // Paramètres › Notifications : rappels coupés.
     await tester.tap(find.byTooltip('Paramètres'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Rappels d\'échéance'));
+    await tapSetting(tester, 'Rappels d\'échéance');
     await tester.pump(const Duration(seconds: 1));
     await tester.pumpAndSettle();
     expect(service.scheduled, isEmpty);

@@ -81,10 +81,6 @@ void main() {
   });
   tearDown(() => db.close());
 
-  Finder scrollableOf(Type page) => find
-      .descendant(of: find.byType(page), matching: find.byType(Scrollable))
-      .first;
-
   testWidgets('simuler un achat : verdict, épargne, salaire, objectif', (
     tester,
   ) async {

@@ -3,6 +3,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../features/assistant/presentation/ai_model_controller.dart';
 import '../features/notifications/presentation/notification_scheduler.dart';
+import '../features/settings/presentation/settings_providers.dart';
 import '../l10n/l10n.dart';
 import 'router.dart';
 import 'theme/app_theme.dart';
@@ -23,6 +24,7 @@ class FinanceApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
+      themeMode: ref.watch(themeModeProvider),
       routerConfig: ref.watch(appRouterProvider),
       // Application en français uniquement pour le MVP.
       locale: const Locale('fr'),

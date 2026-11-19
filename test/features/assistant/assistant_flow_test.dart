@@ -272,7 +272,7 @@ void main() {
       await pumpTestApp(tester, db);
       await tester.tap(find.byTooltip('Paramètres'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Effacer l\'historique de conversation'));
+      await tapSetting(tester, 'Effacer l\'historique de conversation');
       await tester.pumpAndSettle();
       expect(find.text('Effacer l\'historique ?'), findsOneWidget);
       await tester.tap(find.text('Effacer'));

@@ -75,6 +75,7 @@ class BudgetRow extends StatelessWidget {
     required this.status,
     this.onTap,
     this.showAmounts = true,
+    this.masked = false,
     super.key,
   });
 
@@ -84,11 +85,15 @@ class BudgetRow extends StatelessWidget {
   /// « 92 500 sur 120 000 » sous la barre (masqué sur l'accueil).
   final bool showAmounts;
 
+  /// Reste remplacé par « •••• » (la barre reste visible).
+  final bool masked;
+
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     final l10n = context.l10n;
-    final (label, labelColor) = budgetStatusLabel(status, l10n, colors);
+    final (statusLabel, labelColor) = budgetStatusLabel(status, l10n, colors);
+    final label = masked ? MoneyFormat.masked : statusLabel;
     return InkWell(
       onTap: onTap,
       child: Padding(

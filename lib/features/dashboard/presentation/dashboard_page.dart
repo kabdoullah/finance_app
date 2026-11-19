@@ -16,6 +16,7 @@ import '../../accounts/domain/accounts_summary.dart';
 import '../../accounts/presentation/accounts_providers.dart';
 import '../../budgets/presentation/budget_widgets.dart';
 import '../../budgets/presentation/budgets_providers.dart';
+import '../../settings/presentation/settings_providers.dart';
 import '../../transactions/domain/expense_breakdown.dart';
 import '../../transactions/domain/transaction_stats.dart';
 import '../../transactions/presentation/new_operation_sheet.dart';
@@ -56,7 +57,11 @@ class DashboardPage extends ConsumerWidget {
             spacing: 32,
             children: [
               _Header(date: now),
-              _Balance(summary: summary),
+              _Balance(
+                summary: summary,
+                masked: ref.watch(amountsHiddenProvider),
+                onToggleMask: ref.read(amountsHiddenProvider.notifier).toggle,
+              ),
               if (active) ...[
                 _MonthTotals(month: Month.of(now)),
                 _WhereMoneyGoes(month: Month.of(now)),
@@ -88,6 +93,7 @@ class _MonthTotals extends ConsumerWidget {
     final totals = TransactionTotals.of(
       ref.watch(monthTransactionsProvider(month)).value ?? const [],
     );
+    final masked = ref.watch(amountsHiddenProvider);
     Widget cell(
       IconData icon,
       Color iconColor,
@@ -113,7 +119,7 @@ class _MonthTotals extends ConsumerWidget {
             ],
           ),
           Text(
-            MoneyFormat.amount(amount),
+            masked ? MoneyFormat.masked : MoneyFormat.amount(amount),
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w600,
@@ -270,7 +276,9 @@ class _WhereMoneyGoes extends ConsumerWidget {
                     ),
                     const Spacer(),
                     Text(
-                      MoneyFormat.amount(share.amount),
+                      ref.watch(amountsHiddenProvider)
+                          ? MoneyFormat.masked
+                          : MoneyFormat.amount(share.amount),
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
@@ -324,6 +332,7 @@ class _Budgets extends ConsumerWidget {
         for (final status in budgets.take(_maxRows))
           BudgetRow(
             status: status,
+            masked: ref.watch(amountsHiddenProvider),
             showAmounts: false,
             onTap: () => context.go(AppRoutes.budgets),
           ),
@@ -365,6 +374,7 @@ class _RecentOperations extends ConsumerWidget {
         for (final t in recent)
           TransactionTile(
             transaction: t,
+            masked: ref.watch(amountsHiddenProvider),
             onTap: () => context.push(AppRoutes.transactionDetail(t.id)),
           ),
       ],
@@ -421,9 +431,17 @@ class _Header extends StatelessWidget {
 }
 
 class _Balance extends StatelessWidget {
-  const _Balance({required this.summary});
+  const _Balance({
+    required this.summary,
+    required this.masked,
+    required this.onToggleMask,
+  });
 
   final AccountsSummary summary;
+
+  /// Montants de l'accueil masqués ; l'œil les affiche ou les masque.
+  final bool masked;
+  final VoidCallback onToggleMask;
 
   @override
   Widget build(BuildContext context) {
@@ -434,15 +452,33 @@ class _Balance extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 6,
       children: [
-        Text(
-          l10n.dashboardTotalBalance,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: colors.inkSecondary,
-          ),
+        Row(
+          children: [
+            Text(
+              l10n.dashboardTotalBalance,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: colors.inkSecondary,
+              ),
+            ),
+            if (hasAccounts)
+              IconButton(
+                tooltip: masked
+                    ? l10n.dashboardShowAmounts
+                    : l10n.dashboardHideAmounts,
+                onPressed: onToggleMask,
+                visualDensity: VisualDensity.compact,
+                icon: Icon(
+                  masked ? AppIcons.eye : AppIcons.eyeSlash,
+                  size: 18,
+                  color: colors.inkSecondary,
+                ),
+              ),
+          ],
         ),
         AmountDisplay(
+          masked: masked && hasAccounts,
           amount: summary.total,
           fontSize: 46,
           // Sans compte, le 0 reste discret : ce n'est pas un vrai solde.

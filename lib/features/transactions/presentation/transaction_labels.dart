@@ -101,10 +101,18 @@ List<(DateTime, List<Transaction>)> groupByDay(List<Transaction> transactions) {
 
 /// Ligne d'opération (liste, accueil).
 class TransactionTile extends StatelessWidget {
-  const TransactionTile({required this.transaction, this.onTap, super.key});
+  const TransactionTile({
+    required this.transaction,
+    this.onTap,
+    this.masked = false,
+    super.key,
+  });
 
   final Transaction transaction;
   final VoidCallback? onTap;
+
+  /// Montant remplacé par « •••• ».
+  final bool masked;
 
   @override
   Widget build(BuildContext context) {
@@ -148,7 +156,7 @@ class TransactionTile extends StatelessWidget {
               ),
             ),
             Text(
-              transaction.signedAmount,
+              masked ? MoneyFormat.masked : transaction.signedAmount,
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w600,

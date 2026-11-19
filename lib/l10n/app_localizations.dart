@@ -3022,6 +3022,126 @@ abstract class AppLocalizations {
   /// **'Notifications'**
   String get settingsNotifSection;
 
+  /// No description provided for @dashboardShowAmounts.
+  ///
+  /// In fr, this message translates to:
+  /// **'Afficher les montants'**
+  String get dashboardShowAmounts;
+
+  /// No description provided for @dashboardHideAmounts.
+  ///
+  /// In fr, this message translates to:
+  /// **'Masquer les montants'**
+  String get dashboardHideAmounts;
+
+  /// No description provided for @settingsLocalOnly.
+  ///
+  /// In fr, this message translates to:
+  /// **'Données stockées uniquement sur ce téléphone'**
+  String get settingsLocalOnly;
+
+  /// No description provided for @settingsPrefsSection.
+  ///
+  /// In fr, this message translates to:
+  /// **'Préférences'**
+  String get settingsPrefsSection;
+
+  /// No description provided for @settingsCurrency.
+  ///
+  /// In fr, this message translates to:
+  /// **'Devise'**
+  String get settingsCurrency;
+
+  /// No description provided for @settingsCurrencyValue.
+  ///
+  /// In fr, this message translates to:
+  /// **'FCFA (XOF)'**
+  String get settingsCurrencyValue;
+
+  /// No description provided for @settingsLanguage.
+  ///
+  /// In fr, this message translates to:
+  /// **'Langue'**
+  String get settingsLanguage;
+
+  /// No description provided for @settingsLanguageValue.
+  ///
+  /// In fr, this message translates to:
+  /// **'Français'**
+  String get settingsLanguageValue;
+
+  /// No description provided for @settingsTheme.
+  ///
+  /// In fr, this message translates to:
+  /// **'Thème'**
+  String get settingsTheme;
+
+  /// No description provided for @settingsThemeSystem.
+  ///
+  /// In fr, this message translates to:
+  /// **'Automatique'**
+  String get settingsThemeSystem;
+
+  /// No description provided for @settingsThemeLight.
+  ///
+  /// In fr, this message translates to:
+  /// **'Clair'**
+  String get settingsThemeLight;
+
+  /// No description provided for @settingsThemeDark.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sombre'**
+  String get settingsThemeDark;
+
+  /// No description provided for @settingsRecurring.
+  ///
+  /// In fr, this message translates to:
+  /// **'Opérations récurrentes'**
+  String get settingsRecurring;
+
+  /// No description provided for @settingsRecurringCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucune active} =1{1 active} other{{count} actives}}'**
+  String settingsRecurringCount(int count);
+
+  /// No description provided for @settingsHideAmounts.
+  ///
+  /// In fr, this message translates to:
+  /// **'Masquer les montants à l\'ouverture'**
+  String get settingsHideAmounts;
+
+  /// No description provided for @settingsHideAmountsHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sur l\'accueil, touche l\'œil pour les afficher'**
+  String get settingsHideAmountsHint;
+
+  /// No description provided for @settingsSecuritySection.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sécurité et confidentialité'**
+  String get settingsSecuritySection;
+
+  /// No description provided for @settingsPrivacy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Confidentialité'**
+  String get settingsPrivacy;
+
+  /// No description provided for @settingsPrivacyHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune donnée n\'est envoyée sur Internet, sauf le téléchargement du modèle IA si tu l\'installes.'**
+  String get settingsPrivacyHint;
+
+  /// No description provided for @settingsFooter.
+  ///
+  /// In fr, this message translates to:
+  /// **'{app} {version} · données stockées localement'**
+  String settingsFooter(String app, String version);
+
   /// No description provided for @txDuplicate.
   ///
   /// In fr, this message translates to:

@@ -20,6 +20,9 @@ extension type const Money(int value) {
 abstract final class MoneyFormat {
   static final _digits = NumberFormat('#,##0', 'fr');
 
+  /// Montant masqué (« Masquer les montants à l'ouverture »).
+  static const masked = '••••';
+
   /// Signe moins typographique (U+2212), comme dans les maquettes.
   static const _minus = '−';
 

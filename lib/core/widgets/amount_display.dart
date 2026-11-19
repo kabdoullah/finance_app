@@ -11,6 +11,7 @@ class AmountDisplay extends StatelessWidget {
     this.fontSize = 42,
     this.color,
     this.currencyColor,
+    this.masked = false,
     super.key,
   });
 
@@ -19,10 +20,15 @@ class AmountDisplay extends StatelessWidget {
   final Color? color;
   final Color? currencyColor;
 
+  /// Montant remplacé par « •••• ».
+  final bool masked;
+
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final text = amount.isNegative
+    final text = masked
+        ? MoneyFormat.masked
+        : amount.isNegative
         ? MoneyFormat.signed(amount)
         : MoneyFormat.amount(amount);
     return Row(

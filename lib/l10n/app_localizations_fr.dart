@@ -1841,6 +1841,80 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settingsNotifSection => 'Notifications';
 
   @override
+  String get dashboardShowAmounts => 'Afficher les montants';
+
+  @override
+  String get dashboardHideAmounts => 'Masquer les montants';
+
+  @override
+  String get settingsLocalOnly =>
+      'Données stockées uniquement sur ce téléphone';
+
+  @override
+  String get settingsPrefsSection => 'Préférences';
+
+  @override
+  String get settingsCurrency => 'Devise';
+
+  @override
+  String get settingsCurrencyValue => 'FCFA (XOF)';
+
+  @override
+  String get settingsLanguage => 'Langue';
+
+  @override
+  String get settingsLanguageValue => 'Français';
+
+  @override
+  String get settingsTheme => 'Thème';
+
+  @override
+  String get settingsThemeSystem => 'Automatique';
+
+  @override
+  String get settingsThemeLight => 'Clair';
+
+  @override
+  String get settingsThemeDark => 'Sombre';
+
+  @override
+  String get settingsRecurring => 'Opérations récurrentes';
+
+  @override
+  String settingsRecurringCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count actives',
+      one: '1 active',
+      zero: 'Aucune active',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get settingsHideAmounts => 'Masquer les montants à l\'ouverture';
+
+  @override
+  String get settingsHideAmountsHint =>
+      'Sur l\'accueil, touche l\'œil pour les afficher';
+
+  @override
+  String get settingsSecuritySection => 'Sécurité et confidentialité';
+
+  @override
+  String get settingsPrivacy => 'Confidentialité';
+
+  @override
+  String get settingsPrivacyHint =>
+      'Aucune donnée n\'est envoyée sur Internet, sauf le téléchargement du modèle IA si tu l\'installes.';
+
+  @override
+  String settingsFooter(String app, String version) {
+    return '$app $version · données stockées localement';
+  }
+
+  @override
   String get txDuplicate => 'Dupliquer';
 
   @override
