@@ -11,6 +11,7 @@ import 'package:finance_app/features/settings/presentation/settings_providers.da
 import 'package:finance_app/features/transactions/data/transactions_repository.dart';
 import 'package:finance_app/features/transactions/domain/transaction.dart';
 import 'package:finance_app/features/transactions/domain/transaction_draft.dart';
+import 'package:finance_app/features/transactions/presentation/transactions_page.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -76,7 +77,8 @@ void main() {
     );
     // Accueil : la dépense du 28 oct. compte dans « novembre ».
     expect(monthExpense('15 000'), findsOneWidget);
-    expect(find.text('Novembre · 25 oct. – 24 nov.'), findsOneWidget);
+    // Aussi en tête du calendrier de l'accueil.
+    expect(find.text('Novembre · 25 oct. – 24 nov.'), findsNWidgets(2));
 
     await tester.tap(find.text('Budgets').last);
     await tester.pumpAndSettle();
@@ -86,7 +88,13 @@ void main() {
 
     await tester.tap(find.text('Transactions').last);
     await tester.pumpAndSettle();
-    expect(find.text('Novembre · 25 oct. – 24 nov.'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byType(TransactionsPage),
+        matching: find.text('Novembre · 25 oct. – 24 nov.'),
+      ),
+      findsOneWidget,
+    );
   });
 
   testWidgets('réglage dans les Paramètres : le 1er puis le 5', (tester) async {
@@ -106,7 +114,7 @@ void main() {
     await tester.tap(find.byType(BackButton));
     await tester.pumpAndSettle();
     // Du 5 nov. au 4 déc. : toujours la seule dépense du 10 nov.
-    expect(find.text('Novembre · 5 nov. – 4 déc.'), findsOneWidget);
+    expect(find.text('Novembre · 5 nov. – 4 déc.'), findsNWidgets(2));
     expect(monthExpense('5 000'), findsOneWidget);
   });
 }

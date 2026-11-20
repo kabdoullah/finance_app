@@ -6,7 +6,6 @@ import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
 import '../../../core/clock.dart';
-import '../../../core/formatting/date_format.dart';
 import '../../../core/formatting/relative_date.dart';
 import '../../../core/formatting/text_search.dart';
 import '../../../core/money/money.dart';
@@ -19,6 +18,7 @@ import '../../accounts/presentation/accounts_providers.dart';
 import '../../categories/domain/category.dart';
 import '../../categories/presentation/categories_providers.dart';
 import '../../categories/presentation/category_icons.dart';
+import '../../planned/domain/month_spending.dart';
 import '../../planned/domain/planned_expense.dart';
 import '../../planned/presentation/planned_labels.dart';
 import '../../planned/presentation/planned_providers.dart';
@@ -58,6 +58,13 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
   void initState() {
     super.initState();
     _search.addListener(() => setState(() {}));
+    final month = ref.read(transactionsMonthRequestProvider);
+    if (month != null) {
+      _month = month;
+      Future.microtask(
+        () => ref.read(transactionsMonthRequestProvider.notifier).clear(),
+      );
+    }
     final requested = ref.read(transactionsCategoryRequestProvider);
     if (requested != null) {
       _categoryId = requested;
@@ -119,6 +126,12 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
     // Début du mois budgétaire changé : retour au mois en cours.
     ref.listen(budgetMonthStartProvider, (_, _) {
       setState(() => _month = _currentMonth());
+    });
+    // Onglet déjà ouvert : mois demandé depuis Dépenses du mois.
+    ref.listen(transactionsMonthRequestProvider, (_, month) {
+      if (month == null) return;
+      setState(() => _month = month);
+      ref.read(transactionsMonthRequestProvider.notifier).clear();
     });
     // Onglet déjà ouvert : applique une demande venue d'un budget.
     ref.listen(transactionsCategoryRequestProvider, (_, requested) {
@@ -189,7 +202,6 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
     final totals = TransactionTotals.of(visible);
     final query = _search.text.trim();
     final monthName = relative.month(_month);
-    final locale = Localizations.localeOf(context).toLanguageTag();
     final now = ref.watch(clockProvider)();
     final planned = [
       for (final p
@@ -351,27 +363,19 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
             if (late.isNotEmpty) ...[
               plannedHeader(l10n.plannedLateGroup, late),
               for (final p in late)
-                PlannedRow(
-                  expense: p,
-                  status: PlannedStatus.late,
-                  meta: AppDateFormat.sentence(
-                    l10n.plannedLateMeta(
-                      p.accountName,
-                      AppDateFormat.dayMonth(p.dueDate, locale),
-                    ),
-                  ),
+                DueRow(
+                  due: DueItem.fromPlanned(p),
+                  now: now,
+                  meta: dueMeta(l10n, relative, DueItem.fromPlanned(p), now),
                 ),
             ],
             if (upcoming.isNotEmpty) ...[
               plannedHeader(l10n.plannedUpcomingGroup, upcoming),
               for (final p in upcoming)
-                PlannedRow(
-                  expense: p,
-                  status: PlannedStatus.planned,
-                  meta: l10n.plannedUpcomingMeta(
-                    p.accountName,
-                    relative.header(p.dueDate),
-                  ),
+                DueRow(
+                  due: DueItem.fromPlanned(p),
+                  now: now,
+                  meta: dueMeta(l10n, relative, DueItem.fromPlanned(p), now),
                 ),
             ],
             for (final (day, items) in groupByDay(visible)) ...[

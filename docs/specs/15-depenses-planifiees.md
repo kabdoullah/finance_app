@@ -46,3 +46,30 @@ Table `planned_expenses` (schéma v9) pour les dépenses à payer ; colonnes
 `planned_due_date`, `planned_created_at`, `planned_note` sur `transactions`
 pour celles payées. Supprimer une catégorie déplace ses dépenses
 planifiées vers la catégorie de repli.
+
+## Calendrier et Dépenses du mois
+- **Dépenses à payer d'un mois** : dépenses planifiées et échéances des
+  dépenses récurrentes actives (« Récurrente », « ≈ » si montant variable,
+  lecture seule : ouvre les récurrentes). Une échéance « à confirmer »
+  passée compte **en retard**. Revenus récurrents et modèles en pause
+  exclus.
+- **Payées / Planifiées / Total prévu** du mois budgétaire : payées = dépenses
+  enregistrées dans la période (transferts exclus), planifiées = dépenses à
+  payer dont la date tombe dans la période, total = somme. Phrase selon le
+  mois : futur, en cours (dont … en retard), terminé.
+- **Calendrier de l'accueil** (sous Entrées / Sorties) : grille de la
+  période budgétaire, lundi en premier ; point d'intensité des dépenses
+  payées (moins de 5 000, moins de 20 000, au-delà), cercle pour une
+  dépense à payer, ambre en retard. Replié sur la semaine du jour choisi,
+  « Voir tout le mois ». Jour choisi : dépenses à payer puis opérations,
+  « … dépensés · … à payer » ; jour futur sans rien : « Planifier une
+  dépense ce jour-là » (ajout en Planifiée à cette date). Navigation du
+  mois de la première opération à 12 mois après le mois en cours ; en
+  arrivant sur un mois : aujourd'hui, sinon la première dépense à payer
+  (futur) ou le dernier jour payé (passé). Montants masqués avec
+  « Masquer les montants ».
+- **Dépenses du mois** : total prévu, sections « En retard », « À payer »,
+  « Payées » par catégorie, « Voir les opérations » (Transactions sur ce
+  mois), mois précédent/suivant.
+- Détail d'une dépense planifiée : cartes du mois en cours et du mois prévu,
+  solde réel aujourd'hui.

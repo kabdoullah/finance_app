@@ -9,12 +9,14 @@ comptes, saisir ses premières opérations, fixer un premier budget), invite
 1. **Solde total** (répartis sur N comptes) ; bouton œil pour masquer ou
    afficher les montants.
 2. **Revenus et dépenses du mois** (mois budgétaire, transferts exclus).
-3. **Où va ton argent** (répartition, dates du mois s'il est décalé).
-4. **Suggestion du Copilote** (voir ci-dessous).
-5. **Budgets** (3 au plus, « Tout voir »).
-6. **Dans 30 jours** : solde prévu, fourchette, fiabilité, courbe,
+3. **Calendrier** et **Dépenses de …** (payées, planifiées, total prévu),
+   voir [Dépenses planifiées](15-depenses-planifiees.md).
+4. **Où va ton argent** (répartition, dates du mois s'il est décalé).
+5. **Suggestion du Copilote** (voir ci-dessous).
+6. **Budgets** (3 au plus, « Tout voir »).
+7. **Dans 30 jours** : solde prévu, fourchette, fiabilité, courbe,
    « Comprendre cette prévision » (avec 14 jours d'historique au moins).
-7. **Dernières opérations** (4, « Tout voir »).
+8. **Dernières opérations** (4, « Tout voir »).
 
 ## Suggestion du Copilote
 Une seule phrase factuelle, **écrite par l'application (pas par Gemma)**,

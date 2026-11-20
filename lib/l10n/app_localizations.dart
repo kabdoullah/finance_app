@@ -5889,6 +5889,264 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Dépense planifiée : marque-la payée une fois réglée.'**
   String get ntPlannedBody;
+
+  /// No description provided for @calTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Calendrier'**
+  String get calTitle;
+
+  /// No description provided for @calSeeMonth.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir tout le mois'**
+  String get calSeeMonth;
+
+  /// No description provided for @calCollapse.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réduire'**
+  String get calCollapse;
+
+  /// No description provided for @calPrevMonth.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mois précédent'**
+  String get calPrevMonth;
+
+  /// No description provided for @calNextMonth.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mois suivant'**
+  String get calNextMonth;
+
+  /// No description provided for @calLegendPaid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Payées, selon le montant'**
+  String get calLegendPaid;
+
+  /// No description provided for @calLegendPlanned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Planifiée'**
+  String get calLegendPlanned;
+
+  /// No description provided for @calLegendLate.
+  ///
+  /// In fr, this message translates to:
+  /// **'En retard'**
+  String get calLegendLate;
+
+  /// No description provided for @calDayToday.
+  ///
+  /// In fr, this message translates to:
+  /// **'{day} · aujourd\'hui'**
+  String calDayToday(Object day);
+
+  /// No description provided for @calDaySpent.
+  ///
+  /// In fr, this message translates to:
+  /// **'{amount} FCFA dépensés'**
+  String calDaySpent(Object amount);
+
+  /// No description provided for @calDayDue.
+  ///
+  /// In fr, this message translates to:
+  /// **'{amount} FCFA à payer'**
+  String calDayDue(Object amount);
+
+  /// No description provided for @calDayLate.
+  ///
+  /// In fr, this message translates to:
+  /// **'{amount} FCFA en retard'**
+  String calDayLate(Object amount);
+
+  /// No description provided for @calDayEmptyMonth.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune dépense enregistrée en {month}.'**
+  String calDayEmptyMonth(Object month);
+
+  /// No description provided for @calDayEmptyFuture.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rien de prévu ce jour-là.'**
+  String get calDayEmptyFuture;
+
+  /// No description provided for @calDayEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune dépense ce jour-là.'**
+  String get calDayEmpty;
+
+  /// No description provided for @calPlanThisDay.
+  ///
+  /// In fr, this message translates to:
+  /// **'Planifier une dépense ce jour-là'**
+  String get calPlanThisDay;
+
+  /// No description provided for @calDaySemantics.
+  ///
+  /// In fr, this message translates to:
+  /// **'{day}{details}'**
+  String calDaySemantics(Object day, Object details);
+
+  /// No description provided for @calDaySpentShort.
+  ///
+  /// In fr, this message translates to:
+  /// **', {amount} FCFA dépensés'**
+  String calDaySpentShort(Object amount);
+
+  /// No description provided for @calDayPlannedShort.
+  ///
+  /// In fr, this message translates to:
+  /// **', dépense à payer'**
+  String get calDayPlannedShort;
+
+  /// No description provided for @calDayLateShort.
+  ///
+  /// In fr, this message translates to:
+  /// **', dépense en retard'**
+  String get calDayLateShort;
+
+  /// No description provided for @spendTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépenses de {month}'**
+  String spendTitle(Object month);
+
+  /// No description provided for @spendPaid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Payées'**
+  String get spendPaid;
+
+  /// No description provided for @spendPlanned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Planifiées'**
+  String get spendPlanned;
+
+  /// No description provided for @spendTotal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Total prévu'**
+  String get spendTotal;
+
+  /// No description provided for @spendNoteFuture.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rien n\'est encore payé : ces dépenses ne touchent pas ton solde actuel.'**
+  String get spendNoteFuture;
+
+  /// No description provided for @spendNoteCurrent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Total prévu = payées + planifiées encore à payer.'**
+  String get spendNoteCurrent;
+
+  /// No description provided for @spendNoteCurrentLate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Total prévu = payées + planifiées encore à payer, dont {amount} FCFA en retard.'**
+  String spendNoteCurrentLate(Object amount);
+
+  /// No description provided for @spendNoteEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune dépense ce mois-là.'**
+  String get spendNoteEmpty;
+
+  /// No description provided for @spendNotePast.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mois terminé : tout ce qui était prévu a été payé.'**
+  String get spendNotePast;
+
+  /// No description provided for @spendNotePastLate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mois terminé : {amount} FCFA restent à payer.'**
+  String spendNotePastLate(Object amount);
+
+  /// No description provided for @spendSeeMonth.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir les dépenses de {month}'**
+  String spendSeeMonth(Object month);
+
+  /// No description provided for @monthPageTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépenses du mois'**
+  String get monthPageTitle;
+
+  /// No description provided for @monthTotalLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Total prévu des dépenses'**
+  String get monthTotalLabel;
+
+  /// No description provided for @monthLateTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'En retard · {amount} FCFA'**
+  String monthLateTitle(Object amount);
+
+  /// No description provided for @monthPlanTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'À payer · {amount} FCFA'**
+  String monthPlanTitle(Object amount);
+
+  /// No description provided for @monthPaidTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Payées · {amount} FCFA'**
+  String monthPaidTitle(Object amount);
+
+  /// No description provided for @monthSeeOperations.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir les opérations'**
+  String get monthSeeOperations;
+
+  /// No description provided for @monthEmptyTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune dépense en {month}'**
+  String monthEmptyTitle(Object month);
+
+  /// No description provided for @monthEmptyText.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rien de payé ni de planifié ce mois-là.'**
+  String get monthEmptyText;
+
+  /// No description provided for @monthRule.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une dépense planifiée compte dans le mois de sa date prévue. Payée en avance, elle passe dans le mois de son paiement réel et quitte les planifiées : jamais comptée deux fois.'**
+  String get monthRule;
+
+  /// No description provided for @dueRecurringMeta.
+  ///
+  /// In fr, this message translates to:
+  /// **'{date} · récurrente · {account}'**
+  String dueRecurringMeta(Object account, Object date);
+
+  /// No description provided for @dueRecurringLateMeta.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prévue le {date} · récurrente · {account}'**
+  String dueRecurringLateMeta(Object account, Object date);
+
+  /// No description provided for @plannedRealBalance.
+  ///
+  /// In fr, this message translates to:
+  /// **'Solde réel aujourd\'hui'**
+  String get plannedRealBalance;
 }
 
 class _AppLocalizationsDelegate

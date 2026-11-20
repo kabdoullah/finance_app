@@ -22,6 +22,7 @@ import '../../budgets/presentation/budgets_providers.dart';
 import '../../forecast/domain/forecast.dart';
 import '../../forecast/presentation/forecast_chart.dart';
 import '../../forecast/presentation/forecast_providers.dart';
+import '../../planned/presentation/spending_calendar.dart';
 import '../../recurring/presentation/recurring_providers.dart';
 import '../../settings/presentation/settings_providers.dart';
 import '../../transactions/domain/expense_breakdown.dart';
@@ -72,6 +73,7 @@ class DashboardPage extends ConsumerWidget {
               ),
               if (active) ...[
                 _MonthTotals(month: ref.watch(monthOfProvider)(now)),
+                const SpendingCalendar(),
                 _WhereMoneyGoes(month: ref.watch(monthOfProvider)(now)),
                 const _CopilotInsight(),
                 const _Budgets(),

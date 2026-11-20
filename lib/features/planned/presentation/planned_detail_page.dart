@@ -13,11 +13,13 @@ import '../../../core/money/money.dart';
 import '../../../core/time/calendar_date.dart';
 import '../../../core/widgets/confirm_dialog.dart';
 import '../../../l10n/l10n.dart';
+import '../../accounts/presentation/accounts_providers.dart';
 import '../../categories/presentation/category_icons.dart';
 import '../../settings/presentation/settings_providers.dart';
 import '../domain/planned_expense.dart';
 import 'planned_labels.dart';
 import 'planned_providers.dart';
+import 'spending_calendar.dart';
 
 /// Détail d'une dépense planifiée à payer (maquette Planifiee-Detail) :
 /// statut, dates, effet sur les dépenses, puis « Marquer comme payée »,
@@ -249,6 +251,32 @@ class _PlannedDetailPageState extends ConsumerState<PlannedDetailPage> {
                             ),
                           ),
                   ),
+                  for (final month in {
+                    ref.watch(monthOfProvider)(now),
+                    ref.watch(monthOfProvider)(expense.dueDate),
+                  })
+                    if (ref.watch(monthSpendingProvider(month))
+                        case final spending?)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 24),
+                        child: MonthSpendingSummary(
+                          spending: spending,
+                          now: now,
+                          masked: ref.watch(amountsHiddenProvider),
+                        ),
+                      ),
+                  if (ref.watch(accountsSummaryProvider).value
+                      case final summary?)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: _InfoRow(
+                        label: l10n.plannedRealBalance,
+                        value: ref.watch(amountsHiddenProvider)
+                            ? MoneyFormat.masked
+                            : '${MoneyFormat.amount(summary.total)} '
+                                  '${l10n.currencyLabel}',
+                      ),
+                    ),
                 ],
               ),
             ),

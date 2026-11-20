@@ -2,6 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../core/time/calendar_date.dart';
+import '../core/time/month.dart';
 import '../features/accounts/presentation/account_detail_page.dart';
 import '../features/accounts/presentation/account_form_page.dart';
 import '../features/accounts/presentation/accounts_page.dart';
@@ -17,6 +19,7 @@ import '../features/forecast/presentation/simulation_page.dart';
 import '../features/goals/presentation/goal_detail_page.dart';
 import '../features/goals/presentation/goal_form_page.dart';
 import '../features/goals/presentation/goals_page.dart';
+import '../features/planned/presentation/month_spending_page.dart';
 import '../features/planned/presentation/planned_detail_page.dart';
 import '../features/planned/presentation/planned_labels.dart';
 import '../features/quick_entry/presentation/quick_entry_page.dart';
@@ -72,11 +75,22 @@ abstract final class AppRoutes {
   static String accountDetail(String id) => '/accounts/$id';
   static String editAccount(String id) => '/accounts/$id/edit';
 
-  static String newTransaction({TransactionKind? kind, String? accountId}) =>
-      Uri(
-        path: '/transactions/new',
-        queryParameters: {'kind': ?kind?.storageValue, 'account': ?accountId},
-      ).toString();
+  /// [plannedDue] : dépense planifiée à cette date (« Planifier une dépense
+  /// ce jour-là »).
+  static String newTransaction({
+    TransactionKind? kind,
+    String? accountId,
+    DateTime? plannedDue,
+  }) => Uri(
+    path: '/transactions/new',
+    queryParameters: {
+      'kind': ?kind?.storageValue,
+      'account': ?accountId,
+      'due': ?(plannedDue == null ? null : CalendarDate.format(plannedDue)),
+    },
+  ).toString();
+  static String monthSpending(Month month) =>
+      '/spending/${month.year}-${month.month.toString().padLeft(2, '0')}';
   static String transactionDetail(String id) => '/transactions/$id';
   static String plannedDetail(String id) => '/transactions/planned/$id';
   static String editPlanned(String id) => '/planned/$id/edit';
@@ -124,6 +138,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                   ? TransactionKind.expense
                   : TransactionKind.fromStorage(kind),
               initialAccountId: state.uri.queryParameters['account'],
+              initialPlannedDue: switch (state.uri.queryParameters['due']) {
+                final due? => CalendarDate.parse(due),
+                null => null,
+              },
             ),
           );
         },
@@ -226,6 +244,17 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                         ),
                       ),
                     ],
+                  ),
+                  // Dépenses du mois (« 2026-11 »).
+                  GoRoute(
+                    path: 'spending/:ym',
+                    builder: (context, state) {
+                      final [year, month] = state.pathParameters['ym']!
+                          .split('-')
+                          .map(int.parse)
+                          .toList();
+                      return MonthSpendingPage(year: year, month: month);
+                    },
                   ),
                 ],
               ),

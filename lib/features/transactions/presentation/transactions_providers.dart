@@ -45,6 +45,22 @@ final transactionsCategoryRequestProvider =
       TransactionsCategoryRequest.new,
     );
 
+/// Demande d'ouverture de l'onglet Transactions sur un mois (« Voir les
+/// opérations » de Dépenses du mois), consommée par la page.
+final transactionsMonthRequestProvider =
+    NotifierProvider<TransactionsMonthRequest, Month?>(
+      TransactionsMonthRequest.new,
+    );
+
+class TransactionsMonthRequest extends Notifier<Month?> {
+  @override
+  Month? build() => null;
+
+  void request(Month month) => state = month;
+
+  void clear() => state = null;
+}
+
 class TransactionsCategoryRequest extends Notifier<String?> {
   @override
   String? build() => null;

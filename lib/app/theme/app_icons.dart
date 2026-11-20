@@ -50,6 +50,8 @@ abstract final class AppIcons {
   static const trash = IconData(0xe4a6, fontFamily: _regular);
 
   static const caretDownBold = IconData(0xe136, fontFamily: _bold);
+  static const caretUpBold = IconData(0xe13c, fontFamily: _bold);
+  static const caretRightBold = IconData(0xe13a, fontFamily: _bold);
   static const arrowDownLeftBold = IconData(0xe040, fontFamily: _bold);
   static const arrowUpRightBold = IconData(0xe092, fontFamily: _bold);
   static const arrowDownLeft = IconData(0xe040, fontFamily: _regular);

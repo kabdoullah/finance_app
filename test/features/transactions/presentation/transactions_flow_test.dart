@@ -62,8 +62,9 @@ void main() {
     // Accueil « actif » : dernières opérations au lieu des étapes.
     expect(find.text('Dernières opérations'), findsOneWidget);
     expect(find.text('Pour bien démarrer'), findsNothing);
-    expect(find.text('Transport · Wave'), findsOneWidget);
-    expect(find.text('−2${_nbsp}500'), findsOneWidget);
+    // Dans « Dernières opérations » et dans le jour du calendrier.
+    expect(find.text('Transport · Wave'), findsNWidgets(2));
+    expect(find.text('−2${_nbsp}500'), findsNWidgets(2));
   });
 
   testWidgets('supprimer une opération puis annuler la suppression', (
@@ -74,9 +75,15 @@ void main() {
     await tester.tap(find.text("Retour à l'accueil"));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Transport · Wave'));
+    // Le calendrier pousse « Dernières opérations » plus bas.
+    await tester.ensureVisible(find.text('Transport · Wave').last);
     await tester.pumpAndSettle();
-    expect(find.text('Solde après : 39${_nbsp}500${_nbsp}FCFA'), findsOneWidget);
+    await tester.tap(find.text('Transport · Wave').last);
+    await tester.pumpAndSettle();
+    expect(
+      find.text('Solde après : 39${_nbsp}500${_nbsp}FCFA'),
+      findsOneWidget,
+    );
 
     await tester.tap(find.text('Supprimer'));
     await tester.pumpAndSettle();
@@ -87,7 +94,10 @@ void main() {
 
     await tester.tap(find.text('Annuler la suppression'));
     await tester.pumpAndSettle();
-    expect(find.text('Solde après : 39${_nbsp}500${_nbsp}FCFA'), findsOneWidget);
+    expect(
+      find.text('Solde après : 39${_nbsp}500${_nbsp}FCFA'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('l’onglet Transactions liste et filtre les opérations', (
@@ -100,7 +110,10 @@ void main() {
 
     await tester.tap(find.text('Transactions').last);
     await tester.pumpAndSettle();
-    expect(find.text('1 opération · transferts exclus des totaux'), findsOneWidget);
+    expect(
+      find.text('1 opération · transferts exclus des totaux'),
+      findsOneWidget,
+    );
     expect(find.textContaining('Aujourd'), findsOneWidget);
 
     await tester.enterText(find.byType(TextField), 'boulangerie');

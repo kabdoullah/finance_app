@@ -39,12 +39,16 @@ class AddTransactionPage extends ConsumerStatefulWidget {
     required this.initialKind,
     this.initialAccountId,
     this.editPlanned,
+    this.initialPlannedDue,
     super.key,
   });
 
   final TransactionKind initialKind;
   final String? initialAccountId;
   final PlannedExpense? editPlanned;
+
+  /// Ouvre en dépense « Planifiée » à cette date (depuis le calendrier).
+  final DateTime? initialPlannedDue;
 
   @override
   ConsumerState<AddTransactionPage> createState() => _AddTransactionPageState();
@@ -89,6 +93,11 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
     super.initState();
     _date = ref.read(clockProvider)();
     _due = _tomorrow();
+    if (widget.initialPlannedDue case final due?
+        when due.isAfter(CalendarDate.of(_date))) {
+      _planned = true;
+      _due = CalendarDate.of(due);
+    }
     _accountId = widget.initialAccountId;
     if (widget.editPlanned case final p?) {
       _planned = true;

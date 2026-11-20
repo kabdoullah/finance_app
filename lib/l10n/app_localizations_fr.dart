@@ -3677,4 +3677,171 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get ntPlannedBody =>
       'Dépense planifiée : marque-la payée une fois réglée.';
+
+  @override
+  String get calTitle => 'Calendrier';
+
+  @override
+  String get calSeeMonth => 'Voir tout le mois';
+
+  @override
+  String get calCollapse => 'Réduire';
+
+  @override
+  String get calPrevMonth => 'Mois précédent';
+
+  @override
+  String get calNextMonth => 'Mois suivant';
+
+  @override
+  String get calLegendPaid => 'Payées, selon le montant';
+
+  @override
+  String get calLegendPlanned => 'Planifiée';
+
+  @override
+  String get calLegendLate => 'En retard';
+
+  @override
+  String calDayToday(Object day) {
+    return '$day · aujourd\'hui';
+  }
+
+  @override
+  String calDaySpent(Object amount) {
+    return '$amount FCFA dépensés';
+  }
+
+  @override
+  String calDayDue(Object amount) {
+    return '$amount FCFA à payer';
+  }
+
+  @override
+  String calDayLate(Object amount) {
+    return '$amount FCFA en retard';
+  }
+
+  @override
+  String calDayEmptyMonth(Object month) {
+    return 'Aucune dépense enregistrée en $month.';
+  }
+
+  @override
+  String get calDayEmptyFuture => 'Rien de prévu ce jour-là.';
+
+  @override
+  String get calDayEmpty => 'Aucune dépense ce jour-là.';
+
+  @override
+  String get calPlanThisDay => 'Planifier une dépense ce jour-là';
+
+  @override
+  String calDaySemantics(Object day, Object details) {
+    return '$day$details';
+  }
+
+  @override
+  String calDaySpentShort(Object amount) {
+    return ', $amount FCFA dépensés';
+  }
+
+  @override
+  String get calDayPlannedShort => ', dépense à payer';
+
+  @override
+  String get calDayLateShort => ', dépense en retard';
+
+  @override
+  String spendTitle(Object month) {
+    return 'Dépenses de $month';
+  }
+
+  @override
+  String get spendPaid => 'Payées';
+
+  @override
+  String get spendPlanned => 'Planifiées';
+
+  @override
+  String get spendTotal => 'Total prévu';
+
+  @override
+  String get spendNoteFuture =>
+      'Rien n\'est encore payé : ces dépenses ne touchent pas ton solde actuel.';
+
+  @override
+  String get spendNoteCurrent =>
+      'Total prévu = payées + planifiées encore à payer.';
+
+  @override
+  String spendNoteCurrentLate(Object amount) {
+    return 'Total prévu = payées + planifiées encore à payer, dont $amount FCFA en retard.';
+  }
+
+  @override
+  String get spendNoteEmpty => 'Aucune dépense ce mois-là.';
+
+  @override
+  String get spendNotePast =>
+      'Mois terminé : tout ce qui était prévu a été payé.';
+
+  @override
+  String spendNotePastLate(Object amount) {
+    return 'Mois terminé : $amount FCFA restent à payer.';
+  }
+
+  @override
+  String spendSeeMonth(Object month) {
+    return 'Voir les dépenses de $month';
+  }
+
+  @override
+  String get monthPageTitle => 'Dépenses du mois';
+
+  @override
+  String get monthTotalLabel => 'Total prévu des dépenses';
+
+  @override
+  String monthLateTitle(Object amount) {
+    return 'En retard · $amount FCFA';
+  }
+
+  @override
+  String monthPlanTitle(Object amount) {
+    return 'À payer · $amount FCFA';
+  }
+
+  @override
+  String monthPaidTitle(Object amount) {
+    return 'Payées · $amount FCFA';
+  }
+
+  @override
+  String get monthSeeOperations => 'Voir les opérations';
+
+  @override
+  String monthEmptyTitle(Object month) {
+    return 'Aucune dépense en $month';
+  }
+
+  @override
+  String get monthEmptyText => 'Rien de payé ni de planifié ce mois-là.';
+
+  @override
+  String get monthRule =>
+      'Une dépense planifiée compte dans le mois de sa date prévue. Payée en avance, elle passe dans le mois de son paiement réel et quitte les planifiées : jamais comptée deux fois.';
+
+  @override
+  String dueRecurringMeta(Object account, Object date) {
+    return '$date · récurrente · $account';
+  }
+
+  @override
+  String dueRecurringLateMeta(Object account, Object date) {
+    return 'Prévue le $date · récurrente · $account';
+  }
+
+  @override
+  String get plannedRealBalance => 'Solde réel aujourd\'hui';
 }

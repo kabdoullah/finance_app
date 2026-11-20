@@ -4,11 +4,15 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
+import '../../../app/theme/app_icons.dart';
+import '../../../core/formatting/date_format.dart';
+import '../../../core/formatting/relative_date.dart';
 import '../../../core/money/money.dart';
 import '../../../l10n/l10n.dart';
 import '../../categories/presentation/category_icons.dart';
 import '../../transactions/domain/transaction.dart';
 import '../../transactions/presentation/add_transaction_page.dart';
+import '../domain/month_spending.dart';
 import '../domain/planned_expense.dart';
 import 'planned_providers.dart';
 
@@ -55,26 +59,32 @@ class PlannedStatusPill extends StatelessWidget {
   }
 }
 
-/// Ligne d'une dépense à payer dans une liste (Transactions) : ouvre son
-/// détail.
-class PlannedRow extends StatelessWidget {
-  const PlannedRow({
-    required this.expense,
-    required this.status,
+/// Ligne d'une dépense à payer (planifiée ou échéance récurrente) : ouvre
+/// son détail, ou la liste des récurrentes.
+class DueRow extends StatelessWidget {
+  const DueRow({
+    required this.due,
+    required this.now,
     required this.meta,
+    this.masked = false,
     super.key,
   });
 
-  final PlannedExpense expense;
-  final PlannedStatus status;
+  final DueItem due;
+  final DateTime now;
   final String meta;
+  final bool masked;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final status = due.statusOn(now);
     final (background, ink) = status.colors(colors);
+    final isRecurring = due.source == DueSource.recurring;
     return InkWell(
-      onTap: () => context.push(AppRoutes.plannedDetail(expense.id)),
+      onTap: () => context.push(
+        isRecurring ? AppRoutes.recurring : AppRoutes.plannedDetail(due.id),
+      ),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
@@ -88,7 +98,9 @@ class PlannedRow extends StatelessWidget {
                 color: background,
               ),
               child: Icon(
-                categoryIcon(expense.mainCategory.iconKey),
+                isRecurring
+                    ? AppIcons.repeat
+                    : categoryIcon(due.category.iconKey),
                 size: 18,
                 color: ink,
               ),
@@ -99,7 +111,7 @@ class PlannedRow extends StatelessWidget {
                 spacing: 2,
                 children: [
                   Text(
-                    expense.name,
+                    due.name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
@@ -124,7 +136,10 @@ class PlannedRow extends StatelessWidget {
               spacing: 4,
               children: [
                 Text(
-                  MoneyFormat.amount(expense.amount),
+                  masked
+                      ? MoneyFormat.masked
+                      : '${due.isEstimate ? '≈ ' : ''}'
+                            '${MoneyFormat.amount(due.amount)}',
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
@@ -139,6 +154,31 @@ class PlannedRow extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Ligne secondaire d'une dépense à payer : « Prévue le 12 nov. · Wave »
+/// en retard, « Mardi 15 déc. · Ecobank » à venir (« récurrente » en plus).
+String dueMeta(
+  AppLocalizations l10n,
+  RelativeDate relative,
+  DueItem due,
+  DateTime now,
+) {
+  final late = due.statusOn(now) == PlannedStatus.late;
+  final recurring = due.source == DueSource.recurring;
+  final short = AppDateFormat.dayMonth(due.date, relative.locale);
+  return AppDateFormat.sentence(switch ((late, recurring)) {
+    (true, false) => l10n.plannedLateMeta(due.accountName, short),
+    (true, true) => l10n.dueRecurringLateMeta(due.accountName, short),
+    (false, false) => l10n.plannedUpcomingMeta(
+      due.accountName,
+      relative.header(due.date),
+    ),
+    (false, true) => l10n.dueRecurringMeta(
+      due.accountName,
+      relative.header(due.date),
+    ),
+  });
 }
 
 /// « Modifier » une dépense planifiée : le formulaire d'ajout, ouvert sur
