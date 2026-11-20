@@ -274,23 +274,37 @@ class _WhereMoneyGoes extends ConsumerWidget {
                       ),
                       child: const SizedBox.square(dimension: 10),
                     ),
-                    // Un nom long se réduit au lieu de déborder.
-                    Flexible(
-                      child: Text(
-                        name(share),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
+                    // Nom et part se réduisent au lieu de déborder ; le
+                    // montant reste toujours entier.
+                    Expanded(
+                      child: Row(
+                        spacing: 10,
+                        children: [
+                          Flexible(
+                            child: Text(
+                              name(share),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          Flexible(
+                            child: Text(
+                              l10n.dashboardShare(share.percent),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: colors.inkTertiary,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    Text(
-                      l10n.dashboardShare(share.percent),
-                      style: TextStyle(fontSize: 14, color: colors.inkTertiary),
-                    ),
-                    const Spacer(),
                     Text(
                       ref.watch(amountsHiddenProvider)
                           ? MoneyFormat.masked
@@ -470,12 +484,14 @@ class _Balance extends StatelessWidget {
       children: [
         Row(
           children: [
-            Text(
-              l10n.dashboardTotalBalance,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: colors.inkSecondary,
+            Flexible(
+              child: Text(
+                l10n.dashboardTotalBalance,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: colors.inkSecondary,
+                ),
               ),
             ),
             if (hasAccounts)
@@ -513,7 +529,9 @@ class _Balance extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               spacing: 4,
               children: [
-                Text(l10n.dashboardAccountsLink(summary.count)),
+                Flexible(
+                  child: Text(l10n.dashboardAccountsLink(summary.count)),
+                ),
                 const Icon(AppIcons.caretRight, size: 12),
               ],
             ),
@@ -891,9 +909,12 @@ class _ForecastCard extends ConsumerWidget {
                 ),
               ),
             ),
-            Text(
-              RelativeDate.capitalize(l10n.forecastReliability(level)),
-              style: TextStyle(fontSize: 13, color: colors.inkTertiary),
+            Flexible(
+              child: Text(
+                RelativeDate.capitalize(l10n.forecastReliability(level)),
+                textAlign: TextAlign.end,
+                style: TextStyle(fontSize: 13, color: colors.inkTertiary),
+              ),
             ),
           ],
         ),

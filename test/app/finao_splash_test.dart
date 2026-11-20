@@ -64,4 +64,18 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(SvgPicture), findsNothing);
   });
+
+  testWidgets('le splash tient en paysage', (tester) async {
+    tester.view
+      ..physicalSize = const Size(844, 390)
+      ..devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      const MaterialApp(home: FinaoSplash(next: _Counter())),
+    );
+    await tester.pump(const Duration(milliseconds: 950));
+
+    expect(tester.takeException(), isNull);
+    await tester.pumpAndSettle();
+  });
 }

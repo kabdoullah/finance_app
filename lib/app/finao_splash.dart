@@ -97,8 +97,9 @@ class _FinaoSplashState extends State<FinaoSplash>
     // le thème forcé dans les Paramètres).
     final dark = MediaQuery.platformBrightnessOf(context) == Brightness.dark;
     final background = dark ? const Color(0xFF174D3A) : const Color(0xFFF3F0E8);
-    // Même échelle que le splash natif.
-    final width = MediaQuery.sizeOf(context).width * 0.36;
+    // Même échelle que le splash natif (portrait), sur le plus petit côté
+    // pour tenir aussi en paysage.
+    final width = MediaQuery.sizeOf(context).shortestSide * 0.36;
     final word = _interval(620, 920, _decelerate);
     final out = _interval(1000 + _hold, _total, const Cubic(0.4, 0, 1, 1));
 

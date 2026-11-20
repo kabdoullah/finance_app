@@ -83,6 +83,18 @@ void main() {
     expect(find.text('Ajouter une opération'), findsOneWidget);
   });
 
+  testWidgets('pas encore de prévision : tient avec un texte agrandi ×2', (
+    tester,
+  ) async {
+    tester.platformDispatcher.textScaleFactorTestValue = 2;
+    addTearDown(tester.platformDispatcher.clearAllTestValues);
+    await expense(5000, testNow);
+    await openForecast(tester);
+
+    expect(find.text('Encore 13 jours'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('prévision à 30 puis 7 jours avec un salaire récurrent', (
     tester,
   ) async {

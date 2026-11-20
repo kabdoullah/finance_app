@@ -145,16 +145,14 @@ class _Insufficient extends StatelessWidget {
             backgroundColor: colors.chip,
           ),
         ),
-        Row(
+        // Wrap : avec un texte agrandi, « Encore N jours » passe à la ligne.
+        Wrap(
+          alignment: WrapAlignment.spaceBetween,
+          spacing: 8,
           children: [
-            Expanded(
-              child: Text(
-                l10n.forecastInsufficientProgress(days, total),
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+            Text(
+              l10n.forecastInsufficientProgress(days, total),
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
             ),
             Text(
               l10n.forecastInsufficientLeft(total - days),
@@ -254,9 +252,11 @@ class _Summary extends StatelessWidget {
             ),
             _ReliabilityBars(level: forecast.reliability),
             const SizedBox(width: 6),
-            Text(
-              l10n.forecastReliability(level),
-              style: TextStyle(fontSize: 13, color: colors.inkSecondary),
+            Flexible(
+              child: Text(
+                l10n.forecastReliability(level),
+                style: TextStyle(fontSize: 13, color: colors.inkSecondary),
+              ),
             ),
           ],
         ),
@@ -402,9 +402,11 @@ class _Legend extends StatelessWidget {
     spacing: 6,
     children: [
       swatch,
-      Text(
-        label,
-        style: TextStyle(fontSize: 12, color: context.colors.inkSecondary),
+      Flexible(
+        child: Text(
+          label,
+          style: TextStyle(fontSize: 12, color: context.colors.inkSecondary),
+        ),
       ),
     ],
   );

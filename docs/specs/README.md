@@ -30,6 +30,12 @@ Ces specs décrivent **ce que fait l'application aujourd'hui** (état au
    n'est jamais compté comme revenu ni comme dépense.
 7. **Montants entiers en FCFA.** Pas de centimes ; affichage « 25 000 FCFA »
    (espace insécable), signe moins typographique « − ».
+8. **Portrait, tout texte.** Sur téléphone, l'application est bloquée en
+   portrait (l'iPad garde toutes les orientations ; Android 16+ ignore le
+   blocage sur tablettes et pliables). Les écrans tiennent dès 320 px de
+   large et avec un texte agrandi jusqu'à ×2 : un libellé passe à la ligne
+   ou se réduit, un montant n'est jamais tronqué. Pas de mise en page
+   dédiée aux tablettes pour l'instant.
 
 ## Sommaire
 
@@ -55,6 +61,7 @@ Ces specs décrivent **ce que fait l'application aujourd'hui** (état au
 - Google Drive intégré (synchronisation automatique) : prochaine version.
   Aujourd'hui, Drive est accessible via le sélecteur de fichiers du système.
 - Scanner de reçus (l'origine « reçu » existe dans le modèle de données).
+- Mise en page tablette (navigation latérale, largeur de contenu limitée).
 - Publication : identifiant `com.finao.app` choisi ; clé de signature de
   publication (Android) et compte développeur Apple payant à prévoir.
 
