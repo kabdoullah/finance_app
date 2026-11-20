@@ -9,6 +9,7 @@ import '../../../core/clock.dart';
 import '../../../core/formatting/relative_date.dart';
 import '../../../core/money/money.dart';
 import '../../../core/widgets/motion.dart';
+import '../../../core/widgets/section_tint.dart';
 import '../../../l10n/l10n.dart';
 import '../../accounts/presentation/accounts_providers.dart';
 import '../../categories/domain/category.dart';
@@ -47,9 +48,12 @@ class AssistantPage extends ConsumerWidget {
           ],
         ),
       ),
-      body: ai.status == AiModelStatus.ready
-          ? const _Conversation()
-          : _NotLoaded(state: ai),
+      body: SectionTint(
+        color: context.colors.infoTint,
+        child: ai.status == AiModelStatus.ready
+            ? const _Conversation()
+            : _NotLoaded(state: ai),
+      ),
     );
   }
 }

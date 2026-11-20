@@ -77,14 +77,23 @@ extension TransactionLabels on Transaction {
   Color amountColor(AppColors colors) => switch (kind) {
     TransactionKind.income => colors.positive,
     TransactionKind.transfer => colors.inkSecondary,
-    TransactionKind.expense => colors.ink,
+    // Terracotta : la couleur des montants dépensés.
+    TransactionKind.expense => colors.expense,
   };
 
   (Color background, Color foreground) iconColors(AppColors colors) =>
       switch (kind) {
         TransactionKind.income => (colors.primarySoft, colors.onPrimarySoft),
-        TransactionKind.transfer => (colors.chip, colors.inkSecondary),
-        TransactionKind.expense => (colors.chip, colors.ink),
+        // Ardoise : ni revenu ni dépense.
+        TransactionKind.transfer => (colors.infoSoft, colors.info),
+        // Teinte de la catégorie (icône seulement, jamais un état).
+        TransactionKind.expense => switch (mainCategory) {
+          final category? => (
+            colors.category(category.iconKey).background,
+            colors.category(category.iconKey).ink,
+          ),
+          null => (colors.chip, colors.ink),
+        },
       };
 }
 

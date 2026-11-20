@@ -103,7 +103,8 @@ class _ForecastPainter extends CustomPainter {
       band.lineTo(x(d), y(points[d].value - bands[d]));
     }
     band.close();
-    canvas.drawPath(band, Paint()..color = colors.primarySoft);
+    // Ardoise : la prévision, sa fourchette.
+    canvas.drawPath(band, Paint()..color = colors.infoSoft);
 
     // Ligne zéro.
     canvas.drawLine(
@@ -147,7 +148,7 @@ class _ForecastPainter extends CustomPainter {
       canvas,
       estimate,
       Paint()
-        ..color = colors.primary
+        ..color = colors.info
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2
         ..strokeJoin = StrokeJoin.round,

@@ -220,14 +220,35 @@ Future<void> showNewOperationSheet(BuildContext context) =>
       },
     );
 
-/// Bouton flottant « Ajouter » des maquettes (ouvre la feuille ci-dessus).
+/// Boutons flottants du design system, toujours au même endroit : « + »
+/// (saisie à la main, ouvre la feuille ci-dessus) et « Dicter », le
+/// principal (la voix est privilégiée).
 class AddOperationButton extends StatelessWidget {
   const AddOperationButton({super.key});
 
   @override
-  Widget build(BuildContext context) => FloatingActionButton.extended(
-    onPressed: () => showNewOperationSheet(context),
-    icon: const Icon(AppIcons.plusBold, size: 18),
-    label: Text(context.l10n.txAdd),
-  );
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final l10n = context.l10n;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      spacing: 12,
+      children: [
+        FloatingActionButton(
+          heroTag: 'add-operation',
+          tooltip: l10n.txAdd,
+          backgroundColor: colors.surface,
+          foregroundColor: colors.ink,
+          onPressed: () => showNewOperationSheet(context),
+          child: const Icon(AppIcons.plusBold, size: 20),
+        ),
+        FloatingActionButton.extended(
+          heroTag: 'dictate',
+          onPressed: () => context.push(AppRoutes.quickEntry()),
+          icon: const Icon(AppIcons.microphoneBold, size: 18),
+          label: Text(l10n.txEmptyDictate),
+        ),
+      ],
+    );
+  }
 }

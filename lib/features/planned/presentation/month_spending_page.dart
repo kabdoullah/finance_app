@@ -295,7 +295,7 @@ class _CategoryBar extends StatelessWidget {
                     child: LinearProgressIndicator(
                       value: ratio.clamp(0, 1),
                       minHeight: 5,
-                      color: colors.chart.first,
+                      color: colors.expenseMid,
                       backgroundColor: colors.chip,
                     ),
                   ),

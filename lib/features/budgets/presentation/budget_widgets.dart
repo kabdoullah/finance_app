@@ -12,8 +12,9 @@ import 'budgets_providers.dart';
 
 /// Couleur de barre : vert, ambre au seuil choisi, brique au-delà de 100 %.
 Color budgetBarColor(BudgetLevel level, AppColors colors) => switch (level) {
-  BudgetLevel.ok || BudgetLevel.reached => colors.primary,
-  BudgetLevel.warning => colors.warning,
+  // Barres : sauge, ambre, puis terracotta profond une fois dépassé.
+  BudgetLevel.ok || BudgetLevel.reached => colors.primaryMid,
+  BudgetLevel.warning => colors.warningMid,
   BudgetLevel.exceeded => colors.negative,
 };
 

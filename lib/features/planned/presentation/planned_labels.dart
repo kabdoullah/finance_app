@@ -26,7 +26,8 @@ extension PlannedStatusLabels on PlannedStatus {
   /// (fond, encre) de l'icône et de la pastille : neutre à payer, ambre en
   /// retard, vert une fois payée.
   (Color, Color) colors(AppColors colors) => switch (this) {
-    PlannedStatus.planned => (colors.chip, colors.ink),
+    // Ardoise : à payer, prévu.
+    PlannedStatus.planned => (colors.infoSoft, colors.info),
     PlannedStatus.late => (colors.warningSoft, colors.warning),
     PlannedStatus.paid => (colors.primarySoft, colors.onPrimarySoft),
   };

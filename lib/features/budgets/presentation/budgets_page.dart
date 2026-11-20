@@ -11,6 +11,7 @@ import '../../../core/formatting/relative_date.dart';
 import '../../../core/money/money.dart';
 import '../../../core/time/month.dart';
 import '../../../core/widgets/motion.dart';
+import '../../../core/widgets/section_tint.dart';
 import '../../../l10n/l10n.dart';
 import '../../goals/presentation/budgets_goals_switch.dart';
 import '../../transactions/presentation/transactions_providers.dart';
@@ -31,129 +32,134 @@ class BudgetsPage extends ConsumerWidget {
     final now = ref.watch(clockProvider)();
 
     return Scaffold(
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(24, 12, 24, 40),
-          children: [
-            Semantics(
-              header: true,
-              child: Text(
-                l10n.budgetsTitle,
-                style: const TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: -0.5,
+      body: SectionTint(
+        color: context.colors.primaryTint,
+        child: SafeArea(
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(24, 12, 24, 40),
+            children: [
+              Semantics(
+                header: true,
+                child: Text(
+                  l10n.budgetsTitle,
+                  style: const TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: -0.5,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 16),
-            const BudgetsGoalsSwitch(showGoals: false),
-            const SizedBox(height: 24),
-            if (overview != null) ...[
-              if (overview.global case final global?)
-                _MonthBudget(status: global, now: now, month: overview.month)
-              else
-                OutlinedButton.icon(
-                  onPressed: () => context.push(AppRoutes.newBudget),
-                  icon: const Icon(AppIcons.plusBold, size: 16),
-                  label: Text(l10n.budgetNoGlobal),
-                ),
-              for (final status in overview.exceeded)
-                if (status.budget.category case final category?)
+              const SizedBox(height: 16),
+              const BudgetsGoalsSwitch(showGoals: false),
+              const SizedBox(height: 24),
+              if (overview != null) ...[
+                if (overview.global case final global?)
+                  _MonthBudget(status: global, now: now, month: overview.month)
+                else
+                  OutlinedButton.icon(
+                    onPressed: () => context.push(AppRoutes.newBudget),
+                    icon: const Icon(AppIcons.plusBold, size: 16),
+                    label: Text(l10n.budgetNoGlobal),
+                  ),
+                for (final status in overview.exceeded)
+                  if (status.budget.category case final category?)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: _Alert(
+                        icon: AppIcons.warningCircleBold,
+                        background: colors.negativeSoft,
+                        foreground: colors.negative,
+                        title: l10n.budgetExceededAlert(
+                          category.name,
+                          MoneyFormat.amount(-status.remaining),
+                        ),
+                        body: switch (overview.driverOf(status)) {
+                          final driver? => l10n.budgetDriver(
+                            driver.category.name,
+                            driver.count,
+                            MoneyFormat.amount(driver.total),
+                          ),
+                          null => null,
+                        },
+                        linkLabel: l10n.budgetSeeOperations,
+                        onLink: () =>
+                            _showOperations(context, ref, category.id),
+                      ),
+                    ),
+                if (overview.forecasts.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 16),
                     child: _Alert(
-                      icon: AppIcons.warningCircleBold,
-                      background: colors.negativeSoft,
-                      foreground: colors.negative,
-                      title: l10n.budgetExceededAlert(
-                        category.name,
-                        MoneyFormat.amount(-status.remaining),
+                      icon: AppIcons.chartLineBold,
+                      background: colors.warningSoft,
+                      foreground: colors.warning,
+                      title: l10n.budgetForecastLabel,
+                      body: _forecastText(context, overview.forecasts),
+                      linkLabel: l10n.budgetSeeForecast,
+                      onLink: () => context.go(AppRoutes.forecast),
+                    ),
+                  ),
+                const SizedBox(height: 28),
+                if (overview.categories.isEmpty && overview.global == null)
+                  Text(
+                    l10n.budgetEmpty,
+                    style: TextStyle(
+                      fontSize: 14,
+                      height: 1.5,
+                      color: colors.inkSecondary,
+                    ),
+                  )
+                else if (overview.categories.isNotEmpty) ...[
+                  Semantics(
+                    header: true,
+                    child: Text(
+                      l10n.budgetByCategory,
+                      style: const TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w600,
                       ),
-                      body: switch (overview.driverOf(status)) {
-                        final driver? => l10n.budgetDriver(
-                          driver.category.name,
-                          driver.count,
-                          MoneyFormat.amount(driver.total),
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  // Barres en cascade à l'ouverture.
+                  for (final (i, status) in overview.categories.indexed)
+                    FadeSlideIn(
+                      index: i,
+                      child: BudgetRow(
+                        status: status,
+                        onTap: () => context.push(
+                          AppRoutes.editBudget(status.budget.id),
                         ),
-                        null => null,
-                      },
-                      linkLabel: l10n.budgetSeeOperations,
-                      onLink: () => _showOperations(context, ref, category.id),
+                      ),
+                    ),
+                ],
+                if (overview.withoutBudget.isNotEmpty) ...[
+                  const SizedBox(height: 12),
+                  Text(
+                    l10n.budgetWithout(
+                      overview.withoutBudget.map((c) => c.name).join(', '),
+                    ),
+                    style: TextStyle(
+                      fontSize: 12.5,
+                      height: 1.5,
+                      color: colors.inkTertiary,
                     ),
                   ),
-              if (overview.forecasts.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: _Alert(
-                    icon: AppIcons.chartLineBold,
-                    background: colors.warningSoft,
-                    foreground: colors.warning,
-                    title: l10n.budgetForecastLabel,
-                    body: _forecastText(context, overview.forecasts),
-                    linkLabel: l10n.budgetSeeForecast,
-                    onLink: () => context.go(AppRoutes.forecast),
-                  ),
+                ],
+                const SizedBox(height: 24),
+                FilledButton.icon(
+                  onPressed: () => context.push(AppRoutes.newBudget),
+                  icon: const Icon(AppIcons.plusBold, size: 18),
+                  label: Text(l10n.budgetCreate),
                 ),
-              const SizedBox(height: 28),
-              if (overview.categories.isEmpty && overview.global == null)
-                Text(
-                  l10n.budgetEmpty,
-                  style: TextStyle(
-                    fontSize: 14,
-                    height: 1.5,
-                    color: colors.inkSecondary,
-                  ),
-                )
-              else if (overview.categories.isNotEmpty) ...[
-                Semantics(
-                  header: true,
-                  child: Text(
-                    l10n.budgetByCategory,
-                    style: const TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 6),
-                // Barres en cascade à l'ouverture.
-                for (final (i, status) in overview.categories.indexed)
-                  FadeSlideIn(
-                    index: i,
-                    child: BudgetRow(
-                      status: status,
-                      onTap: () =>
-                          context.push(AppRoutes.editBudget(status.budget.id)),
-                    ),
-                  ),
-              ],
-              if (overview.withoutBudget.isNotEmpty) ...[
-                const SizedBox(height: 12),
-                Text(
-                  l10n.budgetWithout(
-                    overview.withoutBudget.map((c) => c.name).join(', '),
-                  ),
-                  style: TextStyle(
-                    fontSize: 12.5,
-                    height: 1.5,
-                    color: colors.inkTertiary,
-                  ),
+                const SizedBox(height: 8),
+                OutlinedButton(
+                  onPressed: () => context.go(AppRoutes.transactions),
+                  child: Text(l10n.budgetSeeOperations),
                 ),
               ],
-              const SizedBox(height: 24),
-              FilledButton.icon(
-                onPressed: () => context.push(AppRoutes.newBudget),
-                icon: const Icon(AppIcons.plusBold, size: 18),
-                label: Text(l10n.budgetCreate),
-              ),
-              const SizedBox(height: 8),
-              OutlinedButton(
-                onPressed: () => context.go(AppRoutes.transactions),
-                child: Text(l10n.budgetSeeOperations),
-              ),
             ],
-          ],
+          ),
         ),
       ),
     );

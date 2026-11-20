@@ -31,7 +31,7 @@ void main() {
 
   Future<void> openSheet(WidgetTester tester) async {
     await pumpTestApp(tester, db);
-    await tester.tap(find.text('Ajouter').last);
+    await tester.tap(find.byTooltip('Ajouter').last);
     await tester.pumpAndSettle();
   }
 
@@ -98,7 +98,7 @@ void main() {
       (call) async => call.method == 'status' ? 'unsupported' : null,
     );
     await openSheet(tester);
-    await tester.tap(find.text('Dicter'));
+    await tester.tap(find.text('Dicter').last);
     await tester.pumpAndSettle();
     expect(
       find.textContaining('La dictée hors connexion n\'est pas disponible'),
@@ -132,7 +132,7 @@ void main() {
           ),
         ],
       );
-      await tester.tap(find.text('Ajouter').last);
+      await tester.tap(find.byTooltip('Ajouter').last);
       await tester.pumpAndSettle();
       await tester.tap(find.text('« Taxi 2 500 ce matin avec Wave »'));
       await tester.pumpAndSettle();

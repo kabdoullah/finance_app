@@ -27,7 +27,7 @@ void main() {
   tearDown(() => db.close());
 
   Future<void> addExpense(WidgetTester tester) async {
-    await tester.tap(find.text('Ajouter'));
+    await tester.tap(find.byTooltip('Ajouter'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Dépense'));
     await tester.pumpAndSettle();

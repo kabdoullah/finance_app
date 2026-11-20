@@ -9,6 +9,7 @@ import '../../../app/theme/motion.dart';
 import '../../../core/clock.dart';
 import '../../../core/formatting/date_format.dart';
 import '../../../core/money/money.dart';
+import '../../../core/widgets/section_tint.dart';
 import '../../../core/widgets/segmented_choice.dart';
 import '../../../l10n/l10n.dart';
 import '../../budgets/domain/budget.dart';
@@ -38,61 +39,64 @@ class _ForecastPageState extends ConsumerState<ForecastPage> {
     final days = history?.daysOfHistory(now) ?? 0;
 
     return Scaffold(
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(24, 12, 24, 40),
-          children: [
-            Semantics(
-              header: true,
-              child: Text(
-                l10n.forecastTitle,
-                style: const TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: -0.5,
+      body: SectionTint(
+        color: context.colors.infoTint,
+        child: SafeArea(
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(24, 12, 24, 40),
+            children: [
+              Semantics(
+                header: true,
+                child: Text(
+                  l10n.forecastTitle,
+                  style: const TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: -0.5,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 16),
-            if (history != null && days < Forecast.minHistoryDays)
-              _Insufficient(days: days)
-            else if (forecast != null) ...[
-              SegmentedChoice<ForecastHorizon>(
-                options: [
-                  (ForecastHorizon.week, l10n.forecastHorizon7),
-                  (ForecastHorizon.month, l10n.forecastHorizon30),
-                  (ForecastHorizon.quarter, l10n.forecastHorizon90),
-                ],
-                selected: _horizon,
-                onChanged: (h) => setState(() => _horizon = h),
-              ),
-              const SizedBox(height: 24),
-              _Summary(forecast: forecast),
-              const SizedBox(height: 20),
-              _ChartBlock(forecast: forecast),
-              const SizedBox(height: 28),
-              _Risks(forecast: forecast),
-              const SizedBox(height: 28),
-              _Expected(forecast: forecast),
-              const SizedBox(height: 24),
-              _HowItWorks(forecast: forecast),
-              const SizedBox(height: 24),
-              OutlinedButton.icon(
-                onPressed: () => context.go(AppRoutes.simulation),
-                icon: const Icon(AppIcons.target, size: 18),
-                label: Text(l10n.forecastSimulate),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                l10n.forecastSimulateExample,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 13,
-                  color: context.colors.inkTertiary,
+              const SizedBox(height: 16),
+              if (history != null && days < Forecast.minHistoryDays)
+                _Insufficient(days: days)
+              else if (forecast != null) ...[
+                SegmentedChoice<ForecastHorizon>(
+                  options: [
+                    (ForecastHorizon.week, l10n.forecastHorizon7),
+                    (ForecastHorizon.month, l10n.forecastHorizon30),
+                    (ForecastHorizon.quarter, l10n.forecastHorizon90),
+                  ],
+                  selected: _horizon,
+                  onChanged: (h) => setState(() => _horizon = h),
                 ),
-              ),
+                const SizedBox(height: 24),
+                _Summary(forecast: forecast),
+                const SizedBox(height: 20),
+                _ChartBlock(forecast: forecast),
+                const SizedBox(height: 28),
+                _Risks(forecast: forecast),
+                const SizedBox(height: 28),
+                _Expected(forecast: forecast),
+                const SizedBox(height: 24),
+                _HowItWorks(forecast: forecast),
+                const SizedBox(height: 24),
+                OutlinedButton.icon(
+                  onPressed: () => context.go(AppRoutes.simulation),
+                  icon: const Icon(AppIcons.target, size: 18),
+                  label: Text(l10n.forecastSimulate),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  l10n.forecastSimulateExample,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: context.colors.inkTertiary,
+                  ),
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );

@@ -12,6 +12,7 @@ import '../../../core/clock.dart';
 import '../../../core/formatting/date_format.dart';
 import '../../../core/money/money.dart';
 import '../../../core/widgets/motion.dart';
+import '../../../core/widgets/section_tint.dart';
 import '../../../l10n/l10n.dart';
 import '../domain/savings_goal.dart';
 import 'budgets_goals_switch.dart';
@@ -30,47 +31,50 @@ class GoalsPage extends ConsumerWidget {
     final goals = ref.watch(goalsProvider).value;
 
     return Scaffold(
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(24, 12, 24, 40),
-          children: [
-            Semantics(
-              header: true,
-              child: Text(
-                l10n.budgetsTitle,
-                style: const TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: -0.5,
+      body: SectionTint(
+        color: context.colors.warningTint,
+        child: SafeArea(
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(24, 12, 24, 40),
+            children: [
+              Semantics(
+                header: true,
+                child: Text(
+                  l10n.budgetsTitle,
+                  style: const TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: -0.5,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 16),
-            const BudgetsGoalsSwitch(showGoals: true),
-            const SizedBox(height: 24),
-            if (goals != null) ...[
-              if (goals.isEmpty)
-                Text(
-                  l10n.goalsEmpty,
-                  style: TextStyle(
-                    fontSize: 14,
-                    height: 1.5,
-                    color: colors.inkSecondary,
-                  ),
-                )
-              else ...[
-                _Summary(summary: GoalsSummary.of(goals)),
-                const SizedBox(height: 16),
-                for (final goal in goals) GoalCard(goal: goal),
-              ],
+              const SizedBox(height: 16),
+              const BudgetsGoalsSwitch(showGoals: true),
               const SizedBox(height: 24),
-              OutlinedButton.icon(
-                onPressed: () => context.push(AppRoutes.newGoal),
-                icon: const Icon(AppIcons.plusBold, size: 18),
-                label: Text(l10n.goalNew),
-              ),
+              if (goals != null) ...[
+                if (goals.isEmpty)
+                  Text(
+                    l10n.goalsEmpty,
+                    style: TextStyle(
+                      fontSize: 14,
+                      height: 1.5,
+                      color: colors.inkSecondary,
+                    ),
+                  )
+                else ...[
+                  _Summary(summary: GoalsSummary.of(goals)),
+                  const SizedBox(height: 16),
+                  for (final goal in goals) GoalCard(goal: goal),
+                ],
+                const SizedBox(height: 24),
+                OutlinedButton.icon(
+                  onPressed: () => context.push(AppRoutes.newGoal),
+                  icon: const Icon(AppIcons.plusBold, size: 18),
+                  label: Text(l10n.goalNew),
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );

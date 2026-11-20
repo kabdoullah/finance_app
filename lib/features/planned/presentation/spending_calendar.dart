@@ -401,7 +401,7 @@ class _DayCell extends StatelessWidget {
                       height: 6,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: colors.primary.withValues(
+                        color: colors.expense.withValues(
                           alpha: _opacity[level],
                         ),
                       ),
@@ -415,7 +415,7 @@ class _DayCell extends StatelessWidget {
                         color: hasLate ? colors.warning : null,
                         border: Border.all(
                           width: 1.5,
-                          color: hasLate ? colors.warning : colors.inkSecondary,
+                          color: hasLate ? colors.warning : colors.infoMid,
                         ),
                       ),
                     ),
@@ -463,11 +463,8 @@ class _Legend extends StatelessWidget {
       spacing: 12,
       runSpacing: 4,
       children: [
-        item(dot(colors.primary, colors.primary), l10n.calLegendPaid),
-        item(
-          dot(Colors.transparent, colors.inkSecondary),
-          l10n.calLegendPlanned,
-        ),
+        item(dot(colors.expense, colors.expense), l10n.calLegendPaid),
+        item(dot(Colors.transparent, colors.infoMid), l10n.calLegendPlanned),
         item(dot(colors.warning, colors.warning), l10n.calLegendLate),
       ],
     );
@@ -694,7 +691,7 @@ class MonthSpendingSummary extends ConsumerWidget {
                               if (spending.paid.value > 0)
                                 Expanded(
                                   flex: spending.paid.value,
-                                  child: ColoredBox(color: colors.chart.first),
+                                  child: ColoredBox(color: colors.expenseMid),
                                 ),
                               if (spending.planned.value > 0)
                                 Expanded(
@@ -702,7 +699,7 @@ class MonthSpendingSummary extends ConsumerWidget {
                                   child: ColoredBox(
                                     color: late
                                         ? colors.warning
-                                        : colors.chart.last,
+                                        : colors.infoMid,
                                   ),
                                 ),
                             ],

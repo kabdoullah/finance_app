@@ -13,6 +13,7 @@ import '../../../core/money/money.dart';
 import '../../../core/time/month.dart';
 import '../../../core/widgets/amount_display.dart';
 import '../../../core/widgets/motion.dart';
+import '../../../core/widgets/section_tint.dart';
 import '../../../l10n/l10n.dart';
 import '../../accounts/domain/accounts_summary.dart';
 import '../../accounts/presentation/accounts_providers.dart';
@@ -58,38 +59,43 @@ class DashboardPage extends ConsumerWidget {
 
     return Scaffold(
       floatingActionButton: hasAccounts ? const AddOperationButton() : null,
-      body: SafeArea(
-        bottom: false,
-        child: SingleChildScrollView(
-          padding: EdgeInsets.fromLTRB(24, 12, 24, hasAccounts ? 120 : 40),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: 32,
-            children: [
-              for (final (i, section) in [
-                _Header(date: now),
-                _Balance(
-                  summary: summary,
-                  masked: ref.watch(amountsHiddenProvider),
-                  onToggleMask: ref.read(amountsHiddenProvider.notifier).toggle,
-                ),
-                if (active) ...[
-                  _MonthTotals(month: ref.watch(monthOfProvider)(now)),
-                  const SpendingCalendar(),
-                  _WhereMoneyGoes(month: ref.watch(monthOfProvider)(now)),
-                  const _CopilotInsight(),
-                  const _Budgets(),
-                  const _ForecastCard(),
-                  const _RecentOperations(),
-                ] else ...[
-                  _GetStarted(hasAccounts: hasAccounts),
-                  const _CopilotHint(),
-                  const _PrivacyNote(),
-                ],
-              ].indexed)
-                // Sections en cascade à l'ouverture.
-                FadeSlideIn(index: i, child: section),
-            ],
+      body: SectionTint(
+        color: context.colors.primaryTint,
+        child: SafeArea(
+          bottom: false,
+          child: SingleChildScrollView(
+            padding: EdgeInsets.fromLTRB(24, 12, 24, hasAccounts ? 120 : 40),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: 32,
+              children: [
+                for (final (i, section) in [
+                  _Header(date: now),
+                  _Balance(
+                    summary: summary,
+                    masked: ref.watch(amountsHiddenProvider),
+                    onToggleMask: ref
+                        .read(amountsHiddenProvider.notifier)
+                        .toggle,
+                  ),
+                  if (active) ...[
+                    _MonthTotals(month: ref.watch(monthOfProvider)(now)),
+                    const SpendingCalendar(),
+                    _WhereMoneyGoes(month: ref.watch(monthOfProvider)(now)),
+                    const _CopilotInsight(),
+                    const _Budgets(),
+                    const _ForecastCard(),
+                    const _RecentOperations(),
+                  ] else ...[
+                    _GetStarted(hasAccounts: hasAccounts),
+                    const _CopilotHint(),
+                    const _PrivacyNote(),
+                  ],
+                ].indexed)
+                  // Sections en cascade à l'ouverture.
+                  FadeSlideIn(index: i, child: section),
+              ],
+            ),
           ),
         ),
       ),
@@ -259,7 +265,7 @@ class _WhereMoneyGoes extends ConsumerWidget {
                     if (share.percent > 0)
                       Expanded(
                         flex: share.percent,
-                        child: ColoredBox(color: colors.chart[i]),
+                        child: ColoredBox(color: colors.expenseChart[i]),
                       ),
                 ],
               ),
@@ -276,7 +282,7 @@ class _WhereMoneyGoes extends ConsumerWidget {
                   children: [
                     DecoratedBox(
                       decoration: BoxDecoration(
-                        color: colors.chart[i],
+                        color: colors.expenseChart[i],
                         borderRadius: BorderRadius.circular(3),
                       ),
                       child: const SizedBox.square(dimension: 10),
