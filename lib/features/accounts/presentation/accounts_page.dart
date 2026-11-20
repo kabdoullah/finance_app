@@ -13,6 +13,7 @@ import '../../../core/widgets/amount_display.dart';
 import '../../../l10n/l10n.dart';
 import '../../goals/presentation/goals_page.dart';
 import '../../goals/presentation/goals_providers.dart';
+import '../../transactions/domain/transaction.dart';
 import '../domain/account.dart';
 import '../domain/account_type.dart';
 import '../domain/accounts_summary.dart';
@@ -96,6 +97,8 @@ class _AccountsList extends StatelessWidget {
         ],
         if (active.isNotEmpty) ...[
           const SizedBox(height: 20),
+          // Maquette : transfert entre comptes, puis objectifs.
+          if (active.length >= 2) const _TransferLink(),
           const GoalsAccountsLink(),
         ],
       ],
@@ -468,4 +471,69 @@ class _DashedBorderPainter extends CustomPainter {
   @override
   bool shouldRepaint(_DashedBorderPainter old) =>
       old.color != color || old.radius != radius;
+}
+
+/// « Transférer entre comptes » : ouvre un transfert (ni revenu ni
+/// dépense).
+class _TransferLink extends StatelessWidget {
+  const _TransferLink();
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final l10n = context.l10n;
+    return InkWell(
+      onTap: () => context.push(
+        AppRoutes.newTransaction(kind: TransactionKind.transfer),
+      ),
+      child: Container(
+        margin: const EdgeInsets.only(top: 8),
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        decoration: BoxDecoration(
+          border: Border(top: BorderSide(color: colors.line)),
+        ),
+        child: Row(
+          spacing: 12,
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: colors.infoSoft,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                AppIcons.arrowsLeftRight,
+                size: 19,
+                color: colors.info,
+              ),
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 2,
+                children: [
+                  Text(
+                    l10n.accountsTransfer,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    l10n.accountsTransferHint,
+                    style: TextStyle(
+                      fontSize: 12.5,
+                      color: colors.inkSecondary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(AppIcons.caretRight, size: 14, color: colors.inkTertiary),
+          ],
+        ),
+      ),
+    );
+  }
 }

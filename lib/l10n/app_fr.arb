@@ -1292,5 +1292,7 @@
   "txOlderDateHint": "Plus ancien : touche le libellé de la date pour ouvrir le calendrier.",
   "txDayShortToday": "Auj.",
   "txSeeBudget": "Voir le budget",
-  "txSeeInCalendar": "Voir dans le calendrier"
+  "txSeeInCalendar": "Voir dans le calendrier",
+  "accountsTransfer": "Transférer entre comptes",
+  "accountsTransferHint": "Un transfert ne compte ni comme revenu ni comme dépense."
 }

@@ -4083,4 +4083,11 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get txSeeInCalendar => 'Voir dans le calendrier';
+
+  @override
+  String get accountsTransfer => 'Transférer entre comptes';
+
+  @override
+  String get accountsTransferHint =>
+      'Un transfert ne compte ni comme revenu ni comme dépense.';
 }

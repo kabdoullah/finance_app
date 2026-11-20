@@ -6519,6 +6519,18 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Voir dans le calendrier'**
   String get txSeeInCalendar;
+
+  /// No description provided for @accountsTransfer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Transférer entre comptes'**
+  String get accountsTransfer;
+
+  /// No description provided for @accountsTransferHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un transfert ne compte ni comme revenu ni comme dépense.'**
+  String get accountsTransferHint;
 }
 
 class _AppLocalizationsDelegate

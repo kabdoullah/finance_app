@@ -284,6 +284,15 @@ class GoalCard extends ConsumerWidget {
             ],
           ),
           GoalBar(goal: goal),
+          if (!goal.isReached)
+            Text(
+              l10n.goalLeft(MoneyFormat.amount(goal.left)),
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: colors.inkSecondary,
+              ),
+            ),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 8,
