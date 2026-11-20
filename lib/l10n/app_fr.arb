@@ -1286,5 +1286,11 @@
   "asUntil": "jusqu'au {date}",
   "asLowPoint": "Point bas",
   "asOnDate": "le {date}",
-  "asWeekLabel": "Cette semaine : dépensé {spent}, reste par jour {perDay}, point bas {low}"
+  "asWeekLabel": "Cette semaine : dépensé {spent}, reste par jour {perDay}, point bas {low}",
+  "txWriteWords": "Écrire avec mes mots",
+  "txAccountBalance": "Solde {amount}\u00a0FCFA",
+  "txOlderDateHint": "Plus ancien : touche le libellé de la date pour ouvrir le calendrier.",
+  "txDayShortToday": "Auj.",
+  "txSeeBudget": "Voir le budget",
+  "txSeeInCalendar": "Voir dans le calendrier"
 }

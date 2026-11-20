@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../app/router.dart';
@@ -408,6 +409,32 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
             ],
           ),
         ),
+        if (widget.editPlanned == null) ...[
+          const SizedBox(height: 16),
+          // Raccourcis de la maquette : dicter ou écrire plutôt.
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              _Shortcut(
+                icon: AppIcons.microphoneBold,
+                label: l10n.txEmptyDictate,
+                background: colors.primarySoft,
+                foreground: colors.onPrimarySoft,
+                onTap: () => context.pushReplacement(AppRoutes.quickEntry()),
+              ),
+              _Shortcut(
+                icon: AppIcons.keyboard,
+                label: l10n.txWriteWords,
+                background: colors.chip,
+                foreground: colors.ink,
+                onTap: () =>
+                    context.pushReplacement(AppRoutes.quickEntry(text: true)),
+              ),
+            ],
+          ),
+        ],
         const Spacer(),
         Padding(
           padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
@@ -439,9 +466,9 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
     final to = _to(accounts, from);
     final isTransfer = _kind == TransactionKind.transfer;
     Account? byId(String? id) => accounts.where((a) => a.id == id).firstOrNull;
-    String accountLabel(Account? a) => a == null
-        ? '—'
-        : '${a.name} · ${MoneyFormat.amount(a.balance)} ${l10n.currencyLabel}';
+    String accountLabel(Account? a) => a?.name ?? '—';
+    String? accountBalance(Account? a) =>
+        a == null ? null : l10n.txAccountBalance(MoneyFormat.amount(a.balance));
 
     final canSave =
         !_saving &&
@@ -554,6 +581,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                     icon: AppIcons.wallet,
                     label: l10n.txFrom,
                     value: accountLabel(byId(from)),
+                    subtitle: accountBalance(byId(from)),
                     onTap: () => _chooseAccount(accounts, from, (id) {
                       _accountId = id;
                       if (id == _toAccountId) _toAccountId = null;
@@ -563,6 +591,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                     icon: AppIcons.wallet,
                     label: l10n.txTo,
                     value: accountLabel(byId(to)),
+                    subtitle: accountBalance(byId(to)),
                     onTap: () => _chooseAccount(
                       accounts.where((a) => a.id != from).toList(),
                       to,
@@ -582,6 +611,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                   icon: AppIcons.wallet,
                   label: l10n.txAccount,
                   value: accountLabel(byId(from)),
+                  subtitle: accountBalance(byId(from)),
                   onTap: () =>
                       _chooseAccount(accounts, from, (id) => _accountId = id),
                 ),
@@ -601,12 +631,22 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                       : l10n.plannedInfoLaterMonth(currentMonth, dueMonth),
                 ),
               ] else
-                _PickerRow(
-                  icon: AppIcons.calendarBlank,
-                  label: l10n.txDate,
-                  value: relative.formDate(_date),
-                  onTap: _pickDate,
-                  showDivider: false,
+                _DayStrip(
+                  label: relative.formDate(_date),
+                  selected: _date,
+                  now: ref.watch(clockProvider)(),
+                  onOlder: _pickDate,
+                  onPick: (day) => setState(() {
+                    final now = ref.read(clockProvider)();
+                    // On garde l'heure de saisie (ordre des opérations).
+                    _date = DateTime(
+                      day.year,
+                      day.month,
+                      day.day,
+                      now.hour,
+                      now.minute,
+                    );
+                  }),
                 ),
               if (isTransfer && to != null) ...[
                 const SizedBox(height: 8),
@@ -750,6 +790,22 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
               ),
               const SizedBox(height: 24),
               _InfoBox(text: l10n.plannedInfoSameMonth(month)),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton.icon(
+                  onPressed: () => context.go(AppRoutes.home),
+                  icon: Icon(
+                    AppIcons.calendarBlank,
+                    size: 16,
+                    color: colors.info,
+                  ),
+                  label: Text(l10n.txSeeInCalendar),
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    foregroundColor: colors.ink,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -846,7 +902,22 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                 if (saved.mainCategory case final category?)
                   Padding(
                     padding: const EdgeInsets.only(top: 24),
-                    child: BudgetImpactNote(mainCategoryId: category.id),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        BudgetImpactNote(mainCategoryId: category.id),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: TextButton(
+                            onPressed: () => context.go(AppRoutes.budgets),
+                            style: TextButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                            ),
+                            child: Text(l10n.txSeeBudget),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
               if (account != null) ...[
                 const SizedBox(height: 28),
@@ -1010,6 +1081,7 @@ class _PickerRow extends StatelessWidget {
     required this.value,
     required this.onTap,
     this.showDivider = true,
+    this.subtitle,
   });
 
   final IconData icon;
@@ -1017,6 +1089,9 @@ class _PickerRow extends StatelessWidget {
   final String value;
   final VoidCallback onTap;
   final bool showDivider;
+
+  /// Ligne discrète sous la valeur (« Solde 42 000 FCFA »).
+  final String? subtitle;
 
   @override
   Widget build(BuildContext context) {
@@ -1061,6 +1136,14 @@ class _PickerRow extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
+                  if (subtitle != null)
+                    Text(
+                      subtitle!,
+                      style: TextStyle(
+                        fontSize: 12.5,
+                        color: colors.inkTertiary,
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -1152,4 +1235,215 @@ class _NeedAccount extends StatelessWidget {
       ],
     ),
   );
+}
+
+/// Raccourci pilule sous le montant (« Dicter », « Écrire avec mes mots »).
+class _Shortcut extends StatelessWidget {
+  const _Shortcut({
+    required this.icon,
+    required this.label,
+    required this.background,
+    required this.foreground,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final Color background;
+  final Color foreground;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) => Material(
+    color: background,
+    shape: const StadiumBorder(),
+    child: InkWell(
+      customBorder: const StadiumBorder(),
+      onTap: onTap,
+      child: Container(
+        constraints: const BoxConstraints(minHeight: 44),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 6,
+          children: [
+            Icon(icon, size: 15, color: foreground),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: foreground,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+/// Date d'une opération déjà payée : les 7 derniers jours en pastilles ;
+/// toucher le libellé ouvre le calendrier pour une date plus ancienne.
+class _DayStrip extends StatelessWidget {
+  const _DayStrip({
+    required this.label,
+    required this.selected,
+    required this.now,
+    required this.onOlder,
+    required this.onPick,
+  });
+
+  final String label;
+  final DateTime selected;
+  final DateTime now;
+  final VoidCallback onOlder;
+  final ValueChanged<DateTime> onPick;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final l10n = context.l10n;
+    final locale = Localizations.localeOf(context).toLanguageTag();
+    final relative = RelativeDate(l10n, locale, now);
+    final today = CalendarDate.of(now);
+    final picked = CalendarDate.of(selected.toLocal());
+    final days = [
+      for (var i = 6; i >= 0; i--)
+        DateTime(today.year, today.month, today.day - i),
+    ];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: 8,
+      children: [
+        InkWell(
+          onTap: onOlder,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    l10n.txDate,
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: colors.inkSecondary,
+                    ),
+                  ),
+                ),
+                Flexible(
+                  child: Text(
+                    label,
+                    textAlign: TextAlign.end,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Row(
+          spacing: 6,
+          children: [
+            for (final day in days)
+              Expanded(
+                child: _DayChip(
+                  top: day == today
+                      ? l10n.txDayShortToday
+                      : RelativeDate.capitalize(
+                          DateFormat(
+                            'E',
+                            locale,
+                          ).format(day).replaceAll('.', ''),
+                        ),
+                  number: '${day.day}',
+                  semantics: relative.longDate(day),
+                  selected: day == picked,
+                  onTap: () => onPick(day),
+                ),
+              ),
+          ],
+        ),
+        Text(
+          l10n.txOlderDateHint,
+          style: TextStyle(fontSize: 12.5, color: colors.inkTertiary),
+        ),
+      ],
+    );
+  }
+}
+
+class _DayChip extends StatelessWidget {
+  const _DayChip({
+    required this.top,
+    required this.number,
+    required this.semantics,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String top;
+  final String number;
+  final String semantics;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final ink = selected ? colors.onPrimarySoft : colors.ink;
+    return Semantics(
+      button: true,
+      selected: selected,
+      label: semantics,
+      excludeSemantics: true,
+      child: Material(
+        color: selected ? colors.primarySoft : colors.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14),
+          side: BorderSide(color: selected ? colors.primaryMid : colors.line),
+        ),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(14),
+          onTap: onTap,
+          child: Container(
+            constraints: const BoxConstraints(minHeight: 56),
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              spacing: 2,
+              children: [
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    top,
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: selected ? ink : colors.inkTertiary,
+                    ),
+                  ),
+                ),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    number,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: ink,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }

@@ -6483,6 +6483,42 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Cette semaine : dépensé {spent}, reste par jour {perDay}, point bas {low}'**
   String asWeekLabel(Object low, Object perDay, Object spent);
+
+  /// No description provided for @txWriteWords.
+  ///
+  /// In fr, this message translates to:
+  /// **'Écrire avec mes mots'**
+  String get txWriteWords;
+
+  /// No description provided for @txAccountBalance.
+  ///
+  /// In fr, this message translates to:
+  /// **'Solde {amount} FCFA'**
+  String txAccountBalance(Object amount);
+
+  /// No description provided for @txOlderDateHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plus ancien : touche le libellé de la date pour ouvrir le calendrier.'**
+  String get txOlderDateHint;
+
+  /// No description provided for @txDayShortToday.
+  ///
+  /// In fr, this message translates to:
+  /// **'Auj.'**
+  String get txDayShortToday;
+
+  /// No description provided for @txSeeBudget.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir le budget'**
+  String get txSeeBudget;
+
+  /// No description provided for @txSeeInCalendar.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir dans le calendrier'**
+  String get txSeeInCalendar;
 }
 
 class _AppLocalizationsDelegate

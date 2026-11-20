@@ -4062,4 +4062,25 @@ class AppLocalizationsFr extends AppLocalizations {
   String asWeekLabel(Object low, Object perDay, Object spent) {
     return 'Cette semaine : dépensé $spent, reste par jour $perDay, point bas $low';
   }
+
+  @override
+  String get txWriteWords => 'Écrire avec mes mots';
+
+  @override
+  String txAccountBalance(Object amount) {
+    return 'Solde $amount FCFA';
+  }
+
+  @override
+  String get txOlderDateHint =>
+      'Plus ancien : touche le libellé de la date pour ouvrir le calendrier.';
+
+  @override
+  String get txDayShortToday => 'Auj.';
+
+  @override
+  String get txSeeBudget => 'Voir le budget';
+
+  @override
+  String get txSeeInCalendar => 'Voir dans le calendrier';
 }
