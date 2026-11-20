@@ -1534,35 +1534,11 @@ abstract class AppLocalizations {
   /// **'Dicter'**
   String get qeDictate;
 
-  /// No description provided for @qeDictateHint.
-  ///
-  /// In fr, this message translates to:
-  /// **'Une ou plusieurs opérations'**
-  String get qeDictateHint;
-
   /// No description provided for @qeWrite.
   ///
   /// In fr, this message translates to:
   /// **'Écrire'**
   String get qeWrite;
-
-  /// No description provided for @qeOrWrite.
-  ///
-  /// In fr, this message translates to:
-  /// **'Ou écris-le simplement'**
-  String get qeOrWrite;
-
-  /// No description provided for @qeWriteExample.
-  ///
-  /// In fr, this message translates to:
-  /// **'« Taxi 2 500 ce matin avec Wave »'**
-  String get qeWriteExample;
-
-  /// No description provided for @qeWriteNote.
-  ///
-  /// In fr, this message translates to:
-  /// **'L\'application prépare les opérations, tu vérifies avant d\'enregistrer.'**
-  String get qeWriteNote;
 
   /// No description provided for @qeListening.
   ///

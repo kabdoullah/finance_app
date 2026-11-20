@@ -37,7 +37,7 @@ void main() {
 
   testWidgets('écrire deux opérations, vérifier, enregistrer', (tester) async {
     await openSheet(tester);
-    await tester.tap(find.text('« Taxi 2 500 ce matin avec Wave »'));
+    await tester.tap(find.text('Écrire avec mes mots'));
     await tester.pumpAndSettle();
 
     await tester.enterText(
@@ -74,7 +74,7 @@ void main() {
     tester,
   ) async {
     await openSheet(tester);
-    await tester.tap(find.text('« Taxi 2 500 ce matin avec Wave »'));
+    await tester.tap(find.text('Écrire avec mes mots'));
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextField), 'taxi wave');
     await tester.pump();
@@ -134,7 +134,7 @@ void main() {
       );
       await tester.tap(find.byTooltip('Ajouter').last);
       await tester.pumpAndSettle();
-      await tester.tap(find.text('« Taxi 2 500 ce matin avec Wave »'));
+      await tester.tap(find.text('Écrire avec mes mots'));
       await tester.pumpAndSettle();
       await tester.enterText(find.byType(TextField), text);
       await tester.pump();

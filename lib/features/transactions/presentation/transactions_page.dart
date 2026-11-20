@@ -913,7 +913,7 @@ class _EmptyState extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: FilledButton.icon(
-              onPressed: () => showNewOperationSheet(context),
+              onPressed: () => openNewOperation(context),
               icon: const Icon(AppIcons.plusBold, size: 18),
               label: Text(l10n.txEmptyAction),
             ),

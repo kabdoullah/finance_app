@@ -798,7 +798,7 @@ class _GetStarted extends StatelessWidget {
           title: l10n.dashboardStepTransactionsTitle,
           subtitle: l10n.dashboardStepTransactionsSubtitle,
           isNext: hasAccounts,
-          onTap: hasAccounts ? () => showNewOperationSheet(context) : null,
+          onTap: hasAccounts ? () => openNewOperation(context) : null,
         ),
         _StepRow(
           number: 3,

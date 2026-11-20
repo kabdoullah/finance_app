@@ -921,20 +921,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get qeDictate => 'Dicter';
 
   @override
-  String get qeDictateHint => 'Une ou plusieurs opérations';
-
-  @override
   String get qeWrite => 'Écrire';
-
-  @override
-  String get qeOrWrite => 'Ou écris-le simplement';
-
-  @override
-  String get qeWriteExample => '« Taxi 2 500 ce matin avec Wave »';
-
-  @override
-  String get qeWriteNote =>
-      'L\'application prépare les opérations, tu vérifies avant d\'enregistrer.';
 
   @override
   String get qeListening => 'Écoute en cours · reconnaissance hors ligne';
