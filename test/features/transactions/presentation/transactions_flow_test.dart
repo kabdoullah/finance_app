@@ -3,6 +3,7 @@ import 'package:finance_app/core/money/money.dart';
 import 'package:finance_app/features/accounts/data/accounts_repository.dart';
 import 'package:finance_app/features/accounts/domain/account_draft.dart';
 import 'package:finance_app/features/accounts/domain/account_type.dart';
+import 'package:finance_app/features/transactions/presentation/transactions_page.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -139,5 +140,38 @@ void main() {
     await tester.tap(find.text('Jour'));
     await tester.pumpAndSettle();
     expect(find.text('Lundi 2 nov.'), findsOneWidget);
+  });
+
+  testWidgets('glisser pour supprimer, puis annuler', (tester) async {
+    await pumpTestApp(tester, db);
+    await addExpense(tester);
+    await tester.tap(find.text("Retour à l'accueil"));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Transactions').last);
+    await tester.pumpAndSettle();
+
+    await tester.drag(
+      find.text('Transport · Wave').last,
+      const Offset(-500, 0),
+    );
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Opération supprimée'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byType(TransactionsPage),
+        matching: find.text('Transport · Wave'),
+      ),
+      findsNothing,
+    );
+
+    await tester.tap(find.text('Annuler'));
+    await tester.pumpAndSettle();
+    expect(
+      find.descendant(
+        of: find.byType(TransactionsPage),
+        matching: find.text('Transport · Wave'),
+      ),
+      findsOneWidget,
+    );
   });
 }

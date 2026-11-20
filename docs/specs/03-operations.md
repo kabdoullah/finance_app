@@ -40,6 +40,9 @@ message qui la confirme).
 - États : chargement (lignes grisées), « Rien sur cette période » /
   « Aucun résultat » avec « Tout afficher », premier lancement (Ajouter,
   Planifier une dépense, Dicter).
+- **Glisser vers la gauche** une opération la supprime sans dialogue
+  (repli de la ligne, « Opération supprimée : … · Annuler » 5 s) ; action
+  « Supprimer » pour les lecteurs d'écran. Pas pour les dépenses à payer.
 - Depuis un budget, « Voir les opérations » ouvre le mois en cours filtré
   sur sa catégorie ; depuis Dépenses du mois, le mois choisi.
 

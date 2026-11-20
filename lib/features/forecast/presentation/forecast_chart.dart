@@ -4,6 +4,8 @@ import 'dart:ui' as ui;
 import 'package:material_ui/material_ui.dart';
 
 import '../../../app/theme/app_colors.dart';
+import '../../../app/theme/motion.dart';
+import '../../../core/widgets/motion.dart';
 import '../domain/forecast.dart';
 
 /// Graphique de la maquette Prévisions : passé (trait plein), estimation
@@ -30,8 +32,31 @@ class ForecastChart extends StatelessWidget {
       child: SizedBox(
         height: height,
         width: double.infinity,
-        child: CustomPaint(
-          painter: _ForecastPainter(forecast: forecast, colors: colors),
+        // Tracé de gauche à droite à l'apparition.
+        child: FillIn(
+          value: 1,
+          duration: Motion.chart,
+          // L'Align extérieur libère la largeur : seule la part tracée est
+          // visible.
+          builder: (context, progress) => Align(
+            alignment: Alignment.centerLeft,
+            child: ClipRect(
+              child: Align(
+                alignment: Alignment.centerLeft,
+                widthFactor: progress,
+                child: SizedBox(
+                  height: height,
+                  width: double.infinity,
+                  child: CustomPaint(
+                    painter: _ForecastPainter(
+                      forecast: forecast,
+                      colors: colors,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );

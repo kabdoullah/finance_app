@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
 import '../../app/theme/app_colors.dart';
+import '../../app/theme/motion.dart';
 
 /// Sélecteur segmenté des maquettes : fond pastille, segment actif en surface.
 class SegmentedChoice<T> extends StatelessWidget {
@@ -68,7 +69,10 @@ class _Segment extends StatelessWidget {
         shadowColor: Colors.black26,
         child: InkWell(
           borderRadius: radius,
-          onTap: onTap,
+          onTap: () {
+            if (!selected) Haptics.selection();
+            onTap();
+          },
           child: SizedBox(
             height: 36,
             child: Center(

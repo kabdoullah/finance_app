@@ -4,6 +4,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
 import '../../../core/money/money.dart';
+import '../../../core/widgets/motion.dart';
 import '../../../l10n/l10n.dart';
 import '../domain/budget.dart';
 import 'budgets_providers.dart';
@@ -57,10 +58,14 @@ class BudgetBar extends StatelessWidget {
           color: colors.chip,
           child: Align(
             alignment: Alignment.centerLeft,
-            child: FractionallySizedBox(
-              widthFactor: fill,
-              heightFactor: 1,
-              child: ColoredBox(color: budgetBarColor(status.level, colors)),
+            // Remplissage depuis la gauche à l'apparition.
+            child: FillIn(
+              value: fill,
+              builder: (context, value) => FractionallySizedBox(
+                widthFactor: value,
+                heightFactor: 1,
+                child: ColoredBox(color: budgetBarColor(status.level, colors)),
+              ),
             ),
           ),
         ),

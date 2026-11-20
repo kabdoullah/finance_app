@@ -36,6 +36,13 @@ Ces specs décrivent **ce que fait l'application aujourd'hui** (état au
    large et avec un texte agrandi jusqu'à ×2 : un libellé passe à la ligne
    ou se réduit, un montant n'est jamais tronqué. Pas de mise en page
    dédiée aux tablettes pour l'instant.
+9. **Mouvement calme et utile.** Durées 150 / 220 / 300 / 650 ms, trois
+   courbes (standard, entrée, sortie) ; apparitions 8 px + fondu en
+   cascade (40 ms, 6 au plus) ; un montant compte de 92 % à 100 %, jamais
+   depuis zéro ; l'action n'attend jamais l'animation. « Réduire les
+   animations » du système : tout devient instantané. Retours haptiques
+   (sélection, suppression, enregistrement) selon les réglages du
+   téléphone.
 
 ## Sommaire
 

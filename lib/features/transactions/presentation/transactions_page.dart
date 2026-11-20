@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:flutter/semantics.dart' show CustomSemanticsAction;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
@@ -5,13 +8,16 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/motion.dart';
 import '../../../core/clock.dart';
+import '../../../core/errors/result.dart';
 import '../../../core/formatting/date_format.dart';
 import '../../../core/formatting/relative_date.dart';
 import '../../../core/formatting/text_search.dart';
 import '../../../core/money/money.dart';
 import '../../../core/time/calendar_date.dart';
 import '../../../core/widgets/choice_pill.dart';
+import '../../../core/widgets/motion.dart';
 import '../../../core/widgets/segmented_choice.dart';
 import '../../../l10n/l10n.dart';
 import '../../accounts/presentation/accounts_providers.dart';
@@ -49,6 +55,14 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
   late TransactionPeriod _period = _currentMonth();
   _Status _status = _Status.all;
   TransactionFilters _filters = const TransactionFilters();
+
+  /// Opérations glissées hors de la liste, en cours de suppression.
+  final Set<String> _removing = {};
+
+  /// Opérations déjà affichées pour la même sélection : les autres
+  /// (nouvelles) glissent dans la liste.
+  Set<String>? _known;
+  Object? _knownSelection;
 
   DateTime get _now => ref.read(clockProvider)();
 
@@ -97,6 +111,45 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
     _status = _Status.all;
     _closeSearch();
   });
+
+  /// Glisser pour supprimer : la ligne se replie, « Annuler » la remet.
+  Future<void> _swipeDelete(Transaction t) async {
+    final l10n = context.l10n;
+    final messenger = ScaffoldMessenger.of(context);
+    setState(() => _removing.add(t.id));
+    unawaited(Haptics.medium());
+    final repository = ref.read(transactionsRepositoryProvider);
+    final result = await repository.delete(t.id);
+    if (!mounted) return;
+    switch (result) {
+      case Ok(:final value):
+        messenger
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(
+              content: Text(
+                l10n.txSwipeDeleted(
+                  t.kind == TransactionKind.transfer
+                      ? MoneyFormat.amount(t.amount)
+                      : t.signedAmount,
+                  t.title(l10n),
+                ),
+              ),
+              duration: const Duration(seconds: 5),
+              action: SnackBarAction(
+                label: l10n.cancel,
+                onPressed: () async {
+                  await repository.restore(value);
+                  if (mounted) setState(() => _removing.remove(t.id));
+                },
+              ),
+            ),
+          );
+      case Err():
+        setState(() => _removing.remove(t.id));
+        messenger.showSnackBar(SnackBar(content: Text(l10n.errorGeneric)));
+    }
+  }
 
   @override
   void dispose() {
@@ -293,8 +346,21 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
         : _status;
     final visible = [
       for (final t in transactions ?? const <Transaction>[])
-        if (_matches(t, l10n, _filters)) t,
+        if (!_removing.contains(t.id) && _matches(t, l10n, _filters)) t,
     ];
+    // Nouvelles opérations de la même sélection : elles glissent dans la
+    // liste (pas au premier affichage ni au changement de filtre).
+    final selection = (_period, status, _filters, _search.text.trim());
+    final known = _knownSelection == selection ? _known : null;
+    final fresh = {
+      if (known != null)
+        for (final t in visible)
+          if (!known.contains(t.id)) t.id,
+    };
+    if (!loading) {
+      _known = {for (final t in visible) t.id};
+      _knownSelection = selection;
+    }
 
     /// Lignes affichées pour le statut choisi et [filters].
     int countFor(TransactionFilters filters) {
@@ -575,59 +641,90 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
                 ],
               ),
             ],
-            if (loading)
-              const _Skeleton()
-            else if (rows == 0)
-              _NoResult(
-                title: query.isEmpty
-                    ? l10n.txNothingTitle
-                    : l10n.txNoResultTitle,
-                body: query.isNotEmpty
-                    ? l10n.txNoResultPeriod(query)
-                    : status == _Status.planned
-                    ? l10n.txNothingPlanned
-                    : l10n.txNothingFilters,
-                onReset:
-                    _filters.count > 0 ||
-                        query.isNotEmpty ||
-                        status != _Status.all
-                    ? _resetAll
-                    : null,
-              )
-            else ...[
-              if (showLate && late.isNotEmpty) ...[
-                dueHeader(l10n.plannedLateGroup, late, colors.warning),
-                for (final d in late)
-                  DueRow(
-                    due: d,
-                    now: now,
-                    meta: dueMeta(l10n, relative, d, now),
-                  ),
-              ],
-              if (showUpcoming && upcoming.isNotEmpty) ...[
-                dueHeader(
-                  l10n.plannedUpcomingGroup,
-                  upcoming,
-                  colors.inkTertiary,
-                ),
-                for (final d in upcoming)
-                  DueRow(
-                    due: d,
-                    now: now,
-                    meta: dueMeta(l10n, relative, d, now),
-                  ),
-              ],
-              if (showPaid)
-                for (final (day, items) in groupByDay(visible)) ...[
-                  DayHeader(relative.header(day)),
-                  for (final t in items)
-                    TransactionTile(
-                      transaction: t,
-                      onTap: () =>
-                          context.go(AppRoutes.transactionDetail(t.id)),
-                    ),
+            // Changement de période, de statut ou de filtre : la liste
+            // passe en fondu.
+            AnimatedSwitcher(
+              duration: Motion.of(context, Motion.base),
+              switchInCurve: Motion.ease,
+              switchOutCurve: Motion.easeIn,
+              layoutBuilder: (current, previous) => Stack(
+                alignment: Alignment.topCenter,
+                children: [...previous, ?current],
+              ),
+              child: Column(
+                key: ValueKey((selection, loading)),
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (loading)
+                    const _Skeleton()
+                  else if (rows == 0)
+                    _NoResult(
+                      title: query.isEmpty
+                          ? l10n.txNothingTitle
+                          : l10n.txNoResultTitle,
+                      body: query.isNotEmpty
+                          ? l10n.txNoResultPeriod(query)
+                          : status == _Status.planned
+                          ? l10n.txNothingPlanned
+                          : l10n.txNothingFilters,
+                      onReset:
+                          _filters.count > 0 ||
+                              query.isNotEmpty ||
+                              status != _Status.all
+                          ? _resetAll
+                          : null,
+                    )
+                  else ...[
+                    if (showLate && late.isNotEmpty) ...[
+                      dueHeader(l10n.plannedLateGroup, late, colors.warning),
+                      for (final d in late)
+                        DueRow(
+                          due: d,
+                          now: now,
+                          meta: dueMeta(l10n, relative, d, now),
+                        ),
+                    ],
+                    if (showUpcoming && upcoming.isNotEmpty) ...[
+                      dueHeader(
+                        l10n.plannedUpcomingGroup,
+                        upcoming,
+                        colors.inkTertiary,
+                      ),
+                      for (final d in upcoming)
+                        DueRow(
+                          due: d,
+                          now: now,
+                          meta: dueMeta(l10n, relative, d, now),
+                        ),
+                    ],
+                    if (showPaid)
+                      for (final (day, items) in groupByDay(visible)) ...[
+                        DayHeader(relative.header(day)),
+                        for (final t in items)
+                          _SwipeToDelete(
+                            key: ValueKey('tx-${t.id}'),
+                            onDelete: () => _swipeDelete(t),
+                            child: fresh.contains(t.id)
+                                ? FadeSlideIn(
+                                    child: TransactionTile(
+                                      transaction: t,
+                                      onTap: () => context.go(
+                                        AppRoutes.transactionDetail(t.id),
+                                      ),
+                                    ),
+                                  )
+                                : TransactionTile(
+                                    transaction: t,
+                                    onTap: () => context.go(
+                                      AppRoutes.transactionDetail(t.id),
+                                    ),
+                                  ),
+                          ),
+                      ],
+                  ],
                 ],
-            ],
+              ),
+            ),
           ],
         ),
       ),
@@ -655,7 +752,13 @@ class _Summary extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final l10n = context.l10n;
-    Widget cell(String label, String value, {Color? color}) => Expanded(
+    // Les totaux comptent vers leur nouvelle valeur (360 ms).
+    Widget cell(
+      String label,
+      int value,
+      String Function(int value) format, {
+      Color? color,
+    }) => Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 2,
@@ -667,14 +770,23 @@ class _Summary extends StatelessWidget {
           FittedBox(
             fit: BoxFit.scaleDown,
             alignment: Alignment.centerLeft,
-            child: Text(
-              value,
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.w600,
-                color: color,
-              ),
-            ),
+            child: loading
+                ? const Text(
+                    '…',
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                  )
+                : CountingValue(
+                    value: value,
+                    firstDuration: Duration.zero,
+                    builder: (context, v) => Text(
+                      format(v),
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w600,
+                        color: color,
+                      ),
+                    ),
+                  ),
           ),
         ],
       ),
@@ -688,22 +800,16 @@ class _Summary extends StatelessWidget {
           children: [
             cell(
               l10n.txSumPaid,
-              loading
-                  ? '…'
-                  : paid.value == 0
-                  ? '0'
-                  : MoneyFormat.signed(-paid),
+              paid.value,
+              (v) => v == 0 ? '0' : MoneyFormat.signed(Money(-v)),
             ),
             cell(
               l10n.txSumPlanned,
-              loading
-                  ? '…'
-                  : planned.value == 0
-                  ? '—'
-                  : MoneyFormat.amount(planned),
+              planned.value,
+              (v) => v == 0 ? '—' : MoneyFormat.amount(Money(v)),
               color: planned.value == 0 ? colors.inkTertiary : null,
             ),
-            cell(l10n.txSumCount, loading ? '…' : '$count'),
+            cell(l10n.txSumCount, count, (v) => '$v'),
           ],
         ),
         Text(note, style: TextStyle(fontSize: 12.5, color: colors.inkTertiary)),
@@ -884,6 +990,54 @@ class _NoResult extends StatelessWidget {
               child: Text(context.l10n.txShowAll),
             ),
         ],
+      ),
+    );
+  }
+}
+
+/// Glisser une opération vers la gauche pour la supprimer (léger retour
+/// haptique au seuil) ; action « Supprimer » pour les lecteurs d'écran.
+class _SwipeToDelete extends StatelessWidget {
+  const _SwipeToDelete({
+    required this.child,
+    required this.onDelete,
+    super.key,
+  });
+
+  final Widget child;
+  final VoidCallback onDelete;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final l10n = context.l10n;
+    return Semantics(
+      hint: l10n.txSwipeHint,
+      customSemanticsActions: {
+        CustomSemanticsAction(label: l10n.txDelete): onDelete,
+      },
+      child: Dismissible(
+        key: key!,
+        direction: DismissDirection.endToStart,
+        dismissThresholds: const {DismissDirection.endToStart: 0.4},
+        movementDuration: Motion.of(context, Motion.base),
+        resizeDuration: Motion.of(context, Motion.slow),
+        onUpdate: (details) {
+          if (details.reached && !details.previousReached) {
+            unawaited(Haptics.light());
+          }
+        },
+        onDismissed: (_) => onDelete(),
+        background: Container(
+          alignment: Alignment.centerRight,
+          padding: const EdgeInsets.only(right: 20),
+          decoration: BoxDecoration(
+            color: colors.negativeSoft,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(AppIcons.trash, color: colors.negative, size: 20),
+        ),
+        child: child,
       ),
     );
   }

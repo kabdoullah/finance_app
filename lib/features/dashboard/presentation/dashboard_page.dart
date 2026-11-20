@@ -12,6 +12,7 @@ import '../../../core/formatting/relative_date.dart';
 import '../../../core/money/money.dart';
 import '../../../core/time/month.dart';
 import '../../../core/widgets/amount_display.dart';
+import '../../../core/widgets/motion.dart';
 import '../../../l10n/l10n.dart';
 import '../../accounts/domain/accounts_summary.dart';
 import '../../accounts/presentation/accounts_providers.dart';
@@ -65,25 +66,29 @@ class DashboardPage extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             spacing: 32,
             children: [
-              _Header(date: now),
-              _Balance(
-                summary: summary,
-                masked: ref.watch(amountsHiddenProvider),
-                onToggleMask: ref.read(amountsHiddenProvider.notifier).toggle,
-              ),
-              if (active) ...[
-                _MonthTotals(month: ref.watch(monthOfProvider)(now)),
-                const SpendingCalendar(),
-                _WhereMoneyGoes(month: ref.watch(monthOfProvider)(now)),
-                const _CopilotInsight(),
-                const _Budgets(),
-                const _ForecastCard(),
-                const _RecentOperations(),
-              ] else ...[
-                _GetStarted(hasAccounts: hasAccounts),
-                const _CopilotHint(),
-                const _PrivacyNote(),
-              ],
+              for (final (i, section) in [
+                _Header(date: now),
+                _Balance(
+                  summary: summary,
+                  masked: ref.watch(amountsHiddenProvider),
+                  onToggleMask: ref.read(amountsHiddenProvider.notifier).toggle,
+                ),
+                if (active) ...[
+                  _MonthTotals(month: ref.watch(monthOfProvider)(now)),
+                  const SpendingCalendar(),
+                  _WhereMoneyGoes(month: ref.watch(monthOfProvider)(now)),
+                  const _CopilotInsight(),
+                  const _Budgets(),
+                  const _ForecastCard(),
+                  const _RecentOperations(),
+                ] else ...[
+                  _GetStarted(hasAccounts: hasAccounts),
+                  const _CopilotHint(),
+                  const _PrivacyNote(),
+                ],
+              ].indexed)
+                // Sections en cascade à l'ouverture.
+                FadeSlideIn(index: i, child: section),
             ],
           ),
         ),
@@ -511,13 +516,26 @@ class _Balance extends StatelessWidget {
               ),
           ],
         ),
-        AmountDisplay(
-          masked: masked && hasAccounts,
-          amount: summary.total,
-          fontSize: 46,
-          // Sans compte, le 0 reste discret : ce n'est pas un vrai solde.
-          color: hasAccounts ? colors.ink : colors.inkTertiary,
-          currencyColor: hasAccounts ? colors.inkSecondary : colors.inkTertiary,
+        // Masquer : fondu et flou ; à l'ouverture, le solde compte de 92 à
+        // 100 %.
+        BlurFadeSwitcher(
+          child: KeyedSubtree(
+            key: ValueKey(masked && hasAccounts),
+            child: CountingValue(
+              value: summary.total.value,
+              builder: (context, value) => AmountDisplay(
+                masked: masked && hasAccounts,
+                amount: Money(value),
+                fontSize: 46,
+                // Sans compte, le 0 reste discret : ce n'est pas un vrai
+                // solde.
+                color: hasAccounts ? colors.ink : colors.inkTertiary,
+                currencyColor: hasAccounts
+                    ? colors.inkSecondary
+                    : colors.inkTertiary,
+              ),
+            ),
+          ),
         ),
         if (hasAccounts)
           TextButton(

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
@@ -5,6 +7,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/motion.dart';
 import '../../../core/clock.dart';
 import '../../../core/errors/result.dart';
 import '../../../core/formatting/date_format.dart';
@@ -185,6 +188,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
 
     switch (result) {
       case Ok(:final value):
+        unawaited(Haptics.success());
         final balanceAccountId = value.toAccountId ?? value.accountId;
         final account = await ref
             .read(accountsRepositoryProvider)
@@ -230,6 +234,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
     final l10n = context.l10n;
     switch (result) {
       case Ok(:final value):
+        unawaited(Haptics.success());
         if (editing != null) {
           _showMessage(l10n.plannedUpdated);
           context.pop();

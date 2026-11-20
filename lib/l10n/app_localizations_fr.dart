@@ -3962,4 +3962,12 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get txLoading => 'Chargement des opérations';
+
+  @override
+  String txSwipeDeleted(Object amount, Object title) {
+    return 'Opération supprimée : $title · $amount FCFA';
+  }
+
+  @override
+  String get txSwipeHint => 'Glisser vers la gauche pour supprimer';
 }

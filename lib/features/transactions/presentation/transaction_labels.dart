@@ -3,6 +3,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
 import '../../../core/money/money.dart';
+import '../../../core/widgets/motion.dart';
 import '../../../l10n/l10n.dart';
 import '../../categories/presentation/category_icons.dart';
 import '../domain/transaction.dart';
@@ -119,51 +120,59 @@ class TransactionTile extends StatelessWidget {
     final colors = context.colors;
     final l10n = context.l10n;
     final (iconBg, iconFg) = transaction.iconColors(colors);
-    return InkWell(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Row(
-          spacing: 12,
-          children: [
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(shape: BoxShape.circle, color: iconBg),
-              child: Icon(transaction.icon, size: 18, color: iconFg),
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 2,
-                children: [
-                  Text(
-                    transaction.title(l10n),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
+    return PressScale(
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: Row(
+            spacing: 12,
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: iconBg,
+                ),
+                child: Icon(transaction.icon, size: 18, color: iconFg),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 2,
+                  children: [
+                    Text(
+                      transaction.title(l10n),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  Text(
-                    transaction.meta(l10n),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 12.5, color: colors.inkTertiary),
-                  ),
-                ],
+                    Text(
+                      transaction.meta(l10n),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 12.5,
+                        color: colors.inkTertiary,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Text(
-              masked ? MoneyFormat.masked : transaction.signedAmount,
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                color: transaction.amountColor(colors),
+              Text(
+                masked ? MoneyFormat.masked : transaction.signedAmount,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: transaction.amountColor(colors),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

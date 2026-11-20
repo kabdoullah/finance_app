@@ -6,11 +6,13 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/motion.dart';
 import '../../../core/clock.dart';
 import '../../../core/formatting/relative_date.dart';
 import '../../../core/money/money.dart';
 import '../../../core/time/calendar_date.dart';
 import '../../../core/time/month.dart';
+import '../../../core/widgets/motion.dart';
 import '../../../l10n/l10n.dart';
 import '../../settings/presentation/settings_providers.dart';
 import '../../transactions/domain/transaction.dart';
@@ -41,6 +43,9 @@ class _SpendingCalendarState extends ConsumerState<SpendingCalendar> {
   DateTime? _selected;
   bool _expanded = false;
 
+  /// Sens du dernier changement de mois (1 suivant, -1 précédent).
+  int _direction = 1;
+
   DateTime get _now => ref.read(clockProvider)();
 
   /// Jour choisi en arrivant sur un mois : aujourd'hui pour le mois en
@@ -56,6 +61,8 @@ class _SpendingCalendarState extends ConsumerState<SpendingCalendar> {
   }
 
   void _go(Month month) => setState(() {
+    final from = _month ?? ref.read(monthOfProvider)(_now);
+    _direction = month.compareTo(from) >= 0 ? 1 : -1;
     _month = month;
     _selected = _defaultDay(month, ref.read(monthSpendingProvider(month)));
   });
@@ -126,16 +133,41 @@ class _SpendingCalendarState extends ConsumerState<SpendingCalendar> {
         ),
         const SizedBox(height: 8),
         if (spending != null) ...[
-          SpendingCalendarGrid(
-            month: month,
-            spending: spending,
-            selected: selected,
-            now: now,
-            expanded: _expanded,
-            onSelect: (day) => setState(() {
-              _month = month;
-              _selected = day;
-            }),
+          // Changement de mois : la grille glisse dans le sens choisi.
+          AnimatedSwitcher(
+            duration: Motion.of(context, Motion.slow),
+            switchInCurve: Motion.easeOut,
+            switchOutCurve: Motion.easeIn,
+            transitionBuilder: (child, animation) {
+              final incoming = child.key == ValueKey(month);
+              final from = Offset(0.15 * _direction * (incoming ? 1 : -1), 0);
+              return FadeTransition(
+                opacity: animation,
+                child: SlideTransition(
+                  position: Tween(
+                    begin: from,
+                    end: Offset.zero,
+                  ).animate(animation),
+                  child: child,
+                ),
+              );
+            },
+            layoutBuilder: (current, previous) => Stack(
+              alignment: Alignment.topCenter,
+              children: [...previous, ?current],
+            ),
+            child: SpendingCalendarGrid(
+              key: ValueKey(month),
+              month: month,
+              spending: spending,
+              selected: selected,
+              now: now,
+              expanded: _expanded,
+              onSelect: (day) => setState(() {
+                _month = month;
+                _selected = day;
+              }),
+            ),
           ),
           const SizedBox(height: 8),
           const _Legend(),
@@ -151,13 +183,23 @@ class _SpendingCalendarState extends ConsumerState<SpendingCalendar> {
             ),
           ),
           Divider(height: 24, color: colors.line),
-          _DayPanel(
-            month: month,
-            spending: spending,
-            day: selected,
-            now: now,
-            masked: masked,
-            relative: relative,
+          AnimatedSwitcher(
+            duration: Motion.of(context, Motion.base),
+            switchInCurve: Motion.ease,
+            switchOutCurve: Motion.easeIn,
+            layoutBuilder: (current, previous) => Stack(
+              alignment: Alignment.topCenter,
+              children: [...previous, ?current],
+            ),
+            child: _DayPanel(
+              key: ValueKey((month, selected)),
+              month: month,
+              spending: spending,
+              day: selected,
+              now: now,
+              masked: masked,
+              relative: relative,
+            ),
           ),
           const SizedBox(height: 20),
           MonthSpendingSummary(
@@ -436,6 +478,7 @@ class _Legend extends StatelessWidget {
 class _DayPanel extends ConsumerWidget {
   const _DayPanel({
     required this.month,
+    super.key,
     required this.spending,
     required this.day,
     required this.now,
@@ -602,11 +645,14 @@ class MonthSpendingSummary extends ConsumerWidget {
           FittedBox(
             fit: BoxFit.scaleDown,
             alignment: Alignment.centerLeft,
-            child: Text(
-              amount(value),
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: strong ? FontWeight.w700 : FontWeight.w600,
+            child: CountingValue(
+              value: value.value,
+              builder: (context, v) => Text(
+                amount(Money(v)),
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: strong ? FontWeight.w700 : FontWeight.w600,
+                ),
               ),
             ),
           ),
@@ -637,21 +683,32 @@ class MonthSpendingSummary extends ConsumerWidget {
               height: 8,
               child: total == 0
                   ? ColoredBox(color: colors.chip)
-                  : Row(
-                      children: [
-                        if (spending.paid.value > 0)
-                          Expanded(
-                            flex: spending.paid.value,
-                            child: ColoredBox(color: colors.chart.first),
+                  : FillIn(
+                      value: 1,
+                      builder: (context, progress) => Align(
+                        alignment: Alignment.centerLeft,
+                        child: FractionallySizedBox(
+                          widthFactor: progress,
+                          child: Row(
+                            children: [
+                              if (spending.paid.value > 0)
+                                Expanded(
+                                  flex: spending.paid.value,
+                                  child: ColoredBox(color: colors.chart.first),
+                                ),
+                              if (spending.planned.value > 0)
+                                Expanded(
+                                  flex: spending.planned.value,
+                                  child: ColoredBox(
+                                    color: late
+                                        ? colors.warning
+                                        : colors.chart.last,
+                                  ),
+                                ),
+                            ],
                           ),
-                        if (spending.planned.value > 0)
-                          Expanded(
-                            flex: spending.planned.value,
-                            child: ColoredBox(
-                              color: late ? colors.warning : colors.chart.last,
-                            ),
-                          ),
-                      ],
+                        ),
+                      ),
                     ),
             ),
           ),

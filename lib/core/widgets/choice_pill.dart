@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
 import '../../app/theme/app_colors.dart';
+import '../../app/theme/motion.dart';
 
 /// Pilule de choix des maquettes (catégories, opérateurs, comptes) :
 /// fond sauge et bord forêt quand elle est sélectionnée.
@@ -35,7 +36,10 @@ class ChoicePill extends StatelessWidget {
         shape: shape,
         child: InkWell(
           customBorder: shape,
-          onTap: onTap,
+          onTap: () {
+            Haptics.selection();
+            onTap();
+          },
           child: SizedBox(
             height: height,
             child: Padding(

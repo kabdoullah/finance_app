@@ -1269,5 +1269,7 @@
   "txRangeThisMonth": "Ce mois-ci",
   "txRangeNext30": "30 prochains jours",
   "txRangeLast3Months": "3 derniers mois",
-  "txLoading": "Chargement des opérations"
+  "txLoading": "Chargement des opérations",
+  "txSwipeDeleted": "Opération supprimée : {title} · {amount}\u00a0FCFA",
+  "txSwipeHint": "Glisser vers la gauche pour supprimer"
 }

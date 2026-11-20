@@ -6363,6 +6363,18 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Chargement des opérations'**
   String get txLoading;
+
+  /// No description provided for @txSwipeDeleted.
+  ///
+  /// In fr, this message translates to:
+  /// **'Opération supprimée : {title} · {amount} FCFA'**
+  String txSwipeDeleted(Object amount, Object title);
+
+  /// No description provided for @txSwipeHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Glisser vers la gauche pour supprimer'**
+  String get txSwipeHint;
 }
 
 class _AppLocalizationsDelegate
