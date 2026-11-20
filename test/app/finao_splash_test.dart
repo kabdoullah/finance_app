@@ -1,4 +1,5 @@
 import 'package:finance_app/app/finao_splash.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
@@ -77,5 +78,49 @@ void main() {
 
     expect(tester.takeException(), isNull);
     await tester.pumpAndSettle();
+  });
+
+  testWidgets('barre d’état masquée pendant le splash, rendue au fondu', (
+    tester,
+  ) async {
+    final modes = <Object?>[];
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+      SystemChannels.platform,
+      (call) async {
+        if (call.method.startsWith('SystemChrome.setEnabledSystemUI')) {
+          modes.add(call.arguments);
+        }
+        return null;
+      },
+    );
+    addTearDown(
+      () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        null,
+      ),
+    );
+
+    await tester.pumpWidget(
+      const MaterialApp(home: FinaoSplash(next: _Counter())),
+    );
+    expect(modes, [
+      ['SystemUiOverlay.bottom'],
+    ]);
+
+    // Logo complet encore affiché : barre toujours masquée.
+    await tester.pump(const Duration(milliseconds: 2500));
+    expect(modes, [
+      ['SystemUiOverlay.bottom'],
+    ]);
+
+    // Début du fondu (2,64 s) : barre rendue.
+    await tester.pump(const Duration(milliseconds: 200));
+    expect(modes, [
+      ['SystemUiOverlay.bottom'],
+      'SystemUiMode.edgeToEdge',
+    ]);
+
+    await tester.pumpAndSettle();
+    expect(modes, hasLength(2));
   });
 }

@@ -111,6 +111,8 @@ flutter_launcher_icons:
 # splash animé de lib/app/finao_splash.dart construit le cairn), sauf sur
 # Android 12+ où le système affiche lui-même le cairn.
 flutter_native_splash:
+  # Barre d'état masquée (rendue par lib/app/finao_splash.dart).
+  fullscreen: true
   color: "#F3F0E8"
   color_dark: "#174D3A"
   android_12:

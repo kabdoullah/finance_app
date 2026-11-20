@@ -1,13 +1,19 @@
+import 'dart:async';
+
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_ui/material_ui.dart';
 
-/// Splash animé de Finao (2,1 s), posé au-dessus de [next] puis effacé
+/// Splash animé de Finao (≈ 3,1 s), posé au-dessus de [next] puis effacé
 /// par un fondu croisé.
 ///
-/// Chronologie (ms) : galet de base 0–320 · milieu 160–480 · sommet ambre
-/// 320–700 · mot « Finao » 620–920 · logo complet affiché 0,8 s · fondu
-/// croisé vers l'app 1800–2100.
+/// Chronologie (ms) : galet de base 0–480 · milieu 240–720 · sommet ambre
+/// 480–1050 · mot « Finao » 930–1380 · logo complet affiché 1,2 s · fondu
+/// croisé vers l'app 2640–3150.
 /// « Réduire les animations » : position finale d'emblée, puis fondu simple.
+///
+/// Barre d'état masquée pendant le splash (comme le splash natif), rendue au
+/// début du fondu pour que l'app apparaisse déjà à sa place définitive.
 ///
 /// [next] reste monté au même endroit du début à la fin (l'état de l'écran
 /// de verrouillage et du routeur est conservé quand le splash disparaît).
@@ -30,29 +36,52 @@ class FinaoSplash extends StatefulWidget {
 
 class _FinaoSplashState extends State<FinaoSplash>
     with SingleTickerProviderStateMixin {
+  /// Ralentissement des mouvements (chronologie de référence × 1,5).
+  static const _pace = 1.5;
+
   /// Temps pendant lequel le logo complet reste affiché avant le fondu.
-  static const _hold = 800.0;
-  static const _total = 1300.0 + _hold;
+  static const _hold = 1200.0;
+  static const _total = 1300.0 * _pace + _hold;
   static const _decelerate = Cubic(0, 0, 0.2, 1);
+
+  /// Début du fondu croisé : l'app réapparaît, avec sa barre d'état.
+  static const _fadeStart = 960.0 * _pace + _hold;
 
   late final AnimationController _controller = AnimationController(
     vsync: this,
     duration: Duration(milliseconds: _total.round()),
-  );
+  )..addListener(_restoreStatusBarOnFade);
   bool _done = false;
+  bool _statusBarHidden = false;
 
+  /// Intervalle exprimé sur la chronologie de référence (avant [_pace]).
   Animation<double> _interval(double from, double to, Curve curve) =>
+      _intervalMs(from * _pace, to * _pace, curve);
+
+  Animation<double> _intervalMs(double from, double to, Curve curve) =>
       CurvedAnimation(
         parent: _controller,
         curve: Interval(from / _total, to / _total, curve: curve),
       );
 
   @override
+  void initState() {
+    super.initState();
+    _statusBarHidden = true;
+    unawaited(
+      SystemChrome.setEnabledSystemUIMode(
+        SystemUiMode.manual,
+        overlays: [SystemUiOverlay.bottom],
+      ),
+    );
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (_controller.status == AnimationStatus.dismissed) {
       if (MediaQuery.disableAnimationsOf(context)) {
-        _controller.value = 920 / _total;
+        _controller.value = 920 * _pace / _total;
       }
       _controller.forward().whenComplete(() {
         if (mounted) setState(() => _done = true);
@@ -60,8 +89,19 @@ class _FinaoSplashState extends State<FinaoSplash>
     }
   }
 
+  void _restoreStatusBarOnFade() {
+    if (_controller.value * _total >= _fadeStart) _restoreStatusBar();
+  }
+
+  void _restoreStatusBar() {
+    if (!_statusBarHidden) return;
+    _statusBarHidden = false;
+    unawaited(SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge));
+  }
+
   @override
   void dispose() {
+    _restoreStatusBar();
     _controller.dispose();
     super.dispose();
   }
@@ -101,7 +141,11 @@ class _FinaoSplashState extends State<FinaoSplash>
     // pour tenir aussi en paysage.
     final width = MediaQuery.sizeOf(context).shortestSide * 0.36;
     final word = _interval(620, 920, _decelerate);
-    final out = _interval(1000 + _hold, _total, const Cubic(0.4, 0, 1, 1));
+    final out = _intervalMs(
+      1000 * _pace + _hold,
+      _total,
+      const Cubic(0.4, 0, 1, 1),
+    );
 
     final splash = ColoredBox(
       color: background,
@@ -163,7 +207,7 @@ class _FinaoSplashState extends State<FinaoSplash>
       FadeTransition(
         opacity: _done
             ? const AlwaysStoppedAnimation(1.0)
-            : _interval(960 + _hold, 1260 + _hold, _decelerate),
+            : _intervalMs(_fadeStart, 1260 * _pace + _hold, _decelerate),
         child: ExcludeSemantics(excluding: !_done, child: widget.next),
       ),
       if (!_done) _splash(context),

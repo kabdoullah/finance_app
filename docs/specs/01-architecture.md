@@ -103,10 +103,12 @@ Identité visuelle (`assets/brand/`, cairn sur ivoire `#F3F0E8` / forêt
 `#174D3A`) : icône et splash natif générés par `flutter_launcher_icons` et
 `flutter_native_splash` (configuration dans `pubspec.yaml`). Le splash
 natif n'est qu'un fond, sauf sur Android 12+ où le système affiche le
-cairn. Puis splash animé Flutter de 2,1 s (logo complet affiché 0,8 s) (`FinaoSplash`, au-dessus du
+cairn. Puis splash animé Flutter d'environ 3,1 s (logo complet affiché 1,2 s) (`FinaoSplash`, au-dessus du
 verrouillage) : galets puis mot « Finao », seulement le mot sur Android 12+
 (version lue par `main`), position finale d'emblée si « Réduire les
-animations ». Il suit le thème du système, comme le splash natif. Au lancement : suivi du modèle IA, planification
+animations ». Il suit le thème du système, comme le splash natif. Barre
+d'état masquée pendant les splashs (sauf le splash système d'Android 12+,
+qui l'impose), rendue au début du fondu vers l'app. Au lancement : suivi du modèle IA, planification
 des notifications, enregistrement automatique des échéances récurrentes
 sans confirmation.
 
