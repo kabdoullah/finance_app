@@ -10,6 +10,7 @@ import '../../../core/formatting/date_format.dart';
 import '../../../core/formatting/relative_date.dart';
 import '../../../core/money/money.dart';
 import '../../../core/time/month.dart';
+import '../../../core/widgets/motion.dart';
 import '../../../l10n/l10n.dart';
 import '../../goals/presentation/budgets_goals_switch.dart';
 import '../../transactions/presentation/transactions_providers.dart';
@@ -116,11 +117,15 @@ class BudgetsPage extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 6),
-                for (final status in overview.categories)
-                  BudgetRow(
-                    status: status,
-                    onTap: () =>
-                        context.push(AppRoutes.editBudget(status.budget.id)),
+                // Barres en cascade à l'ouverture.
+                for (final (i, status) in overview.categories.indexed)
+                  FadeSlideIn(
+                    index: i,
+                    child: BudgetRow(
+                      status: status,
+                      onTap: () =>
+                          context.push(AppRoutes.editBudget(status.budget.id)),
+                    ),
                   ),
               ],
               if (overview.withoutBudget.isNotEmpty) ...[

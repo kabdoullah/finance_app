@@ -10,6 +10,7 @@ import '../../../core/errors/result.dart';
 import '../../../core/formatting/date_format.dart';
 import '../../../core/formatting/relative_date.dart';
 import '../../../core/money/money.dart';
+import '../../../core/widgets/motion.dart';
 import '../../../l10n/l10n.dart';
 import '../../recurring/domain/recurring_operation.dart';
 import '../../recurring/presentation/recurring_providers.dart';
@@ -64,25 +65,30 @@ class GoalDetailPage extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(24, 8, 24, 40),
         children: [
-          Text.rich(
-            TextSpan(
-              text: '${MoneyFormat.amount(goal.saved)} ',
-              children: [
-                TextSpan(
-                  text: l10n.goalsOfTarget(MoneyFormat.amount(goal.target)),
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0,
-                    color: colors.inkSecondary,
+          // Le montant compte après une contribution.
+          CountingValue(
+            value: goal.saved.value,
+            duration: const Duration(milliseconds: 600),
+            builder: (context, saved) => Text.rich(
+              TextSpan(
+                text: '${MoneyFormat.amount(Money(saved))} ',
+                children: [
+                  TextSpan(
+                    text: l10n.goalsOfTarget(MoneyFormat.amount(goal.target)),
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0,
+                      color: colors.inkSecondary,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            style: const TextStyle(
-              fontSize: 38,
-              fontWeight: FontWeight.w600,
-              letterSpacing: -1,
+                ],
+              ),
+              style: const TextStyle(
+                fontSize: 38,
+                fontWeight: FontWeight.w600,
+                letterSpacing: -1,
+              ),
             ),
           ),
           const SizedBox(height: 12),

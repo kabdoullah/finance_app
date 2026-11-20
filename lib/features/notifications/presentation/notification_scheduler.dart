@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart' show immutable;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/router.dart';
+import '../../../app/theme/motion.dart';
 import '../../../core/clock.dart';
 import '../../../core/errors/error_reporter.dart';
 import '../../../l10n/l10n.dart';
@@ -171,6 +172,10 @@ class NotificationScheduler extends Notifier<NotificationSettings> {
           // Niveau mémorisé même interrupteur coupé : pas de rafale le jour
           // où il est réactivé.
           notified[status.budget.id] = NotificationPlan.alertLevel(status);
+          // Budget atteint ou dépassé : un avertissement haptique, une fois.
+          if (NotificationPlan.alertLevel(status) == 2) {
+            unawaited(Haptics.warning());
+          }
           if (state.isEnabled(NoticeKind.budget)) {
             await _askPermissionOnce();
             await _service.show(notice, _l10n);

@@ -9,6 +9,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/motion.dart';
 import '../../../core/clock.dart';
 import '../../../core/errors/result.dart';
 import '../../../core/formatting/date_format.dart';
@@ -16,6 +17,7 @@ import '../../../core/formatting/relative_date.dart';
 import '../../../core/money/amount_input_formatter.dart';
 import '../../../core/money/money.dart';
 import '../../../core/widgets/choice_pill.dart';
+import '../../../core/widgets/motion.dart';
 import '../../../l10n/l10n.dart';
 import '../../accounts/domain/account.dart';
 import '../../accounts/presentation/accounts_providers.dart';
@@ -163,6 +165,7 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
       (_) => setState(() {}),
     );
     setState(() => _listening = true);
+    unawaited(Haptics.light());
     await _speech.start();
   }
 
@@ -200,6 +203,7 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
   }
 
   void _stopListening({bool cancel = false}) {
+    if (_listening) unawaited(Haptics.light());
     _ticker?.cancel();
     _ticker = null;
     _stopwatch.stop();
@@ -546,25 +550,30 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
               label: _listening ? l10n.qeTapToFinish : l10n.qeTapToRetry,
               child: GestureDetector(
                 onTap: _listening ? () => _speech.stop() : _listen,
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 120),
-                  width: 88,
-                  height: 88,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: colors.primary,
-                    boxShadow: [
-                      if (_listening)
-                        BoxShadow(
-                          color: colors.primary.withValues(alpha: 0.25),
-                          spreadRadius: 6 + 18 * _level,
-                        ),
-                    ],
-                  ),
-                  child: Icon(
-                    _listening ? AppIcons.stop : AppIcons.microphoneBold,
-                    size: 34,
-                    color: colors.surface,
+                // Écoute : deux anneaux sauge autour du bouton.
+                child: PulseRings(
+                  active: _listening,
+                  color: colors.primary,
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 120),
+                    width: 88,
+                    height: 88,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: colors.primary,
+                      boxShadow: [
+                        if (_listening)
+                          BoxShadow(
+                            color: colors.primary.withValues(alpha: 0.25),
+                            spreadRadius: 6 + 18 * _level,
+                          ),
+                      ],
+                    ),
+                    child: Icon(
+                      _listening ? AppIcons.stop : AppIcons.microphoneBold,
+                      size: 34,
+                      color: colors.surface,
+                    ),
                   ),
                 ),
               ),
@@ -830,16 +839,20 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
                   style: TextStyle(fontSize: 14, color: colors.inkSecondary),
                 ),
               ],
+              // Lignes du récapitulatif en cascade (80 ms).
               for (final (i, op) in _operations.indexed) ...[
                 const SizedBox(height: 12),
-                _OperationCard(
+                FadeSlideIn(
                   key: ObjectKey(op),
-                  operation: op,
-                  accounts: accounts,
-                  onChanged: () => setState(() {}),
-                  onRemove: () => setState(() {
-                    _operations.removeAt(i).dispose();
-                  }),
+                  index: i * 2,
+                  child: _OperationCard(
+                    operation: op,
+                    accounts: accounts,
+                    onChanged: () => setState(() {}),
+                    onRemove: () => setState(() {
+                      _operations.removeAt(i).dispose();
+                    }),
+                  ),
                 ),
               ],
               const SizedBox(height: 12),
@@ -926,10 +939,8 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
                     shape: BoxShape.circle,
                     color: colors.primarySoft,
                   ),
-                  child: Icon(
-                    AppIcons.checkBold,
-                    size: 28,
-                    color: colors.onPrimarySoft,
+                  child: Center(
+                    child: DrawnCheck(color: colors.onPrimarySoft, size: 34),
                   ),
                 ),
               ),
@@ -1046,7 +1057,6 @@ class _OperationCard extends ConsumerWidget {
     required this.accounts,
     required this.onChanged,
     required this.onRemove,
-    super.key,
   });
 
   final _EditableOperation operation;

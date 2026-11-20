@@ -202,3 +202,272 @@ class BlurFadeSwitcher extends StatelessWidget {
     child: child,
   );
 }
+
+/// Coche qui se trace (360 ms) : opération ou budget enregistré.
+class DrawnCheck extends StatelessWidget {
+  const DrawnCheck({required this.color, this.size = 32, super.key});
+
+  final Color color;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) => TweenAnimationBuilder<double>(
+    tween: Tween(begin: 0, end: 1),
+    duration: Motion.of(context, const Duration(milliseconds: 360)),
+    curve: Motion.ease,
+    builder: (context, progress, _) => CustomPaint(
+      size: Size.square(size),
+      painter: _CheckPainter(progress: progress, color: color),
+    ),
+  );
+}
+
+class _CheckPainter extends CustomPainter {
+  _CheckPainter({required this.progress, required this.color});
+
+  final double progress;
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final path = Path()
+      ..moveTo(size.width * 0.2, size.height * 0.53)
+      ..lineTo(size.width * 0.42, size.height * 0.74)
+      ..lineTo(size.width * 0.8, size.height * 0.3);
+    final metric = path.computeMetrics().single;
+    canvas.drawPath(
+      metric.extractPath(0, metric.length * progress),
+      Paint()
+        ..color = color
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = size.width * 0.1
+        ..strokeCap = StrokeCap.round
+        ..strokeJoin = StrokeJoin.round,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_CheckPainter old) =>
+      old.progress != progress || old.color != color;
+}
+
+/// Deux anneaux qui s'élargissent autour de [child] tant que [active]
+/// (écoute de la dictée, boucle de 1,8 s).
+class PulseRings extends StatefulWidget {
+  const PulseRings({
+    required this.active,
+    required this.color,
+    required this.child,
+    this.size = 88,
+    super.key,
+  });
+
+  final bool active;
+  final Color color;
+  final double size;
+  final Widget child;
+
+  @override
+  State<PulseRings> createState() => _PulseRingsState();
+}
+
+class _PulseRingsState extends State<PulseRings>
+    with SingleTickerProviderStateMixin {
+  late final _controller = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 1800),
+  );
+
+  void _sync() {
+    if (widget.active && !Motion.reduced(context)) {
+      if (!_controller.isAnimating) _controller.repeat();
+    } else {
+      _controller
+        ..stop()
+        ..value = 0;
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _sync();
+  }
+
+  @override
+  void didUpdateWidget(PulseRings old) {
+    super.didUpdateWidget(old);
+    _sync();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => SizedBox.square(
+    dimension: widget.size * 1.8,
+    child: Stack(
+      alignment: Alignment.center,
+      children: [
+        if (widget.active)
+          for (final offset in const [0.0, 0.5])
+            AnimatedBuilder(
+              animation: _controller,
+              builder: (context, _) {
+                final t = (_controller.value + offset) % 1;
+                return Container(
+                  width: widget.size * (1 + 0.8 * t),
+                  height: widget.size * (1 + 0.8 * t),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      width: 2,
+                      color: widget.color.withValues(alpha: 0.5 * (1 - t)),
+                    ),
+                  ),
+                );
+              },
+            ),
+        widget.child,
+      ],
+    ),
+  );
+}
+
+/// Trois points qui s'animent pendant un calcul (boucle de 1,2 s).
+class TypingDots extends StatefulWidget {
+  const TypingDots({required this.color, super.key});
+
+  final Color color;
+
+  @override
+  State<TypingDots> createState() => _TypingDotsState();
+}
+
+class _TypingDotsState extends State<TypingDots>
+    with SingleTickerProviderStateMixin {
+  late final _controller = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 1200),
+  );
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (Motion.reduced(context)) {
+      _controller.stop();
+    } else if (!_controller.isAnimating) {
+      _controller.repeat();
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => AnimatedBuilder(
+    animation: _controller,
+    builder: (context, _) => Row(
+      mainAxisSize: MainAxisSize.min,
+      spacing: 5,
+      children: [
+        for (var i = 0; i < 3; i++)
+          Opacity(
+            opacity: 0.3 + 0.7 * _pulse((_controller.value - i * 0.18) % 1),
+            child: Container(
+              width: 7,
+              height: 7,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: widget.color,
+              ),
+            ),
+          ),
+      ],
+    ),
+  );
+
+  /// 0 → 1 → 0 sur la première moitié du cycle.
+  static double _pulse(double t) => t < 0.5 ? 1 - (2 * t - 1).abs() : 0;
+}
+
+/// Halo ambre unique quand [reached] passe à vrai pendant l'affichage
+/// (objectif atteint, 900 ms) ; jamais à l'ouverture d'un objectif déjà
+/// atteint.
+class ReachedHalo extends StatefulWidget {
+  const ReachedHalo({
+    required this.reached,
+    required this.color,
+    required this.child,
+    this.onReached,
+    super.key,
+  });
+
+  final bool reached;
+  final Color color;
+  final Widget child;
+  final VoidCallback? onReached;
+
+  @override
+  State<ReachedHalo> createState() => _ReachedHaloState();
+}
+
+class _ReachedHaloState extends State<ReachedHalo>
+    with SingleTickerProviderStateMixin {
+  late final _controller = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 900),
+  );
+
+  @override
+  void didUpdateWidget(ReachedHalo old) {
+    super.didUpdateWidget(old);
+    if (widget.reached && !old.reached) {
+      widget.onReached?.call();
+      if (!Motion.reduced(context)) _controller.forward(from: 0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => AnimatedBuilder(
+    animation: _controller,
+    builder: (context, child) {
+      final t = _controller.value;
+      final visible = _controller.isAnimating;
+      return Stack(
+        alignment: Alignment.center,
+        clipBehavior: Clip.none,
+        children: [
+          if (visible)
+            Transform.scale(
+              scale: 1 + 0.6 * Motion.easeOut.transform(t),
+              child: Opacity(
+                opacity: 0.5 * (1 - t),
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: widget.color,
+                  ),
+                  child: Opacity(opacity: 0, child: child),
+                ),
+              ),
+            ),
+          child!,
+        ],
+      );
+    },
+    child: widget.child,
+  );
+}

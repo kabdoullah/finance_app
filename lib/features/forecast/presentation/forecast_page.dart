@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/motion.dart';
 import '../../../core/clock.dart';
 import '../../../core/formatting/date_format.dart';
 import '../../../core/money/money.dart';
@@ -235,9 +236,20 @@ class _Summary extends StatelessWidget {
               child: cell(l10n.forecastCurrent, _amount(forecast.balance)),
             ),
             Expanded(
-              child: cell(
-                l10n.forecastExpectedOn(_day(context, forecast.endDate)),
-                '≈ ${_amount(forecast.endBalance)}',
+              // Nouvelle valeur en fondu (220 ms).
+              child: AnimatedSwitcher(
+                duration: Motion.of(context, Motion.base),
+                layoutBuilder: (current, previous) => Stack(
+                  alignment: Alignment.topLeft,
+                  children: [...previous, ?current],
+                ),
+                child: KeyedSubtree(
+                  key: ValueKey(forecast.horizon),
+                  child: cell(
+                    l10n.forecastExpectedOn(_day(context, forecast.endDate)),
+                    '≈ ${_amount(forecast.endBalance)}',
+                  ),
+                ),
               ),
             ),
           ],
@@ -314,7 +326,9 @@ class _ChartBlock extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: 6,
       children: [
+        // Nouveau tracé à chaque horizon.
         ForecastChart(
+          key: ValueKey(forecast.horizon),
           forecast: forecast,
           semanticLabel: l10n.forecastChartLabel(
             _day(context, forecast.endDate),

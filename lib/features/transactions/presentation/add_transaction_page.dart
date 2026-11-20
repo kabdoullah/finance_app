@@ -15,6 +15,7 @@ import '../../../core/formatting/relative_date.dart';
 import '../../../core/money/money.dart';
 import '../../../core/time/calendar_date.dart';
 import '../../../core/widgets/choice_pill.dart';
+import '../../../core/widgets/motion.dart';
 import '../../../core/widgets/segmented_choice.dart';
 import '../../../l10n/l10n.dart';
 import '../../accounts/domain/account.dart';
@@ -798,10 +799,9 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                     shape: BoxShape.circle,
                     color: colors.primarySoft,
                   ),
-                  child: Icon(
-                    AppIcons.checkBold,
-                    size: 32,
-                    color: colors.onPrimarySoft,
+                  // Coche qui se trace (360 ms).
+                  child: Center(
+                    child: DrawnCheck(color: colors.onPrimarySoft, size: 40),
                   ),
                 ),
               ),

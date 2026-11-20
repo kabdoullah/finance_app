@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/motion.dart';
 import '../../../core/clock.dart';
 import '../../../core/formatting/date_format.dart';
 import '../../../core/money/amount_input_formatter.dart';
@@ -350,7 +351,10 @@ class _Result extends StatelessWidget {
 
     return Semantics(
       liveRegion: true,
-      child: Container(
+      // Couleur du verdict en 300 ms.
+      child: AnimatedContainer(
+        duration: Motion.of(context, Motion.slow),
+        curve: Motion.ease,
         padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
           color: background,

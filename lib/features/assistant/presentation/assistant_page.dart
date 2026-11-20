@@ -8,6 +8,7 @@ import '../../../app/theme/app_icons.dart';
 import '../../../core/clock.dart';
 import '../../../core/formatting/relative_date.dart';
 import '../../../core/money/money.dart';
+import '../../../core/widgets/motion.dart';
 import '../../../l10n/l10n.dart';
 import '../../accounts/presentation/accounts_providers.dart';
 import '../../categories/domain/category.dart';
@@ -73,6 +74,13 @@ class _ConversationState extends ConsumerState<_Conversation> {
   final _input = TextEditingController();
   final _scroll = ScrollController();
 
+  /// Messages déjà là à l'ouverture (historique) : seuls les suivants
+  /// glissent en arrivant.
+  late final int _initialEntries = ref
+      .read(assistantControllerProvider)
+      .entries
+      .length;
+
   @override
   void initState() {
     super.initState();
@@ -111,6 +119,11 @@ class _ConversationState extends ConsumerState<_Conversation> {
     }
   });
 
+  static Widget _entry(ChatEntry entry) => switch (entry) {
+    UserEntry(:final text) => _UserBubble(text: text),
+    final ReplyEntry reply => _ReplyBubble(reply: reply),
+  };
+
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
@@ -143,11 +156,11 @@ class _ConversationState extends ConsumerState<_Conversation> {
                     ),
                   ),
                 ),
-              for (final entry in state.entries)
-                switch (entry) {
-                  UserEntry(:final text) => _UserBubble(text: text),
-                  final ReplyEntry reply => _ReplyBubble(reply: reply),
-                },
+              for (final (i, entry) in state.entries.indexed)
+                if (i < _initialEntries)
+                  _entry(entry)
+                else
+                  FadeSlideIn(key: ValueKey(i), child: _entry(entry)),
               if (state.busy) const _Typing(),
             ],
           ),
@@ -528,13 +541,7 @@ class _Typing extends StatelessWidget {
       child: Row(
         spacing: 10,
         children: [
-          SizedBox.square(
-            dimension: 16,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              color: colors.primary,
-            ),
-          ),
+          TypingDots(color: colors.inkSecondary),
           Text(
             context.l10n.asTyping,
             style: TextStyle(fontSize: 14, color: colors.inkSecondary),

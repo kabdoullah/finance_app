@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
@@ -5,9 +7,11 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/motion.dart';
 import '../../../core/clock.dart';
 import '../../../core/formatting/date_format.dart';
 import '../../../core/money/money.dart';
+import '../../../core/widgets/motion.dart';
 import '../../../l10n/l10n.dart';
 import '../domain/savings_goal.dart';
 import 'budgets_goals_switch.dart';
@@ -94,25 +98,28 @@ class _Summary extends StatelessWidget {
             color: colors.inkSecondary,
           ),
         ),
-        Text.rich(
-          TextSpan(
-            text: '${MoneyFormat.amount(summary.saved)} ',
-            children: [
-              TextSpan(
-                text: l10n.goalsOfTarget(MoneyFormat.amount(summary.target)),
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0,
-                  color: colors.inkSecondary,
+        CountingValue(
+          value: summary.saved.value,
+          builder: (context, saved) => Text.rich(
+            TextSpan(
+              text: '${MoneyFormat.amount(Money(saved))} ',
+              children: [
+                TextSpan(
+                  text: l10n.goalsOfTarget(MoneyFormat.amount(summary.target)),
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0,
+                    color: colors.inkSecondary,
+                  ),
                 ),
-              ),
-            ],
-          ),
-          style: const TextStyle(
-            fontSize: 34,
-            fontWeight: FontWeight.w600,
-            letterSpacing: -1,
+              ],
+            ),
+            style: const TextStyle(
+              fontSize: 34,
+              fontWeight: FontWeight.w600,
+              letterSpacing: -1,
+            ),
           ),
         ),
         Text(
@@ -159,17 +166,27 @@ class GoalCard extends ConsumerWidget {
           Row(
             spacing: 12,
             children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: colors.primarySoft,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  goalIcon(goal.iconKey),
-                  size: 18,
-                  color: colors.onPrimarySoft,
+              // Objectif atteint : icône pleine ambre, halo unique et
+              // retour haptique.
+              ReachedHalo(
+                reached: goal.isReached,
+                color: colors.warning,
+                onReached: () => unawaited(Haptics.success()),
+                child: AnimatedContainer(
+                  duration: Motion.of(context, Motion.slow),
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: goal.isReached ? colors.warning : colors.primarySoft,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    goalIcon(goal.iconKey),
+                    size: 18,
+                    color: goal.isReached
+                        ? colors.surface
+                        : colors.onPrimarySoft,
+                  ),
                 ),
               ),
               Expanded(
@@ -332,10 +349,15 @@ class GoalBar extends StatelessWidget {
           color: colors.chip,
           child: Align(
             alignment: Alignment.centerLeft,
-            child: FractionallySizedBox(
-              widthFactor: goal.progress,
-              heightFactor: 1,
-              child: ColoredBox(color: colors.primary),
+            // Remplissage depuis la gauche ; suit la contribution.
+            child: FillIn(
+              value: goal.progress,
+              duration: Motion.slow,
+              builder: (context, value) => FractionallySizedBox(
+                widthFactor: value,
+                heightFactor: 1,
+                child: ColoredBox(color: colors.primary),
+              ),
             ),
           ),
         ),

@@ -3,6 +3,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/motion.dart';
 import '../../../core/money/money.dart';
 import '../../../core/widgets/motion.dart';
 import '../../../l10n/l10n.dart';
@@ -64,7 +65,12 @@ class BudgetBar extends StatelessWidget {
               builder: (context, value) => FractionallySizedBox(
                 widthFactor: value,
                 heightFactor: 1,
-                child: ColoredBox(color: budgetBarColor(status.level, colors)),
+                // Sauge → ambre → brique : la couleur change en 300 ms.
+                child: AnimatedContainer(
+                  duration: Motion.of(context, Motion.slow),
+                  curve: Motion.ease,
+                  color: budgetBarColor(status.level, colors),
+                ),
               ),
             ),
           ),

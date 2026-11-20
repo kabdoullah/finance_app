@@ -53,4 +53,53 @@ void main() {
     await tester.pumpAndSettle();
     expect(tester.widget<Opacity>(find.byType(Opacity)).opacity, 1);
   });
+
+  testWidgets('halo : seulement quand l’objectif devient atteint', (
+    tester,
+  ) async {
+    var calls = 0;
+    Widget halo(bool reached) => _app(
+      ReachedHalo(
+        reached: reached,
+        color: Colors.amber,
+        onReached: () => calls++,
+        child: const SizedBox.square(dimension: 40),
+      ),
+    );
+
+    // Déjà atteint à l'ouverture : rien.
+    await tester.pumpWidget(halo(true));
+    await tester.pumpAndSettle();
+    expect(calls, 0);
+
+    await tester.pumpWidget(halo(false));
+    await tester.pumpWidget(halo(true));
+    expect(calls, 1);
+    await tester.pumpAndSettle();
+    await tester.pumpWidget(halo(true));
+    expect(calls, 1);
+  });
+
+  testWidgets('anneaux d’écoute : s’arrêtent avec l’écoute ; coche tracée', (
+    tester,
+  ) async {
+    Widget rings(bool active) => _app(
+      PulseRings(
+        active: active,
+        color: Colors.green,
+        child: const SizedBox.square(dimension: 88),
+      ),
+    );
+    await tester.pumpWidget(rings(true));
+    await tester.pump(const Duration(milliseconds: 900));
+    expect(tester.hasRunningAnimations, isTrue);
+
+    await tester.pumpWidget(rings(false));
+    await tester.pumpAndSettle();
+    expect(tester.hasRunningAnimations, isFalse);
+
+    await tester.pumpWidget(_app(const DrawnCheck(color: Colors.green)));
+    await tester.pumpAndSettle();
+    expect(find.byType(DrawnCheck), findsOneWidget);
+  });
 }
