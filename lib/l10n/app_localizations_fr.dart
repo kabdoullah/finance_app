@@ -529,51 +529,17 @@ class AppLocalizationsFr extends AppLocalizations {
   String get txFilterTransfer => 'Transferts';
 
   @override
-  String txCountSummary(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count opérations',
-      one: '1 opération',
-      zero: 'Aucune opération',
-    );
-    return '$_temp0 · transferts exclus des totaux';
-  }
-
-  @override
   String get txEmptyTitle => 'Aucune opération pour l\'instant';
 
   @override
   String get txEmptyBody =>
-      'Ajoute ta première dépense ou ton premier revenu. Tu peux aussi l\'écrire au Copilote : « Taxi 2 500 avec Wave ».';
+      'Ajoute ta première dépense, dicte-la, ou planifie une dépense à venir.';
 
   @override
   String get txEmptyAction => 'Ajouter une opération';
 
   @override
-  String txMonthEmpty(String month) {
-    return 'Aucune opération en $month.';
-  }
-
-  @override
   String get txNoResultTitle => 'Aucun résultat';
-
-  @override
-  String txNoResultBody(String query, String month) {
-    return 'Aucune opération ne correspond à « $query » en $month. Essaie un autre mot ou change de période.';
-  }
-
-  @override
-  String get txChooseMonth => 'Choisir le mois';
-
-  @override
-  String get txAllAccounts => 'Tous les comptes';
-
-  @override
-  String get txAllCategories => 'Toutes catégories';
-
-  @override
-  String get txChooseCategory => 'Choisir une catégorie';
 
   @override
   String get txFilterExpenseSection => 'Dépenses';
@@ -585,14 +551,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String txArchivedAccount(String name) {
     return '$name (archivé)';
   }
-
-  @override
-  String txNoFilterMatch(String month) {
-    return 'Aucune opération ne correspond à ces filtres en $month.';
-  }
-
-  @override
-  String get txResetFilters => 'Réinitialiser les filtres';
 
   @override
   String get settingsCategoriesHint => 'Dépenses et revenus, sous-catégories';
@@ -3844,4 +3802,164 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get plannedRealBalance => 'Solde réel aujourd\'hui';
+
+  @override
+  String get txSpanDay => 'Jour';
+
+  @override
+  String get txSpanWeek => 'Semaine';
+
+  @override
+  String get txSpanMonth => 'Mois';
+
+  @override
+  String get txSpanCustom => 'Période';
+
+  @override
+  String txPeriodRange(Object end, Object start) {
+    return '$start – $end';
+  }
+
+  @override
+  String get txPrevPeriod => 'Période précédente';
+
+  @override
+  String get txNextPeriod => 'Période suivante';
+
+  @override
+  String txChoosePeriod(Object period) {
+    return 'Choisir la période, actuellement $period';
+  }
+
+  @override
+  String get txSumPaid => 'Payées';
+
+  @override
+  String get txSumPlanned => 'Planifiées';
+
+  @override
+  String get txSumCount => 'Opérations';
+
+  @override
+  String txSumNoteIncome(Object amount) {
+    return 'Revenus $amount · transferts exclus des totaux';
+  }
+
+  @override
+  String get txSumNotePlanned =>
+      'Les planifiées ne sont pas encore sorties de tes comptes.';
+
+  @override
+  String get txStatusAll => 'Tout';
+
+  @override
+  String get txStatusPaid => 'Payées';
+
+  @override
+  String get txStatusPlanned => 'Planifiées';
+
+  @override
+  String txStatusLate(Object count) {
+    return 'En retard · $count';
+  }
+
+  @override
+  String get txFilters => 'Filtres';
+
+  @override
+  String txFiltersActive(Object count) {
+    return 'Filtres : $count actifs';
+  }
+
+  @override
+  String get txFiltersReset => 'Réinitialiser';
+
+  @override
+  String get txFilterType => 'Type';
+
+  @override
+  String get txFilterCategory => 'Catégorie';
+
+  @override
+  String get txFilterAccount => 'Compte';
+
+  @override
+  String get txFilterAllAccountsShort => 'Tous';
+
+  @override
+  String get txFilterAllCategoriesShort => 'Toutes';
+
+  @override
+  String txShowCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Voir $count opérations',
+      one: 'Voir 1 opération',
+      zero: 'Aucune opération',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String txRemoveFilter(Object name) {
+    return 'Retirer le filtre $name';
+  }
+
+  @override
+  String get txNothingTitle => 'Rien sur cette période';
+
+  @override
+  String get txNothingFilters =>
+      'Aucune opération avec ces filtres sur cette période.';
+
+  @override
+  String get txNothingPlanned => 'Aucune dépense planifiée sur cette période.';
+
+  @override
+  String txNoResultPeriod(Object query) {
+    return 'Aucune opération ne correspond à « $query » sur cette période.';
+  }
+
+  @override
+  String get txShowAll => 'Tout afficher';
+
+  @override
+  String get txEmptyPlan => 'Planifier une dépense';
+
+  @override
+  String get txEmptyDictate => 'Dicter';
+
+  @override
+  String get txSearchOpen => 'Rechercher';
+
+  @override
+  String get txSearchClose => 'Fermer la recherche';
+
+  @override
+  String get txRangeTitle => 'Période';
+
+  @override
+  String get txRangeFrom => 'Du';
+
+  @override
+  String get txRangeTo => 'Au';
+
+  @override
+  String get txRangeApply => 'Afficher cette période';
+
+  @override
+  String get txRangeLast7 => '7 derniers jours';
+
+  @override
+  String get txRangeThisMonth => 'Ce mois-ci';
+
+  @override
+  String get txRangeNext30 => '30 prochains jours';
+
+  @override
+  String get txRangeLast3Months => '3 derniers mois';
+
+  @override
+  String get txLoading => 'Chargement des opérations';
 }

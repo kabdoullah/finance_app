@@ -9,6 +9,7 @@ import 'package:finance_app/features/transactions/data/transactions_repository.d
 import 'package:finance_app/features/transactions/domain/transaction.dart';
 import 'package:finance_app/features/transactions/domain/transaction_draft.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../../helpers/test_app.dart';
 
@@ -58,7 +59,7 @@ void main() {
     expect(find.text('3 %'), findsOneWidget);
   });
 
-  testWidgets('filtrer par compte puis par catégorie, et réinitialiser', (
+  testWidgets('filtrer par compte puis par catégorie, et tout afficher', (
     tester,
   ) async {
     await pumpTestApp(tester, db);
@@ -67,28 +68,51 @@ void main() {
     expect(find.text('Transport · Wave'), findsOneWidget);
     expect(find.text('Logement · Ecobank'), findsOneWidget);
 
-    await tester.tap(find.text('Tous les comptes'));
+    // Feuille « Filtres » : compte Ecobank.
+    await tester.tap(find.text('Filtres'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Ecobank'));
+    await tester.ensureVisible(find.text('Ecobank').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Ecobank').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Voir 1 opération'));
     await tester.pumpAndSettle();
     expect(find.text('Logement · Ecobank'), findsOneWidget);
     expect(find.text('Transport · Wave'), findsNothing);
+    expect(find.widgetWithText(InputChip, 'Ecobank'), findsOneWidget);
 
-    // La rangée de filtres défile horizontalement.
-    await tester.ensureVisible(find.text('Toutes catégories'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Toutes catégories'));
+    // Puis Transport : plus rien sur Ecobank.
+    await tester.tap(find.text('Filtres · 1'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Transport'));
     await tester.pumpAndSettle();
-    expect(
-      find.text('Aucune opération ne correspond à ces filtres en novembre.'),
-      findsOneWidget,
-    );
+    expect(find.text('Aucune opération'), findsOneWidget);
+    await tester.tap(find.text('Aucune opération'));
+    await tester.pumpAndSettle();
+    expect(find.text('Rien sur cette période'), findsOneWidget);
 
-    await tester.tap(find.text('Réinitialiser les filtres'));
+    await tester.tap(find.text('Tout afficher'));
     await tester.pumpAndSettle();
     expect(find.text('Transport · Wave'), findsOneWidget);
+    expect(find.text('Logement · Ecobank'), findsOneWidget);
+  });
+
+  testWidgets('retirer un filtre actif d’un toucher', (tester) async {
+    await pumpTestApp(tester, db);
+    await tester.tap(find.text('Transactions').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Filtres'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Wave').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Wave').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Voir 1 opération'));
+    await tester.pumpAndSettle();
+    expect(find.text('Logement · Ecobank'), findsNothing);
+
+    await tester.tap(find.byTooltip('Retirer le filtre Wave'));
+    await tester.pumpAndSettle();
     expect(find.text('Logement · Ecobank'), findsOneWidget);
   });
 }

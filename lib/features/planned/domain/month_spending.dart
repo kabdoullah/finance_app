@@ -23,6 +23,7 @@ class DueItem {
     required this.amount,
     required this.date,
     required this.category,
+    required this.accountId,
     required this.accountName,
     this.isEstimate = false,
   });
@@ -35,6 +36,7 @@ class DueItem {
         amount: p.amount,
         date: p.dueDate,
         category: p.mainCategory,
+        accountId: p.accountId,
         accountName: p.accountName,
       );
 
@@ -50,6 +52,7 @@ class DueItem {
 
   /// Catégorie principale.
   final Category category;
+  final String accountId;
   final String accountName;
 
   /// Montant variable d'une récurrente : c'est une estimation (« ≈ »).
@@ -78,6 +81,7 @@ class DueItem {
             amount: op.amount,
             date: due,
             category: op.mainCategory,
+            accountId: op.accountId,
             accountName: op.accountName,
             isEstimate: op.isVariable,
           ),

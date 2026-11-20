@@ -110,20 +110,34 @@ void main() {
 
     await tester.tap(find.text('Transactions').last);
     await tester.pumpAndSettle();
+    // Résumé : payées, planifiées, nombre d'opérations.
+    expect(find.text('−2${_nbsp}500'), findsWidgets);
     expect(
-      find.text('1 opération · transferts exclus des totaux'),
+      find.text('Les planifiées ne sont pas encore sorties de tes comptes.'),
       findsOneWidget,
     );
     expect(find.textContaining('Aujourd'), findsOneWidget);
 
+    // Recherche derrière la loupe.
+    await tester.tap(find.byTooltip('Rechercher'));
+    await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextField), 'boulangerie');
     await tester.pumpAndSettle();
     expect(find.text('Aucun résultat'), findsOneWidget);
+    await tester.tap(find.byTooltip('Fermer la recherche'));
+    await tester.pumpAndSettle();
+    expect(find.text('Transport · Wave'), findsOneWidget);
 
-    await tester.tap(find.text('Effacer la recherche').last);
+    // Semaine puis jour : toujours l'opération d'aujourd'hui.
+    await tester.tap(find.text('Semaine'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Revenus'));
+    expect(find.text('9 nov. – 15 nov.'), findsOneWidget);
+    expect(find.text('Transport · Wave'), findsOneWidget);
+    await tester.tap(find.byTooltip('Période précédente'));
     await tester.pumpAndSettle();
-    expect(find.text('Transport · Wave'), findsNothing);
+    expect(find.text('Rien sur cette période'), findsOneWidget);
+    await tester.tap(find.text('Jour'));
+    await tester.pumpAndSettle();
+    expect(find.text('Lundi 2 nov.'), findsOneWidget);
   });
 }

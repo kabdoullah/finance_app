@@ -964,12 +964,6 @@ abstract class AppLocalizations {
   /// **'Transferts'**
   String get txFilterTransfer;
 
-  /// No description provided for @txCountSummary.
-  ///
-  /// In fr, this message translates to:
-  /// **'{count, plural, =0{Aucune opération} =1{1 opération} other{{count} opérations}} · transferts exclus des totaux'**
-  String txCountSummary(int count);
-
   /// No description provided for @txEmptyTitle.
   ///
   /// In fr, this message translates to:
@@ -979,7 +973,7 @@ abstract class AppLocalizations {
   /// No description provided for @txEmptyBody.
   ///
   /// In fr, this message translates to:
-  /// **'Ajoute ta première dépense ou ton premier revenu. Tu peux aussi l\'écrire au Copilote : « Taxi 2 500 avec Wave ».'**
+  /// **'Ajoute ta première dépense, dicte-la, ou planifie une dépense à venir.'**
   String get txEmptyBody;
 
   /// No description provided for @txEmptyAction.
@@ -988,47 +982,11 @@ abstract class AppLocalizations {
   /// **'Ajouter une opération'**
   String get txEmptyAction;
 
-  /// No description provided for @txMonthEmpty.
-  ///
-  /// In fr, this message translates to:
-  /// **'Aucune opération en {month}.'**
-  String txMonthEmpty(String month);
-
   /// No description provided for @txNoResultTitle.
   ///
   /// In fr, this message translates to:
   /// **'Aucun résultat'**
   String get txNoResultTitle;
-
-  /// No description provided for @txNoResultBody.
-  ///
-  /// In fr, this message translates to:
-  /// **'Aucune opération ne correspond à « {query} » en {month}. Essaie un autre mot ou change de période.'**
-  String txNoResultBody(String query, String month);
-
-  /// No description provided for @txChooseMonth.
-  ///
-  /// In fr, this message translates to:
-  /// **'Choisir le mois'**
-  String get txChooseMonth;
-
-  /// No description provided for @txAllAccounts.
-  ///
-  /// In fr, this message translates to:
-  /// **'Tous les comptes'**
-  String get txAllAccounts;
-
-  /// No description provided for @txAllCategories.
-  ///
-  /// In fr, this message translates to:
-  /// **'Toutes catégories'**
-  String get txAllCategories;
-
-  /// No description provided for @txChooseCategory.
-  ///
-  /// In fr, this message translates to:
-  /// **'Choisir une catégorie'**
-  String get txChooseCategory;
 
   /// No description provided for @txFilterExpenseSection.
   ///
@@ -1047,18 +1005,6 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'{name} (archivé)'**
   String txArchivedAccount(String name);
-
-  /// No description provided for @txNoFilterMatch.
-  ///
-  /// In fr, this message translates to:
-  /// **'Aucune opération ne correspond à ces filtres en {month}.'**
-  String txNoFilterMatch(String month);
-
-  /// No description provided for @txResetFilters.
-  ///
-  /// In fr, this message translates to:
-  /// **'Réinitialiser les filtres'**
-  String get txResetFilters;
 
   /// No description provided for @settingsCategoriesHint.
   ///
@@ -6147,6 +6093,276 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Solde réel aujourd\'hui'**
   String get plannedRealBalance;
+
+  /// No description provided for @txSpanDay.
+  ///
+  /// In fr, this message translates to:
+  /// **'Jour'**
+  String get txSpanDay;
+
+  /// No description provided for @txSpanWeek.
+  ///
+  /// In fr, this message translates to:
+  /// **'Semaine'**
+  String get txSpanWeek;
+
+  /// No description provided for @txSpanMonth.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mois'**
+  String get txSpanMonth;
+
+  /// No description provided for @txSpanCustom.
+  ///
+  /// In fr, this message translates to:
+  /// **'Période'**
+  String get txSpanCustom;
+
+  /// No description provided for @txPeriodRange.
+  ///
+  /// In fr, this message translates to:
+  /// **'{start} – {end}'**
+  String txPeriodRange(Object end, Object start);
+
+  /// No description provided for @txPrevPeriod.
+  ///
+  /// In fr, this message translates to:
+  /// **'Période précédente'**
+  String get txPrevPeriod;
+
+  /// No description provided for @txNextPeriod.
+  ///
+  /// In fr, this message translates to:
+  /// **'Période suivante'**
+  String get txNextPeriod;
+
+  /// No description provided for @txChoosePeriod.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisir la période, actuellement {period}'**
+  String txChoosePeriod(Object period);
+
+  /// No description provided for @txSumPaid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Payées'**
+  String get txSumPaid;
+
+  /// No description provided for @txSumPlanned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Planifiées'**
+  String get txSumPlanned;
+
+  /// No description provided for @txSumCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Opérations'**
+  String get txSumCount;
+
+  /// No description provided for @txSumNoteIncome.
+  ///
+  /// In fr, this message translates to:
+  /// **'Revenus {amount} · transferts exclus des totaux'**
+  String txSumNoteIncome(Object amount);
+
+  /// No description provided for @txSumNotePlanned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les planifiées ne sont pas encore sorties de tes comptes.'**
+  String get txSumNotePlanned;
+
+  /// No description provided for @txStatusAll.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tout'**
+  String get txStatusAll;
+
+  /// No description provided for @txStatusPaid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Payées'**
+  String get txStatusPaid;
+
+  /// No description provided for @txStatusPlanned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Planifiées'**
+  String get txStatusPlanned;
+
+  /// No description provided for @txStatusLate.
+  ///
+  /// In fr, this message translates to:
+  /// **'En retard · {count}'**
+  String txStatusLate(Object count);
+
+  /// No description provided for @txFilters.
+  ///
+  /// In fr, this message translates to:
+  /// **'Filtres'**
+  String get txFilters;
+
+  /// No description provided for @txFiltersActive.
+  ///
+  /// In fr, this message translates to:
+  /// **'Filtres : {count} actifs'**
+  String txFiltersActive(Object count);
+
+  /// No description provided for @txFiltersReset.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réinitialiser'**
+  String get txFiltersReset;
+
+  /// No description provided for @txFilterType.
+  ///
+  /// In fr, this message translates to:
+  /// **'Type'**
+  String get txFilterType;
+
+  /// No description provided for @txFilterCategory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Catégorie'**
+  String get txFilterCategory;
+
+  /// No description provided for @txFilterAccount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compte'**
+  String get txFilterAccount;
+
+  /// No description provided for @txFilterAllAccountsShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tous'**
+  String get txFilterAllAccountsShort;
+
+  /// No description provided for @txFilterAllCategoriesShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'Toutes'**
+  String get txFilterAllCategoriesShort;
+
+  /// No description provided for @txShowCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucune opération} =1{Voir 1 opération} other{Voir {count} opérations}}'**
+  String txShowCount(num count);
+
+  /// No description provided for @txRemoveFilter.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer le filtre {name}'**
+  String txRemoveFilter(Object name);
+
+  /// No description provided for @txNothingTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rien sur cette période'**
+  String get txNothingTitle;
+
+  /// No description provided for @txNothingFilters.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune opération avec ces filtres sur cette période.'**
+  String get txNothingFilters;
+
+  /// No description provided for @txNothingPlanned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune dépense planifiée sur cette période.'**
+  String get txNothingPlanned;
+
+  /// No description provided for @txNoResultPeriod.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune opération ne correspond à « {query} » sur cette période.'**
+  String txNoResultPeriod(Object query);
+
+  /// No description provided for @txShowAll.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tout afficher'**
+  String get txShowAll;
+
+  /// No description provided for @txEmptyPlan.
+  ///
+  /// In fr, this message translates to:
+  /// **'Planifier une dépense'**
+  String get txEmptyPlan;
+
+  /// No description provided for @txEmptyDictate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dicter'**
+  String get txEmptyDictate;
+
+  /// No description provided for @txSearchOpen.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rechercher'**
+  String get txSearchOpen;
+
+  /// No description provided for @txSearchClose.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fermer la recherche'**
+  String get txSearchClose;
+
+  /// No description provided for @txRangeTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Période'**
+  String get txRangeTitle;
+
+  /// No description provided for @txRangeFrom.
+  ///
+  /// In fr, this message translates to:
+  /// **'Du'**
+  String get txRangeFrom;
+
+  /// No description provided for @txRangeTo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Au'**
+  String get txRangeTo;
+
+  /// No description provided for @txRangeApply.
+  ///
+  /// In fr, this message translates to:
+  /// **'Afficher cette période'**
+  String get txRangeApply;
+
+  /// No description provided for @txRangeLast7.
+  ///
+  /// In fr, this message translates to:
+  /// **'7 derniers jours'**
+  String get txRangeLast7;
+
+  /// No description provided for @txRangeThisMonth.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce mois-ci'**
+  String get txRangeThisMonth;
+
+  /// No description provided for @txRangeNext30.
+  ///
+  /// In fr, this message translates to:
+  /// **'30 prochains jours'**
+  String get txRangeNext30;
+
+  /// No description provided for @txRangeLast3Months.
+  ///
+  /// In fr, this message translates to:
+  /// **'3 derniers mois'**
+  String get txRangeLast3Months;
+
+  /// No description provided for @txLoading.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chargement des opérations'**
+  String get txLoading;
 }
 
 class _AppLocalizationsDelegate

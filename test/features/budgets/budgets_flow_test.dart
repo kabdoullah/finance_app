@@ -93,7 +93,7 @@ void main() {
     // « Voir les opérations » de l'alerte : Transactions filtré sur Transport.
     await tester.tap(find.text('Voir les opérations').first);
     await tester.pumpAndSettle();
-    expect(find.text('Toutes catégories'), findsNothing);
+    expect(find.widgetWithText(InputChip, 'Transport'), findsOneWidget);
     await tester.tap(find.text('Budgets').last);
     await tester.pumpAndSettle();
 

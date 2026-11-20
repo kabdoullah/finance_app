@@ -19,6 +19,14 @@ final monthTransactionsProvider =
           ref.watch(transactionsRepositoryProvider).watchMonth(month),
     );
 
+/// Opérations d'une période (début inclus, fin exclue).
+final periodTransactionsProvider =
+    StreamProvider.family<List<Transaction>, (DateTime, DateTime)>(
+      (ref, range) => ref
+          .watch(transactionsRepositoryProvider)
+          .watchBetween(range.$1, range.$2),
+    );
+
 final recentTransactionsProvider = StreamProvider<List<Transaction>>(
   (ref) => ref.watch(transactionsRepositoryProvider).watchRecent(4),
 );
