@@ -80,7 +80,7 @@ void main() {
     await tester.pumpAndSettle();
   });
 
-  testWidgets('barre d’état masquée pendant le splash, rendue au fondu', (
+  testWidgets('barres système masquées pendant le splash, rendues au fondu', (
     tester,
   ) async {
     final modes = <Object?>[];
@@ -103,22 +103,15 @@ void main() {
     await tester.pumpWidget(
       const MaterialApp(home: FinaoSplash(next: _Counter())),
     );
-    expect(modes, [
-      ['SystemUiOverlay.bottom'],
-    ]);
+    expect(modes, ['SystemUiMode.immersiveSticky']);
 
-    // Logo complet encore affiché : barre toujours masquée.
+    // Logo complet encore affiché : barres toujours masquées.
     await tester.pump(const Duration(milliseconds: 2500));
-    expect(modes, [
-      ['SystemUiOverlay.bottom'],
-    ]);
+    expect(modes, ['SystemUiMode.immersiveSticky']);
 
-    // Début du fondu (2,64 s) : barre rendue.
+    // Début du fondu (2,64 s) : barres rendues.
     await tester.pump(const Duration(milliseconds: 200));
-    expect(modes, [
-      ['SystemUiOverlay.bottom'],
-      'SystemUiMode.edgeToEdge',
-    ]);
+    expect(modes, ['SystemUiMode.immersiveSticky', 'SystemUiMode.edgeToEdge']);
 
     await tester.pumpAndSettle();
     expect(modes, hasLength(2));

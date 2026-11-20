@@ -12,7 +12,7 @@ import 'package:material_ui/material_ui.dart';
 /// croisé vers l'app 2640–3150.
 /// « Réduire les animations » : position finale d'emblée, puis fondu simple.
 ///
-/// Barre d'état masquée pendant le splash (comme le splash natif), rendue au
+/// Barres système masquées pendant le splash (plein écran), rendues au
 /// début du fondu pour que l'app apparaisse déjà à sa place définitive.
 ///
 /// [next] reste monté au même endroit du début à la fin (l'état de l'écran
@@ -69,10 +69,9 @@ class _FinaoSplashState extends State<FinaoSplash>
     super.initState();
     _statusBarHidden = true;
     unawaited(
-      SystemChrome.setEnabledSystemUIMode(
-        SystemUiMode.manual,
-        overlays: [SystemUiOverlay.bottom],
-      ),
+      // Immersif (et non « manual ») : Android reste bord à bord, le fond
+      // couvre aussi la zone de la barre de navigation.
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky),
     );
   }
 

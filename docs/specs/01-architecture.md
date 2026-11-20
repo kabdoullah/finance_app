@@ -106,9 +106,10 @@ natif n'est qu'un fond, sauf sur Android 12+ où le système affiche le
 cairn. Puis splash animé Flutter d'environ 3,1 s (logo complet affiché 1,2 s) (`FinaoSplash`, au-dessus du
 verrouillage) : galets puis mot « Finao », seulement le mot sur Android 12+
 (version lue par `main`), position finale d'emblée si « Réduire les
-animations ». Il suit le thème du système, comme le splash natif. Barre
-d'état masquée pendant les splashs (sauf le splash système d'Android 12+,
-qui l'impose), rendue au début du fondu vers l'app. Au lancement : suivi du modèle IA, planification
+animations ». Il suit le thème du système, comme le splash natif. Barres
+système masquées pendant les splashs, plein écran (sauf la barre d'état du
+splash système d'Android 12+, qui l'impose), rendues au début du fondu
+vers l'app. Au lancement : suivi du modèle IA, planification
 des notifications, enregistrement automatique des échéances récurrentes
 sans confirmation.
 
