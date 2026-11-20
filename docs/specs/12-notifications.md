@@ -9,6 +9,7 @@ une seule fois. Toucher une notification ouvre l'écran concerné.
 | Type | Quand | Exemple | Ouvre |
 |---|---|---|---|
 | Rappel d'échéance | Jour d'une échéance récurrente active, 9 h | « Loyer · 75 000 FCFA aujourd'hui » + « Touche pour l'enregistrer. » ou « Elle sera enregistrée à l'ouverture » | Récurrentes |
+| Dépense planifiée (interrupteur des rappels d'échéance) | Jour prévu d'une dépense planifiée non payée, 9 h | « Scolarité · 150 000 FCFA à payer aujourd'hui » | Détail de la dépense |
 | Alerte de budget | Franchissement du seuil, puis de 100 % ; une fois par niveau, par budget et par mois budgétaire (même application ouverte) | « Alimentation : 84 % du budget utilisé » | Budgets |
 | Solde bas | 3 jours avant un solde bas prévu, 9 h (14 jours d'historique) | « Solde bas possible le 30 nov. » | Prévisions |
 | Rappel de sauvegarde | 30 jours après la dernière sauvegarde (ou la première opération), 9 h ; le lendemain si en retard | « Pense à sauvegarder tes données » | Paramètres |

@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart' show immutable;
 
 import '../../../core/money/money.dart';
 import '../../../core/time/calendar_date.dart';
+import '../../planned/domain/planned_expense.dart';
 import '../../recurring/domain/recurring_operation.dart';
 import '../../transactions/domain/transaction.dart';
 
@@ -60,6 +61,7 @@ class ForecastEvent {
     required this.name,
     required this.amount,
     required this.isEstimate,
+    this.isPlanned = false,
   });
 
   final DateTime date;
@@ -70,6 +72,10 @@ class ForecastEvent {
 
   /// Montant variable : c'est une estimation.
   final bool isEstimate;
+
+  /// Dépense planifiée saisie par l'utilisateur (pas une échéance
+  /// récurrente).
+  final bool isPlanned;
 }
 
 /// Point bas prévu (« solde bas possible »).
@@ -120,6 +126,7 @@ class Forecast {
     required Money balance,
     required SpendingHistory history,
     required List<RecurringOperation> recurring,
+    required List<PlannedExpense> planned,
   }) {
     final today = CalendarDate.of(now);
     final days = horizon.days;
@@ -145,7 +152,8 @@ class Forecast {
         windowDays;
     final sd = math.sqrt(variance);
 
-    // Opérations récurrentes : les échéances en retard comptent aujourd'hui.
+    // Opérations récurrentes et dépenses planifiées : celles en retard
+    // restent à payer et comptent aujourd'hui (sortie dès demain).
     final events = <ForecastEvent>[
       for (final op in recurring)
         if (!op.isPaused)
@@ -158,6 +166,15 @@ class Forecast {
                   : Money(-op.amount.value),
               isEstimate: op.isVariable,
             ),
+      for (final expense in planned)
+        if (!expense.dueDate.isAfter(end))
+          ForecastEvent(
+            date: expense.dueDate.isBefore(today) ? today : expense.dueDate,
+            name: expense.name,
+            amount: -expense.amount,
+            isEstimate: false,
+            isPlanned: true,
+          ),
     ]..sort((a, b) => a.date.compareTo(b.date));
 
     // Solde prévu jour par jour (d = 0 : solde actuel).

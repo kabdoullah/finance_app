@@ -6,6 +6,7 @@ import '../../features/budgets/data/budgets_table.dart';
 import '../../features/categories/data/categories_table.dart';
 import '../../features/categories/data/default_categories.dart';
 import '../../features/goals/data/goals_tables.dart';
+import '../../features/planned/data/planned_table.dart';
 import '../../features/recurring/data/recurring_table.dart';
 import '../../features/transactions/data/transactions_table.dart';
 import 'app_database.steps.dart';
@@ -27,13 +28,14 @@ part 'app_database.g.dart';
     SavingsGoals,
     GoalMovements,
     AssistantMessages,
+    PlannedExpenses,
   ],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   @override
-  int get schemaVersion => 8;
+  int get schemaVersion => 9;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -78,6 +80,19 @@ class AppDatabase extends _$AppDatabase {
       from7To8: (m, schema) async {
         await m.createTable(schema.assistantMessages);
         await m.createIndex(schema.assistantMessagesCreated);
+      },
+      from8To9: (m, schema) async {
+        await m.createTable(schema.plannedExpenses);
+        await m.createIndex(schema.plannedExpensesDue);
+        await m.addColumn(
+          schema.transactions,
+          schema.transactions.plannedDueDate,
+        );
+        await m.addColumn(
+          schema.transactions,
+          schema.transactions.plannedCreatedAt,
+        );
+        await m.addColumn(schema.transactions, schema.transactions.plannedNote);
       },
     ),
     beforeOpen: (details) async {

@@ -7,8 +7,10 @@ import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
 import '../../../core/clock.dart';
 import '../../../core/errors/result.dart';
+import '../../../core/formatting/date_format.dart';
 import '../../../core/formatting/relative_date.dart';
 import '../../../core/money/money.dart';
+import '../../../core/time/calendar_date.dart';
 import '../../../core/widgets/choice_pill.dart';
 import '../../../core/widgets/segmented_choice.dart';
 import '../../../l10n/l10n.dart';
@@ -18,22 +20,31 @@ import '../../accounts/presentation/accounts_providers.dart';
 import '../../budgets/presentation/budget_widgets.dart';
 import '../../categories/presentation/categories_providers.dart';
 import '../../categories/presentation/category_icons.dart';
+import '../../planned/domain/planned_draft.dart';
+import '../../planned/domain/planned_expense.dart';
+import '../../planned/presentation/planned_providers.dart';
+import '../../settings/presentation/settings_providers.dart';
 import '../domain/transaction.dart';
 import '../domain/transaction_draft.dart';
 import 'transaction_labels.dart';
 import 'transactions_providers.dart';
 
 /// Ajout d'une opération en 3 étapes (maquette Ajout-Transaction) :
-/// 1. type et montant, 2. détails, 3. confirmation.
+/// 1. type et montant, 2. détails (dépense payée ou planifiée),
+/// 3. confirmation. Sert aussi à modifier une dépense planifiée
+/// ([editPlanned] : ouverture sur les détails, retour après
+/// l'enregistrement).
 class AddTransactionPage extends ConsumerStatefulWidget {
   const AddTransactionPage({
     required this.initialKind,
     this.initialAccountId,
+    this.editPlanned,
     super.key,
   });
 
   final TransactionKind initialKind;
   final String? initialAccountId;
+  final PlannedExpense? editPlanned;
 
   @override
   ConsumerState<AddTransactionPage> createState() => _AddTransactionPageState();
@@ -43,6 +54,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
   static const _maxDigits = 9;
 
   final _description = TextEditingController();
+  final _name = TextEditingController();
 
   int _step = 1;
   late TransactionKind _kind = widget.initialKind;
@@ -54,9 +66,21 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
   bool _descriptionOpen = false;
   bool _saving = false;
 
+  /// Dépense « Planifiée » (à payer plus tard) plutôt que « Payée ».
+  bool _planned = false;
+  late DateTime _due;
+
+  /// « Planifier » touché sans libellé : le champ passe en erreur.
+  bool _nameTried = false;
+
   /// Étape 3 : opération enregistrée et nouveau solde du compte concerné.
   Transaction? _saved;
   Account? _savedAccount;
+
+  /// Étape 3 d'une dépense planifiée.
+  PlannedExpense? _savedPlanned;
+
+  bool get _isPlanned => _kind == TransactionKind.expense && _planned;
 
   Money get _amount => _digits.isEmpty ? Money.zero : Money(int.parse(_digits));
 
@@ -64,7 +88,19 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
   void initState() {
     super.initState();
     _date = ref.read(clockProvider)();
+    _due = _tomorrow();
     _accountId = widget.initialAccountId;
+    if (widget.editPlanned case final p?) {
+      _planned = true;
+      _step = 2;
+      _digits = '${p.amount.value}';
+      _name.text = p.name;
+      _categoryId = p.category.id;
+      _accountId = p.accountId;
+      _due = p.dueDate;
+      _description.text = p.note ?? '';
+      _descriptionOpen = p.note != null;
+    }
     if (_accountId == null) {
       // Par défaut : le compte de la dernière opération saisie.
       ref.read(transactionsRepositoryProvider).lastUsedAccountId().then((id) {
@@ -78,7 +114,13 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
   @override
   void dispose() {
     _description.dispose();
+    _name.dispose();
     super.dispose();
+  }
+
+  DateTime _tomorrow() {
+    final today = CalendarDate.of(ref.read(clockProvider)());
+    return DateTime(today.year, today.month, today.day + 1);
   }
 
   void _press(String key) => setState(() {
@@ -115,6 +157,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
   }
 
   Future<void> _save(List<Account> accounts) async {
+    if (_isPlanned) return _savePlanned(accounts);
     final from = _from(accounts);
     final to = _to(accounts, from);
     final draft = TransactionDraft(
@@ -155,6 +198,54 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
     }
   }
 
+  Future<void> _savePlanned(List<Account> accounts) async {
+    if (_name.text.trim().isEmpty) {
+      setState(() => _nameTried = true);
+      return;
+    }
+    final draft = PlannedDraft(
+      name: _name.text,
+      amount: _amount,
+      dueDate: _due,
+      categoryId: _categoryId,
+      accountId: _from(accounts),
+      note: _description.text,
+    );
+    final repository = ref.read(plannedRepositoryProvider);
+    final editing = widget.editPlanned;
+    setState(() => _saving = true);
+    final result = editing == null
+        ? await repository.create(draft)
+        : await repository.update(editing.id, draft);
+    if (!mounted) return;
+    final l10n = context.l10n;
+    switch (result) {
+      case Ok(:final value):
+        if (editing != null) {
+          _showMessage(l10n.plannedUpdated);
+          context.pop();
+          return;
+        }
+        setState(() {
+          _saving = false;
+          _savedPlanned = value;
+          _step = 3;
+        });
+      case Err(failure: ValidationFailure<PlannedFieldError>(:final errors)):
+        setState(() => _saving = false);
+        _showMessage(
+          errors.contains(PlannedFieldError.accountUnavailable)
+              ? l10n.txAccountUnavailable
+              : errors.contains(PlannedFieldError.dueNotInFuture)
+              ? l10n.plannedDueMissingFuture
+              : l10n.errorGeneric,
+        );
+      case Err():
+        setState(() => _saving = false);
+        _showMessage(l10n.errorGeneric);
+    }
+  }
+
   void _reset() => setState(() {
     _step = 1;
     _digits = '';
@@ -162,8 +253,25 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
     _description.clear();
     _descriptionOpen = false;
     _saved = null;
+    _savedPlanned = null;
+    _name.clear();
+    _nameTried = false;
+    _due = _tomorrow();
     _date = ref.read(clockProvider)();
   });
+
+  Future<void> _pickDue() async {
+    final tomorrow = _tomorrow();
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _due.isBefore(tomorrow) ? tomorrow : _due,
+      firstDate: tomorrow,
+      lastDate: DateTime(tomorrow.year + 5, 12, 31),
+      helpText: context.l10n.plannedDuePickerHelp,
+    );
+    if (picked == null || !mounted) return;
+    setState(() => _due = CalendarDate.of(picked));
+  }
 
   Future<void> _pickDate() async {
     final now = ref.read(clockProvider)();
@@ -198,7 +306,15 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
     return Scaffold(
       appBar: AppBar(
         leading: const CloseButton(),
-        title: Text(_step == 3 ? l10n.txSavedTitle : l10n.txNewTitle),
+        title: Text(
+          widget.editPlanned != null
+              ? l10n.plannedEditTitle
+              : _step == 3
+              ? (_savedPlanned != null
+                    ? l10n.plannedSavedHeading
+                    : l10n.txSavedTitle)
+              : l10n.txNewTitle,
+        ),
       ),
       body: SafeArea(
         child: switch (accounts) {
@@ -207,6 +323,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
           _ => switch (_step) {
             1 => _amountStep(context),
             2 => _detailsStep(context, accounts),
+            _ when _savedPlanned != null => _plannedSavedStep(context),
             _ => _savedStep(context),
           },
         },
@@ -220,17 +337,18 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
     final hasAmount = _amount.value > 0;
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(24, 12, 24, 0),
-          child: SegmentedChoice(
-            options: [
-              for (final kind in TransactionKind.values)
-                (kind, kind.label(l10n)),
-            ],
-            selected: _kind,
-            onChanged: _setKind,
+        if (widget.editPlanned == null)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 12, 24, 0),
+            child: SegmentedChoice(
+              options: [
+                for (final kind in TransactionKind.values)
+                  (kind, kind.label(l10n)),
+              ],
+              selected: _kind,
+              onChanged: _setKind,
+            ),
           ),
-        ),
         const SizedBox(height: 28),
         Text(
           l10n.txAmount,
@@ -314,6 +432,11 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
         !_saving &&
         (isTransfer ? to != null : _categoryId != null) &&
         from != null;
+    final isPlanned = _isPlanned;
+    final monthOf = ref.watch(monthOfProvider);
+    final dueMonth = relative.month(monthOf(_due));
+    final currentMonth = relative.month(monthOf(ref.watch(clockProvider)()));
+    final nameError = _nameTried && _name.text.trim().isEmpty;
 
     return Column(
       children: [
@@ -373,6 +496,41 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                 ),
               ),
               const SizedBox(height: 24),
+              if (_kind == TransactionKind.expense &&
+                  widget.editPlanned == null) ...[
+                SegmentedChoice(
+                  options: [
+                    (false, l10n.txModePaid),
+                    (true, l10n.txModePlanned),
+                  ],
+                  selected: _planned,
+                  onChanged: (value) => setState(() => _planned = value),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  isPlanned ? l10n.txModePlannedHint : l10n.txModePaidHint,
+                  style: TextStyle(fontSize: 13, color: colors.inkSecondary),
+                ),
+                const SizedBox(height: 20),
+              ],
+              if (isPlanned) ...[
+                _SectionLabel(l10n.plannedName),
+                TextField(
+                  controller: _name,
+                  maxLength: PlannedDraft.maxLength,
+                  textCapitalization: TextCapitalization.sentences,
+                  onChanged: (_) {
+                    if (_nameTried) setState(() {});
+                  },
+                  decoration: InputDecoration(
+                    hintText: l10n.plannedNameHintExample,
+                    counterText: '',
+                    helperText: nameError ? null : l10n.plannedNameHint,
+                    errorText: nameError ? l10n.plannedNameHint : null,
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ],
               if (isTransfer) ...[
                 if (to == null)
                   _InfoBox(text: l10n.txNeedTwoAccounts)
@@ -413,27 +571,44 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                       _chooseAccount(accounts, from, (id) => _accountId = id),
                 ),
               ],
-              _PickerRow(
-                icon: AppIcons.calendarBlank,
-                label: l10n.txDate,
-                value: relative.formDate(_date),
-                onTap: _pickDate,
-                showDivider: false,
-              ),
+              if (isPlanned) ...[
+                _PickerRow(
+                  icon: AppIcons.calendarBlank,
+                  label: l10n.plannedDueDate,
+                  value: relative.longDate(_due),
+                  onTap: _pickDue,
+                  showDivider: false,
+                ),
+                const SizedBox(height: 8),
+                _InfoBox(
+                  text: dueMonth == currentMonth
+                      ? l10n.plannedInfoSameMonth(dueMonth)
+                      : l10n.plannedInfoLaterMonth(currentMonth, dueMonth),
+                ),
+              ] else
+                _PickerRow(
+                  icon: AppIcons.calendarBlank,
+                  label: l10n.txDate,
+                  value: relative.formDate(_date),
+                  onTap: _pickDate,
+                  showDivider: false,
+                ),
               if (isTransfer && to != null) ...[
                 const SizedBox(height: 8),
                 _InfoBox(text: l10n.txTransferInfo),
               ],
               const SizedBox(height: 12),
               if (_descriptionOpen) ...[
-                _SectionLabel(l10n.txDescription),
+                _SectionLabel(
+                  isPlanned ? l10n.plannedNote : l10n.txDescription,
+                ),
                 TextField(
                   controller: _description,
-                  autofocus: true,
+                  autofocus: widget.editPlanned == null,
                   maxLength: TransactionDraft.maxDescriptionLength,
                   textCapitalization: TextCapitalization.sentences,
                   decoration: InputDecoration(
-                    hintText: l10n.txDescriptionHint,
+                    hintText: isPlanned ? null : l10n.txDescriptionHint,
                     counterText: '',
                   ),
                 ),
@@ -443,7 +618,9 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                   child: TextButton.icon(
                     onPressed: () => setState(() => _descriptionOpen = true),
                     icon: const Icon(AppIcons.notePencil, size: 18),
-                    label: Text(l10n.txAddDescription),
+                    label: Text(
+                      isPlanned ? l10n.plannedAddNote : l10n.txAddDescription,
+                    ),
                     style: TextButton.styleFrom(padding: EdgeInsets.zero),
                   ),
                 ),
@@ -459,7 +636,13 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
             width: double.infinity,
             child: FilledButton(
               onPressed: canSave ? () => _save(accounts) : null,
-              child: Text(_kind.saveLabel(l10n)),
+              child: Text(
+                widget.editPlanned != null
+                    ? l10n.accountSave
+                    : isPlanned
+                    ? l10n.plannedSave
+                    : _kind.saveLabel(l10n),
+              ),
             ),
           ),
         ),
@@ -478,6 +661,103 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
       selectedId: selectedId,
     );
     if (id != null && mounted) setState(() => apply(id));
+  }
+
+  Widget _plannedSavedStep(BuildContext context) {
+    final colors = context.colors;
+    final l10n = context.l10n;
+    final saved = _savedPlanned!;
+    final locale = Localizations.localeOf(context).toLanguageTag();
+    final relative = RelativeDate(l10n, locale, ref.watch(clockProvider)());
+    final month = relative.month(ref.watch(monthOfProvider)(saved.dueDate));
+    return Column(
+      children: [
+        Expanded(
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(24, 56, 24, 24),
+            children: [
+              Center(
+                child: Container(
+                  width: 72,
+                  height: 72,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: colors.chip,
+                  ),
+                  child: Icon(
+                    AppIcons.calendarBlank,
+                    size: 32,
+                    color: colors.ink,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 22),
+              Text(
+                l10n.plannedSavedTitle(saved.name),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text.rich(
+                TextSpan(
+                  text: '${MoneyFormat.amount(saved.amount)} ',
+                  children: [
+                    TextSpan(
+                      text: l10n.currencyLabel,
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: colors.inkSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: -0.9,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                AppDateFormat.sentence(
+                  l10n.plannedSavedMeta(
+                    saved.accountName,
+                    saved.category.name,
+                    AppDateFormat.dayMonth(saved.dueDate, locale),
+                  ),
+                ),
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 14, color: colors.inkSecondary),
+              ),
+              const SizedBox(height: 24),
+              _InfoBox(text: l10n.plannedInfoSameMonth(month)),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(24, 12, 24, 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            spacing: 8,
+            children: [
+              FilledButton(
+                onPressed: () => context.go(AppRoutes.plannedDetail(saved.id)),
+                child: Text(l10n.plannedSeeExpense),
+              ),
+              TextButton(
+                onPressed: _reset,
+                style: TextButton.styleFrom(minimumSize: const Size(0, 52)),
+                child: Text(l10n.txAddAnother),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _savedStep(BuildContext context) {
@@ -699,7 +979,9 @@ class _CategoryPills extends ConsumerWidget {
               label: group.category.name,
               icon: categoryIcon(group.category.iconKey),
               height: 40,
-              selected: group.category.id == selectedId,
+              selected:
+                  group.category.id == selectedId ||
+                  group.children.any((c) => c.id == selectedId),
               onTap: () => onSelected(group.category.id),
             ),
       ],

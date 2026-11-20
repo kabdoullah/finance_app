@@ -67,6 +67,14 @@ class Transactions extends Table {
     onDelete: KeyAction.setNull,
   )();
 
+  /// Dépense planifiée payée : sa date prévue (« AAAA-MM-JJ »), sa date de
+  /// création (epoch ms UTC) et sa note. `NULL` pour une saisie ordinaire.
+  TextColumn get plannedDueDate => text().nullable()();
+
+  IntColumn get plannedCreatedAt => integer().nullable()();
+
+  TextColumn get plannedNote => text().nullable().withLength(min: 1, max: 80)();
+
   IntColumn get createdAt => integer()();
 
   IntColumn get updatedAt => integer()();

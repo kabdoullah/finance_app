@@ -5,8 +5,10 @@ import '../../../core/clock.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/errors/result.dart';
 import '../../../core/money/money.dart';
+import '../../../core/time/calendar_date.dart';
 import '../../../core/time/month.dart';
 import '../../categories/data/categories_repository.dart';
+import '../../planned/domain/planned_expense.dart';
 import '../domain/transaction.dart';
 import '../domain/transaction_draft.dart';
 
@@ -75,10 +77,11 @@ class TransactionsRepository {
     TransactionDraft draft, {
     EntryMethod entryMethod = EntryMethod.manual,
     String? recurringId,
+    PlannedOrigin? planned,
   }) => _guard(() async {
     final errors = await _validate(draft);
     if (errors.isNotEmpty) return Err(ValidationFailure(errors));
-    final id = await _insert(draft, entryMethod, recurringId);
+    final id = await _insert(draft, entryMethod, recurringId, planned);
     return Ok((await _get(id))!);
   });
 
@@ -94,7 +97,8 @@ class TransactionsRepository {
     }
     final ids = await _db.transaction(
       () async => [
-        for (final draft in drafts) await _insert(draft, entryMethod, null),
+        for (final draft in drafts)
+          await _insert(draft, entryMethod, null, null),
       ],
     );
     return Ok([for (final id in ids) (await _get(id))!]);
@@ -104,6 +108,7 @@ class TransactionsRepository {
     TransactionDraft draft,
     EntryMethod entryMethod,
     String? recurringId,
+    PlannedOrigin? planned,
   ) async {
     final id = _newId();
     final now = _nowMs();
@@ -114,6 +119,9 @@ class TransactionsRepository {
             id: Value(id),
             entryMethod: Value(entryMethod.storageValue),
             recurringId: Value(recurringId),
+            plannedDueDate: Value(_plannedDue(planned)),
+            plannedCreatedAt: Value(_plannedCreated(planned)),
+            plannedNote: Value(planned?.note),
             createdAt: Value(now),
             updatedAt: Value(now),
           ),
@@ -154,7 +162,8 @@ class TransactionsRepository {
     return Ok(transaction);
   });
 
-  /// Annule une suppression : réinsère l'opération à l'identique.
+  /// Annule une suppression : réinsère l'opération à l'identique (avec la
+  /// dépense planifiée qu'elle a payée, le cas échéant).
   Future<Result<void>> restore(Transaction transaction) => _guard(() async {
     final now = _nowMs();
     // Le modèle récurrent a pu être supprimé entre-temps.
@@ -172,6 +181,9 @@ class TransactionsRepository {
             id: Value(transaction.id),
             entryMethod: Value(transaction.entryMethod.storageValue),
             recurringId: Value(keepsLink ? recurringId : null),
+            plannedDueDate: Value(_plannedDue(transaction.planned)),
+            plannedCreatedAt: Value(_plannedCreated(transaction.planned)),
+            plannedNote: Value(transaction.planned?.note),
             createdAt: Value(now),
             updatedAt: Value(now),
           ),
@@ -270,6 +282,7 @@ class TransactionsRepository {
     final t = row.readTable(_db.transactions);
     final category = row.readTableOrNull(_db.categories);
     final parent = row.readTableOrNull(_parents);
+    final plannedDue = t.plannedDueDate;
     return Transaction(
       id: t.id,
       kind: TransactionKind.fromStorage(t.kind),
@@ -291,8 +304,24 @@ class TransactionsRepository {
       ),
       entryMethod: EntryMethod.fromStorage(t.entryMethod),
       recurringId: t.recurringId,
+      planned: plannedDue == null
+          ? null
+          : PlannedOrigin(
+              dueDate: CalendarDate.parse(plannedDue),
+              createdAt: DateTime.fromMillisecondsSinceEpoch(
+                t.plannedCreatedAt ?? t.createdAt,
+                isUtc: true,
+              ),
+              note: t.plannedNote,
+            ),
     );
   }
+
+  static String? _plannedDue(PlannedOrigin? planned) =>
+      planned == null ? null : CalendarDate.format(planned.dueDate);
+
+  static int? _plannedCreated(PlannedOrigin? planned) =>
+      planned == null ? null : _ms(planned.createdAt);
 
   int _nowMs() => _ms(_clock());
 

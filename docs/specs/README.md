@@ -55,6 +55,7 @@ Ces specs décrivent **ce que fait l'application aujourd'hui** (état au
 | [12-notifications.md](12-notifications.md) | Rappels, alertes, solde bas, rappel de sauvegarde |
 | [13-securite-parametres.md](13-securite-parametres.md) | Verrouillage, paramètres, confidentialité |
 | [14-sauvegarde-export.md](14-sauvegarde-export.md) | Sauvegarde chiffrée, restauration, export CSV/PDF |
+| [15-depenses-planifiees.md](15-depenses-planifiees.md) | Dépenses planifiées : création, paiement, retard, effet sur les prévisions |
 
 ## Hors périmètre (prévu plus tard)
 

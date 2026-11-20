@@ -136,6 +136,7 @@ void main() {
           kind: TransactionKind.income,
         ),
       ],
+      planned: const [],
     );
 
     test('3 jours avant, à 9 h', () {

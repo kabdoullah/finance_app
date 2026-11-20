@@ -2,6 +2,7 @@ import 'package:finance_app/core/money/money.dart';
 import 'package:finance_app/features/categories/domain/category.dart';
 import 'package:finance_app/features/forecast/domain/forecast.dart';
 import 'package:finance_app/features/forecast/domain/purchase_simulation.dart';
+import 'package:finance_app/features/planned/domain/planned_expense.dart';
 import 'package:finance_app/features/recurring/domain/recurrence.dart';
 import 'package:finance_app/features/recurring/domain/recurring_operation.dart';
 import 'package:finance_app/features/transactions/domain/transaction.dart';
@@ -51,12 +52,14 @@ Forecast _compute({
   int balance = 217500,
   SpendingHistory? history,
   List<RecurringOperation> recurring = const [],
+  List<PlannedExpense> planned = const [],
 }) => Forecast.compute(
   now: _now,
   horizon: horizon,
   balance: Money(balance),
   history: history ?? _history(),
   recurring: recurring,
+  planned: planned,
 );
 
 RecurringOperation _salary() =>
@@ -178,6 +181,70 @@ void main() {
     test('l’épargne utilisée réduit le coût de l’achat', () {
       // Coût 90 000 au lieu de 150 000 : 297 500 − 90 000 = 207 500.
       expect(simulate(150000, savings: 60000).endBalance, const Money(208000));
+    });
+  });
+
+  group('dépenses planifiées (scénarios de la maquette)', () {
+    PlannedExpense scolarite() => PlannedExpense(
+      id: 'scol',
+      name: 'Scolarité',
+      amount: const Money(150000),
+      category: const Category(
+        id: 'exp.education',
+        name: 'Éducation',
+        kind: CategoryKind.expense,
+        iconKey: 'education',
+      ),
+      accountId: 'a',
+      accountName: 'Ecobank',
+      dueDate: DateTime(2026, 12, 15),
+      createdAt: DateTime(2026, 11, 15),
+    );
+
+    test('A · comptée à sa date prévue, solde actuel inchangé', () {
+      final base = _compute();
+      final withPlanned = _compute(planned: [scolarite()]);
+
+      expect(withPlanned.points.first, base.points.first);
+      // 15 nov. + 29 jours = 14 déc. : pas encore sortie.
+      expect(withPlanned.points[29], base.points[29]);
+      expect(withPlanned.points[30], Money(base.points[30].value - 150000));
+      expect(withPlanned.events.single.isPlanned, isTrue);
+    });
+
+    test('B/E · payée en avance : prévision du 15 déc. identique', () {
+      final planned = _compute(planned: [scolarite()]);
+      // Payée : le solde baisse maintenant et la sortie prévue disparaît ;
+      // la moyenne des dépenses courantes n'en tient pas compte.
+      final paid = _compute(balance: 217500 - 150000);
+
+      expect(paid.points.last, planned.points.last);
+    });
+
+    test('C · en retard : toujours à payer, comptée dès demain', () {
+      Forecast at16Dec(List<PlannedExpense> planned) => Forecast.compute(
+        now: DateTime(2026, 12, 16, 9),
+        horizon: ForecastHorizon.week,
+        balance: const Money(217500),
+        history: _history(),
+        recurring: const [],
+        planned: planned,
+      );
+      final late = at16Dec([scolarite()]);
+      final without = at16Dec(const []);
+
+      expect(late.events.single.date, DateTime(2026, 12, 16));
+      expect(late.points.first, without.points.first);
+      expect(late.points[1], Money(without.points[1].value - 150000));
+    });
+
+    test('au-delà de l’horizon : pas encore comptée', () {
+      final week = _compute(
+        horizon: ForecastHorizon.week,
+        planned: [scolarite()],
+      );
+
+      expect(week.events, isEmpty);
     });
   });
 }

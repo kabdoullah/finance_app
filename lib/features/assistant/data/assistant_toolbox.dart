@@ -24,6 +24,7 @@ import '../../forecast/presentation/forecast_providers.dart';
 import '../../goals/data/goals_repository.dart';
 import '../../goals/domain/savings_goal.dart';
 import '../../goals/presentation/goals_providers.dart';
+import '../../planned/presentation/planned_providers.dart';
 import '../../quick_entry/domain/quick_entry_parser.dart';
 import '../../recurring/domain/recurring_operation.dart';
 import '../../recurring/presentation/recurring_providers.dart';
@@ -508,6 +509,7 @@ class AssistantToolbox {
       balance: AccountsSummary.of(accounts).total,
       history: history,
       recurring: await _read(recurringOperationsProvider),
+      planned: await _read(plannedExpensesProvider),
     );
   }
 

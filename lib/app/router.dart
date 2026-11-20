@@ -17,6 +17,8 @@ import '../features/forecast/presentation/simulation_page.dart';
 import '../features/goals/presentation/goal_detail_page.dart';
 import '../features/goals/presentation/goal_form_page.dart';
 import '../features/goals/presentation/goals_page.dart';
+import '../features/planned/presentation/planned_detail_page.dart';
+import '../features/planned/presentation/planned_labels.dart';
 import '../features/quick_entry/presentation/quick_entry_page.dart';
 import '../features/recurring/presentation/recurring_auto_recorder.dart';
 import '../features/recurring/presentation/recurring_form_page.dart';
@@ -76,6 +78,8 @@ abstract final class AppRoutes {
         queryParameters: {'kind': ?kind?.storageValue, 'account': ?accountId},
       ).toString();
   static String transactionDetail(String id) => '/transactions/$id';
+  static String plannedDetail(String id) => '/transactions/planned/$id';
+  static String editPlanned(String id) => '/planned/$id/edit';
 
   /// Saisie rapide : dictée, ou texte avec [text] ; [initialText] est
   /// analysé dès l'ouverture.
@@ -123,6 +127,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             ),
           );
         },
+      ),
+      GoRoute(
+        path: '/planned/:id/edit',
+        pageBuilder: (context, state) => MaterialPage(
+          fullscreenDialog: true,
+          child: PlannedEditPage(plannedId: state.pathParameters['id']!),
+        ),
       ),
       GoRoute(
         path: '/quick-entry',
@@ -230,6 +241,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'recurring',
                     builder: (context, state) => const RecurringPage(),
+                  ),
+                  GoRoute(
+                    path: 'planned/:id',
+                    builder: (context, state) => PlannedDetailPage(
+                      plannedId: state.pathParameters['id']!,
+                    ),
                   ),
                   GoRoute(
                     path: ':id',

@@ -6,6 +6,7 @@ import '../../../core/time/calendar_date.dart';
 import '../../../l10n/l10n.dart';
 import '../../budgets/domain/budget.dart';
 import '../../forecast/domain/forecast.dart';
+import '../../planned/domain/planned_expense.dart';
 import '../../recurring/domain/recurring_operation.dart';
 import '../../transactions/domain/transaction.dart';
 
@@ -45,8 +46,10 @@ abstract final class NotificationPlan {
   /// Solde bas : prévenir ce nombre de jours avant.
   static const lowBalanceLeadDays = 3;
 
-  /// Identifiants : rappels à partir de 1000, solde bas 900, budgets 2000+.
+  /// Identifiants : rappels à partir de 1000, solde bas 900, budgets 2000+,
+  /// dépenses planifiées 3000+.
   static const _reminderBaseId = 1000;
+  static const _plannedBaseId = 3000;
   static const lowBalanceId = 900;
   static const backupId = 901;
 
@@ -95,6 +98,47 @@ abstract final class NotificationPlan {
               ? l10n.ntReminderConfirm
               : l10n.ntReminderAuto,
           route: route,
+        ),
+    ];
+  }
+
+  /// Rappel à 9 h le jour prévu de chaque dépense planifiée des
+  /// [horizonDays] prochains jours ; [route] ouvre son détail.
+  static List<PlannedNotice> plannedReminders({
+    required Iterable<PlannedExpense> expenses,
+    required DateTime now,
+    required AppLocalizations l10n,
+    required String Function(String id) route,
+  }) {
+    final today = CalendarDate.of(now);
+    final until = DateTime(today.year, today.month, today.day + horizonDays);
+    final dated =
+        [
+            for (final expense in expenses)
+              if (!expense.dueDate.isAfter(until))
+                (
+                  DateTime(
+                    expense.dueDate.year,
+                    expense.dueDate.month,
+                    expense.dueDate.day,
+                    hour,
+                  ),
+                  expense,
+                ),
+          ].where((e) => e.$1.isAfter(now)).toList()
+          ..sort((a, b) => a.$1.compareTo(b.$1));
+    return [
+      for (final (i, (at, expense)) in dated.indexed)
+        PlannedNotice(
+          id: _plannedBaseId + i,
+          kind: NoticeKind.reminder,
+          at: at,
+          title: l10n.ntPlannedTitle(
+            MoneyFormat.amount(expense.amount),
+            expense.name,
+          ),
+          body: l10n.ntPlannedBody,
+          route: route(expense.id),
         ),
     ];
   }

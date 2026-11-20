@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart' show immutable;
 
 import '../../../core/money/money.dart';
 import '../../categories/domain/category.dart';
+import '../../planned/domain/planned_expense.dart';
 
 enum TransactionKind {
   expense('expense'),
@@ -56,6 +57,7 @@ class Transaction {
     this.parentCategory,
     this.description,
     this.recurringId,
+    this.planned,
   });
 
   final String id;
@@ -84,6 +86,9 @@ class Transaction {
 
   /// Modèle récurrent qui a produit l'opération, s'il existe encore.
   final String? recurringId;
+
+  /// Dépense planifiée qui a été payée par cette opération.
+  final PlannedOrigin? planned;
 
   /// Catégorie principale (celle qui compte pour les budgets).
   Category? get mainCategory => parentCategory ?? category;

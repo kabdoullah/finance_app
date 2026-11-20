@@ -4,9 +4,10 @@
 - Horizons : **7, 30 et 90 jours**, à partir d'aujourd'hui.
 - Disponible après **14 jours d'historique** ; avant, écran « Pas encore
   assez de données » avec la progression.
-- Calcul : solde total actuel + échéances récurrentes de la période (en
-  retard comptées aujourd'hui) − dépenses variables moyennes par jour
-  (90 derniers jours, opérations récurrentes exclues).
+- Calcul : solde total actuel + échéances récurrentes et
+  [dépenses planifiées](15-depenses-planifiees.md) de la période (en retard
+  comptées aujourd'hui) − dépenses variables moyennes par jour (90 derniers
+  jours, opérations récurrentes et dépenses planifiées payées exclues).
 - **Fourchette** : écart type des dépenses variables × √jours, arrondie aux
   5 000 FCFA. Solde prévu arrondi au millier.
 - **Fiabilité** : élevée (7 j), moyenne (30 j), faible (90 j) ; un cran de

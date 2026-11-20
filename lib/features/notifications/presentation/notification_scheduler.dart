@@ -13,6 +13,7 @@ import '../../budgets/domain/budget.dart';
 import '../../budgets/presentation/budgets_providers.dart';
 import '../../forecast/domain/forecast.dart';
 import '../../forecast/presentation/forecast_providers.dart';
+import '../../planned/presentation/planned_providers.dart';
 import '../../recurring/presentation/recurring_providers.dart';
 import '../data/notification_service.dart';
 import '../domain/notification_plan.dart';
@@ -53,6 +54,7 @@ class NotificationScheduler extends Notifier<NotificationSettings> {
     ref
       ..onDispose(() => _debounce?.cancel())
       ..listen(recurringOperationsProvider, (_, _) => _rescheduleSoon())
+      ..listen(plannedExpensesProvider, (_, _) => _rescheduleSoon())
       ..listen(
         backupControllerProvider.select((s) => s.lastAt),
         (_, _) => _rescheduleSoon(),
@@ -121,6 +123,13 @@ class NotificationScheduler extends Notifier<NotificationSettings> {
           now: now,
           l10n: _l10n,
           route: AppRoutes.recurring,
+        ),
+      if (state.isEnabled(NoticeKind.reminder))
+        ...NotificationPlan.plannedReminders(
+          expenses: ref.read(plannedExpensesProvider).value ?? const [],
+          now: now,
+          l10n: _l10n,
+          route: AppRoutes.plannedDetail,
         ),
       if (state.isEnabled(NoticeKind.lowBalance))
         ?NotificationPlan.lowBalance(

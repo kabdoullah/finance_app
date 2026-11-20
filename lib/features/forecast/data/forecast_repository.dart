@@ -26,7 +26,8 @@ class ForecastRepository {
     final netFrom = DateTime(today.year, today.month, today.day - _netDays);
     return _db
         .customSelect(
-          'SELECT occurred_at, kind, amount, recurring_id FROM transactions '
+          'SELECT occurred_at, kind, amount, recurring_id, planned_due_date '
+          'FROM transactions '
           "WHERE kind <> 'transfer' AND occurred_at >= ?",
           variables: [Variable.withInt(_ms(from))],
           readsFrom: {_db.transactions},
@@ -51,7 +52,11 @@ class ForecastRepository {
             );
             final amount = row.read<int>('amount');
             final isExpense = row.read<String>('kind') == 'expense';
-            if (isExpense && row.readNullable<String>('recurring_id') == null) {
+            // Dépenses courantes : hors échéances récurrentes et dépenses
+            // planifiées payées (prévues à part, jamais dans la moyenne).
+            if (isExpense &&
+                row.readNullable<String>('recurring_id') == null &&
+                row.readNullable<String>('planned_due_date') == null) {
               variable[day] = (variable[day] ?? 0) + amount;
             }
             if (!day.isBefore(netFrom)) {

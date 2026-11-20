@@ -42,7 +42,7 @@ est le même partout.
   le moteur n'est pas SQLite3MultipleCiphers (sinon `PRAGMA key` serait
   ignoré et la base écrite en clair).
 - Montants stockés en entiers (FCFA), dates en millisecondes UTC.
-- Schéma actuel : **v8**. Chaque version a son schéma figé
+- Schéma actuel : **v9**. Chaque version a son schéma figé
   (`drift_schemas/`) et une étape de migration testée depuis chaque version
   antérieure (`test/drift/`).
 
@@ -55,6 +55,7 @@ est le même partout.
 | v6 | Opérations récurrentes |
 | v7 | Objectifs d'épargne et mouvements |
 | v8 | Historique du Copilote |
+| v9 | Dépenses planifiées (table + colonnes `planned_*` des opérations) |
 
 ## Préférences hors base (shared_preferences)
 

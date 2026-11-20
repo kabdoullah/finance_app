@@ -704,7 +704,11 @@ class _Expected extends StatelessWidget {
                   width: 58,
                   child: Text(_day(context, e.date), style: dateStyle),
                 ),
-                Icon(AppIcons.repeat, size: 14, color: colors.inkTertiary),
+                Icon(
+                  e.isPlanned ? AppIcons.calendarBlank : AppIcons.repeat,
+                  size: 14,
+                  color: colors.inkTertiary,
+                ),
                 Expanded(
                   child: Text(
                     e.name,
@@ -788,7 +792,10 @@ class _HowItWorks extends StatelessWidget {
         l10n.forecastHowRecurring,
       l10n.forecastHowVariable(MoneyFormat.amount(forecast.dailyVariable)),
       l10n.forecastHowIncome,
-      l10n.forecastHowNoException,
+      if (forecast.events.any((e) => e.isPlanned))
+        l10n.forecastHowPlanned
+      else
+        l10n.forecastHowNoException,
     ];
     final style = TextStyle(
       fontSize: 13.5,

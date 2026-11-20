@@ -6,6 +6,7 @@ import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
 import '../../../core/clock.dart';
+import '../../../core/formatting/date_format.dart';
 import '../../../core/formatting/relative_date.dart';
 import '../../../core/formatting/text_search.dart';
 import '../../../core/money/money.dart';
@@ -18,6 +19,9 @@ import '../../accounts/presentation/accounts_providers.dart';
 import '../../categories/domain/category.dart';
 import '../../categories/presentation/categories_providers.dart';
 import '../../categories/presentation/category_icons.dart';
+import '../../planned/domain/planned_expense.dart';
+import '../../planned/presentation/planned_labels.dart';
+import '../../planned/presentation/planned_providers.dart';
 import '../../settings/presentation/settings_providers.dart';
 import '../domain/transaction.dart';
 import '../domain/transaction_stats.dart';
@@ -94,6 +98,22 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
         t.title(l10n),
       ]);
 
+  /// Dépense planifiée du mois affiché qui passe les filtres (une dépense :
+  /// visible pour « Tout » et « Dépenses »).
+  bool _matchesPlanned(PlannedExpense p) =>
+      (_kind == null || _kind == TransactionKind.expense) &&
+      !p.dueDate.isBefore(_month.start) &&
+      p.dueDate.isBefore(_month.end) &&
+      (_accountId == null || p.accountId == _accountId) &&
+      (_categoryId == null || p.mainCategory.id == _categoryId) &&
+      TextSearch.matches(_search.text, [
+        p.name,
+        p.note,
+        p.category.name,
+        p.mainCategory.name,
+        p.accountName,
+      ]);
+
   @override
   Widget build(BuildContext context) {
     // Début du mois budgétaire changé : retour au mois en cours.
@@ -148,7 +168,10 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
     );
 
     // Aucune opération du tout : état vide de la maquette.
-    if (hasAny == false) {
+    // Premier lancement : rien à lister, ni opération ni dépense planifiée.
+    final hasPlanned =
+        ref.watch(plannedExpensesProvider).value?.isNotEmpty ?? false;
+    if (hasAny == false && !hasPlanned) {
       return Scaffold(
         body: SafeArea(
           child: ListView(
@@ -166,6 +189,38 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
     final totals = TransactionTotals.of(visible);
     final query = _search.text.trim();
     final monthName = relative.month(_month);
+    final locale = Localizations.localeOf(context).toLanguageTag();
+    final now = ref.watch(clockProvider)();
+    final planned = [
+      for (final p
+          in ref.watch(plannedExpensesProvider).value ??
+              const <PlannedExpense>[])
+        if (_matchesPlanned(p)) p,
+    ];
+    final late = [
+      for (final p in planned)
+        if (p.statusOn(now) == PlannedStatus.late) p,
+    ];
+    final upcoming = [
+      for (final p in planned)
+        if (p.statusOn(now) == PlannedStatus.planned) p,
+    ];
+    Widget plannedHeader(String title, List<PlannedExpense> items) => Row(
+      children: [
+        Expanded(child: DayHeader(title)),
+        Padding(
+          padding: const EdgeInsets.only(top: 18, bottom: 4),
+          child: Text(
+            l10n.plannedGroupTotal(
+              MoneyFormat.amount(
+                items.fold(Money.zero, (sum, p) => sum + p.amount),
+              ),
+            ),
+            style: TextStyle(fontSize: 12.5, color: colors.inkTertiary),
+          ),
+        ),
+      ],
+    );
 
     return Scaffold(
       floatingActionButton: const AddOperationButton(),
@@ -263,7 +318,7 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
                 ),
               ],
             ),
-            if (monthTransactions != null && visible.isEmpty)
+            if (monthTransactions != null && visible.isEmpty && planned.isEmpty)
               query.isEmpty
                   ? Padding(
                       padding: const EdgeInsets.symmetric(vertical: 40),
@@ -293,6 +348,32 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
                       month: monthName,
                       onClear: _search.clear,
                     ),
+            if (late.isNotEmpty) ...[
+              plannedHeader(l10n.plannedLateGroup, late),
+              for (final p in late)
+                PlannedRow(
+                  expense: p,
+                  status: PlannedStatus.late,
+                  meta: AppDateFormat.sentence(
+                    l10n.plannedLateMeta(
+                      p.accountName,
+                      AppDateFormat.dayMonth(p.dueDate, locale),
+                    ),
+                  ),
+                ),
+            ],
+            if (upcoming.isNotEmpty) ...[
+              plannedHeader(l10n.plannedUpcomingGroup, upcoming),
+              for (final p in upcoming)
+                PlannedRow(
+                  expense: p,
+                  status: PlannedStatus.planned,
+                  meta: l10n.plannedUpcomingMeta(
+                    p.accountName,
+                    relative.header(p.dueDate),
+                  ),
+                ),
+            ],
             for (final (day, items) in groupByDay(visible)) ...[
               DayHeader(relative.header(day)),
               for (final t in items)

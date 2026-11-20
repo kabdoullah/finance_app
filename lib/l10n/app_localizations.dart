@@ -5512,6 +5512,383 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Supprimer définitivement'**
   String get accountDeleteConfirm;
+
+  /// No description provided for @txModePaid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Payée'**
+  String get txModePaid;
+
+  /// No description provided for @txModePlanned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Planifiée'**
+  String get txModePlanned;
+
+  /// No description provided for @txModePaidHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Déjà payée : elle sort de ton compte à la date choisie.'**
+  String get txModePaidHint;
+
+  /// No description provided for @txModePlannedHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'À payer plus tard : rien ne sort de ton compte aujourd\'hui.'**
+  String get txModePlannedHint;
+
+  /// No description provided for @plannedName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Libellé'**
+  String get plannedName;
+
+  /// No description provided for @plannedNameHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Donne un nom à cette dépense pour la retrouver.'**
+  String get plannedNameHint;
+
+  /// No description provided for @plannedNameHintExample.
+  ///
+  /// In fr, this message translates to:
+  /// **'Par exemple : Scolarité'**
+  String get plannedNameHintExample;
+
+  /// No description provided for @plannedDueDate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Date prévue de paiement'**
+  String get plannedDueDate;
+
+  /// No description provided for @plannedDuePickerHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Date prévue'**
+  String get plannedDuePickerHelp;
+
+  /// No description provided for @plannedInfoSameMonth.
+  ///
+  /// In fr, this message translates to:
+  /// **'Comptée dans les dépenses de {month}. Ton solde actuel ne change pas tant que tu ne la marques pas payée.'**
+  String plannedInfoSameMonth(Object month);
+
+  /// No description provided for @plannedInfoLaterMonth.
+  ///
+  /// In fr, this message translates to:
+  /// **'Comptée dans les dépenses de {month}, pas en {current}. Ton solde actuel ne change pas tant que tu ne la marques pas payée.'**
+  String plannedInfoLaterMonth(Object current, Object month);
+
+  /// No description provided for @plannedNote.
+  ///
+  /// In fr, this message translates to:
+  /// **'Note (facultative)'**
+  String get plannedNote;
+
+  /// No description provided for @plannedAddNote.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter une note'**
+  String get plannedAddNote;
+
+  /// No description provided for @plannedSave.
+  ///
+  /// In fr, this message translates to:
+  /// **'Planifier la dépense'**
+  String get plannedSave;
+
+  /// No description provided for @plannedSavedHeading.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépense planifiée'**
+  String get plannedSavedHeading;
+
+  /// No description provided for @plannedSavedTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'« {name} » planifiée'**
+  String plannedSavedTitle(Object name);
+
+  /// No description provided for @plannedSavedMeta.
+  ///
+  /// In fr, this message translates to:
+  /// **'{category} · {account} · à payer le {date}'**
+  String plannedSavedMeta(Object account, Object category, Object date);
+
+  /// No description provided for @plannedSeeExpense.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir la dépense'**
+  String get plannedSeeExpense;
+
+  /// No description provided for @plannedEditTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier la dépense planifiée'**
+  String get plannedEditTitle;
+
+  /// No description provided for @plannedUpdated.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépense planifiée modifiée.'**
+  String get plannedUpdated;
+
+  /// No description provided for @plannedTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépense planifiée'**
+  String get plannedTitle;
+
+  /// No description provided for @plannedNotFound.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette dépense planifiée n\'existe plus.'**
+  String get plannedNotFound;
+
+  /// No description provided for @plannedStatusPlanned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Planifiée'**
+  String get plannedStatusPlanned;
+
+  /// No description provided for @plannedStatusLate.
+  ///
+  /// In fr, this message translates to:
+  /// **'En retard'**
+  String get plannedStatusLate;
+
+  /// No description provided for @plannedStatusPaid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Payée'**
+  String get plannedStatusPaid;
+
+  /// No description provided for @plannedStatusPaidEarly.
+  ///
+  /// In fr, this message translates to:
+  /// **'Payée en avance'**
+  String get plannedStatusPaidEarly;
+
+  /// No description provided for @plannedDue.
+  ///
+  /// In fr, this message translates to:
+  /// **'Date prévue'**
+  String get plannedDue;
+
+  /// No description provided for @plannedPaidOn.
+  ///
+  /// In fr, this message translates to:
+  /// **'Payée le'**
+  String get plannedPaidOn;
+
+  /// No description provided for @plannedNotYet.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas encore'**
+  String get plannedNotYet;
+
+  /// No description provided for @plannedCreated.
+  ///
+  /// In fr, this message translates to:
+  /// **'Créée le'**
+  String get plannedCreated;
+
+  /// No description provided for @plannedNoteRow.
+  ///
+  /// In fr, this message translates to:
+  /// **'Note'**
+  String get plannedNoteRow;
+
+  /// No description provided for @plannedImpactPlannedTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Comptée en {month}, pas avant'**
+  String plannedImpactPlannedTitle(Object month);
+
+  /// No description provided for @plannedImpactPlannedText.
+  ///
+  /// In fr, this message translates to:
+  /// **'Elle s\'ajoute aux dépenses planifiées de {month} et à ta prévision, à la date du {date}. Ton solde réel ne change pas tant qu\'elle n\'est pas payée.'**
+  String plannedImpactPlannedText(Object date, Object month);
+
+  /// No description provided for @plannedImpactLateTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Toujours à payer'**
+  String get plannedImpactLateTitle;
+
+  /// No description provided for @plannedImpactLateText.
+  ///
+  /// In fr, this message translates to:
+  /// **'La date prévue est passée. Elle reste dans les dépenses planifiées de {month} et dans tes prévisions, mais elle n\'est pas comptée comme payée.'**
+  String plannedImpactLateText(Object month);
+
+  /// No description provided for @plannedMarkPaid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Marquer comme payée'**
+  String get plannedMarkPaid;
+
+  /// No description provided for @plannedPayDate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Date réelle du paiement'**
+  String get plannedPayDate;
+
+  /// No description provided for @plannedPayToday.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aujourd\'hui · {date}'**
+  String plannedPayToday(Object date);
+
+  /// No description provided for @plannedPayYesterday.
+  ///
+  /// In fr, this message translates to:
+  /// **'Hier · {date}'**
+  String plannedPayYesterday(Object date);
+
+  /// No description provided for @plannedPayOnDue.
+  ///
+  /// In fr, this message translates to:
+  /// **'À la date prévue · {date}'**
+  String plannedPayOnDue(Object date);
+
+  /// No description provided for @plannedPaidFrom.
+  ///
+  /// In fr, this message translates to:
+  /// **'Payée depuis'**
+  String get plannedPaidFrom;
+
+  /// No description provided for @plannedPaidFromValue.
+  ///
+  /// In fr, this message translates to:
+  /// **'{account} · {amount} FCFA'**
+  String plannedPaidFromValue(Object account, Object amount);
+
+  /// No description provided for @plannedPayEarlyTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiement anticipé.'**
+  String get plannedPayEarlyTitle;
+
+  /// No description provided for @plannedPayEarlyText.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prévue le {due}, payée le {paid} : elle comptera dans les dépenses réelles de {paidMonth} et sortira des prévisions de {dueMonth}. La date prévue reste dans l\'historique.'**
+  String plannedPayEarlyText(
+    Object due,
+    Object dueMonth,
+    Object paid,
+    Object paidMonth,
+  );
+
+  /// No description provided for @plannedPayLateText.
+  ///
+  /// In fr, this message translates to:
+  /// **'Payée après la date prévue : elle comptera à sa date réelle, le {date}.'**
+  String plannedPayLateText(Object date);
+
+  /// No description provided for @plannedPayConfirm.
+  ///
+  /// In fr, this message translates to:
+  /// **'Confirmer le paiement'**
+  String get plannedPayConfirm;
+
+  /// No description provided for @plannedPaidToast.
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} payée · −{amount} FCFA sur {account}'**
+  String plannedPaidToast(Object account, Object amount, Object name);
+
+  /// No description provided for @plannedDeleteTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer « {name} » ?'**
+  String plannedDeleteTitle(Object name);
+
+  /// No description provided for @plannedDeleteBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Elle sort des dépenses planifiées de {month} et de tes prévisions. Aucun argent n\'a bougé : ton solde ne change pas.'**
+  String plannedDeleteBody(Object month);
+
+  /// No description provided for @plannedDeletedTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépense planifiée supprimée'**
+  String get plannedDeletedTitle;
+
+  /// No description provided for @plannedDeletedBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'« {name} » ne compte plus dans les dépenses de {month} ni dans tes prévisions. Aucun argent n\'a bougé.'**
+  String plannedDeletedBody(Object month, Object name);
+
+  /// No description provided for @plannedDueMissingFuture.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisis une date après aujourd\'hui. Pour une dépense déjà faite, choisis « Payée ».'**
+  String get plannedDueMissingFuture;
+
+  /// No description provided for @plannedLateGroup.
+  ///
+  /// In fr, this message translates to:
+  /// **'En retard'**
+  String get plannedLateGroup;
+
+  /// No description provided for @plannedUpcomingGroup.
+  ///
+  /// In fr, this message translates to:
+  /// **'À venir'**
+  String get plannedUpcomingGroup;
+
+  /// No description provided for @plannedGroupTotal.
+  ///
+  /// In fr, this message translates to:
+  /// **'{amount} à payer'**
+  String plannedGroupTotal(Object amount);
+
+  /// No description provided for @plannedLateMeta.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prévue le {date} · {account}'**
+  String plannedLateMeta(Object account, Object date);
+
+  /// No description provided for @plannedUpcomingMeta.
+  ///
+  /// In fr, this message translates to:
+  /// **'{date} · {account}'**
+  String plannedUpcomingMeta(Object account, Object date);
+
+  /// No description provided for @txPlannedDue.
+  ///
+  /// In fr, this message translates to:
+  /// **'Date prévue'**
+  String get txPlannedDue;
+
+  /// No description provided for @txDeletePlannedNote.
+  ///
+  /// In fr, this message translates to:
+  /// **'La dépense planifiée qu\'elle a payée sera supprimée aussi.'**
+  String get txDeletePlannedNote;
+
+  /// No description provided for @forecastHowPlanned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tes dépenses planifiées sont comptées à leur date prévue ; celles en retard, dès demain.'**
+  String get forecastHowPlanned;
+
+  /// No description provided for @ntPlannedTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} · {amount} FCFA à payer aujourd\'hui'**
+  String ntPlannedTitle(Object amount, Object name);
+
+  /// No description provided for @ntPlannedBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépense planifiée : marque-la payée une fois réglée.'**
+  String get ntPlannedBody;
 }
 
 class _AppLocalizationsDelegate

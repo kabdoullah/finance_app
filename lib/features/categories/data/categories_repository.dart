@@ -163,6 +163,15 @@ class CategoriesRepository {
           updatedAt: Value(_nowMs()),
         ),
       );
+      // Les dépenses planifiées aussi (clé étrangère RESTRICT).
+      await (_db.update(
+        _db.plannedExpenses,
+      )..where((p) => p.categoryId.isIn(ids))).write(
+        PlannedExpensesCompanion(
+          categoryId: Value(target),
+          updatedAt: Value(_nowMs()),
+        ),
+      );
       // Les sous-catégories d'abord (clé étrangère vers le parent).
       await (_db.delete(_categories)..where((c) => c.parentId.equals(id))).go();
       await (_db.delete(_categories)..where((c) => c.id.equals(id))).go();

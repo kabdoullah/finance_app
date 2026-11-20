@@ -10,6 +10,7 @@ import '../../../core/errors/result.dart';
 import '../../../core/formatting/relative_date.dart';
 import '../../../core/money/amount_input_formatter.dart';
 import '../../../core/money/money.dart';
+import '../../../core/time/calendar_date.dart';
 import '../../../core/widgets/choice_pill.dart';
 import '../../../core/widgets/confirm_dialog.dart';
 import '../../../l10n/l10n.dart';
@@ -93,11 +94,14 @@ class _TransactionDetailPageState extends ConsumerState<TransactionDetailPage> {
     final confirmed = await showConfirmDialog(
       context,
       title: l10n.txDeleteTitle(t.kind.storageValue),
-      message: l10n.txDeleteBody(
-        t.title(l10n),
-        MoneyFormat.amount(t.amount),
-        t.accountName,
-      ),
+      message: [
+        l10n.txDeleteBody(
+          t.title(l10n),
+          MoneyFormat.amount(t.amount),
+          t.accountName,
+        ),
+        if (t.planned != null) l10n.txDeletePlannedNote,
+      ].join(' '),
       confirmLabel: l10n.txDelete,
       destructive: true,
     );
@@ -267,8 +271,21 @@ class _TransactionDetailPageState extends ConsumerState<TransactionDetailPage> {
             ),
           ],
           _InfoRow(label: l10n.txDate, value: relative.longDate(t.occurredAt)),
+          if (t.planned case final planned?) ...[
+            _InfoRow(
+              label: l10n.txPlannedDue,
+              value: relative.longDate(planned.dueDate),
+              secondary:
+                  CalendarDate.of(t.occurredAt.toLocal())
+                      .isBefore(planned.dueDate)
+                  ? l10n.plannedStatusPaidEarly
+                  : null,
+            ),
+          ],
           if (t.description != null)
             _InfoRow(label: l10n.txDescription, value: t.description!),
+          if (t.planned?.note case final note?)
+            _InfoRow(label: l10n.plannedNoteRow, value: note),
           _InfoRow(label: l10n.txEntry, value: t.entryMethod.label(l10n)),
           const SizedBox(height: 16),
           // Une opération déjà issue d'un modèle n'en crée pas un second.

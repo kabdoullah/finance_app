@@ -3437,4 +3437,244 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get accountDeleteConfirm => 'Supprimer définitivement';
+
+  @override
+  String get txModePaid => 'Payée';
+
+  @override
+  String get txModePlanned => 'Planifiée';
+
+  @override
+  String get txModePaidHint =>
+      'Déjà payée : elle sort de ton compte à la date choisie.';
+
+  @override
+  String get txModePlannedHint =>
+      'À payer plus tard : rien ne sort de ton compte aujourd\'hui.';
+
+  @override
+  String get plannedName => 'Libellé';
+
+  @override
+  String get plannedNameHint =>
+      'Donne un nom à cette dépense pour la retrouver.';
+
+  @override
+  String get plannedNameHintExample => 'Par exemple : Scolarité';
+
+  @override
+  String get plannedDueDate => 'Date prévue de paiement';
+
+  @override
+  String get plannedDuePickerHelp => 'Date prévue';
+
+  @override
+  String plannedInfoSameMonth(Object month) {
+    return 'Comptée dans les dépenses de $month. Ton solde actuel ne change pas tant que tu ne la marques pas payée.';
+  }
+
+  @override
+  String plannedInfoLaterMonth(Object current, Object month) {
+    return 'Comptée dans les dépenses de $month, pas en $current. Ton solde actuel ne change pas tant que tu ne la marques pas payée.';
+  }
+
+  @override
+  String get plannedNote => 'Note (facultative)';
+
+  @override
+  String get plannedAddNote => 'Ajouter une note';
+
+  @override
+  String get plannedSave => 'Planifier la dépense';
+
+  @override
+  String get plannedSavedHeading => 'Dépense planifiée';
+
+  @override
+  String plannedSavedTitle(Object name) {
+    return '« $name » planifiée';
+  }
+
+  @override
+  String plannedSavedMeta(Object account, Object category, Object date) {
+    return '$category · $account · à payer le $date';
+  }
+
+  @override
+  String get plannedSeeExpense => 'Voir la dépense';
+
+  @override
+  String get plannedEditTitle => 'Modifier la dépense planifiée';
+
+  @override
+  String get plannedUpdated => 'Dépense planifiée modifiée.';
+
+  @override
+  String get plannedTitle => 'Dépense planifiée';
+
+  @override
+  String get plannedNotFound => 'Cette dépense planifiée n\'existe plus.';
+
+  @override
+  String get plannedStatusPlanned => 'Planifiée';
+
+  @override
+  String get plannedStatusLate => 'En retard';
+
+  @override
+  String get plannedStatusPaid => 'Payée';
+
+  @override
+  String get plannedStatusPaidEarly => 'Payée en avance';
+
+  @override
+  String get plannedDue => 'Date prévue';
+
+  @override
+  String get plannedPaidOn => 'Payée le';
+
+  @override
+  String get plannedNotYet => 'Pas encore';
+
+  @override
+  String get plannedCreated => 'Créée le';
+
+  @override
+  String get plannedNoteRow => 'Note';
+
+  @override
+  String plannedImpactPlannedTitle(Object month) {
+    return 'Comptée en $month, pas avant';
+  }
+
+  @override
+  String plannedImpactPlannedText(Object date, Object month) {
+    return 'Elle s\'ajoute aux dépenses planifiées de $month et à ta prévision, à la date du $date. Ton solde réel ne change pas tant qu\'elle n\'est pas payée.';
+  }
+
+  @override
+  String get plannedImpactLateTitle => 'Toujours à payer';
+
+  @override
+  String plannedImpactLateText(Object month) {
+    return 'La date prévue est passée. Elle reste dans les dépenses planifiées de $month et dans tes prévisions, mais elle n\'est pas comptée comme payée.';
+  }
+
+  @override
+  String get plannedMarkPaid => 'Marquer comme payée';
+
+  @override
+  String get plannedPayDate => 'Date réelle du paiement';
+
+  @override
+  String plannedPayToday(Object date) {
+    return 'Aujourd\'hui · $date';
+  }
+
+  @override
+  String plannedPayYesterday(Object date) {
+    return 'Hier · $date';
+  }
+
+  @override
+  String plannedPayOnDue(Object date) {
+    return 'À la date prévue · $date';
+  }
+
+  @override
+  String get plannedPaidFrom => 'Payée depuis';
+
+  @override
+  String plannedPaidFromValue(Object account, Object amount) {
+    return '$account · $amount FCFA';
+  }
+
+  @override
+  String get plannedPayEarlyTitle => 'Paiement anticipé.';
+
+  @override
+  String plannedPayEarlyText(
+    Object due,
+    Object dueMonth,
+    Object paid,
+    Object paidMonth,
+  ) {
+    return 'Prévue le $due, payée le $paid : elle comptera dans les dépenses réelles de $paidMonth et sortira des prévisions de $dueMonth. La date prévue reste dans l\'historique.';
+  }
+
+  @override
+  String plannedPayLateText(Object date) {
+    return 'Payée après la date prévue : elle comptera à sa date réelle, le $date.';
+  }
+
+  @override
+  String get plannedPayConfirm => 'Confirmer le paiement';
+
+  @override
+  String plannedPaidToast(Object account, Object amount, Object name) {
+    return '$name payée · −$amount FCFA sur $account';
+  }
+
+  @override
+  String plannedDeleteTitle(Object name) {
+    return 'Supprimer « $name » ?';
+  }
+
+  @override
+  String plannedDeleteBody(Object month) {
+    return 'Elle sort des dépenses planifiées de $month et de tes prévisions. Aucun argent n\'a bougé : ton solde ne change pas.';
+  }
+
+  @override
+  String get plannedDeletedTitle => 'Dépense planifiée supprimée';
+
+  @override
+  String plannedDeletedBody(Object month, Object name) {
+    return '« $name » ne compte plus dans les dépenses de $month ni dans tes prévisions. Aucun argent n\'a bougé.';
+  }
+
+  @override
+  String get plannedDueMissingFuture =>
+      'Choisis une date après aujourd\'hui. Pour une dépense déjà faite, choisis « Payée ».';
+
+  @override
+  String get plannedLateGroup => 'En retard';
+
+  @override
+  String get plannedUpcomingGroup => 'À venir';
+
+  @override
+  String plannedGroupTotal(Object amount) {
+    return '$amount à payer';
+  }
+
+  @override
+  String plannedLateMeta(Object account, Object date) {
+    return 'Prévue le $date · $account';
+  }
+
+  @override
+  String plannedUpcomingMeta(Object account, Object date) {
+    return '$date · $account';
+  }
+
+  @override
+  String get txPlannedDue => 'Date prévue';
+
+  @override
+  String get txDeletePlannedNote =>
+      'La dépense planifiée qu\'elle a payée sera supprimée aussi.';
+
+  @override
+  String get forecastHowPlanned =>
+      'Tes dépenses planifiées sont comptées à leur date prévue ; celles en retard, dès demain.';
+
+  @override
+  String ntPlannedTitle(Object amount, Object name) {
+    return '$name · $amount FCFA à payer aujourd\'hui';
+  }
+
+  @override
+  String get ntPlannedBody =>
+      'Dépense planifiée : marque-la payée une fois réglée.';
 }
