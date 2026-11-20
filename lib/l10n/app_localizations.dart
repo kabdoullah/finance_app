@@ -1207,13 +1207,13 @@ abstract class AppLocalizations {
   /// No description provided for @budgetMonthTitle.
   ///
   /// In fr, this message translates to:
-  /// **'Budget de {month}'**
+  /// **'Budget global · {month}'**
   String budgetMonthTitle(String month);
 
   /// No description provided for @budgetOfLimit.
   ///
   /// In fr, this message translates to:
-  /// **'/ {limit} FCFA'**
+  /// **'sur {limit} FCFA'**
   String budgetOfLimit(String limit);
 
   /// No description provided for @budgetRemainingSentence.
@@ -1246,47 +1246,11 @@ abstract class AppLocalizations {
   /// **'{name} : budget dépassé de {amount} FCFA.'**
   String budgetExceededAlert(String name, String amount);
 
-  /// No description provided for @budgetByCategory.
-  ///
-  /// In fr, this message translates to:
-  /// **'Par catégorie'**
-  String get budgetByCategory;
-
   /// No description provided for @budgetDriver.
   ///
   /// In fr, this message translates to:
   /// **'Surtout à cause de {name} : {count, plural, =1{1 opération} other{{count} opérations}}, {amount} FCFA ce mois-ci.'**
   String budgetDriver(String name, int count, String amount);
-
-  /// No description provided for @budgetForecastLabel.
-  ///
-  /// In fr, this message translates to:
-  /// **'Prévision :'**
-  String get budgetForecastLabel;
-
-  /// No description provided for @budgetForecastLead.
-  ///
-  /// In fr, this message translates to:
-  /// **'au rythme actuel, {items}.'**
-  String budgetForecastLead(String items);
-
-  /// No description provided for @budgetForecastCategory.
-  ///
-  /// In fr, this message translates to:
-  /// **'{name} dépassera son budget vers le {date}'**
-  String budgetForecastCategory(String name, String date);
-
-  /// No description provided for @budgetForecastGlobal.
-  ///
-  /// In fr, this message translates to:
-  /// **'le budget du mois sera dépassé vers le {date}'**
-  String budgetForecastGlobal(String date);
-
-  /// No description provided for @listAnd.
-  ///
-  /// In fr, this message translates to:
-  /// **'et'**
-  String get listAnd;
 
   /// No description provided for @budgetSpentOf.
   ///
@@ -4418,12 +4382,6 @@ abstract class AppLocalizations {
   /// **'C\'est une estimation, pas une certitude : plus l\'horizon est lointain, plus la fourchette s\'élargit. Calculé sur ton téléphone.'**
   String get forecastDisclaimer;
 
-  /// No description provided for @budgetSeeForecast.
-  ///
-  /// In fr, this message translates to:
-  /// **'Voir la prévision'**
-  String get budgetSeeForecast;
-
   /// No description provided for @budgetsSegment.
   ///
   /// In fr, this message translates to:
@@ -6375,6 +6333,90 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Glisser vers la gauche pour supprimer'**
   String get txSwipeHint;
+
+  /// No description provided for @budgetWatchTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'À surveiller'**
+  String get budgetWatchTitle;
+
+  /// No description provided for @budgetCalmTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dans les clous'**
+  String get budgetCalmTitle;
+
+  /// No description provided for @budgetCategoryCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 catégorie} other{{count} catégories}}'**
+  String budgetCategoryCount(num count);
+
+  /// No description provided for @budgetOverrunOn.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépassera vers le {date}'**
+  String budgetOverrunOn(Object date);
+
+  /// No description provided for @budgetHowToFix.
+  ///
+  /// In fr, this message translates to:
+  /// **'Comment revenir dans le budget ?'**
+  String get budgetHowToFix;
+
+  /// No description provided for @budgetHowToFixQuestion.
+  ///
+  /// In fr, this message translates to:
+  /// **'Comment revenir dans mon budget {category} ce mois-ci ?'**
+  String budgetHowToFixQuestion(Object category);
+
+  /// No description provided for @budgetTodayPace.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aujourd\'hui · rythme idéal {percent} %'**
+  String budgetTodayPace(Object percent);
+
+  /// No description provided for @dashboardWhyIncrease.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pourquoi mes dépenses de {category} augmentent ?'**
+  String dashboardWhyIncrease(Object category);
+
+  /// No description provided for @dashboardBalanceCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Solde total} =1{Solde total · 1 compte} other{Solde total · {count} comptes}}'**
+  String dashboardBalanceCount(num count);
+
+  /// No description provided for @dashboardIncomeOf.
+  ///
+  /// In fr, this message translates to:
+  /// **'Entrées · {month}'**
+  String dashboardIncomeOf(Object month);
+
+  /// No description provided for @dashboardExpenseOf.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sorties · {month}'**
+  String dashboardExpenseOf(Object month);
+
+  /// No description provided for @dashboardAccountsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Comptes et épargne'**
+  String get dashboardAccountsTitle;
+
+  /// No description provided for @dashboardGoalsCard.
+  ///
+  /// In fr, this message translates to:
+  /// **'Objectifs'**
+  String get dashboardGoalsCard;
+
+  /// No description provided for @dashboardRestLine.
+  ///
+  /// In fr, this message translates to:
+  /// **'+ {names} : {amount} FCFA'**
+  String dashboardRestLine(Object amount, Object names);
 }
 
 class _AppLocalizationsDelegate

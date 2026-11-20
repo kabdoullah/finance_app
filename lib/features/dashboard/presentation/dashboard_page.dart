@@ -16,14 +16,18 @@ import '../../../core/widgets/motion.dart';
 import '../../../core/widgets/section_tint.dart';
 import '../../../l10n/l10n.dart';
 import '../../accounts/domain/accounts_summary.dart';
+import '../../accounts/presentation/account_labels.dart';
 import '../../accounts/presentation/accounts_providers.dart';
 import '../../assistant/presentation/ai_model_controller.dart';
 import '../../assistant/presentation/assistant_controller.dart';
 import '../../budgets/presentation/budget_widgets.dart';
 import '../../budgets/presentation/budgets_providers.dart';
+import '../../categories/presentation/category_icons.dart';
 import '../../forecast/domain/forecast.dart';
 import '../../forecast/presentation/forecast_chart.dart';
 import '../../forecast/presentation/forecast_providers.dart';
+import '../../goals/domain/savings_goal.dart';
+import '../../goals/presentation/goals_providers.dart';
 import '../../planned/presentation/spending_calendar.dart';
 import '../../recurring/presentation/recurring_providers.dart';
 import '../../settings/presentation/settings_providers.dart';
@@ -79,13 +83,15 @@ class DashboardPage extends ConsumerWidget {
                         .toggle,
                   ),
                   if (active) ...[
+                    // Ordre de la maquette : du présent vers l'avenir.
                     _MonthTotals(month: ref.watch(monthOfProvider)(now)),
                     const SpendingCalendar(),
-                    _WhereMoneyGoes(month: ref.watch(monthOfProvider)(now)),
-                    const _CopilotInsight(),
-                    const _Budgets(),
-                    const _ForecastCard(),
+                    const _AccountsStrip(),
                     const _RecentOperations(),
+                    const _Budgets(),
+                    const _CopilotInsight(),
+                    _WhereMoneyGoes(month: ref.watch(monthOfProvider)(now)),
+                    const _ForecastCard(),
                   ] else ...[
                     _GetStarted(hasAccounts: hasAccounts),
                     const _CopilotHint(),
@@ -117,6 +123,11 @@ class _MonthTotals extends ConsumerWidget {
       ref.watch(monthTransactionsProvider(month)).value ?? const [],
     );
     final masked = ref.watch(amountsHiddenProvider);
+    final relative = RelativeDate(
+      l10n,
+      Localizations.localeOf(context).toLanguageTag(),
+      ref.watch(clockProvider)(),
+    );
     Widget cell(
       IconData icon,
       Color iconColor,
@@ -141,12 +152,14 @@ class _MonthTotals extends ConsumerWidget {
               ),
             ],
           ),
+          // Entrées en vert, sorties en terracotta (maquette).
           Text(
             masked ? MoneyFormat.masked : MoneyFormat.amount(amount),
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w600,
               letterSpacing: -0.4,
+              color: iconColor,
             ),
           ),
         ],
@@ -168,7 +181,7 @@ class _MonthTotals extends ConsumerWidget {
                 child: cell(
                   AppIcons.arrowDownLeftBold,
                   colors.positive,
-                  l10n.dashboardMonthIncome,
+                  l10n.dashboardIncomeOf(relative.month(month)),
                   totals.income,
                   const EdgeInsets.fromLTRB(0, 16, 16, 16),
                 ),
@@ -177,8 +190,8 @@ class _MonthTotals extends ConsumerWidget {
             Expanded(
               child: cell(
                 AppIcons.arrowUpRightBold,
-                colors.inkSecondary,
-                l10n.dashboardMonthExpense,
+                colors.expense,
+                l10n.dashboardExpenseOf(relative.month(month)),
                 totals.expense,
                 const EdgeInsets.fromLTRB(16, 16, 0, 16),
               ),
@@ -276,16 +289,31 @@ class _WhereMoneyGoes extends ConsumerWidget {
           child: Column(
             spacing: 12,
             children: [
-              for (final (i, share) in breakdown.shares.indexed)
+              // Trois premières catégories avec leur icône, puis le reste.
+              for (final (i, share) in breakdown.shares.take(3).indexed)
                 Row(
                   spacing: 10,
                   children: [
-                    DecoratedBox(
+                    Container(
+                      width: 28,
+                      height: 28,
                       decoration: BoxDecoration(
-                        color: colors.expenseChart[i],
-                        borderRadius: BorderRadius.circular(3),
+                        shape: BoxShape.circle,
+                        color: colors
+                            .category(share.category?.iconKey ?? '')
+                            .background,
+                        border: Border.all(
+                          color: colors.expenseChart[i],
+                          width: 2,
+                        ),
                       ),
-                      child: const SizedBox.square(dimension: 10),
+                      child: Icon(
+                        categoryIcon(share.category?.iconKey ?? ''),
+                        size: 14,
+                        color: colors
+                            .category(share.category?.iconKey ?? '')
+                            .ink,
+                      ),
                     ),
                     // Nom et part se réduisent au lieu de déborder ; le
                     // montant reste toujours entier.
@@ -329,6 +357,26 @@ class _WhereMoneyGoes extends ConsumerWidget {
                     ),
                   ],
                 ),
+              if (breakdown.shares.length > 3)
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    l10n.dashboardRestLine(
+                      ref.watch(amountsHiddenProvider)
+                          ? MoneyFormat.masked
+                          : MoneyFormat.amount(
+                              breakdown.shares
+                                  .skip(3)
+                                  .fold(Money.zero, (sum, s) => sum + s.amount),
+                            ),
+                      [
+                        for (final share in breakdown.shares.skip(3))
+                          name(share),
+                      ].join(', '),
+                    ),
+                    style: TextStyle(fontSize: 12.5, color: colors.inkTertiary),
+                  ),
+                ),
             ],
           ),
         ),
@@ -337,8 +385,9 @@ class _WhereMoneyGoes extends ConsumerWidget {
   }
 }
 
-/// Section « Budgets » : les budgets par catégorie du mois (masquée sans
-/// budget).
+/// « À surveiller » : budgets au seuil d'alerte, dépassés ou qui seront
+/// dépassés avant la fin du mois (masquée s'il n'y en a pas), et une
+/// question au Copilote sur le premier.
 class _Budgets extends ConsumerWidget {
   const _Budgets();
 
@@ -346,9 +395,12 @@ class _Budgets extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.colors;
     final l10n = context.l10n;
-    final budgets = ref.watch(budgetsOverviewProvider)?.categories ?? const [];
-    if (budgets.isEmpty) return const SizedBox.shrink();
+    final overview = ref.watch(budgetsOverviewProvider);
+    final watched = overview?.watched ?? const [];
+    if (overview == null || watched.isEmpty) return const SizedBox.shrink();
+    final first = watched.first.budget.category?.name;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -358,7 +410,7 @@ class _Budgets extends ConsumerWidget {
               child: Semantics(
                 header: true,
                 child: Text(
-                  l10n.budgetsTitle,
+                  l10n.budgetWatchTitle,
                   style: const TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w600,
@@ -368,17 +420,173 @@ class _Budgets extends ConsumerWidget {
             ),
             TextButton(
               onPressed: () => context.go(AppRoutes.budgets),
-              child: Text(l10n.dashboardSeeAll),
+              child: Text(l10n.budgetsTitle),
             ),
           ],
         ),
-        for (final status in budgets.take(_maxRows))
+        for (final status in watched.take(_maxRows))
           BudgetRow(
             status: status,
+            overrunOn: overview.overrunOf(status),
             masked: ref.watch(amountsHiddenProvider),
             showAmounts: false,
             onTap: () => context.go(AppRoutes.budgets),
           ),
+        if (first != null)
+          Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton.icon(
+              onPressed: () {
+                ref
+                    .read(assistantRequestProvider.notifier)
+                    .ask(l10n.dashboardWhyIncrease(first.toLowerCase()));
+                context.go(AppRoutes.assistant);
+              },
+              icon: Icon(AppIcons.chatCircleText, size: 17, color: colors.info),
+              label: Text(l10n.dashboardWhyIncrease(first.toLowerCase())),
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.zero,
+                foregroundColor: colors.ink,
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+/// « Comptes et épargne » : les comptes actifs puis les objectifs, en
+/// cartes qui défilent ; « Tout voir » ouvre Mes comptes.
+class _AccountsStrip extends ConsumerWidget {
+  const _AccountsStrip();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.colors;
+    final l10n = context.l10n;
+    final accounts = ref.watch(activeAccountsProvider).value ?? const [];
+    if (accounts.isEmpty) return const SizedBox.shrink();
+    final goals = GoalsSummary.of(ref.watch(goalsProvider).value ?? const []);
+    final masked = ref.watch(amountsHiddenProvider);
+    String amount(Money m) =>
+        masked ? MoneyFormat.masked : MoneyFormat.amount(m);
+
+    Widget card({
+      required IconData icon,
+      required Color background,
+      required Color ink,
+      required String name,
+      required String value,
+      required VoidCallback onTap,
+    }) => SizedBox(
+      width: 128,
+      child: Material(
+        color: colors.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(color: colors.line),
+        ),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 10,
+              children: [
+                Container(
+                  width: 32,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: background,
+                  ),
+                  child: Icon(icon, size: 16, color: ink),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 2,
+                  children: [
+                    Text(
+                      name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 12.5,
+                        color: colors.inkSecondary,
+                      ),
+                    ),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        value,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: 4,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Semantics(
+                header: true,
+                child: Text(
+                  l10n.dashboardAccountsTitle,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () => context.go(AppRoutes.accounts),
+              child: Text(l10n.dashboardSeeAll),
+            ),
+          ],
+        ),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          clipBehavior: Clip.none,
+          child: Row(
+            spacing: 8,
+            children: [
+              for (final account in accounts)
+                card(
+                  icon: account.type.icon,
+                  background: colors.primarySoft,
+                  ink: colors.onPrimarySoft,
+                  name: account.name,
+                  value: amount(account.balance),
+                  onTap: () => context.go(AppRoutes.accountDetail(account.id)),
+                ),
+              card(
+                icon: AppIcons.target,
+                background: colors.warningSoft,
+                ink: colors.warning,
+                name: l10n.dashboardGoalsCard,
+                value: amount(goals.saved),
+                onTap: () => context.go(AppRoutes.goals),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -499,7 +707,7 @@ class _Balance extends StatelessWidget {
           children: [
             Flexible(
               child: Text(
-                l10n.dashboardTotalBalance,
+                l10n.dashboardBalanceCount(summary.count),
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
@@ -534,8 +742,8 @@ class _Balance extends StatelessWidget {
                 amount: Money(value),
                 fontSize: 46,
                 // Sans compte, le 0 reste discret : ce n'est pas un vrai
-                // solde.
-                color: hasAccounts ? colors.ink : colors.inkTertiary,
+                // solde. Sinon, forêt (maquette).
+                color: hasAccounts ? colors.primary : colors.inkTertiary,
                 currencyColor: hasAccounts
                     ? colors.inkSecondary
                     : colors.inkTertiary,
@@ -543,26 +751,8 @@ class _Balance extends StatelessWidget {
             ),
           ),
         ),
-        if (hasAccounts)
-          TextButton(
-            onPressed: () => context.go(AppRoutes.accounts),
-            style: TextButton.styleFrom(
-              padding: EdgeInsets.zero,
-              minimumSize: const Size(0, 44),
-              alignment: Alignment.centerLeft,
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              spacing: 4,
-              children: [
-                Flexible(
-                  child: Text(l10n.dashboardAccountsLink(summary.count)),
-                ),
-                const Icon(AppIcons.caretRight, size: 12),
-              ],
-            ),
-          )
-        else
+        // Les comptes sont détaillés dans « Comptes et épargne ».
+        if (!hasAccounts)
           Text(
             l10n.dashboardEmptyBalanceHint,
             style: TextStyle(fontSize: 13.5, color: colors.inkSecondary),

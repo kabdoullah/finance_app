@@ -4,6 +4,7 @@ import 'package:finance_app/core/money/money.dart';
 import 'package:finance_app/features/accounts/data/accounts_repository.dart';
 import 'package:finance_app/features/accounts/domain/account_draft.dart';
 import 'package:finance_app/features/accounts/domain/account_type.dart';
+import 'package:finance_app/features/dashboard/presentation/dashboard_page.dart';
 import 'package:finance_app/features/transactions/data/transactions_repository.dart';
 import 'package:finance_app/features/transactions/domain/transaction.dart';
 import 'package:finance_app/features/transactions/domain/transaction_draft.dart';
@@ -99,7 +100,17 @@ void main() {
 
     await tester.tap(find.text('Accueil'));
     await tester.pumpAndSettle();
-    await tester.scrollUntilVisible(find.text('Dépassé de 3 000'), 200);
+    // Zone défilante de la page (la rangée des comptes défile aussi).
+    await tester.scrollUntilVisible(
+      find.text('Dépassé de 3 000'),
+      200,
+      scrollable: find
+          .descendant(
+            of: find.byType(DashboardPage),
+            matching: find.byType(Scrollable),
+          )
+          .first,
+    );
     expect(find.text('Dépassé de 3 000'), findsOneWidget);
   });
 
@@ -118,13 +129,17 @@ void main() {
     await tester.tap(find.text('Voir mes budgets'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Budget de novembre'), findsOneWidget);
+    expect(find.text('Budget global · novembre'), findsOneWidget);
     // 15 novembre : 16 jours restants, aujourd'hui compris ;
     // 252 000 / 16 = 15 750 → 15 700 par jour.
     expect(find.text('Encore 16 jours'), findsOneWidget);
     // Repères sous la barre du mois.
     expect(find.text('1er nov.'), findsOneWidget);
-    expect(find.text("Aujourd'hui"), findsOneWidget);
+    // 15e jour sur 30 : rythme idéal à 50 %.
+    expect(
+      find.textContaining("Aujourd'hui · rythme idéal 50"),
+      findsOneWidget,
+    );
     expect(find.text('30 nov.'), findsOneWidget);
     expect(
       find.text(
@@ -134,14 +149,14 @@ void main() {
       findsOneWidget,
     );
 
-    await tester.tap(find.text('Budget de novembre'));
+    await tester.tap(find.text('Budget global · novembre'));
     await tester.pumpAndSettle();
     expect(find.text('Modifier le budget'), findsOneWidget);
     await tester.tap(find.text('Supprimer ce budget'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Supprimer ce budget').last);
     await tester.pumpAndSettle();
-    expect(find.text('Budget de novembre'), findsNothing);
+    expect(find.text('Budget global · novembre'), findsNothing);
     expect(find.text('Définir un budget pour tout le mois'), findsOneWidget);
   });
 }

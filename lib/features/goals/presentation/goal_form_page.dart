@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_theme.dart';
 import '../../../core/clock.dart';
 import '../../../core/errors/result.dart';
 import '../../../core/formatting/date_format.dart';
@@ -423,6 +424,7 @@ class _EmergencySuggestion extends StatelessWidget {
               foregroundColor: colors.onPrimarySoft,
               padding: EdgeInsets.zero,
               textStyle: const TextStyle(
+                fontFamily: AppTheme.fontFamily,
                 fontSize: 13.5,
                 fontWeight: FontWeight.w600,
               ),

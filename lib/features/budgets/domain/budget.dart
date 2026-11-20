@@ -151,6 +151,27 @@ class BudgetsOverview {
   BudgetDriver? driverOf(BudgetStatus status) =>
       BudgetDriver.of(status.budget, monthTransactions);
 
+  /// Date prévue de dépassement de [status] au rythme actuel, s'il y en a.
+  DateTime? overrunOf(BudgetStatus status) =>
+      forecasts.where((f) => identical(f.$1, status)).firstOrNull?.$2;
+
+  /// « À surveiller » : seuil d'alerte atteint, dépassé, ou dépassement
+  /// prévu avant la fin du mois.
+  bool isWatched(BudgetStatus status) =>
+      status.level != BudgetLevel.ok || overrunOf(status) != null;
+
+  /// Budgets par catégorie à surveiller, du plus entamé au moins entamé.
+  List<BudgetStatus> get watched => [
+    for (final s in categories)
+      if (isWatched(s)) s,
+  ]..sort((a, b) => b.percent.compareTo(a.percent));
+
+  /// Budgets par catégorie « dans les clous ».
+  List<BudgetStatus> get calm => [
+    for (final s in categories)
+      if (!isWatched(s)) s,
+  ];
+
   /// Budgets dépassés (alertes de l'onglet).
   List<BudgetStatus> get exceeded => [
     for (final s in [?global, ...categories])

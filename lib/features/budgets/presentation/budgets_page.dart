@@ -13,6 +13,7 @@ import '../../../core/time/month.dart';
 import '../../../core/widgets/motion.dart';
 import '../../../core/widgets/section_tint.dart';
 import '../../../l10n/l10n.dart';
+import '../../assistant/presentation/assistant_controller.dart';
 import '../../goals/presentation/budgets_goals_switch.dart';
 import '../../transactions/presentation/transactions_providers.dart';
 import '../domain/budget.dart';
@@ -54,7 +55,12 @@ class BudgetsPage extends ConsumerWidget {
               const SizedBox(height: 24),
               if (overview != null) ...[
                 if (overview.global case final global?)
-                  _MonthBudget(status: global, now: now, month: overview.month)
+                  _MonthBudget(
+                    status: global,
+                    now: now,
+                    month: overview.month,
+                    overrunOn: overview.overrunOf(global),
+                  )
                 else
                   OutlinedButton.icon(
                     onPressed: () => context.push(AppRoutes.newBudget),
@@ -86,19 +92,6 @@ class BudgetsPage extends ConsumerWidget {
                             _showOperations(context, ref, category.id),
                       ),
                     ),
-                if (overview.forecasts.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16),
-                    child: _Alert(
-                      icon: AppIcons.chartLineBold,
-                      background: colors.warningSoft,
-                      foreground: colors.warning,
-                      title: l10n.budgetForecastLabel,
-                      body: _forecastText(context, overview.forecasts),
-                      linkLabel: l10n.budgetSeeForecast,
-                      onLink: () => context.go(AppRoutes.forecast),
-                    ),
-                  ),
                 const SizedBox(height: 28),
                 if (overview.categories.isEmpty && overview.global == null)
                   Text(
@@ -108,31 +101,57 @@ class BudgetsPage extends ConsumerWidget {
                       height: 1.5,
                       color: colors.inkSecondary,
                     ),
-                  )
-                else if (overview.categories.isNotEmpty) ...[
-                  Semantics(
-                    header: true,
-                    child: Text(
-                      l10n.budgetByCategory,
-                      style: const TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
                   ),
-                  const SizedBox(height: 6),
-                  // Barres en cascade à l'ouverture.
-                  for (final (i, status) in overview.categories.indexed)
-                    FadeSlideIn(
-                      index: i,
-                      child: BudgetRow(
-                        status: status,
-                        onTap: () => context.push(
-                          AppRoutes.editBudget(status.budget.id),
+                // Maquette : « À surveiller » puis « Dans les clous ».
+                for (final (title, list, isWatch) in [
+                  (l10n.budgetWatchTitle, overview.watched, true),
+                  (l10n.budgetCalmTitle, overview.calm, false),
+                ])
+                  if (list.isNotEmpty) ...[
+                    _SectionHeader(
+                      title: title,
+                      trailing: l10n.budgetCategoryCount(list.length),
+                    ),
+                    for (final (i, status) in list.indexed)
+                      FadeSlideIn(
+                        index: i,
+                        child: BudgetRow(
+                          status: status,
+                          overrunOn: overview.overrunOf(status),
+                          onTap: () => context.push(
+                            AppRoutes.editBudget(status.budget.id),
+                          ),
                         ),
                       ),
-                    ),
-                ],
+                    if (isWatch)
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: TextButton.icon(
+                          onPressed: () {
+                            ref
+                                .read(assistantRequestProvider.notifier)
+                                .ask(
+                                  l10n.budgetHowToFixQuestion(
+                                    list.first.budget.category?.name ??
+                                        l10n.budgetAllExpenses,
+                                  ),
+                                );
+                            context.go(AppRoutes.assistant);
+                          },
+                          icon: Icon(
+                            AppIcons.chatCircleText,
+                            size: 17,
+                            color: colors.info,
+                          ),
+                          label: Text(l10n.budgetHowToFix),
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            foregroundColor: colors.ink,
+                          ),
+                        ),
+                      ),
+                    const SizedBox(height: 20),
+                  ],
                 if (overview.withoutBudget.isNotEmpty) ...[
                   const SizedBox(height: 12),
                   Text(
@@ -152,11 +171,6 @@ class BudgetsPage extends ConsumerWidget {
                   icon: const Icon(AppIcons.plusBold, size: 18),
                   label: Text(l10n.budgetCreate),
                 ),
-                const SizedBox(height: 8),
-                OutlinedButton(
-                  onPressed: () => context.go(AppRoutes.transactions),
-                  child: Text(l10n.budgetSeeOperations),
-                ),
               ],
             ],
           ),
@@ -172,42 +186,21 @@ void _showOperations(BuildContext context, WidgetRef ref, String categoryId) {
   context.go(AppRoutes.transactions);
 }
 
-/// « au rythme actuel, Loisirs dépassera son budget vers le 17 nov. et le
-/// budget du mois sera dépassé vers le 20 nov. »
-String _forecastText(
-  BuildContext context,
-  List<(BudgetStatus, DateTime)> forecasts,
-) {
-  final l10n = context.l10n;
-  final locale = Localizations.localeOf(context).toLanguageTag();
-  final items = [
-    for (final (status, date) in forecasts)
-      switch (status.budget.category) {
-        final c? => l10n.budgetForecastCategory(
-          c.name,
-          AppDateFormat.dayMonth(date, locale),
-        ),
-        null => l10n.budgetForecastGlobal(AppDateFormat.dayMonth(date, locale)),
-      },
-  ];
-  final joined = items.length == 1
-      ? items.single
-      : '${items.sublist(0, items.length - 1).join(', ')} '
-            '${l10n.listAnd} ${items.last}';
-  return AppDateFormat.sentence(l10n.budgetForecastLead(joined));
-}
-
 /// « Budget de novembre » : dépensé / limite, barre, reste par jour.
 class _MonthBudget extends StatelessWidget {
   const _MonthBudget({
     required this.status,
     required this.now,
     required this.month,
+    this.overrunOn,
   });
 
   final BudgetStatus status;
   final DateTime now;
   final Month month;
+
+  /// Dépassement prévu du budget global au rythme actuel.
+  final DateTime? overrunOn;
 
   @override
   Widget build(BuildContext context) {
@@ -283,7 +276,9 @@ class _MonthBudget extends StatelessWidget {
               Text(AppDateFormat.dayMonth(month.start, locale), style: small),
               Expanded(
                 child: Text(
-                  RelativeDate.capitalize(relative.day(now)),
+                  l10n.budgetTodayPace(
+                    '${month.dayOf(now) * 100 ~/ month.length}',
+                  ),
                   textAlign: TextAlign.center,
                   style: small.copyWith(
                     color: colors.inkSecondary,
@@ -315,6 +310,17 @@ class _MonthBudget extends StatelessWidget {
               color: over ? colors.negative : colors.ink,
             ),
           ),
+          if (overrunOn case final date? when !over)
+            Text(
+              AppDateFormat.sentence(
+                l10n.budgetOverrunOn(AppDateFormat.dayMonth(date, locale)),
+              ),
+              style: TextStyle(
+                fontSize: 13.5,
+                fontWeight: FontWeight.w600,
+                color: colors.warning,
+              ),
+            ),
         ],
       ),
     );
@@ -426,4 +432,36 @@ class _Alert extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Titre de section avec un compte à droite (« À surveiller · 2 catégories »).
+class _SectionHeader extends StatelessWidget {
+  const _SectionHeader({required this.title, required this.trailing});
+
+  final String title;
+  final String trailing;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(bottom: 4),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.baseline,
+      textBaseline: TextBaseline.alphabetic,
+      children: [
+        Expanded(
+          child: Semantics(
+            header: true,
+            child: Text(
+              title,
+              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+            ),
+          ),
+        ),
+        Text(
+          trailing,
+          style: TextStyle(fontSize: 13, color: context.colors.inkTertiary),
+        ),
+      ],
+    ),
+  );
 }

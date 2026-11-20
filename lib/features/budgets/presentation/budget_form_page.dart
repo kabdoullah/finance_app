@@ -4,6 +4,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_theme.dart';
 import '../../../core/errors/result.dart';
 import '../../../core/money/amount_input_formatter.dart';
 import '../../../core/money/money.dart';
@@ -191,6 +192,7 @@ class _BudgetFormPageState extends ConsumerState<BudgetFormPage> {
                       style: TextButton.styleFrom(
                         minimumSize: const Size(0, 52),
                         textStyle: const TextStyle(
+                          fontFamily: AppTheme.fontFamily,
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
                         ),
@@ -433,6 +435,7 @@ class _AverageHint extends ConsumerWidget {
                 foregroundColor: colors.onPrimarySoft,
                 padding: EdgeInsets.zero,
                 textStyle: const TextStyle(
+                  fontFamily: AppTheme.fontFamily,
                   fontSize: 13.5,
                   fontWeight: FontWeight.w600,
                 ),

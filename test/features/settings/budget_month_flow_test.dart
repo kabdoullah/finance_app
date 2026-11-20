@@ -58,7 +58,7 @@ void main() {
   Finder monthExpense(String amount) => find.descendant(
     of: find
         .ancestor(
-          of: find.text('Dépenses du mois'),
+          of: find.text('Sorties · novembre'),
           matching: find.byType(Column),
         )
         .first,
@@ -82,7 +82,7 @@ void main() {
 
     await tester.tap(find.text('Budgets').last);
     await tester.pumpAndSettle();
-    expect(find.text('Budget de novembre · 25 oct. – 24 nov.'), findsOneWidget);
+    expect(find.text('Budget global · novembre · 25 oct. – 24 nov.'), findsOneWidget);
     // 15 → 24 nov. inclus.
     expect(find.text('Encore 10 jours'), findsOneWidget);
 

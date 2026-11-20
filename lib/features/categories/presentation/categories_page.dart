@@ -3,6 +3,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_theme.dart';
 import '../../../core/errors/result.dart';
 import '../../../core/widgets/choice_pill.dart';
 import '../../../core/widgets/confirm_dialog.dart';
@@ -386,6 +387,7 @@ class _CategoryTile extends StatelessWidget {
                           backgroundColor: Colors.transparent,
                           side: BorderSide(color: colors.inkTertiary),
                           textStyle: const TextStyle(
+                            fontFamily: AppTheme.fontFamily,
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
                           ),

@@ -703,12 +703,12 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String budgetMonthTitle(String month) {
-    return 'Budget de $month';
+    return 'Budget global · $month';
   }
 
   @override
   String budgetOfLimit(String limit) {
-    return '/ $limit FCFA';
+    return 'sur $limit FCFA';
   }
 
   @override
@@ -741,9 +741,6 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get budgetByCategory => 'Par catégorie';
-
-  @override
   String budgetDriver(String name, int count, String amount) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -753,27 +750,6 @@ class AppLocalizationsFr extends AppLocalizations {
     );
     return 'Surtout à cause de $name : $_temp0, $amount FCFA ce mois-ci.';
   }
-
-  @override
-  String get budgetForecastLabel => 'Prévision :';
-
-  @override
-  String budgetForecastLead(String items) {
-    return 'au rythme actuel, $items.';
-  }
-
-  @override
-  String budgetForecastCategory(String name, String date) {
-    return '$name dépassera son budget vers le $date';
-  }
-
-  @override
-  String budgetForecastGlobal(String date) {
-    return 'le budget du mois sera dépassé vers le $date';
-  }
-
-  @override
-  String get listAnd => 'et';
 
   @override
   String budgetSpentOf(String spent, String limit) {
@@ -2725,9 +2701,6 @@ class AppLocalizationsFr extends AppLocalizations {
       'C\'est une estimation, pas une certitude : plus l\'horizon est lointain, plus la fourchette s\'élargit. Calculé sur ton téléphone.';
 
   @override
-  String get budgetSeeForecast => 'Voir la prévision';
-
-  @override
   String get budgetsSegment => 'Budgets';
 
   @override
@@ -3970,4 +3943,77 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get txSwipeHint => 'Glisser vers la gauche pour supprimer';
+
+  @override
+  String get budgetWatchTitle => 'À surveiller';
+
+  @override
+  String get budgetCalmTitle => 'Dans les clous';
+
+  @override
+  String budgetCategoryCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count catégories',
+      one: '1 catégorie',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String budgetOverrunOn(Object date) {
+    return 'Dépassera vers le $date';
+  }
+
+  @override
+  String get budgetHowToFix => 'Comment revenir dans le budget ?';
+
+  @override
+  String budgetHowToFixQuestion(Object category) {
+    return 'Comment revenir dans mon budget $category ce mois-ci ?';
+  }
+
+  @override
+  String budgetTodayPace(Object percent) {
+    return 'Aujourd\'hui · rythme idéal $percent %';
+  }
+
+  @override
+  String dashboardWhyIncrease(Object category) {
+    return 'Pourquoi mes dépenses de $category augmentent ?';
+  }
+
+  @override
+  String dashboardBalanceCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Solde total · $count comptes',
+      one: 'Solde total · 1 compte',
+      zero: 'Solde total',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String dashboardIncomeOf(Object month) {
+    return 'Entrées · $month';
+  }
+
+  @override
+  String dashboardExpenseOf(Object month) {
+    return 'Sorties · $month';
+  }
+
+  @override
+  String get dashboardAccountsTitle => 'Comptes et épargne';
+
+  @override
+  String get dashboardGoalsCard => 'Objectifs';
+
+  @override
+  String dashboardRestLine(Object amount, Object names) {
+    return '+ $names : $amount FCFA';
+  }
 }

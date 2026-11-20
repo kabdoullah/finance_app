@@ -7,6 +7,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_theme.dart';
 import '../../../app/theme/motion.dart';
 import '../../../core/clock.dart';
 import '../../../core/formatting/date_format.dart';
@@ -241,6 +242,7 @@ class GoalCard extends ConsumerWidget {
                   minimumSize: const Size(0, 36),
                   padding: const EdgeInsets.symmetric(horizontal: 14),
                   textStyle: const TextStyle(
+                    fontFamily: AppTheme.fontFamily,
                     fontSize: 13.5,
                     fontWeight: FontWeight.w600,
                   ),

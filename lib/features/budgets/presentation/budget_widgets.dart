@@ -4,6 +4,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
 import '../../../app/theme/motion.dart';
+import '../../../core/formatting/date_format.dart';
 import '../../../core/money/money.dart';
 import '../../../core/widgets/motion.dart';
 import '../../../l10n/l10n.dart';
@@ -88,11 +89,15 @@ class BudgetRow extends StatelessWidget {
     this.onTap,
     this.showAmounts = true,
     this.masked = false,
+    this.overrunOn,
     super.key,
   });
 
   final BudgetStatus status;
   final VoidCallback? onTap;
+
+  /// Dépassement prévu au rythme actuel : « Dépassera vers le 22 nov. ».
+  final DateTime? overrunOn;
 
   /// « 92 500 sur 120 000 » sous la barre (masqué sur l'accueil).
   final bool showAmounts;
@@ -104,7 +109,23 @@ class BudgetRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final l10n = context.l10n;
-    final (statusLabel, labelColor) = budgetStatusLabel(status, l10n, colors);
+    final overrun = overrunOn;
+    final (
+      statusLabel,
+      labelColor,
+    ) = overrun != null && status.level != BudgetLevel.exceeded
+        ? (
+            AppDateFormat.sentence(
+              l10n.budgetOverrunOn(
+                AppDateFormat.dayMonth(
+                  overrun,
+                  Localizations.localeOf(context).toLanguageTag(),
+                ),
+              ),
+            ),
+            colors.warning,
+          )
+        : budgetStatusLabel(status, l10n, colors);
     final label = masked ? MoneyFormat.masked : statusLabel;
     return InkWell(
       onTap: onTap,
@@ -117,6 +138,7 @@ class BudgetRow extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.baseline,
               textBaseline: TextBaseline.alphabetic,
+              spacing: 12,
               children: [
                 Expanded(
                   child: Text(
@@ -127,12 +149,17 @@ class BudgetRow extends StatelessWidget {
                     ),
                   ),
                 ),
-                Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: labelColor,
+                // « Dépassera vers le 22 nov. » passe à la ligne au besoin.
+                Flexible(
+                  flex: 2,
+                  child: Text(
+                    label,
+                    textAlign: TextAlign.end,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: labelColor,
+                    ),
                   ),
                 ),
               ],

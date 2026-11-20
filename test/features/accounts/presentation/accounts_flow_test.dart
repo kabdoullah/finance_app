@@ -50,7 +50,7 @@ void main() {
     // Retour à l'accueil : solde réel et étape 1 cochée.
     await tester.tap(find.byType(BackButton));
     await tester.pumpAndSettle();
-    expect(find.text('Réparti sur 1 compte'), findsOneWidget);
+    expect(find.text('Solde total · 1 compte'), findsOneWidget);
     expect(find.text('15${_nnbsp}000'), findsOneWidget);
   });
 
