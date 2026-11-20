@@ -147,6 +147,8 @@ void main() {
     await openAssistant(tester, loaded: false);
     expect(find.text('L\'assistant n\'est pas chargé'), findsOneWidget);
     expect(find.text('Simuler un achat'), findsOneWidget);
+    await tester.ensureVisible(find.text('Charger l\'assistant'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Charger l\'assistant'));
     await tester.pumpAndSettle();
     expect(find.text('Pose ta question…'), findsOneWidget);

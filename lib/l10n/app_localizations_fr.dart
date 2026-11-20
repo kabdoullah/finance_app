@@ -2551,16 +2551,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get forecastAddOperation => 'Ajouter une opération';
 
   @override
-  String get forecastCurrent => 'Solde actuel';
+  String get forecastCurrent => 'Solde réel';
 
   @override
   String forecastExpectedOn(String date) {
-    return 'Prévu au $date';
+    return 'Solde prévu';
   }
 
   @override
-  String forecastRange(String low, String high) {
-    return 'Entre $low et $high FCFA';
+  String forecastRange(String low, String high, Object date) {
+    return 'au $date · $low à $high';
   }
 
   @override
@@ -2581,13 +2581,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get forecastToday => 'Aujourd\'hui';
 
   @override
-  String get forecastLegendPast => 'Passé';
+  String get forecastLegendPast => 'Réel';
 
   @override
-  String get forecastLegendEstimate => 'Estimation';
+  String get forecastLegendEstimate => 'Prévu';
 
   @override
-  String get forecastLegendRange => 'Fourchette probable';
+  String get forecastLegendRange => 'Fourchette';
 
   @override
   String forecastChartLabel(String date, String amount) {
@@ -2648,32 +2648,25 @@ class AppLocalizationsFr extends AppLocalizations {
   String get forecastSeeBudget => 'Voir le budget';
 
   @override
-  String get forecastExpected => 'Ce qui est attendu';
+  String get forecastExpected => 'Programmé';
 
   @override
-  String get forecastRecurring => 'Récurrentes';
-
-  @override
-  String get forecastExpectedIncome => 'Revenus attendus';
-
-  @override
-  String get forecastExpectedExpenses => 'Dépenses attendues';
+  String get forecastRecurring => 'Gérer';
 
   @override
   String get forecastNoRecurring =>
       'Aucune opération récurrente dans la période.';
 
   @override
-  String get forecastEveryDay => 'Chaque jour';
-
-  @override
   String get forecastVariable => 'Dépenses variables';
 
   @override
-  String get forecastVariableHelp => 'Estimées sur tes 3 derniers mois';
+  String forecastVariableHelp(Object amount) {
+    return '≈ $amount FCFA par jour, d\'après tes 3 derniers mois';
+  }
 
   @override
-  String get forecastHowTitle => 'Comment est calculée cette prévision ?';
+  String get forecastHowTitle => 'Comment c\'est calculé';
 
   @override
   String get forecastHowRecurring =>
@@ -4015,5 +4008,58 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String dashboardRestLine(Object amount, Object names) {
     return '+ $names : $amount FCFA';
+  }
+
+  @override
+  String forecastCurrentOn(Object date) {
+    return 'aujourd\'hui, $date';
+  }
+
+  @override
+  String get forecastScheduledHint =>
+      'Tes opérations récurrentes et dépenses planifiées : montants et dates connus.';
+
+  @override
+  String get forecastScheduledTotal => 'Total programmé';
+
+  @override
+  String get forecastEstimated => 'Estimé';
+
+  @override
+  String get forecastLegendRisk => 'Risque';
+
+  @override
+  String get asWeekTitle => 'Cette semaine';
+
+  @override
+  String get asComputedNow => 'Calculé à l\'instant';
+
+  @override
+  String get asWeekSpent => 'Dépensé';
+
+  @override
+  String asVsAverage(Object amount) {
+    return '$amount vs moy.';
+  }
+
+  @override
+  String get asPerDayLeft => 'Reste / jour';
+
+  @override
+  String asUntil(Object date) {
+    return 'jusqu\'au $date';
+  }
+
+  @override
+  String get asLowPoint => 'Point bas';
+
+  @override
+  String asOnDate(Object date) {
+    return 'le $date';
+  }
+
+  @override
+  String asWeekLabel(Object low, Object perDay, Object spent) {
+    return 'Cette semaine : dépensé $spent, reste par jour $perDay, point bas $low';
   }
 }

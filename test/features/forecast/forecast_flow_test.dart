@@ -115,8 +115,8 @@ void main() {
     await openForecast(tester);
 
     // 30 jours : 285 000 − 30 × 750 + 380 000 = 642 500 ≈ 643 000.
-    expect(find.text('Solde actuel'), findsOneWidget);
-    expect(find.text('Prévu au 15 déc.'), findsOneWidget);
+    expect(find.text('Solde réel'), findsOneWidget);
+    expect(find.text('Solde prévu'), findsOneWidget);
     expect(find.text('≈ 643 000'), findsOneWidget);
     // Moins de 30 jours d'historique : fiabilité abaissée d'un cran.
     expect(find.text('Fiabilité faible'), findsOneWidget);
@@ -125,13 +125,15 @@ void main() {
     expect(noNegative, findsOneWidget);
     await scrollTo(tester, find.text('Salaire'), 200);
     expect(find.text('+380 000'), findsWidgets);
-    expect(find.text('≈ −750'), findsOneWidget);
+    // Dépenses variables : 750 par jour, soit ≈ −22 500 sur 30 jours.
+    expect(find.textContaining('750\u00a0FCFA par jour'), findsOneWidget);
+    expect(find.textContaining('22\u00a0500'), findsOneWidget);
 
     // 7 jours : 285 000 − 7 × 750 = 279 750 ≈ 280 000.
     await scrollTo(tester, find.text('7 jours'), -200);
     await tester.tap(find.text('7 jours'));
     await tester.pumpAndSettle();
-    expect(find.text('Prévu au 22 nov.'), findsOneWidget);
+    expect(find.textContaining('au 22 nov.'), findsOneWidget);
     expect(find.text('≈ 280 000'), findsOneWidget);
     expect(find.text('Fiabilité moyenne'), findsOneWidget);
   });

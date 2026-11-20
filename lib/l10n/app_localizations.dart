@@ -4157,20 +4157,20 @@ abstract class AppLocalizations {
   /// No description provided for @forecastCurrent.
   ///
   /// In fr, this message translates to:
-  /// **'Solde actuel'**
+  /// **'Solde réel'**
   String get forecastCurrent;
 
   /// No description provided for @forecastExpectedOn.
   ///
   /// In fr, this message translates to:
-  /// **'Prévu au {date}'**
+  /// **'Solde prévu'**
   String forecastExpectedOn(String date);
 
   /// No description provided for @forecastRange.
   ///
   /// In fr, this message translates to:
-  /// **'Entre {low} et {high} FCFA'**
-  String forecastRange(String low, String high);
+  /// **'au {date} · {low} à {high}'**
+  String forecastRange(String low, String high, Object date);
 
   /// No description provided for @forecastReliability.
   ///
@@ -4205,19 +4205,19 @@ abstract class AppLocalizations {
   /// No description provided for @forecastLegendPast.
   ///
   /// In fr, this message translates to:
-  /// **'Passé'**
+  /// **'Réel'**
   String get forecastLegendPast;
 
   /// No description provided for @forecastLegendEstimate.
   ///
   /// In fr, this message translates to:
-  /// **'Estimation'**
+  /// **'Prévu'**
   String get forecastLegendEstimate;
 
   /// No description provided for @forecastLegendRange.
   ///
   /// In fr, this message translates to:
-  /// **'Fourchette probable'**
+  /// **'Fourchette'**
   String get forecastLegendRange;
 
   /// No description provided for @forecastChartLabel.
@@ -4295,38 +4295,20 @@ abstract class AppLocalizations {
   /// No description provided for @forecastExpected.
   ///
   /// In fr, this message translates to:
-  /// **'Ce qui est attendu'**
+  /// **'Programmé'**
   String get forecastExpected;
 
   /// No description provided for @forecastRecurring.
   ///
   /// In fr, this message translates to:
-  /// **'Récurrentes'**
+  /// **'Gérer'**
   String get forecastRecurring;
-
-  /// No description provided for @forecastExpectedIncome.
-  ///
-  /// In fr, this message translates to:
-  /// **'Revenus attendus'**
-  String get forecastExpectedIncome;
-
-  /// No description provided for @forecastExpectedExpenses.
-  ///
-  /// In fr, this message translates to:
-  /// **'Dépenses attendues'**
-  String get forecastExpectedExpenses;
 
   /// No description provided for @forecastNoRecurring.
   ///
   /// In fr, this message translates to:
   /// **'Aucune opération récurrente dans la période.'**
   String get forecastNoRecurring;
-
-  /// No description provided for @forecastEveryDay.
-  ///
-  /// In fr, this message translates to:
-  /// **'Chaque jour'**
-  String get forecastEveryDay;
 
   /// No description provided for @forecastVariable.
   ///
@@ -4337,13 +4319,13 @@ abstract class AppLocalizations {
   /// No description provided for @forecastVariableHelp.
   ///
   /// In fr, this message translates to:
-  /// **'Estimées sur tes 3 derniers mois'**
-  String get forecastVariableHelp;
+  /// **'≈ {amount} FCFA par jour, d\'après tes 3 derniers mois'**
+  String forecastVariableHelp(Object amount);
 
   /// No description provided for @forecastHowTitle.
   ///
   /// In fr, this message translates to:
-  /// **'Comment est calculée cette prévision ?'**
+  /// **'Comment c\'est calculé'**
   String get forecastHowTitle;
 
   /// No description provided for @forecastHowRecurring.
@@ -6417,6 +6399,90 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'+ {names} : {amount} FCFA'**
   String dashboardRestLine(Object amount, Object names);
+
+  /// No description provided for @forecastCurrentOn.
+  ///
+  /// In fr, this message translates to:
+  /// **'aujourd\'hui, {date}'**
+  String forecastCurrentOn(Object date);
+
+  /// No description provided for @forecastScheduledHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tes opérations récurrentes et dépenses planifiées : montants et dates connus.'**
+  String get forecastScheduledHint;
+
+  /// No description provided for @forecastScheduledTotal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Total programmé'**
+  String get forecastScheduledTotal;
+
+  /// No description provided for @forecastEstimated.
+  ///
+  /// In fr, this message translates to:
+  /// **'Estimé'**
+  String get forecastEstimated;
+
+  /// No description provided for @forecastLegendRisk.
+  ///
+  /// In fr, this message translates to:
+  /// **'Risque'**
+  String get forecastLegendRisk;
+
+  /// No description provided for @asWeekTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette semaine'**
+  String get asWeekTitle;
+
+  /// No description provided for @asComputedNow.
+  ///
+  /// In fr, this message translates to:
+  /// **'Calculé à l\'instant'**
+  String get asComputedNow;
+
+  /// No description provided for @asWeekSpent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépensé'**
+  String get asWeekSpent;
+
+  /// No description provided for @asVsAverage.
+  ///
+  /// In fr, this message translates to:
+  /// **'{amount} vs moy.'**
+  String asVsAverage(Object amount);
+
+  /// No description provided for @asPerDayLeft.
+  ///
+  /// In fr, this message translates to:
+  /// **'Reste / jour'**
+  String get asPerDayLeft;
+
+  /// No description provided for @asUntil.
+  ///
+  /// In fr, this message translates to:
+  /// **'jusqu\'au {date}'**
+  String asUntil(Object date);
+
+  /// No description provided for @asLowPoint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Point bas'**
+  String get asLowPoint;
+
+  /// No description provided for @asOnDate.
+  ///
+  /// In fr, this message translates to:
+  /// **'le {date}'**
+  String asOnDate(Object date);
+
+  /// No description provided for @asWeekLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette semaine : dépensé {spent}, reste par jour {perDay}, point bas {low}'**
+  String asWeekLabel(Object low, Object perDay, Object spent);
 }
 
 class _AppLocalizationsDelegate

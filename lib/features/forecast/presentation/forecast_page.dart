@@ -8,6 +8,7 @@ import '../../../app/theme/app_icons.dart';
 import '../../../app/theme/motion.dart';
 import '../../../core/clock.dart';
 import '../../../core/formatting/date_format.dart';
+import '../../../core/formatting/relative_date.dart';
 import '../../../core/money/money.dart';
 import '../../../core/widgets/section_tint.dart';
 import '../../../core/widgets/segmented_choice.dart';
@@ -80,20 +81,7 @@ class _ForecastPageState extends ConsumerState<ForecastPage> {
                 const SizedBox(height: 24),
                 _HowItWorks(forecast: forecast),
                 const SizedBox(height: 24),
-                OutlinedButton.icon(
-                  onPressed: () => context.go(AppRoutes.simulation),
-                  icon: const Icon(AppIcons.target, size: 18),
-                  label: Text(l10n.forecastSimulate),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  l10n.forecastSimulateExample,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: context.colors.inkTertiary,
-                  ),
-                ),
+                _SimulateCard(onTap: () => context.go(AppRoutes.simulation)),
               ],
             ],
           ),
@@ -214,60 +202,123 @@ class _Summary extends StatelessWidget {
       ForecastReliability.medium => l10n.forecastReliabilityMedium,
       ForecastReliability.low => l10n.forecastReliabilityLow,
     };
-    Widget cell(String label, String value) => Column(
+    // Maquette : « Solde réel » (trait plein) et « Solde prévu » (pointillés
+    // ardoise), chacun avec sa légende de ligne.
+    Widget cell({
+      required Widget swatch,
+      required String label,
+      required String value,
+      required String sub,
+      Color? color,
+    }) => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 3,
+      spacing: 4,
       children: [
-        Text(label, style: TextStyle(fontSize: 13, color: colors.inkSecondary)),
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.w600,
-            letterSpacing: -0.4,
+        Row(
+          spacing: 6,
+          children: [
+            swatch,
+            Flexible(
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: 12.5,
+                  fontWeight: FontWeight.w600,
+                  color: colors.inkSecondary,
+                ),
+              ),
+            ),
+          ],
+        ),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Text(
+            value,
+            style: TextStyle(
+              fontSize: 26,
+              fontWeight: FontWeight.w600,
+              letterSpacing: -0.6,
+              color: color,
+            ),
           ),
         ),
+        Text(sub, style: TextStyle(fontSize: 12.5, color: colors.inkTertiary)),
       ],
     );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: 8,
       children: [
-        Row(
-          spacing: 16,
-          children: [
-            Expanded(
-              child: cell(l10n.forecastCurrent, _amount(forecast.balance)),
+        DecoratedBox(
+          decoration: BoxDecoration(
+            border: Border.symmetric(
+              horizontal: BorderSide(color: colors.line),
             ),
-            Expanded(
-              // Nouvelle valeur en fondu (220 ms).
-              child: AnimatedSwitcher(
-                duration: Motion.of(context, Motion.base),
-                layoutBuilder: (current, previous) => Stack(
-                  alignment: Alignment.topLeft,
-                  children: [...previous, ?current],
-                ),
-                child: KeyedSubtree(
-                  key: ValueKey(forecast.horizon),
-                  child: cell(
-                    l10n.forecastExpectedOn(_day(context, forecast.endDate)),
-                    '≈ ${_amount(forecast.endBalance)}',
+          ),
+          child: IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(0, 14, 12, 14),
+                    decoration: BoxDecoration(
+                      border: Border(right: BorderSide(color: colors.line)),
+                    ),
+                    child: cell(
+                      swatch: Container(
+                        width: 14,
+                        height: 2,
+                        color: colors.ink,
+                      ),
+                      label: l10n.forecastCurrent,
+                      value: _amount(forecast.balance),
+                      sub: l10n.forecastCurrentOn(
+                        _day(context, forecast.today),
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(14, 14, 0, 14),
+                    // Nouvelle valeur en fondu (220 ms).
+                    child: AnimatedSwitcher(
+                      duration: Motion.of(context, Motion.base),
+                      layoutBuilder: (current, previous) => Stack(
+                        alignment: Alignment.topLeft,
+                        children: [...previous, ?current],
+                      ),
+                      child: KeyedSubtree(
+                        key: ValueKey(forecast.horizon),
+                        child: cell(
+                          swatch: _Dashes(color: colors.info),
+                          label: l10n.forecastExpectedOn(
+                            _day(context, forecast.endDate),
+                          ),
+                          value: '≈\u00a0${_amount(forecast.endBalance)}',
+                          color: colors.info,
+                          sub: AppDateFormat.sentence(
+                            l10n.forecastRange(
+                              _amount(low),
+                              _amount(high),
+                              _day(context, forecast.endDate),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
         Row(
+          spacing: 6,
           children: [
-            Expanded(
-              child: Text(
-                l10n.forecastRange(_amount(low), _amount(high)),
-                style: TextStyle(fontSize: 13, color: colors.inkSecondary),
-              ),
-            ),
             _ReliabilityBars(level: forecast.reliability),
-            const SizedBox(width: 6),
             Flexible(
               child: Text(
                 l10n.forecastReliability(level),
@@ -279,6 +330,22 @@ class _Summary extends StatelessWidget {
       ],
     );
   }
+}
+
+/// Trait pointillé de légende (« Prévu »).
+class _Dashes extends StatelessWidget {
+  const _Dashes({required this.color});
+
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) => Row(
+    mainAxisSize: MainAxisSize.min,
+    spacing: 2,
+    children: [
+      for (var i = 0; i < 3; i++) Container(width: 4, height: 2, color: color),
+    ],
+  );
 }
 
 class _ReliabilityBars extends StatelessWidget {
@@ -381,13 +448,7 @@ class _ChartBlock extends StatelessWidget {
               label: l10n.forecastLegendPast,
             ),
             _Legend(
-              swatch: Row(
-                spacing: 2,
-                children: [
-                  for (var i = 0; i < 3; i++)
-                    Container(width: 4, height: 2, color: colors.primary),
-                ],
-              ),
+              swatch: _Dashes(color: colors.info),
               label: l10n.forecastLegendEstimate,
             ),
             _Legend(
@@ -395,11 +456,22 @@ class _ChartBlock extends StatelessWidget {
                 width: 14,
                 height: 10,
                 decoration: BoxDecoration(
-                  color: colors.primarySoft,
+                  color: colors.infoSoft,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
               label: l10n.forecastLegendRange,
+            ),
+            _Legend(
+              swatch: Container(
+                width: 9,
+                height: 9,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: colors.warning,
+                ),
+              ),
+              label: l10n.forecastLegendRisk,
             ),
           ],
         ),
@@ -623,87 +695,99 @@ class _Expected extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final l10n = context.l10n;
-    Widget cell(String label, String value, Color color, EdgeInsets padding) =>
-        Padding(
-          padding: padding,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 3,
-            children: [
-              Text(
-                label,
-                style: TextStyle(fontSize: 12.5, color: colors.inkSecondary),
-              ),
-              Text(
-                value,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: color,
-                ),
-              ),
-            ],
+    final income = forecast.events
+        .where((e) => e.amount.value > 0)
+        .fold(Money.zero, (sum, e) => sum + e.amount);
+    final expenses = forecast.events
+        .where((e) => e.amount.value < 0)
+        .fold(Money.zero, (sum, e) => sum - e.amount);
+    Widget header(String title, {Widget? trailing}) => Row(
+      children: [
+        Expanded(
+          child: Semantics(
+            header: true,
+            child: Text(
+              title,
+              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+            ),
           ),
-        );
-    final dateStyle = TextStyle(
-      fontSize: 12.5,
-      fontWeight: FontWeight.w600,
-      color: colors.inkTertiary,
+        ),
+        ?trailing,
+      ],
+    );
+    Widget row({
+      required Widget icon,
+      required String title,
+      required String sub,
+      required String amount,
+      Color? amountColor,
+    }) => Container(
+      constraints: const BoxConstraints(minHeight: 52),
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: colors.line)),
+      ),
+      child: Row(
+        spacing: 12,
+        children: [
+          icon,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 1,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 14.5,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  sub,
+                  style: TextStyle(fontSize: 12.5, color: colors.inkTertiary),
+                ),
+              ],
+            ),
+          ),
+          Text(
+            amount,
+            style: TextStyle(
+              fontSize: 14.5,
+              fontWeight: FontWeight.w600,
+              color: amountColor,
+            ),
+          ),
+        ],
+      ),
+    );
+    Widget dashedIcon(IconData icon) => Container(
+      width: 32,
+      height: 32,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: colors.inkTertiary, width: 1.5),
+      ),
+      child: Icon(icon, size: 14, color: colors.inkSecondary),
     );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                l10n.forecastExpected,
-                style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            TextButton(
-              onPressed: () => context.go(AppRoutes.recurring),
-              child: Text(l10n.forecastRecurring),
-            ),
-          ],
-        ),
-        const SizedBox(height: 6),
-        DecoratedBox(
-          decoration: BoxDecoration(
-            border: Border.symmetric(
-              horizontal: BorderSide(color: colors.line),
-            ),
-          ),
-          child: IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(
-                  child: cell(
-                    l10n.forecastExpectedIncome,
-                    MoneyFormat.signed(forecast.expectedIncome),
-                    colors.positive,
-                    const EdgeInsets.fromLTRB(0, 12, 12, 12),
-                  ),
-                ),
-                VerticalDivider(width: 1, color: colors.line),
-                Expanded(
-                  child: cell(
-                    l10n.forecastExpectedExpenses,
-                    MoneyFormat.signed(Money(-forecast.expectedExpenses.value)),
-                    colors.ink,
-                    const EdgeInsets.fromLTRB(12, 12, 0, 12),
-                  ),
-                ),
-              ],
-            ),
+        header(
+          l10n.forecastExpected,
+          trailing: TextButton(
+            onPressed: () => context.go(AppRoutes.recurring),
+            child: Text(l10n.forecastRecurring),
           ),
         ),
-        const SizedBox(height: 4),
+        Padding(
+          padding: const EdgeInsets.only(top: 2, bottom: 6),
+          child: Text(
+            l10n.forecastScheduledHint,
+            style: TextStyle(fontSize: 13, color: colors.inkSecondary),
+          ),
+        ),
         if (forecast.events.isEmpty)
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
@@ -713,87 +797,77 @@ class _Expected extends StatelessWidget {
             ),
           ),
         for (final e in forecast.events.take(_maxEvents))
+          row(
+            icon: dashedIcon(
+              e.isPlanned ? AppIcons.calendarBlank : AppIcons.repeat,
+            ),
+            title: e.name,
+            sub: RelativeDate.capitalize(_day(context, e.date)),
+            amount:
+                '${e.isEstimate ? '≈\u00a0' : ''}${MoneyFormat.signed(e.amount)}',
+            amountColor: e.amount.value > 0 ? colors.positive : colors.ink,
+          ),
+        if (forecast.events.isNotEmpty)
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
+            padding: const EdgeInsets.only(top: 10),
             child: Row(
-              spacing: 12,
               children: [
-                SizedBox(
-                  width: 58,
-                  child: Text(_day(context, e.date), style: dateStyle),
-                ),
-                Icon(
-                  e.isPlanned ? AppIcons.calendarBlank : AppIcons.repeat,
-                  size: 14,
-                  color: colors.inkTertiary,
-                ),
                 Expanded(
                   child: Text(
-                    e.name,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
+                    l10n.forecastScheduledTotal,
+                    style: TextStyle(
+                      fontSize: 13.5,
+                      color: colors.inkSecondary,
                     ),
                   ),
                 ),
                 Text(
-                  '${e.isEstimate ? '≈ ' : ''}${MoneyFormat.signed(e.amount)}',
+                  MoneyFormat.signed(income),
                   style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: e.amount.value > 0 ? colors.positive : colors.ink,
+                    fontSize: 13.5,
+                    fontWeight: FontWeight.w700,
+                    color: colors.positive,
+                  ),
+                ),
+                Text(
+                  ' · ',
+                  style: TextStyle(fontSize: 13.5, color: colors.inkTertiary),
+                ),
+                Text(
+                  MoneyFormat.signed(-expenses),
+                  style: const TextStyle(
+                    fontSize: 13.5,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ],
             ),
           ),
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          decoration: BoxDecoration(
-            border: Border(top: BorderSide(color: colors.line)),
+        const SizedBox(height: 24),
+        header(l10n.forecastEstimated),
+        row(
+          icon: Container(
+            width: 32,
+            height: 32,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: colors.expenseSoft,
+            ),
+            child: Icon(AppIcons.arrowUpRight, size: 15, color: colors.expense),
           ),
-          child: Row(
-            spacing: 12,
-            children: [
-              SizedBox(
-                width: 58,
-                child: Text(l10n.forecastEveryDay, style: dateStyle),
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: 1,
-                  children: [
-                    Text(
-                      l10n.forecastVariable,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    Text(
-                      l10n.forecastVariableHelp,
-                      style: TextStyle(fontSize: 12, color: colors.inkTertiary),
-                    ),
-                  ],
-                ),
-              ),
-              Text(
-                '≈ ${MoneyFormat.signed(Money(-forecast.dailyVariable.value))}',
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
+          title: l10n.forecastVariable,
+          sub: l10n.forecastVariableHelp(
+            MoneyFormat.amount(forecast.dailyVariable),
           ),
+          amount:
+              '≈\u00a0${MoneyFormat.signed(Money(-forecast.dailyVariable.value * forecast.horizon.days))}',
+          amountColor: colors.inkSecondary,
         ),
       ],
     );
   }
 }
 
-/// « Comment est calculée cette prévision ? »
 class _HowItWorks extends StatelessWidget {
   const _HowItWorks({required this.forecast});
 
@@ -820,12 +894,11 @@ class _HowItWorks extends StatelessWidget {
       height: 1.5,
       color: colors.inkSecondary,
     );
+    // Maquette : simple section sous un filet, pas une carte.
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.only(top: 16),
       decoration: BoxDecoration(
-        color: colors.surface,
-        border: Border.all(color: colors.line),
-        borderRadius: BorderRadius.circular(16),
+        border: Border(top: BorderSide(color: colors.line)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -833,7 +906,7 @@ class _HowItWorks extends StatelessWidget {
         children: [
           Text(
             l10n.forecastHowTitle,
-            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
           ),
           for (final b in bullets)
             Row(
@@ -853,6 +926,60 @@ class _HowItWorks extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// « Simuler un achat » : carte ardoise en bas de page (maquette).
+class _SimulateCard extends StatelessWidget {
+  const _SimulateCard({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final l10n = context.l10n;
+    return Material(
+      color: colors.infoSoft,
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          child: Row(
+            spacing: 12,
+            children: [
+              Icon(AppIcons.handCoins, size: 22, color: colors.info),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 2,
+                  children: [
+                    Text(
+                      l10n.forecastSimulate,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                        color: colors.info,
+                      ),
+                    ),
+                    Text(
+                      l10n.forecastSimulateExample,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: colors.inkSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(AppIcons.caretRightBold, size: 14, color: colors.info),
+            ],
+          ),
+        ),
       ),
     );
   }

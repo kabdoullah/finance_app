@@ -19,6 +19,7 @@ import '../../transactions/domain/transaction.dart';
 import '../domain/assistant_reply.dart';
 import 'ai_model_controller.dart';
 import 'assistant_controller.dart';
+import 'week_card.dart';
 
 /// Onglet Assistant (maquettes Assistant, Assistant-Chargement,
 /// Assistant-SansIA) : le Copilote répond avec des chiffres calculés par
@@ -148,7 +149,11 @@ class _ConversationState extends ConsumerState<_Conversation> {
             controller: _scroll,
             padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
             children: [
-              if (state.entries.isEmpty)
+              if (state.entries.isEmpty) ...[
+                const Padding(
+                  padding: EdgeInsets.only(top: 8),
+                  child: WeekCard(),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   child: Text(
@@ -160,6 +165,7 @@ class _ConversationState extends ConsumerState<_Conversation> {
                     ),
                   ),
                 ),
+              ],
               for (final (i, entry) in state.entries.indexed)
                 if (i < _initialEntries)
                   _entry(entry)
@@ -594,8 +600,11 @@ class _NotLoaded extends ConsumerWidget {
       ),
     ];
     return ListView(
-      padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
+      padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
       children: [
+        // Chiffres calculés par l'application, même sans IA (maquette).
+        const WeekCard(),
+        const SizedBox(height: 24),
         Center(
           child: Container(
             width: 64,
