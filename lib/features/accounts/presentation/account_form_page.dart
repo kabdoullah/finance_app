@@ -6,6 +6,7 @@ import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
 import '../../../app/theme/app_radius.dart';
+import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_text.dart';
 import '../../../core/errors/result.dart';
 import '../../../core/money/amount_input_formatter.dart';
@@ -147,7 +148,12 @@ class _AccountFormPageState extends ConsumerState<AccountFormPage> {
                   : _buildForm(context),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(24, 12, 24, 8),
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.gutter,
+                12,
+                AppSpacing.gutter,
+                8,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 spacing: 8,
@@ -188,7 +194,12 @@ class _AccountFormPageState extends ConsumerState<AccountFormPage> {
     final type = _type;
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.gutter,
+        12,
+        AppSpacing.gutter,
+        24,
+      ),
       children: [
         FieldLabel(l10n.accountFieldType),
         // Deux tuiles par rangée ; hauteur minimale de 84 px, extensible

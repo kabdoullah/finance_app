@@ -10,6 +10,7 @@ import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
 import '../../../app/theme/app_radius.dart';
+import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_text.dart';
 import '../../../app/theme/motion.dart';
 import '../../../core/clock.dart';
@@ -488,7 +489,12 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
       _ => null,
     };
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.gutter,
+        8,
+        AppSpacing.gutter,
+        16,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -606,7 +612,12 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
     final l10n = context.l10n;
     final downloading = _issue == _VoiceIssue.downloading;
     return ListView(
-      padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.gutter,
+        16,
+        AppSpacing.gutter,
+        24,
+      ),
       children: [
         Text(l10n.qeLangTitle, style: AppText.title),
         const SizedBox(height: 10),
@@ -660,7 +671,12 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
       children: [
         Expanded(
           child: ListView(
-            padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.gutter,
+              8,
+              AppSpacing.gutter,
+              16,
+            ),
             children: [
               if (_textNotice case final notice?) ...[
                 _Notice(text: notice),
@@ -700,7 +716,12 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.gutter,
+            8,
+            AppSpacing.gutter,
+            8,
+          ),
           child: FilledButton(
             onPressed: _text.text.trim().isEmpty
                 ? null
@@ -736,7 +757,12 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
       ),
     );
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.gutter,
+        16,
+        AppSpacing.gutter,
+        16,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -902,7 +928,12 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
       children: [
         Expanded(
           child: ListView(
-            padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.gutter,
+              24,
+              AppSpacing.gutter,
+              16,
+            ),
             children: [
               Center(
                 child: Container(
@@ -936,7 +967,12 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(24, 12, 24, 8),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.gutter,
+            12,
+            AppSpacing.gutter,
+            8,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             spacing: 8,

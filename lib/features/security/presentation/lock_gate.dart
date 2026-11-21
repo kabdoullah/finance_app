@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_text.dart';
 import '../../../l10n/l10n.dart';
 import '../domain/pin_policy.dart';
@@ -163,7 +164,7 @@ class _LockScreenState extends ConsumerState<_LockScreen> {
       child: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.all(AppSpacing.gutter),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

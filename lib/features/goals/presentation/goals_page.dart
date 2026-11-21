@@ -7,6 +7,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_text.dart';
 import '../../../app/theme/motion.dart';
 import '../../../core/clock.dart';
@@ -36,7 +37,12 @@ class GoalsPage extends ConsumerWidget {
       child: Scaffold(
         body: SafeArea(
           child: ListView(
-            padding: const EdgeInsets.fromLTRB(24, 12, 24, 40),
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.gutter,
+              12,
+              AppSpacing.gutter,
+              40,
+            ),
             children: [
               Semantics(
                 header: true,

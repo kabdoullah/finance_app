@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_text.dart';
 import '../../../core/clock.dart';
 import '../../../core/errors/result.dart';
@@ -196,7 +197,12 @@ class _TransactionDetailPageState extends ConsumerState<TransactionDetailPage> {
         ],
       ),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(24, 12, 24, 40),
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.gutter,
+          12,
+          AppSpacing.gutter,
+          40,
+        ),
         children: [
           Column(
             spacing: 8,
@@ -339,7 +345,12 @@ class _TransactionDetailPageState extends ConsumerState<TransactionDetailPage> {
           children: [
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.gutter,
+                  12,
+                  AppSpacing.gutter,
+                  24,
+                ),
                 children: [
                   _Label(l10n.txAmount),
                   TextField(
@@ -438,7 +449,12 @@ class _TransactionDetailPageState extends ConsumerState<TransactionDetailPage> {
               ),
             ),
             Container(
-              padding: const EdgeInsets.fromLTRB(24, 12, 24, 8),
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.gutter,
+                12,
+                AppSpacing.gutter,
+                8,
+              ),
               decoration: BoxDecoration(
                 border: Border(top: BorderSide(color: context.colors.line)),
               ),
@@ -614,7 +630,12 @@ class _DeletedView extends StatelessWidget {
     final colors = context.colors;
     final l10n = context.l10n;
     return ListView(
-      padding: const EdgeInsets.fromLTRB(24, 80, 24, 24),
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.gutter,
+        80,
+        AppSpacing.gutter,
+        24,
+      ),
       children: [
         Center(
           child: Container(

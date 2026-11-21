@@ -9,6 +9,7 @@ import 'package:pdf/widgets.dart' as pw;
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
 import '../../../app/theme/app_radius.dart';
+import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_text.dart';
 import '../../../core/clock.dart';
 import '../../../core/errors/error_reporter.dart';
@@ -115,7 +116,12 @@ class _ExportPageState extends ConsumerState<ExportPage> {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.exTitle)),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(24, 8, 24, 40),
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.gutter,
+          8,
+          AppSpacing.gutter,
+          40,
+        ),
         children: [
           SegmentedChoice<_Format>(
             options: const [(_Format.csv, 'CSV'), (_Format.pdf, 'PDF')],

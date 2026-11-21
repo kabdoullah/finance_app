@@ -4,6 +4,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
 import '../../../app/theme/app_radius.dart';
+import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_text.dart';
 import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/section_label.dart';
@@ -150,7 +151,12 @@ class AiModelPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.aiModelTitle)),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(24, 8, 24, 40),
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.gutter,
+          8,
+          AppSpacing.gutter,
+          40,
+        ),
         children: [
           Row(
             spacing: 14,

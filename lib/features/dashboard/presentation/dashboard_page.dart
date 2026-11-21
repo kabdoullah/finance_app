@@ -7,6 +7,7 @@ import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
 import '../../../app/theme/app_radius.dart';
+import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_text.dart';
 import '../../../core/clock.dart';
 import '../../../core/formatting/date_format.dart';
@@ -70,7 +71,12 @@ class DashboardPage extends ConsumerWidget {
         body: SafeArea(
           bottom: false,
           child: SingleChildScrollView(
-            padding: EdgeInsets.fromLTRB(24, 12, 24, hasAccounts ? 120 : 40),
+            padding: EdgeInsets.fromLTRB(
+              AppSpacing.gutter,
+              12,
+              AppSpacing.gutter,
+              hasAccounts ? 120 : 40,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               spacing: 32,

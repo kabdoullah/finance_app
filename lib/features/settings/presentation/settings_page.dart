@@ -7,6 +7,7 @@ import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
 import '../../../app/theme/app_radius.dart';
+import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_text.dart';
 import '../../../core/clock.dart';
 import '../../../core/errors/error_reporter.dart';
@@ -78,7 +79,12 @@ class SettingsPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.settingsTitle)),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(24, 12, 24, 40),
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.gutter,
+          12,
+          AppSpacing.gutter,
+          40,
+        ),
         children: [
           Row(
             spacing: 10,
@@ -239,7 +245,12 @@ Future<void> _chooseMonthStart(BuildContext context, WidgetRef ref) async {
       title: Text(l10n.settingsMonthStart),
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.gutter,
+            0,
+            AppSpacing.gutter,
+            8,
+          ),
           child: Text(
             l10n.settingsMonthStartExplain,
             style: AppText.bodySmall.prose.copyWith(

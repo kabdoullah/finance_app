@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
 import '../../../app/theme/app_radius.dart';
+import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_text.dart';
 import '../../../core/errors/result.dart';
 import '../../../core/money/amount_input_formatter.dart';
@@ -179,7 +180,12 @@ class _BudgetFormPageState extends ConsumerState<BudgetFormPage> {
                   : _buildForm(context, budgets, groups, edited),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(24, 12, 24, 8),
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.gutter,
+                12,
+                AppSpacing.gutter,
+                8,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 spacing: 8,
@@ -243,7 +249,12 @@ class _BudgetFormPageState extends ConsumerState<BudgetFormPage> {
     ];
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.gutter,
+        12,
+        AppSpacing.gutter,
+        24,
+      ),
       children: [
         FieldLabel(l10n.txCategory),
         if (edited != null)

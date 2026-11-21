@@ -6,6 +6,7 @@ import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
 import '../../../app/theme/app_radius.dart';
+import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_text.dart';
 import '../../../core/clock.dart';
 import '../../../core/formatting/relative_date.dart';
@@ -64,7 +65,12 @@ class _MonthSpendingPageState extends ConsumerState<MonthSpendingPage> {
       appBar: AppBar(title: Text(l10n.monthPageTitle)),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(24, 4, 24, 40),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.gutter,
+            4,
+            AppSpacing.gutter,
+            40,
+          ),
           children: [
             Row(
               children: [

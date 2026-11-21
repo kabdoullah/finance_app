@@ -8,6 +8,7 @@ import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
 import '../../../app/theme/app_radius.dart';
+import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_text.dart';
 import '../../../core/clock.dart';
 import '../../../core/errors/result.dart';
@@ -39,7 +40,12 @@ class RecurringPage extends ConsumerWidget {
       body: operations == null
           ? const SizedBox.shrink()
           : ListView(
-              padding: const EdgeInsets.fromLTRB(24, 8, 24, 40),
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.gutter,
+                8,
+                AppSpacing.gutter,
+                40,
+              ),
               children: [
                 Text.rich(
                   TextSpan(

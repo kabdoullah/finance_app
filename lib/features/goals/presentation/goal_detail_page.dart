@@ -6,6 +6,7 @@ import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
 import '../../../app/theme/app_radius.dart';
+import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_text.dart';
 import '../../../app/theme/motion.dart';
 import '../../../core/clock.dart';
@@ -66,7 +67,12 @@ class GoalDetailPage extends ConsumerWidget {
         ],
       ),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(24, 8, 24, 40),
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.gutter,
+          8,
+          AppSpacing.gutter,
+          40,
+        ),
         children: [
           // Le montant compte après une contribution.
           CountingValue(

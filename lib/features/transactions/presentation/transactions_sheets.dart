@@ -4,6 +4,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
 import '../../../app/theme/app_radius.dart';
+import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_text.dart';
 import '../../../core/formatting/date_format.dart';
 import '../../../core/formatting/relative_date.dart';
@@ -102,7 +103,9 @@ Future<TransactionFilters?> showTransactionFilters(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.gutter,
+                  ),
                   child: Row(
                     children: [
                       Expanded(
@@ -120,7 +123,12 @@ Future<TransactionFilters?> showTransactionFilters(
                 Flexible(
                   child: ListView(
                     shrinkWrap: true,
-                    padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
+                    padding: const EdgeInsets.fromLTRB(
+                      AppSpacing.gutter,
+                      0,
+                      AppSpacing.gutter,
+                      16,
+                    ),
                     children: [
                       section(l10n.txFilterType, [
                         for (final (kind, label) in [
@@ -182,7 +190,12 @@ Future<TransactionFilters?> showTransactionFilters(
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.fromLTRB(24, 12, 24, 8),
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.gutter,
+                    12,
+                    AppSpacing.gutter,
+                    8,
+                  ),
                   decoration: BoxDecoration(
                     border: Border(top: BorderSide(color: colors.line)),
                   ),
@@ -296,7 +309,12 @@ Future<TransactionPeriod?> showPeriodPicker(
         );
         return SafeArea(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.gutter,
+              0,
+              AppSpacing.gutter,
+              16,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               spacing: 12,

@@ -6,6 +6,7 @@ import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
 import '../../../app/theme/app_radius.dart';
+import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_text.dart';
 import '../../../core/clock.dart';
 import '../../../core/formatting/date_format.dart';
@@ -72,7 +73,12 @@ class _AccountsList extends StatelessWidget {
     final summary = AccountsSummary.of(active);
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(24, 12, 24, 40),
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.gutter,
+        12,
+        AppSpacing.gutter,
+        40,
+      ),
       children: [
         _TotalHeader(summary: summary),
         if (summary.shares.isNotEmpty) ...[

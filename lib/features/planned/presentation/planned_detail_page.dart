@@ -6,6 +6,7 @@ import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
 import '../../../app/theme/app_radius.dart';
+import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_text.dart';
 import '../../../core/clock.dart';
 import '../../../core/errors/result.dart';
@@ -165,7 +166,12 @@ class _PlannedDetailPageState extends ConsumerState<PlannedDetailPage> {
           children: [
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.gutter,
+                  12,
+                  AppSpacing.gutter,
+                  24,
+                ),
                 children: [
                   Column(
                     spacing: 8,
@@ -275,7 +281,12 @@ class _PlannedDetailPageState extends ConsumerState<PlannedDetailPage> {
               ),
             ),
             Container(
-              padding: const EdgeInsets.fromLTRB(24, 12, 24, 8),
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.gutter,
+                12,
+                AppSpacing.gutter,
+                8,
+              ),
               decoration: BoxDecoration(
                 border: Border(top: BorderSide(color: colors.line)),
               ),
@@ -343,7 +354,12 @@ class _PlannedDetailPageState extends ConsumerState<PlannedDetailPage> {
             return SafeArea(
               child: ListView(
                 shrinkWrap: true,
-                padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.gutter,
+                  0,
+                  AppSpacing.gutter,
+                  16,
+                ),
                 children: [
                   Text(l10n.plannedMarkPaid, style: AppText.sheetTitle),
                   const SizedBox(height: 16),
@@ -547,7 +563,12 @@ class _DeletedView extends StatelessWidget {
     final colors = context.colors;
     final l10n = context.l10n;
     return ListView(
-      padding: const EdgeInsets.fromLTRB(24, 80, 24, 24),
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.gutter,
+        80,
+        AppSpacing.gutter,
+        24,
+      ),
       children: [
         Center(
           child: Container(

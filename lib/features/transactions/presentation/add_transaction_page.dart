@@ -9,6 +9,7 @@ import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
 import '../../../app/theme/app_radius.dart';
+import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_text.dart';
 import '../../../app/theme/motion.dart';
 import '../../../core/clock.dart';
@@ -368,7 +369,12 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
       children: [
         if (widget.editPlanned == null)
           Padding(
-            padding: const EdgeInsets.fromLTRB(24, 12, 24, 0),
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.gutter,
+              12,
+              AppSpacing.gutter,
+              0,
+            ),
             child: SegmentedChoice(
               options: [
                 for (final kind in TransactionKind.values)
@@ -439,7 +445,12 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
         ],
         const Spacer(),
         Padding(
-          padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.gutter,
+            0,
+            AppSpacing.gutter,
+            8,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             spacing: 12,
@@ -486,7 +497,12 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
       children: [
         Expanded(
           child: ListView(
-            padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.gutter,
+              12,
+              AppSpacing.gutter,
+              24,
+            ),
             children: [
               Container(
                 padding: const EdgeInsets.only(bottom: 16),
@@ -676,7 +692,12 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
           ),
         ),
         Container(
-          padding: const EdgeInsets.fromLTRB(24, 12, 24, 8),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.gutter,
+            12,
+            AppSpacing.gutter,
+            8,
+          ),
           decoration: BoxDecoration(
             border: Border(top: BorderSide(color: colors.line)),
           ),
@@ -722,7 +743,12 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
       children: [
         Expanded(
           child: ListView(
-            padding: const EdgeInsets.fromLTRB(24, 56, 24, 24),
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.gutter,
+              56,
+              AppSpacing.gutter,
+              24,
+            ),
             children: [
               Center(
                 child: Container(
@@ -796,7 +822,12 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(24, 12, 24, 8),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.gutter,
+            12,
+            AppSpacing.gutter,
+            8,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             spacing: 8,
@@ -831,7 +862,12 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
       children: [
         Expanded(
           child: ListView(
-            padding: const EdgeInsets.fromLTRB(24, 56, 24, 24),
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.gutter,
+              56,
+              AppSpacing.gutter,
+              24,
+            ),
             children: [
               Center(
                 child: Container(
@@ -930,7 +966,12 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(24, 12, 24, 8),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.gutter,
+            12,
+            AppSpacing.gutter,
+            8,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             spacing: 8,
