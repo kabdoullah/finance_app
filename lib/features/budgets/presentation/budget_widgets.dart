@@ -147,8 +147,9 @@ class BudgetRow extends StatelessWidget {
                     style: AppText.body.medium,
                   ),
                 ),
-                // « Dépassera vers le 22 nov. » passe à la ligne au besoin.
-                Flexible(
+                // « Dépassera vers le 22 nov. » passe à la ligne au besoin ;
+                // Expanded (et non Flexible) pour rester calé à droite.
+                Expanded(
                   flex: 2,
                   child: Text(
                     label,
