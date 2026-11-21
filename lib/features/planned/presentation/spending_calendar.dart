@@ -105,10 +105,7 @@ class _SpendingCalendarState extends ConsumerState<SpendingCalendar> {
             Expanded(
               child: Semantics(
                 header: true,
-                child: Text(
-                  l10n.calTitle,
-                  style: AppText.sheetTitle.bold.copyWith(letterSpacing: -0.2),
-                ),
+                child: Text(l10n.calTitle, style: AppText.sectionTitle),
               ),
             ),
             IconButton(
