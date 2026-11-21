@@ -8,6 +8,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../app/theme/motion.dart';
 import '../../../core/clock.dart';
 import '../../../core/errors/result.dart';
@@ -378,11 +379,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
         const SizedBox(height: 28),
         Text(
           l10n.txAmount,
-          style: TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-            color: colors.inkSecondary,
-          ),
+          style: AppText.label.medium.copyWith(color: colors.inkSecondary),
         ),
         const SizedBox(height: 6),
         Semantics(
@@ -398,10 +395,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                   fit: BoxFit.scaleDown,
                   child: Text(
                     MoneyFormat.amount(_amount),
-                    style: TextStyle(
-                      fontSize: 54,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: -1.9,
+                    style: AppText.amount(54).copyWith(
                       height: 1.05,
                       color: hasAmount ? colors.ink : colors.inkTertiary,
                     ),
@@ -410,11 +404,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
               ),
               Text(
                 l10n.currencyLabel,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: colors.inkSecondary,
-                ),
+                style: AppText.sheetTitle.copyWith(color: colors.inkSecondary),
               ),
             ],
           ),
@@ -511,9 +501,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                         children: [
                           Text(
                             _kind.label(l10n),
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
+                            style: AppText.label.medium.copyWith(
                               color: colors.inkSecondary,
                             ),
                           ),
@@ -523,19 +511,14 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                               children: [
                                 TextSpan(
                                   text: l10n.currencyLabel,
-                                  style: TextStyle(
-                                    fontSize: 15,
+                                  style: AppText.bodyLarge.copyWith(
+                                    letterSpacing: 0,
                                     color: colors.inkSecondary,
                                   ),
                                 ),
                               ],
                             ),
-                            style: const TextStyle(
-                              fontSize: 34,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: -1,
-                              height: 1,
-                            ),
+                            style: AppText.amount(34),
                           ),
                         ],
                       ),
@@ -561,7 +544,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                 const SizedBox(height: 8),
                 Text(
                   isPlanned ? l10n.txModePlannedHint : l10n.txModePaidHint,
-                  style: TextStyle(fontSize: 13, color: colors.inkSecondary),
+                  style: AppText.label.copyWith(color: colors.inkSecondary),
                 ),
                 const SizedBox(height: 20),
               ],
@@ -760,10 +743,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
               Text(
                 l10n.plannedSavedTitle(saved.name),
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: AppText.title,
               ),
               const SizedBox(height: 10),
               Text.rich(
@@ -772,19 +752,15 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                   children: [
                     TextSpan(
                       text: l10n.currencyLabel,
-                      style: TextStyle(
-                        fontSize: 15,
+                      style: AppText.bodyLarge.copyWith(
+                        letterSpacing: 0,
                         color: colors.inkSecondary,
                       ),
                     ),
                   ],
                 ),
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: -0.9,
-                ),
+                style: AppText.amount(30, inline: true),
               ),
               const SizedBox(height: 10),
               Text(
@@ -796,7 +772,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                   ),
                 ),
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14, color: colors.inkSecondary),
+                style: AppText.body.copyWith(color: colors.inkSecondary),
               ),
               const SizedBox(height: 24),
               _InfoBox(text: l10n.plannedInfoSameMonth(month)),
@@ -875,10 +851,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
               Text(
                 saved.kind.savedTitle(l10n),
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: AppText.title,
               ),
               const SizedBox(height: 10),
               Text.rich(
@@ -887,26 +860,22 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                   children: [
                     TextSpan(
                       text: l10n.currencyLabel,
-                      style: TextStyle(
-                        fontSize: 15,
+                      style: AppText.bodyLarge.copyWith(
+                        letterSpacing: 0,
                         color: colors.inkSecondary,
                       ),
                     ),
                   ],
                 ),
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: -0.9,
-                ),
+                style: AppText.amount(30, inline: true),
               ),
               const SizedBox(height: 10),
               Text(
                 '${saved.meta(l10n)} · '
                 '${RelativeDate.capitalize(relative.day(saved.occurredAt))}',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14, color: colors.inkSecondary),
+                style: AppText.body.copyWith(color: colors.inkSecondary),
               ),
               if (saved.kind == TransactionKind.expense)
                 if (saved.mainCategory case final category?)
@@ -943,8 +912,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                       Expanded(
                         child: Text(
                           l10n.txNewBalance(account.name),
-                          style: TextStyle(
-                            fontSize: 14,
+                          style: AppText.body.copyWith(
                             color: colors.inkSecondary,
                           ),
                         ),
@@ -952,10 +920,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                       Text(
                         '${MoneyFormat.amount(account.balance)} '
                         '${l10n.currencyLabel}',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: AppText.body.semibold,
                       ),
                     ],
                   ),
@@ -1030,13 +995,7 @@ class _AmountKeypad extends StatelessWidget {
                                   size: 24,
                                   color: colors.ink,
                                 )
-                              : Text(
-                                  key,
-                                  style: const TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
+                              : Text(key, style: AppText.keypadKey),
                         ),
                       ),
                     ),
@@ -1134,23 +1093,13 @@ class _PickerRow extends StatelessWidget {
                 children: [
                   Text(
                     label,
-                    style: TextStyle(
-                      fontSize: 12.5,
-                      color: colors.inkSecondary,
-                    ),
+                    style: AppText.caption.copyWith(color: colors.inkSecondary),
                   ),
-                  Text(
-                    value,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  Text(value, style: AppText.bodyLarge.semibold),
                   if (subtitle != null)
                     Text(
                       subtitle!,
-                      style: TextStyle(
-                        fontSize: 12.5,
+                      style: AppText.caption.copyWith(
                         color: colors.inkTertiary,
                       ),
                     ),
@@ -1175,11 +1124,7 @@ class _SectionLabel extends StatelessWidget {
     padding: const EdgeInsets.only(bottom: 10),
     child: Text(
       text,
-      style: TextStyle(
-        fontSize: 13,
-        fontWeight: FontWeight.w500,
-        color: context.colors.inkSecondary,
-      ),
+      style: AppText.label.medium.copyWith(color: context.colors.inkSecondary),
     ),
   );
 }
@@ -1206,9 +1151,7 @@ class _InfoBox extends StatelessWidget {
           Expanded(
             child: Text(
               text,
-              style: TextStyle(
-                fontSize: 13.5,
-                height: 1.45,
+              style: AppText.bodySmall.prose.copyWith(
                 color: colors.inkSecondary,
               ),
             ),
@@ -1236,7 +1179,7 @@ class _NeedAccount extends StatelessWidget {
         Text(
           message,
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 15, color: context.colors.inkSecondary),
+          style: AppText.bodyLarge.copyWith(color: context.colors.inkSecondary),
         ),
         FilledButton(
           onPressed: () => context.pushReplacement(AppRoutes.newAccount),
@@ -1280,11 +1223,7 @@ class _Shortcut extends StatelessWidget {
             Icon(icon, size: 15, color: foreground),
             Text(
               label,
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: foreground,
-              ),
+              style: AppText.label.semibold.copyWith(color: foreground),
             ),
           ],
         ),
@@ -1335,9 +1274,7 @@ class _DayStrip extends StatelessWidget {
                 Expanded(
                   child: Text(
                     l10n.txDate,
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
+                    style: AppText.label.medium.copyWith(
                       color: colors.inkSecondary,
                     ),
                   ),
@@ -1346,10 +1283,7 @@ class _DayStrip extends StatelessWidget {
                   child: Text(
                     label,
                     textAlign: TextAlign.end,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: AppText.label.semibold,
                   ),
                 ),
               ],
@@ -1380,7 +1314,7 @@ class _DayStrip extends StatelessWidget {
         ),
         Text(
           l10n.txOlderDateHint,
-          style: TextStyle(fontSize: 12.5, color: colors.inkTertiary),
+          style: AppText.caption.copyWith(color: colors.inkTertiary),
         ),
       ],
     );
@@ -1431,9 +1365,7 @@ class _DayChip extends StatelessWidget {
                   fit: BoxFit.scaleDown,
                   child: Text(
                     top,
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
+                    style: AppText.tag.copyWith(
                       color: selected ? ink : colors.inkTertiary,
                     ),
                   ),
@@ -1442,11 +1374,7 @@ class _DayChip extends StatelessWidget {
                   fit: BoxFit.scaleDown,
                   child: Text(
                     number,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: ink,
-                    ),
+                    style: AppText.subtitle.bold.copyWith(color: ink),
                   ),
                 ),
               ],

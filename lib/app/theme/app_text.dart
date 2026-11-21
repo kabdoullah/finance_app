@@ -125,6 +125,14 @@ abstract final class AppText {
     fontWeight: FontWeight.w600,
   );
 
+  /// Chiffre d'une touche du pavé de saisie.
+  static const keypadKey = TextStyle(
+    fontFamily: fontFamily,
+    fontFeatures: _tabular,
+    fontSize: 24,
+    fontWeight: FontWeight.w600,
+  );
+
   // Montants.
 
   /// Grand montant : chiffres serrés de 3,5 % de la taille, sans interligne,
