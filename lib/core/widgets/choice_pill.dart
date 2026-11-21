@@ -12,6 +12,7 @@ class ChoicePill extends StatelessWidget {
     required this.selected,
     required this.onTap,
     this.icon,
+    this.leading,
     this.height = 38,
     super.key,
   });
@@ -20,6 +21,10 @@ class ChoicePill extends StatelessWidget {
   final bool selected;
   final VoidCallback onTap;
   final IconData? icon;
+
+  /// Petit repère avant le libellé (pastille de statut), à la place de
+  /// [icon].
+  final Widget? leading;
   final double height;
 
   @override
@@ -44,7 +49,10 @@ class ChoicePill extends StatelessWidget {
           child: SizedBox(
             height: height,
             child: Padding(
-              padding: EdgeInsets.only(left: icon == null ? 14 : 10, right: 14),
+              padding: EdgeInsets.only(
+                left: icon == null && leading == null ? 14 : 12,
+                right: 14,
+              ),
               // `widthFactor: 1` : la pilule épouse son contenu.
               child: Center(
                 widthFactor: 1,
@@ -52,6 +60,7 @@ class ChoicePill extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   spacing: 6,
                   children: [
+                    ?leading,
                     if (icon != null) Icon(icon, size: 17, color: foreground),
                     Text(
                       label,

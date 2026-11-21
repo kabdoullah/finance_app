@@ -5875,7 +5875,7 @@ abstract class AppLocalizations {
   /// No description provided for @spendPaid.
   ///
   /// In fr, this message translates to:
-  /// **'Dépenses'**
+  /// **'Payées'**
   String get spendPaid;
 
   /// No description provided for @spendPlanned.
@@ -5899,13 +5899,13 @@ abstract class AppLocalizations {
   /// No description provided for @spendNoteCurrent.
   ///
   /// In fr, this message translates to:
-  /// **'Total prévu = dépenses + planifiées encore à payer.'**
+  /// **'Total prévu = payées + planifiées encore à payer.'**
   String get spendNoteCurrent;
 
   /// No description provided for @spendNoteCurrentLate.
   ///
   /// In fr, this message translates to:
-  /// **'Total prévu = dépenses + planifiées encore à payer, dont {amount} FCFA en retard.'**
+  /// **'Total prévu = payées + planifiées encore à payer, dont {amount} FCFA en retard.'**
   String spendNoteCurrentLate(Object amount);
 
   /// No description provided for @spendNoteEmpty.
@@ -5959,7 +5959,7 @@ abstract class AppLocalizations {
   /// No description provided for @monthPaidTitle.
   ///
   /// In fr, this message translates to:
-  /// **'Dépenses · {amount} FCFA'**
+  /// **'Payées · {amount} FCFA'**
   String monthPaidTitle(Object amount);
 
   /// No description provided for @monthSeeOperations.
@@ -6055,7 +6055,7 @@ abstract class AppLocalizations {
   /// No description provided for @txSumPaid.
   ///
   /// In fr, this message translates to:
-  /// **'Dépenses'**
+  /// **'Payées'**
   String get txSumPaid;
 
   /// No description provided for @txSumPlanned.
@@ -6091,7 +6091,7 @@ abstract class AppLocalizations {
   /// No description provided for @txStatusPaid.
   ///
   /// In fr, this message translates to:
-  /// **'Dépenses'**
+  /// **'Payées'**
   String get txStatusPaid;
 
   /// No description provided for @txStatusPlanned.

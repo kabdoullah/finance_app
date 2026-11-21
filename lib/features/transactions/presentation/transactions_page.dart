@@ -255,6 +255,7 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
       Localizations.localeOf(context).toLanguageTag(),
       now,
     );
+    final masked = ref.watch(amountsHiddenProvider);
     final hasAny = ref.watch(hasTransactionsProvider).value;
     final hasPlanned =
         ref.watch(plannedExpensesProvider).value?.isNotEmpty ?? false;
@@ -294,15 +295,13 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
                 size: 20,
               ),
             ),
+          // Même réglage que l'œil de l'accueil.
           IconButton(
-            tooltip: l10n.recurringTitle,
-            onPressed: () => context.go(AppRoutes.recurring),
-            icon: const Icon(AppIcons.repeat, size: 20),
-          ),
-          IconButton(
-            tooltip: l10n.accountsTitle,
-            onPressed: () => context.go(AppRoutes.accounts),
-            icon: const Icon(AppIcons.wallet, size: 20),
+            tooltip: masked
+                ? l10n.dashboardShowAmounts
+                : l10n.dashboardHideAmounts,
+            onPressed: ref.read(amountsHiddenProvider.notifier).toggle,
+            icon: Icon(masked ? AppIcons.eye : AppIcons.eyeSlash, size: 20),
           ),
         ],
       ),
@@ -426,28 +425,63 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
         ),
     ];
 
-    Widget dueHeader(String title, List<DueItem> items, Color ink) => Padding(
+    Widget dueHeader(
+      String title,
+      IconData icon,
+      List<DueItem> items,
+      Color ink,
+    ) => Padding(
       padding: const EdgeInsets.only(top: 18, bottom: 4),
       child: Row(
+        spacing: 8,
         children: [
+          Icon(icon, size: 14, color: ink),
           Expanded(
             child: Semantics(
               header: true,
               child: Text(
                 title,
-                style: AppText.caption.semibold.copyWith(color: ink),
+                style: AppText.caption.bold.copyWith(color: ink),
               ),
             ),
           ),
           Text(
             l10n.plannedGroupTotal(
-              MoneyFormat.amount(
-                items.fold(Money.zero, (sum, d) => sum + d.amount),
-              ),
+              masked
+                  ? MoneyFormat.masked
+                  : MoneyFormat.amount(
+                      items.fold(Money.zero, (sum, d) => sum + d.amount),
+                    ),
             ),
-            style: AppText.caption.copyWith(color: colors.inkTertiary),
+            style: AppText.caption.semibold.copyWith(color: colors.inkTertiary),
           ),
         ],
+      ),
+    );
+
+    /// Solde du jour (revenus − dépenses, transferts exclus), vide s'il est
+    /// nul ou masqué.
+    String? dayTotal(List<Transaction> items) {
+      if (masked) return null;
+      final total = items.fold(
+        Money.zero,
+        (sum, t) => switch (t.kind) {
+          TransactionKind.income => sum + t.amount,
+          TransactionKind.expense => sum - t.amount,
+          TransactionKind.transfer => sum,
+        },
+      );
+      return total.value == 0 ? null : MoneyFormat.signed(total);
+    }
+
+    /// Pastille de statut des puces (maquette) : pleine ou cerclée.
+    Widget statusDot(Color fill, Color border) => Container(
+      width: 7,
+      height: 7,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: fill,
+        border: Border.all(color: border, width: 1.5),
       ),
     );
 
@@ -534,7 +568,7 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
                               child: Text(
                                 periodLabel,
                                 textAlign: TextAlign.center,
-                                style: AppText.bodyLarge.semibold,
+                                style: AppText.bodyLarge.bold,
                               ),
                             ),
                           ],
@@ -558,7 +592,8 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
               paid: paidSum,
               planned: plannedSum,
               count: rows,
-              note: incomeSum.value > 0
+              masked: masked,
+              note: incomeSum.value > 0 && !masked
                   ? l10n.txSumNoteIncome(MoneyFormat.signed(incomeSum))
                   : l10n.txSumNotePlanned,
             ),
@@ -572,16 +607,28 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
                     child: Row(
                       spacing: 8,
                       children: [
-                        for (final (value, label) in [
-                          (_Status.all, l10n.txStatusAll),
-                          (_Status.paid, l10n.txStatusPaid),
-                          (_Status.planned, l10n.txStatusPlanned),
+                        for (final (value, label, dot) in [
+                          (_Status.all, l10n.txStatusAll, null),
+                          (
+                            _Status.paid,
+                            l10n.txStatusPaid,
+                            statusDot(colors.expense, colors.expense),
+                          ),
+                          (
+                            _Status.planned,
+                            l10n.txStatusPlanned,
+                            statusDot(Colors.transparent, colors.infoMid),
+                          ),
                           if (late.isNotEmpty)
-                            (_Status.late, l10n.txStatusLate('${late.length}')),
+                            (
+                              _Status.late,
+                              l10n.txStatusLate('${late.length}'),
+                              statusDot(colors.warningMid, colors.warningMid),
+                            ),
                         ])
                           ChoicePill(
                             label: label,
-                            height: 36,
+                            leading: dot,
                             selected: status == value,
                             onTap: () => setState(() => _status = value),
                           ),
@@ -599,8 +646,7 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
                     label: _filters.count == 0
                         ? l10n.txFilters
                         : '${l10n.txFilters} · ${_filters.count}',
-                    icon: AppIcons.dotsThree,
-                    height: 36,
+                    icon: AppIcons.slidersHorizontal,
                     selected: _filters.count > 0,
                     onTap: () async {
                       final picked = await showTransactionFilters(
@@ -674,30 +720,38 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
                     )
                   else ...[
                     if (showLate && late.isNotEmpty) ...[
-                      dueHeader(l10n.plannedLateGroup, late, colors.warning),
+                      dueHeader(
+                        l10n.plannedLateGroup,
+                        AppIcons.clockBold,
+                        late,
+                        colors.warning,
+                      ),
                       for (final d in late)
                         DueRow(
                           due: d,
                           now: now,
+                          masked: masked,
                           meta: dueMeta(l10n, relative, d, now),
                         ),
                     ],
                     if (showUpcoming && upcoming.isNotEmpty) ...[
                       dueHeader(
                         l10n.plannedUpcomingGroup,
+                        AppIcons.calendarBlank,
                         upcoming,
-                        colors.inkTertiary,
+                        colors.info,
                       ),
                       for (final d in upcoming)
                         DueRow(
                           due: d,
                           now: now,
+                          masked: masked,
                           meta: dueMeta(l10n, relative, d, now),
                         ),
                     ],
                     if (showPaid)
                       for (final (day, items) in groupByDay(visible)) ...[
-                        DayHeader(relative.header(day)),
+                        DayHeader(relative.header(day), total: dayTotal(items)),
                         for (final t in items)
                           _SwipeToDelete(
                             key: ValueKey('tx-${t.id}'),
@@ -706,6 +760,7 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
                                 ? FadeSlideIn(
                                     child: TransactionTile(
                                       transaction: t,
+                                      masked: masked,
                                       onTap: () => context.go(
                                         AppRoutes.transactionDetail(t.id),
                                       ),
@@ -713,6 +768,7 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
                                   )
                                 : TransactionTile(
                                     transaction: t,
+                                    masked: masked,
                                     onTap: () => context.go(
                                       AppRoutes.transactionDetail(t.id),
                                     ),
@@ -730,13 +786,14 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
   }
 }
 
-/// Dépenses · Planifiées · Opérations, puis une phrase.
+/// Payées · Planifiées · Opérations entre deux filets, puis une phrase.
 class _Summary extends StatelessWidget {
   const _Summary({
     required this.loading,
     required this.paid,
     required this.planned,
     required this.count,
+    required this.masked,
     required this.note,
   });
 
@@ -744,65 +801,103 @@ class _Summary extends StatelessWidget {
   final Money paid;
   final Money planned;
   final int count;
+  final bool masked;
   final String note;
+
+  static final _value = AppText.sectionTitle.copyWith(
+    fontSize: 18,
+    fontWeight: FontWeight.w700,
+  );
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     final l10n = context.l10n;
+    final divider = BorderSide(color: colors.line);
     // Les totaux comptent vers leur nouvelle valeur (360 ms).
     Widget cell(
       String label,
       int value,
       String Function(int value) format, {
+      required EdgeInsets padding,
+      bool last = false,
+      bool maskable = true,
       Color? color,
     }) => Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 2,
-        children: [
-          Text(
-            label,
-            style: AppText.caption.copyWith(color: colors.inkSecondary),
-          ),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            alignment: Alignment.centerLeft,
-            child: loading
-                ? const Text('…', style: AppText.sectionTitle)
-                : CountingValue(
-                    value: value,
-                    firstDuration: Duration.zero,
-                    builder: (context, v) => Text(
-                      format(v),
-                      style: AppText.sectionTitle.copyWith(color: color),
+      child: Container(
+        padding: padding,
+        decoration: last ? null : BoxDecoration(border: Border(right: divider)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 3,
+          children: [
+            Text(
+              label,
+              style: AppText.caption.copyWith(
+                fontSize: 12,
+                color: colors.inkSecondary,
+              ),
+            ),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: loading
+                  ? Text('…', style: _value)
+                  : masked && maskable
+                  ? Text(
+                      MoneyFormat.masked,
+                      style: _value.copyWith(color: color),
+                    )
+                  : CountingValue(
+                      value: value,
+                      firstDuration: Duration.zero,
+                      builder: (context, v) =>
+                          Text(format(v), style: _value.copyWith(color: color)),
                     ),
-                  ),
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
+    final noPlanned = planned.value == 0;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      spacing: 6,
+      spacing: 8,
       children: [
-        Row(
-          spacing: 12,
-          children: [
-            cell(
-              l10n.txSumPaid,
-              paid.value,
-              (v) => MoneyFormat.amount(Money(v)),
-              color: colors.expense,
+        DecoratedBox(
+          decoration: BoxDecoration(
+            border: Border(top: divider, bottom: divider),
+          ),
+          child: IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                cell(
+                  l10n.txSumPaid,
+                  paid.value,
+                  (v) => v == 0 ? '0' : MoneyFormat.signed(Money(-v)),
+                  padding: const EdgeInsets.fromLTRB(0, 12, 8, 12),
+                  color: colors.expense,
+                ),
+                cell(
+                  l10n.txSumPlanned,
+                  planned.value,
+                  (v) => noPlanned ? '—' : MoneyFormat.amount(Money(v)),
+                  padding: const EdgeInsets.fromLTRB(12, 12, 8, 12),
+                  maskable: !noPlanned,
+                  color: noPlanned ? colors.inkTertiary : colors.info,
+                ),
+                cell(
+                  l10n.txSumCount,
+                  count,
+                  (v) => '$v',
+                  padding: const EdgeInsets.fromLTRB(12, 12, 0, 12),
+                  last: true,
+                  maskable: false,
+                ),
+              ],
             ),
-            cell(
-              l10n.txSumPlanned,
-              planned.value,
-              (v) => MoneyFormat.amount(Money(v)),
-              color: colors.info,
-            ),
-            cell(l10n.txSumCount, count, (v) => '$v'),
-          ],
+          ),
         ),
         Text(note, style: AppText.caption.copyWith(color: colors.inkTertiary)),
       ],

@@ -91,6 +91,9 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Rien sur cette période'), findsOneWidget);
 
+    // Le bouton est sous les boutons d'ajout : défiler les efface.
+    await tester.drag(find.byType(ListView).first, const Offset(0, -200));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Tout afficher'));
     await tester.pumpAndSettle();
     expect(find.text('Transport · Wave'), findsOneWidget);

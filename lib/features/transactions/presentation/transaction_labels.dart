@@ -185,21 +185,34 @@ class TransactionTile extends StatelessWidget {
 
 /// En-tête de jour des listes (« Aujourd'hui · 15 nov. »).
 class DayHeader extends StatelessWidget {
-  const DayHeader(this.label, {super.key});
+  const DayHeader(this.label, {this.total, super.key});
 
   final String label;
 
+  /// Solde du jour à droite (« −12 500 »), facultatif.
+  final String? total;
+
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(top: 18, bottom: 4),
-    child: Semantics(
-      header: true,
-      child: Text(
-        label,
-        style: AppText.caption.semibold.copyWith(
-          color: context.colors.inkTertiary,
-        ),
+  Widget build(BuildContext context) {
+    final ink = context.colors.inkTertiary;
+    return Padding(
+      padding: const EdgeInsets.only(top: 18, bottom: 4),
+      child: Row(
+        spacing: 8,
+        children: [
+          Expanded(
+            child: Semantics(
+              header: true,
+              child: Text(
+                label,
+                style: AppText.caption.semibold.copyWith(color: ink),
+              ),
+            ),
+          ),
+          if (total case final total?)
+            Text(total, style: AppText.caption.semibold.copyWith(color: ink)),
+        ],
       ),
-    ),
-  );
+    );
+  }
 }

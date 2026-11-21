@@ -3665,7 +3665,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get spendPaid => 'Dépenses';
+  String get spendPaid => 'Payées';
 
   @override
   String get spendPlanned => 'Planifiées';
@@ -3679,11 +3679,11 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get spendNoteCurrent =>
-      'Total prévu = dépenses + planifiées encore à payer.';
+      'Total prévu = payées + planifiées encore à payer.';
 
   @override
   String spendNoteCurrentLate(Object amount) {
-    return 'Total prévu = dépenses + planifiées encore à payer, dont $amount FCFA en retard.';
+    return 'Total prévu = payées + planifiées encore à payer, dont $amount FCFA en retard.';
   }
 
   @override
@@ -3721,7 +3721,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String monthPaidTitle(Object amount) {
-    return 'Dépenses · $amount FCFA';
+    return 'Payées · $amount FCFA';
   }
 
   @override
@@ -3781,7 +3781,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get txSumPaid => 'Dépenses';
+  String get txSumPaid => 'Payées';
 
   @override
   String get txSumPlanned => 'Planifiées';
@@ -3802,7 +3802,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get txStatusAll => 'Tout';
 
   @override
-  String get txStatusPaid => 'Dépenses';
+  String get txStatusPaid => 'Payées';
 
   @override
   String get txStatusPlanned => 'Planifiées';

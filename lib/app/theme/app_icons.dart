@@ -90,6 +90,7 @@ abstract final class AppIcons {
   static const graduationCap = IconData(0xe62c, fontFamily: _regular);
   static const tShirt = IconData(0xe670, fontFamily: _regular);
   static const dotsThree = IconData(0xe1fe, fontFamily: _regular);
+  static const slidersHorizontal = IconData(0xe434, fontFamily: _regular);
   static const tag = IconData(0xe478, fontFamily: _regular);
   static const gift = IconData(0xe276, fontFamily: _regular);
   static const eyeSlash = IconData(0xe224, fontFamily: _regular);
