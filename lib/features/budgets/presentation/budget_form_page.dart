@@ -4,12 +4,13 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
-import '../../../app/theme/app_theme.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../core/errors/result.dart';
 import '../../../core/money/amount_input_formatter.dart';
 import '../../../core/money/money.dart';
 import '../../../core/widgets/choice_pill.dart';
 import '../../../core/widgets/confirm_dialog.dart';
+import '../../../core/widgets/field_label.dart';
 import '../../../core/widgets/segmented_choice.dart';
 import '../../../l10n/l10n.dart';
 import '../../categories/domain/category.dart';
@@ -191,11 +192,7 @@ class _BudgetFormPageState extends ConsumerState<BudgetFormPage> {
                       onPressed: _reset,
                       style: TextButton.styleFrom(
                         minimumSize: const Size(0, 52),
-                        textStyle: const TextStyle(
-                          fontFamily: AppTheme.fontFamily,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        textStyle: AppText.bodyLarge.semibold,
                       ),
                       child: Text(l10n.budgetAddAnother),
                     ),
@@ -247,11 +244,11 @@ class _BudgetFormPageState extends ConsumerState<BudgetFormPage> {
     return ListView(
       padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
       children: [
-        _FieldLabel(l10n.txCategory),
+        FieldLabel(l10n.txCategory),
         if (edited != null)
           Text(
             edited.category?.name ?? l10n.budgetAllExpenses,
-            style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+            style: AppText.sectionTitle,
           )
         else ...[
           Wrap(
@@ -285,7 +282,7 @@ class _BudgetFormPageState extends ConsumerState<BudgetFormPage> {
             const SizedBox(height: 10),
             Text(
               l10n.budgetAlreadyTracked(trackedNames.join(', ')),
-              style: TextStyle(fontSize: 12.5, color: colors.inkTertiary),
+              style: AppText.caption.copyWith(color: colors.inkTertiary),
             ),
           ],
           if (_errors.contains(BudgetFieldError.alreadyExists) ||
@@ -295,24 +292,22 @@ class _BudgetFormPageState extends ConsumerState<BudgetFormPage> {
               _errors.contains(BudgetFieldError.alreadyExists)
                   ? l10n.budgetErrorExists
                   : l10n.budgetErrorCategory,
-              style: TextStyle(fontSize: 12.5, color: colors.negative),
+              style: AppText.caption.copyWith(color: colors.negative),
             ),
           ],
         ],
         const SizedBox(height: 24),
-        _FieldLabel(l10n.budgetLimit),
+        FieldLabel(l10n.budgetLimit),
         TextField(
           controller: _limit,
           keyboardType: TextInputType.number,
           inputFormatters: const [AmountInputFormatter()],
           onChanged: (_) => setState(() => _errors = const {}),
-          style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+          style: AppText.sectionTitle,
           decoration: InputDecoration(
             hintText: '0',
             suffixText: l10n.currencyLabel,
-            suffixStyle: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
+            suffixStyle: AppText.body.semibold.copyWith(
               color: colors.inkSecondary,
             ),
             errorText:
@@ -328,13 +323,13 @@ class _BudgetFormPageState extends ConsumerState<BudgetFormPage> {
             onUse: _useAmount,
           ),
         const SizedBox(height: 24),
-        _FieldLabel(l10n.budgetPeriod),
+        FieldLabel(l10n.budgetPeriod),
         Text(
           l10n.budgetPeriodMonthly,
-          style: TextStyle(fontSize: 15, color: colors.inkSecondary),
+          style: AppText.bodyLarge.copyWith(color: colors.inkSecondary),
         ),
         const SizedBox(height: 24),
-        _FieldLabel(l10n.budgetAlertAt),
+        FieldLabel(l10n.budgetAlertAt),
         SegmentedChoice<int>(
           options: [for (final p in _alertOptions) (p, '$p %')],
           selected: _alertPercent,
@@ -380,7 +375,7 @@ class _CreatedMessage extends StatelessWidget {
                 ? l10n.budgetCreatedGlobal
                 : l10n.budgetCreatedMessage(category.name),
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+            style: AppText.title,
           ),
           Text(
             l10n.budgetCreatedDetail(
@@ -388,7 +383,7 @@ class _CreatedMessage extends StatelessWidget {
               budget.alertPercent,
             ),
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14.5, color: colors.inkSecondary),
+            style: AppText.bodyLarge.copyWith(color: colors.inkSecondary),
           ),
         ],
       ),
@@ -423,9 +418,7 @@ class _AverageHint extends ConsumerWidget {
           children: [
             Text(
               l10n.budgetAverage(MoneyFormat.amount(average)),
-              style: TextStyle(
-                fontSize: 13.5,
-                height: 1.45,
+              style: AppText.bodySmall.prose.copyWith(
                 color: colors.onPrimarySoft,
               ),
             ),
@@ -434,11 +427,7 @@ class _AverageHint extends ConsumerWidget {
               style: TextButton.styleFrom(
                 foregroundColor: colors.onPrimarySoft,
                 padding: EdgeInsets.zero,
-                textStyle: const TextStyle(
-                  fontFamily: AppTheme.fontFamily,
-                  fontSize: 13.5,
-                  fontWeight: FontWeight.w600,
-                ),
+                textStyle: AppText.bodySmall.semibold,
               ),
               child: Text(l10n.budgetUseAmount),
             ),
@@ -447,23 +436,4 @@ class _AverageHint extends ConsumerWidget {
       ),
     );
   }
-}
-
-class _FieldLabel extends StatelessWidget {
-  const _FieldLabel(this.text);
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(bottom: 10),
-    child: Text(
-      text,
-      style: TextStyle(
-        fontSize: 13,
-        fontWeight: FontWeight.w600,
-        color: context.colors.inkSecondary,
-      ),
-    ),
-  );
 }

@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../core/clock.dart';
 import '../../../core/formatting/date_format.dart';
 import '../../../core/formatting/relative_date.dart';
@@ -41,14 +42,7 @@ class BudgetsPage extends ConsumerWidget {
             children: [
               Semantics(
                 header: true,
-                child: Text(
-                  l10n.budgetsTitle,
-                  style: const TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: -0.5,
-                  ),
-                ),
+                child: Text(l10n.budgetsTitle, style: AppText.screenTitle),
               ),
               const SizedBox(height: 16),
               const BudgetsGoalsSwitch(showGoals: false),
@@ -96,9 +90,7 @@ class BudgetsPage extends ConsumerWidget {
                 if (overview.categories.isEmpty && overview.global == null)
                   Text(
                     l10n.budgetEmpty,
-                    style: TextStyle(
-                      fontSize: 14,
-                      height: 1.5,
+                    style: AppText.body.prose.copyWith(
                       color: colors.inkSecondary,
                     ),
                   ),
@@ -158,9 +150,7 @@ class BudgetsPage extends ConsumerWidget {
                     l10n.budgetWithout(
                       overview.withoutBudget.map((c) => c.name).join(', '),
                     ),
-                    style: TextStyle(
-                      fontSize: 12.5,
-                      height: 1.5,
+                    style: AppText.caption.prose.copyWith(
                       color: colors.inkTertiary,
                     ),
                   ),
@@ -215,7 +205,7 @@ class _MonthBudget extends StatelessWidget {
     // Jours restants, aujourd'hui compris.
     final daysLeft = month.daysLeft(now);
     final range = relative.monthRange(month);
-    final small = TextStyle(fontSize: 12, color: colors.inkTertiary);
+    final small = AppText.small.copyWith(color: colors.inkTertiary);
     final over = status.level == BudgetLevel.exceeded;
 
     return InkWell(
@@ -225,9 +215,7 @@ class _MonthBudget extends StatelessWidget {
         spacing: 8,
         children: [
           DefaultTextStyle.merge(
-            style: TextStyle(
-              fontSize: 13.5,
-              fontWeight: FontWeight.w500,
+            style: AppText.bodySmall.medium.copyWith(
               color: colors.inkSecondary,
             ),
             child: Row(
@@ -252,20 +240,14 @@ class _MonthBudget extends StatelessWidget {
                   text: l10n.budgetOfLimit(
                     MoneyFormat.amount(status.budget.limit),
                   ),
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: colors.inkSecondary,
+                  style: AppText.bodyLarge.semibold.copyWith(
                     letterSpacing: 0,
+                    color: colors.inkSecondary,
                   ),
                 ),
               ],
             ),
-            style: const TextStyle(
-              fontSize: 38,
-              fontWeight: FontWeight.w600,
-              letterSpacing: -1,
-            ),
+            style: AppText.amount(38, inline: true),
           ),
           _TodayMarker(
             fraction: month.dayOf(now) / month.length,
@@ -304,9 +286,7 @@ class _MonthBudget extends StatelessWidget {
                       dailyAllowance(status.remaining, daysLeft),
                     ),
                   ),
-            style: TextStyle(
-              fontSize: 14,
-              height: 1.5,
+            style: AppText.body.prose.copyWith(
               color: over ? colors.negative : colors.ink,
             ),
           ),
@@ -315,11 +295,7 @@ class _MonthBudget extends StatelessWidget {
               AppDateFormat.sentence(
                 l10n.budgetOverrunOn(AppDateFormat.dayMonth(date, locale)),
               ),
-              style: TextStyle(
-                fontSize: 13.5,
-                fontWeight: FontWeight.w600,
-                color: colors.warning,
-              ),
+              style: AppText.bodySmall.semibold.copyWith(color: colors.warning),
             ),
         ],
       ),
@@ -378,7 +354,7 @@ class _Alert extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = TextStyle(fontSize: 13.5, height: 1.45, color: foreground);
+    final style = AppText.bodySmall.prose.copyWith(color: foreground);
     final link = linkLabel;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -451,15 +427,12 @@ class _SectionHeader extends StatelessWidget {
         Expanded(
           child: Semantics(
             header: true,
-            child: Text(
-              title,
-              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-            ),
+            child: Text(title, style: AppText.sectionTitle),
           ),
         ),
         Text(
           trailing,
-          style: TextStyle(fontSize: 13, color: context.colors.inkTertiary),
+          style: AppText.label.copyWith(color: context.colors.inkTertiary),
         ),
       ],
     ),

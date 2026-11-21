@@ -3,6 +3,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../app/theme/motion.dart';
 import '../../../core/formatting/date_format.dart';
 import '../../../core/money/money.dart';
@@ -143,10 +144,7 @@ class BudgetRow extends StatelessWidget {
                 Expanded(
                   child: Text(
                     status.budget.category?.name ?? l10n.budgetAllExpenses,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: AppText.body.medium,
                   ),
                 ),
                 // « Dépassera vers le 22 nov. » passe à la ligne au besoin.
@@ -155,11 +153,7 @@ class BudgetRow extends StatelessWidget {
                   child: Text(
                     label,
                     textAlign: TextAlign.end,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: labelColor,
-                    ),
+                    style: AppText.body.semibold.copyWith(color: labelColor),
                   ),
                 ),
               ],
@@ -171,7 +165,7 @@ class BudgetRow extends StatelessWidget {
                   MoneyFormat.amount(status.spent),
                   MoneyFormat.amount(status.budget.limit),
                 ),
-                style: TextStyle(fontSize: 12.5, color: colors.inkTertiary),
+                style: AppText.caption.copyWith(color: colors.inkTertiary),
               ),
           ],
         ),
@@ -225,7 +219,7 @@ class BudgetImpactNote extends ConsumerWidget {
                       MoneyFormat.amount(status.remaining),
                       name,
                     ),
-              style: TextStyle(fontSize: 13.5, height: 1.45, color: fg),
+              style: AppText.bodySmall.prose.copyWith(color: fg),
             ),
           ),
         ],
