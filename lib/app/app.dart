@@ -33,9 +33,12 @@ class FinanceApp extends ConsumerWidget {
       routerConfig: ref.watch(appRouterProvider),
       // Splash animé au lancement, puis verrouillage par code PIN au-dessus
       // de tous les écrans.
-      builder: (context, child) => FinaoSplash(
-        stonesAlreadyShown: systemSplashShowsCairn,
-        next: LockGate(child: child ?? const SizedBox()),
+      builder: (context, child) => AnnotatedRegion(
+        value: AppTheme.statusBarStyle(Theme.of(context).brightness),
+        child: FinaoSplash(
+          stonesAlreadyShown: systemSplashShowsCairn,
+          next: LockGate(child: child ?? const SizedBox()),
+        ),
       ),
       // Application en français uniquement pour le MVP.
       locale: const Locale('fr'),

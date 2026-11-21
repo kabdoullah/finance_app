@@ -14,6 +14,19 @@ abstract final class AppTheme {
   static final ThemeData light = _build(AppColors.light, Brightness.light);
   static final ThemeData dark = _build(AppColors.dark, Brightness.dark);
 
+  /// Barre d'état transparente, icônes contrastées avec le fond. Appliquée à
+  /// la racine (écrans sans AppBar) et par les AppBar : sans elle, Android
+  /// garde son voile gris par défaut.
+  static SystemUiOverlayStyle statusBarStyle(Brightness brightness) =>
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: brightness == Brightness.light
+            ? Brightness.dark
+            : Brightness.light,
+        // iOS : luminosité du fond, et non des icônes.
+        statusBarBrightness: brightness,
+      );
+
   static ThemeData _build(AppColors colors, Brightness brightness) {
     final colorScheme = ColorScheme(
       brightness: brightness,
@@ -61,15 +74,8 @@ abstract final class AppTheme {
       // En-têtes des maquettes : fond papier, titre centré 16/600, sans ombre.
       appBarTheme: AppBarTheme(
         // Fixé : une barre transparente (écrans teintés) ferait deviner des
-        // icônes blanches à Flutter, invisibles sur le papier, et le réglage
-        // resterait en revenant sur l'Accueil (qui n'a pas de barre).
-        systemOverlayStyle: brightness == Brightness.light
-            ? SystemUiOverlayStyle.dark.copyWith(
-                statusBarColor: Colors.transparent,
-              )
-            : SystemUiOverlayStyle.light.copyWith(
-                statusBarColor: Colors.transparent,
-              ),
+        // icônes blanches à Flutter, invisibles sur le papier.
+        systemOverlayStyle: statusBarStyle(brightness),
         backgroundColor: colors.background,
         foregroundColor: colors.ink,
         surfaceTintColor: Colors.transparent,
