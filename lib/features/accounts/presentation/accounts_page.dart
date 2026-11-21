@@ -10,6 +10,7 @@ import '../../../core/formatting/date_format.dart';
 import '../../../core/formatting/relative_date.dart';
 import '../../../core/money/money.dart';
 import '../../../core/widgets/amount_display.dart';
+import '../../../core/widgets/section_tint.dart';
 import '../../../l10n/l10n.dart';
 import '../../goals/presentation/goals_page.dart';
 import '../../goals/presentation/goals_providers.dart';
@@ -30,26 +31,29 @@ class AccountsPage extends ConsumerWidget {
     final active = ref.watch(activeAccountsProvider);
     final archived = ref.watch(archivedAccountsProvider).value ?? const [];
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.accountsTitle),
-        actions: [
-          IconButton(
-            tooltip: l10n.accountsAdd,
-            icon: const Icon(AppIcons.plusBold, size: 20),
-            onPressed: () => context.push(AppRoutes.newAccount),
-          ),
-          const SizedBox(width: 8),
-        ],
-      ),
-      body: switch (active) {
-        AsyncData(:final value) => _AccountsList(
-          active: value,
-          archived: archived,
+    return SectionTint(
+      color: context.colors.primaryTint,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(l10n.accountsTitle),
+          actions: [
+            IconButton(
+              tooltip: l10n.accountsAdd,
+              icon: const Icon(AppIcons.plusBold, size: 20),
+              onPressed: () => context.push(AppRoutes.newAccount),
+            ),
+            const SizedBox(width: 8),
+          ],
         ),
-        AsyncError() => Center(child: Text(l10n.errorGeneric)),
-        _ => const SizedBox.shrink(),
-      },
+        body: switch (active) {
+          AsyncData(:final value) => _AccountsList(
+            active: value,
+            archived: archived,
+          ),
+          AsyncError() => Center(child: Text(l10n.errorGeneric)),
+          _ => const SizedBox.shrink(),
+        },
+      ),
     );
   }
 }

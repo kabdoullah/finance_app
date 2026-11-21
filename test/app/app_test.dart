@@ -31,7 +31,7 @@ void main() {
     await tester.tap(find.text('Assistant'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Copilote'), findsOneWidget);
+    expect(find.text('Sur ton téléphone · hors connexion'), findsOneWidget);
     expect(find.text('Solde total'), findsNothing);
 
     await tester.tap(find.text('Accueil'));
@@ -51,8 +51,11 @@ void main() {
     await tester.pumpAndSettle();
 
     // Écran du Copilote (sans IA en test : « pas chargé »).
-    expect(find.text('Copilote'), findsOneWidget);
-    expect(find.text('L\'assistant n\'est pas chargé'), findsOneWidget);
+    expect(find.text('Sur ton téléphone · hors connexion'), findsOneWidget);
+    expect(
+      find.textContaining('n\'est pas chargé.', findRichText: true),
+      findsOneWidget,
+    );
   });
 
   testWidgets('le bouton Paramètres ouvre un écran avec retour', (

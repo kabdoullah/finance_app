@@ -141,17 +141,23 @@ void main() {
     );
   });
 
-  testWidgets('assistant pas chargé : raccourcis et « Charger »', (
+  testWidgets('assistant pas chargé : saisie désactivée et « Charger »', (
     tester,
   ) async {
     await openAssistant(tester, loaded: false);
-    expect(find.text('L\'assistant n\'est pas chargé'), findsOneWidget);
-    expect(find.text('Simuler un achat'), findsOneWidget);
+    expect(
+      find.textContaining(
+        'L\'assistant n\'est pas chargé.',
+        findRichText: true,
+      ),
+      findsOneWidget,
+    );
+    expect(tester.widget<TextField>(find.byType(TextField)).enabled, isFalse);
     await tester.ensureVisible(find.text('Charger l\'assistant'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Charger l\'assistant'));
     await tester.pumpAndSettle();
-    expect(find.text('Pose ta question…'), findsOneWidget);
+    expect(tester.widget<TextField>(find.byType(TextField)).enabled, isTrue);
   });
 
   testWidgets('téléphone non compatible : pas de bouton de chargement', (

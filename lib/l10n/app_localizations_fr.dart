@@ -1325,27 +1325,23 @@ class AppLocalizationsFr extends AppLocalizations {
   String get qeManageAi => 'Gérer le modèle IA';
 
   @override
-  String get asTitle => 'Copilote';
+  String get asTitle => 'Assistant';
 
   @override
-  String get asSubtitle => 'Sur ton téléphone · fonctionne hors connexion';
+  String get asSubtitle => 'Sur ton téléphone · hors connexion';
 
   @override
   String get asFootnote =>
       'Chiffres calculés par l\'application · expliqués par Gemma 4';
 
   @override
-  String get asTyping => 'Analyse de tes opérations…';
+  String get asTyping => 'je calcule à partir de tes opérations…';
 
   @override
-  String get asInputHint => 'Pose ta question…';
+  String get asInputHint => 'Pose une question ou dicte une dépense';
 
   @override
   String get asSend => 'Envoyer';
-
-  @override
-  String get asIntro =>
-      'Pose une question sur tes dépenses, tes budgets, tes soldes ou un achat. Les chiffres sont toujours calculés par l\'application.';
 
   @override
   String get asSuggest2 => 'Quelle catégorie me coûte le plus ?';
@@ -1364,23 +1360,23 @@ class AppLocalizationsFr extends AppLocalizations {
   String get asError => 'Je n\'ai pas pu répondre. Réessaie.';
 
   @override
-  String get asOffTitle => 'L\'assistant n\'est pas chargé';
+  String get asOffTitle => 'L\'assistant n\'est pas chargé.';
 
   @override
   String get asOffBody =>
-      'Les questions en langage naturel sont indisponibles pour l\'instant. Tous tes chiffres restent accessibles.';
+      'Les questions en langage naturel sont indisponibles ; les chiffres ci-dessus, calculés par l\'application, restent à jour.';
 
   @override
   String get asOffNotInstalled =>
-      'L\'assistant n\'est pas installé. Tous tes chiffres restent accessibles.';
+      'L\'assistant n\'est pas installé : les chiffres ci-dessus, calculés par l\'application, restent à jour.';
 
   @override
   String get asOffUnavailable =>
-      'L\'assistant IA n\'est pas disponible sur ce téléphone. Tous tes chiffres restent accessibles.';
+      'L\'assistant IA n\'est pas disponible sur ce téléphone ; les chiffres ci-dessus, calculés par l\'application, restent à jour.';
 
   @override
   String get asOffDownloading =>
-      'Téléchargement de l\'assistant en cours. Tous tes chiffres restent accessibles.';
+      'Téléchargement de l\'assistant en cours ; les chiffres ci-dessus, calculés par l\'application, restent à jour.';
 
   @override
   String get asLoad => 'Charger l\'assistant';
@@ -3605,7 +3601,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get calNextMonth => 'Mois suivant';
 
   @override
-  String get calLegendPaid => 'Payées, selon le montant';
+  String get calLegendPaid => 'Dépenses';
 
   @override
   String get calLegendPlanned => 'Planifiée';
@@ -4077,4 +4073,16 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get accountsTransferHint =>
       'Un transfert ne compte ni comme revenu ni comme dépense.';
+
+  @override
+  String get asReplyLabel => 'Copilote';
+
+  @override
+  String get asTypingModel => 'Gemma 4';
+
+  @override
+  String get asSettings => 'Réglages de l\'assistant';
+
+  @override
+  String get calAddThisDay => 'Ajouter une dépense ce jour-là';
 }

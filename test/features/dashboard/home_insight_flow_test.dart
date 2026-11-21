@@ -70,7 +70,7 @@ void main() {
     await tester.tap(find.text('Demander au Copilote'));
     await tester.pumpAndSettle();
     // Assistant non chargé dans les tests : l'onglet s'ouvre tel quel.
-    expect(find.text('Copilote'), findsOneWidget);
+    expect(find.text('Sur ton téléphone · hors connexion'), findsOneWidget);
 
     await tester.tap(find.text('Accueil').last);
     await tester.pumpAndSettle();

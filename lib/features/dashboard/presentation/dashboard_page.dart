@@ -61,11 +61,11 @@ class DashboardPage extends ConsumerWidget {
     final hasAccounts = summary.count > 0;
     final active = hasAccounts && hasTransactions.requireValue;
 
-    return Scaffold(
-      floatingActionButton: hasAccounts ? const AddOperationButton() : null,
-      body: SectionTint(
-        color: context.colors.primaryTint,
-        child: SafeArea(
+    return SectionTint(
+      color: context.colors.primaryTint,
+      child: Scaffold(
+        floatingActionButton: hasAccounts ? const AddOperationButton() : null,
+        body: SafeArea(
           bottom: false,
           child: SingleChildScrollView(
             padding: EdgeInsets.fromLTRB(24, 12, 24, hasAccounts ? 120 : 40),

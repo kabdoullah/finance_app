@@ -32,26 +32,57 @@ class AssistantPage extends ConsumerWidget {
     final colors = context.colors;
     final l10n = context.l10n;
     final ai = ref.watch(aiModelControllerProvider);
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: false,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10n.asTitle,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+    return SectionTint(
+      color: context.colors.infoTint,
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: false,
+          toolbarHeight: 72,
+          titleSpacing: 24,
+          shape: Border(bottom: BorderSide(color: colors.line)),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 2,
+            children: [
+              Text(
+                l10n.asTitle,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.5,
+                ),
+              ),
+              Row(
+                spacing: 5,
+                children: [
+                  Icon(
+                    AppIcons.lockSimple,
+                    size: 12,
+                    color: colors.inkSecondary,
+                  ),
+                  Flexible(
+                    child: Text(
+                      l10n.asSubtitle,
+                      style: TextStyle(
+                        fontSize: 12.5,
+                        color: colors.inkSecondary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          actions: [
+            IconButton(
+              tooltip: l10n.asSettings,
+              onPressed: () => context.push(AppRoutes.aiModel),
+              icon: const Icon(AppIcons.gearSix, size: 20),
             ),
-            Text(
-              l10n.asSubtitle,
-              style: TextStyle(fontSize: 12.5, color: colors.inkTertiary),
-            ),
+            const SizedBox(width: 8),
           ],
         ),
-      ),
-      body: SectionTint(
-        color: context.colors.infoTint,
-        child: ai.status == AiModelStatus.ready
+        body: ai.status == AiModelStatus.ready
             ? const _Conversation()
             : _NotLoaded(state: ai),
       ),
@@ -60,12 +91,12 @@ class AssistantPage extends ConsumerWidget {
 }
 
 /// Questions proposées en pastilles.
-List<String> _suggestions(AppLocalizations l10n) => [
-  l10n.asSuggestSave,
-  l10n.asSuggest2,
-  l10n.asSuggest3,
-  l10n.asSuggestGoal,
-  l10n.asSuggest5,
+List<(IconData, String)> _suggestions(AppLocalizations l10n) => [
+  (AppIcons.wallet, l10n.asSuggest3),
+  (AppIcons.chartDonut, l10n.asSuggest2),
+  (AppIcons.trendDown, l10n.asSuggestSave),
+  (AppIcons.piggyBank, l10n.asSuggestGoal),
+  (AppIcons.handCoins, l10n.asSuggest5),
 ];
 
 class _Conversation extends ConsumerStatefulWidget {
@@ -131,8 +162,6 @@ class _ConversationState extends ConsumerState<_Conversation> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colors;
-    final l10n = context.l10n;
     final state = ref.watch(assistantControllerProvider);
     ref
       ..listen(assistantControllerProvider, (_, _) => _scrollToEnd())
@@ -147,25 +176,9 @@ class _ConversationState extends ConsumerState<_Conversation> {
         Expanded(
           child: ListView(
             controller: _scroll,
-            padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
             children: [
-              if (state.entries.isEmpty) ...[
-                const Padding(
-                  padding: EdgeInsets.only(top: 8),
-                  child: WeekCard(),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Text(
-                    l10n.asIntro,
-                    style: TextStyle(
-                      fontSize: 15,
-                      height: 1.45,
-                      color: colors.inkSecondary,
-                    ),
-                  ),
-                ),
-              ],
+              if (state.entries.isEmpty) const WeekCard(),
               for (final (i, entry) in state.entries.indexed)
                 if (i < _initialEntries)
                   _entry(entry)
@@ -175,57 +188,19 @@ class _ConversationState extends ConsumerState<_Conversation> {
             ],
           ),
         ),
-        if (!state.busy)
-          SizedBox(
-            height: 48,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              children: [
-                for (final suggestion in _suggestions(l10n))
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8, bottom: 8),
-                    child: ActionChip(
-                      label: Text(suggestion),
-                      onPressed: () => _send(suggestion),
-                    ),
-                  ),
-              ],
-            ),
-          ),
-        SafeArea(
-          top: false,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 4, 12, 12),
-            child: Row(
-              spacing: 8,
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _input,
-                    enabled: !state.busy,
-                    minLines: 1,
-                    maxLines: 4,
-                    textCapitalization: TextCapitalization.sentences,
-                    textInputAction: TextInputAction.send,
-                    onSubmitted: (_) => _send(),
-                    decoration: InputDecoration(hintText: l10n.asInputHint),
-                  ),
-                ),
-                IconButton.filled(
-                  tooltip: l10n.asSend,
-                  onPressed: state.busy ? null : _send,
-                  icon: const Icon(AppIcons.arrowUpBold, size: 18),
-                ),
-              ],
-            ),
-          ),
+        _Composer(
+          controller: _input,
+          enabled: true,
+          busy: state.busy,
+          onSend: _send,
         ),
       ],
     );
   }
 }
 
+/// Question posée (maquette) : bulle claire à guillemets, chaque échange
+/// séparé par un filet.
 class _UserBubble extends StatelessWidget {
   const _UserBubble({required this.text});
 
@@ -234,18 +209,56 @@ class _UserBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    return Align(
+    return Container(
+      margin: const EdgeInsets.only(top: 20),
+      padding: const EdgeInsets.only(top: 20),
+      decoration: BoxDecoration(
+        border: Border(top: BorderSide(color: colors.line)),
+      ),
       alignment: Alignment.centerRight,
-      child: Container(
-        margin: const EdgeInsets.only(top: 12, left: 48),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-        decoration: BoxDecoration(
-          color: colors.primarySoft,
-          borderRadius: BorderRadius.circular(18),
-        ),
-        child: Text(
-          text,
-          style: TextStyle(fontSize: 15, color: colors.onPrimarySoft),
+      child: FractionallySizedBox(
+        widthFactor: 0.86,
+        alignment: Alignment.centerRight,
+        child: Align(
+          alignment: Alignment.centerRight,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            decoration: BoxDecoration(
+              color: colors.surface,
+              border: Border.all(color: colors.line),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(18),
+                topRight: Radius.circular(18),
+                bottomLeft: Radius.circular(18),
+                bottomRight: Radius.circular(6),
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 8,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 2),
+                  child: Icon(
+                    AppIcons.quotesFill,
+                    size: 16,
+                    color: colors.inkTertiary,
+                  ),
+                ),
+                Flexible(
+                  child: Text(
+                    text,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      height: 1.4,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -282,18 +295,14 @@ class _ReplyBubble extends StatelessWidget {
     final colors = context.colors;
     final l10n = context.l10n;
     final link = reply.link;
-    return Container(
-      margin: const EdgeInsets.only(top: 12, right: 24),
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-      decoration: BoxDecoration(
-        color: colors.surface,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: colors.line),
-      ),
+    return Padding(
+      padding: const EdgeInsets.only(top: 14),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(reply.text, style: const TextStyle(fontSize: 15, height: 1.45)),
+          const _ReplyLabel(),
+          const SizedBox(height: 10),
+          Text(reply.text, style: const TextStyle(fontSize: 15, height: 1.5)),
           if (reply.rows.isNotEmpty) ...[
             const SizedBox(height: 10),
             for (final row in reply.rows)
@@ -340,10 +349,18 @@ class _ReplyBubble extends StatelessWidget {
           ],
           if (reply.prepared.isNotEmpty) _PreparedCard(reply: reply),
           if (reply.fromTools) ...[
-            const SizedBox(height: 8),
-            Text(
-              l10n.asFootnote,
-              style: TextStyle(fontSize: 11.5, color: colors.inkTertiary),
+            const SizedBox(height: 10),
+            Row(
+              spacing: 5,
+              children: [
+                Icon(AppIcons.info, size: 13, color: colors.inkTertiary),
+                Expanded(
+                  child: Text(
+                    l10n.asFootnote,
+                    style: TextStyle(fontSize: 11.5, color: colors.inkTertiary),
+                  ),
+                ),
+              ],
             ),
           ],
           if (link != null)
@@ -540,23 +557,239 @@ class _PreparedCard extends ConsumerWidget {
   }
 }
 
+/// « Gemma 4 · je calcule… » et l'esquisse de la réponse.
 class _Typing extends StatelessWidget {
   const _Typing();
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    return Padding(
-      padding: const EdgeInsets.only(top: 14),
-      child: Row(
-        spacing: 10,
-        children: [
-          TypingDots(color: colors.inkSecondary),
-          Text(
-            context.l10n.asTyping,
-            style: TextStyle(fontSize: 14, color: colors.inkSecondary),
+    final l10n = context.l10n;
+    Widget bar(double width, double height) => FractionallySizedBox(
+      widthFactor: width,
+      alignment: Alignment.centerLeft,
+      child: Container(
+        height: height,
+        decoration: BoxDecoration(
+          color: colors.chip,
+          borderRadius: BorderRadius.circular(height / 3),
+        ),
+      ),
+    );
+    return Semantics(
+      liveRegion: true,
+      label: '${l10n.asTypingModel} · ${l10n.asTyping}',
+      excludeSemantics: true,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: 10,
+          children: [
+            Row(
+              spacing: 8,
+              children: [
+                TypingDots(color: colors.info),
+                Flexible(
+                  child: Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: l10n.asTypingModel,
+                          style: TextStyle(
+                            color: colors.info,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        TextSpan(text: ' · ${l10n.asTyping}'),
+                      ],
+                    ),
+                    style: TextStyle(fontSize: 13, color: colors.inkSecondary),
+                  ),
+                ),
+              ],
+            ),
+            bar(0.46, 26),
+            bar(0.88, 12),
+            bar(0.70, 12),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// « ✦ COPILOTE » au-dessus de chaque réponse.
+class _ReplyLabel extends StatelessWidget {
+  const _ReplyLabel();
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    return Row(
+      spacing: 6,
+      children: [
+        Icon(AppIcons.sparkleFill, size: 14, color: colors.info),
+        Text(
+          context.l10n.asReplyLabel.toUpperCase(),
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.5,
+            color: colors.info,
           ),
-        ],
+        ),
+      ],
+    );
+  }
+}
+
+/// Bas de l'écran (maquette) : questions proposées, champ en pilule avec la
+/// dictée, bouton Envoyer. Désactivé tant que l'assistant n'est pas chargé.
+class _Composer extends StatelessWidget {
+  const _Composer({
+    required this.enabled,
+    required this.busy,
+    this.controller,
+    this.onSend,
+  });
+
+  final TextEditingController? controller;
+  final bool enabled;
+  final bool busy;
+  final void Function([String?])? onSend;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final l10n = context.l10n;
+    final active = enabled && !busy;
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: colors.background,
+        border: Border(top: BorderSide(color: colors.line)),
+      ),
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 10, bottom: 10),
+          child: Column(
+            spacing: 10,
+            children: [
+              SizedBox(
+                height: 40,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  children: [
+                    for (final (icon, label) in _suggestions(l10n))
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: Opacity(
+                          opacity: active ? 1 : 0.5,
+                          child: Material(
+                            color: colors.surface,
+                            shape: StadiumBorder(
+                              side: BorderSide(color: colors.line),
+                            ),
+                            child: InkWell(
+                              customBorder: const StadiumBorder(),
+                              onTap: active ? () => onSend?.call(label) : null,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 14,
+                                ),
+                                child: Row(
+                                  spacing: 6,
+                                  children: [
+                                    Icon(icon, size: 15, color: colors.info),
+                                    Text(
+                                      label,
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  spacing: 8,
+                  children: [
+                    Expanded(
+                      child: Container(
+                        constraints: const BoxConstraints(minHeight: 52),
+                        padding: const EdgeInsets.only(left: 16, right: 4),
+                        decoration: BoxDecoration(
+                          color: colors.surface,
+                          border: Border.all(color: colors.line),
+                          borderRadius: BorderRadius.circular(26),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: controller,
+                                enabled: active,
+                                minLines: 1,
+                                maxLines: 4,
+                                textCapitalization:
+                                    TextCapitalization.sentences,
+                                textInputAction: TextInputAction.send,
+                                onSubmitted: (_) => onSend?.call(),
+                                style: const TextStyle(fontSize: 15),
+                                decoration: InputDecoration(
+                                  hintText: l10n.asInputHint,
+                                  hintMaxLines: 1,
+                                  border: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  disabledBorder: InputBorder.none,
+                                  filled: false,
+                                  isDense: true,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 14,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              tooltip: l10n.asShortcutDictate,
+                              onPressed: () =>
+                                  context.push(AppRoutes.quickEntry()),
+                              icon: Icon(
+                                AppIcons.microphoneFill,
+                                size: 20,
+                                color: colors.info,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox.square(
+                      dimension: 52,
+                      child: IconButton.filled(
+                        tooltip: l10n.asSend,
+                        onPressed: active ? () => onSend?.call() : null,
+                        icon: const Icon(AppIcons.arrowUpBold, size: 18),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -581,113 +814,100 @@ class _NotLoaded extends ConsumerWidget {
       AiModelStatus.downloading => l10n.asOffDownloading,
       _ => l10n.asOffBody,
     };
-    final shortcuts = [
-      (
-        AppIcons.chartDonut,
-        l10n.navBudgets,
-        () => context.go(AppRoutes.budgets),
-      ),
-      (
-        AppIcons.chartLine,
-        l10n.navForecast,
-        () => context.go(AppRoutes.forecast),
-      ),
-      (AppIcons.tag, l10n.simTitle, () => context.go(AppRoutes.simulation)),
-      (
-        AppIcons.microphoneBold,
-        l10n.asShortcutDictate,
-        () => context.push(AppRoutes.quickEntry()),
-      ),
-    ];
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
+    return Column(
       children: [
-        // Chiffres calculés par l'application, même sans IA (maquette).
-        const WeekCard(),
-        const SizedBox(height: 24),
-        Center(
-          child: Container(
-            width: 64,
-            height: 64,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: colors.chip,
-            ),
-            child: Icon(
-              AppIcons.chatCircleText,
-              size: 28,
-              color: colors.inkSecondary,
-            ),
-          ),
-        ),
-        const SizedBox(height: 16),
-        Text(
-          l10n.asOffTitle,
-          textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w600),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          body,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 15,
-            height: 1.45,
-            color: colors.inkSecondary,
-          ),
-        ),
-        const SizedBox(height: 20),
-        Wrap(
-          alignment: WrapAlignment.center,
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            for (final (icon, label, onTap) in shortcuts)
-              ActionChip(
-                avatar: Icon(icon, size: 16),
-                label: Text(label),
-                onPressed: onTap,
-              ),
-          ],
-        ),
-        if (state.notice == AiModelNotice.lowMemory) ...[
-          const SizedBox(height: 20),
-          Text(
-            l10n.aiLowMemory,
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14, color: colors.warning),
-          ),
-        ],
-        const SizedBox(height: 24),
-        switch (status) {
-          AiModelStatus.installed || AiModelStatus.error => FilledButton(
-            onPressed: controller.load,
-            child: Text(l10n.asLoad),
-          ),
-          AiModelStatus.notInstalled => FilledButton(
-            onPressed: () => context.push(AppRoutes.aiModel),
-            child: Text(l10n.asInstall),
-          ),
-          AiModelStatus.loading => Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            spacing: 10,
+        Expanded(
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
             children: [
-              SizedBox.square(
-                dimension: 18,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: colors.primary,
+              // Chiffres calculés par l'application, même sans IA (maquette).
+              const WeekCard(),
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: colors.infoSoft,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  spacing: 12,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 10,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 1),
+                          child: Icon(
+                            AppIcons.cpuBold,
+                            size: 18,
+                            color: colors.info,
+                          ),
+                        ),
+                        Expanded(
+                          child: Text.rich(
+                            TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: '${l10n.asOffTitle} ',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                TextSpan(text: body),
+                              ],
+                            ),
+                            style: const TextStyle(fontSize: 14, height: 1.5),
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (state.notice == AiModelNotice.lowMemory) ...[
+                      const SizedBox(height: 20),
+                      Text(
+                        l10n.aiLowMemory,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 14, color: colors.warning),
+                      ),
+                    ],
+                    switch (status) {
+                      AiModelStatus.installed ||
+                      AiModelStatus.error => FilledButton(
+                        onPressed: controller.load,
+                        child: Text(l10n.asLoad),
+                      ),
+                      AiModelStatus.notInstalled => FilledButton(
+                        onPressed: () => context.push(AppRoutes.aiModel),
+                        child: Text(l10n.asInstall),
+                      ),
+                      AiModelStatus.loading => Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        spacing: 10,
+                        children: [
+                          SizedBox.square(
+                            dimension: 18,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: colors.primary,
+                            ),
+                          ),
+                          Text(l10n.asLoading),
+                        ],
+                      ),
+                      AiModelStatus.downloading => OutlinedButton(
+                        onPressed: () => context.push(AppRoutes.aiModel),
+                        child: Text(l10n.aiModelTitle),
+                      ),
+                      _ => const SizedBox.shrink(),
+                    },
+                  ],
                 ),
               ),
-              Text(l10n.asLoading),
             ],
           ),
-          AiModelStatus.downloading => OutlinedButton(
-            onPressed: () => context.push(AppRoutes.aiModel),
-            child: Text(l10n.aiModelTitle),
-          ),
-          _ => const SizedBox.shrink(),
-        },
+        ),
+        const _Composer(enabled: false, busy: false),
       ],
     );
   }

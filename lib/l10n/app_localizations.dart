@@ -2239,13 +2239,13 @@ abstract class AppLocalizations {
   /// No description provided for @asTitle.
   ///
   /// In fr, this message translates to:
-  /// **'Copilote'**
+  /// **'Assistant'**
   String get asTitle;
 
   /// No description provided for @asSubtitle.
   ///
   /// In fr, this message translates to:
-  /// **'Sur ton téléphone · fonctionne hors connexion'**
+  /// **'Sur ton téléphone · hors connexion'**
   String get asSubtitle;
 
   /// No description provided for @asFootnote.
@@ -2257,13 +2257,13 @@ abstract class AppLocalizations {
   /// No description provided for @asTyping.
   ///
   /// In fr, this message translates to:
-  /// **'Analyse de tes opérations…'**
+  /// **'je calcule à partir de tes opérations…'**
   String get asTyping;
 
   /// No description provided for @asInputHint.
   ///
   /// In fr, this message translates to:
-  /// **'Pose ta question…'**
+  /// **'Pose une question ou dicte une dépense'**
   String get asInputHint;
 
   /// No description provided for @asSend.
@@ -2271,12 +2271,6 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Envoyer'**
   String get asSend;
-
-  /// No description provided for @asIntro.
-  ///
-  /// In fr, this message translates to:
-  /// **'Pose une question sur tes dépenses, tes budgets, tes soldes ou un achat. Les chiffres sont toujours calculés par l\'application.'**
-  String get asIntro;
 
   /// No description provided for @asSuggest2.
   ///
@@ -2311,31 +2305,31 @@ abstract class AppLocalizations {
   /// No description provided for @asOffTitle.
   ///
   /// In fr, this message translates to:
-  /// **'L\'assistant n\'est pas chargé'**
+  /// **'L\'assistant n\'est pas chargé.'**
   String get asOffTitle;
 
   /// No description provided for @asOffBody.
   ///
   /// In fr, this message translates to:
-  /// **'Les questions en langage naturel sont indisponibles pour l\'instant. Tous tes chiffres restent accessibles.'**
+  /// **'Les questions en langage naturel sont indisponibles ; les chiffres ci-dessus, calculés par l\'application, restent à jour.'**
   String get asOffBody;
 
   /// No description provided for @asOffNotInstalled.
   ///
   /// In fr, this message translates to:
-  /// **'L\'assistant n\'est pas installé. Tous tes chiffres restent accessibles.'**
+  /// **'L\'assistant n\'est pas installé : les chiffres ci-dessus, calculés par l\'application, restent à jour.'**
   String get asOffNotInstalled;
 
   /// No description provided for @asOffUnavailable.
   ///
   /// In fr, this message translates to:
-  /// **'L\'assistant IA n\'est pas disponible sur ce téléphone. Tous tes chiffres restent accessibles.'**
+  /// **'L\'assistant IA n\'est pas disponible sur ce téléphone ; les chiffres ci-dessus, calculés par l\'application, restent à jour.'**
   String get asOffUnavailable;
 
   /// No description provided for @asOffDownloading.
   ///
   /// In fr, this message translates to:
-  /// **'Téléchargement de l\'assistant en cours. Tous tes chiffres restent accessibles.'**
+  /// **'Téléchargement de l\'assistant en cours ; les chiffres ci-dessus, calculés par l\'application, restent à jour.'**
   String get asOffDownloading;
 
   /// No description provided for @asLoad.
@@ -5785,7 +5779,7 @@ abstract class AppLocalizations {
   /// No description provided for @calLegendPaid.
   ///
   /// In fr, this message translates to:
-  /// **'Payées, selon le montant'**
+  /// **'Dépenses'**
   String get calLegendPaid;
 
   /// No description provided for @calLegendPlanned.
@@ -6507,6 +6501,30 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Un transfert ne compte ni comme revenu ni comme dépense.'**
   String get accountsTransferHint;
+
+  /// No description provided for @asReplyLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Copilote'**
+  String get asReplyLabel;
+
+  /// No description provided for @asTypingModel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Gemma 4'**
+  String get asTypingModel;
+
+  /// No description provided for @asSettings.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réglages de l\'assistant'**
+  String get asSettings;
+
+  /// No description provided for @calAddThisDay.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter une dépense ce jour-là'**
+  String get calAddThisDay;
 }
 
 class _AppLocalizationsDelegate

@@ -32,10 +32,10 @@ class BudgetsPage extends ConsumerWidget {
     final overview = ref.watch(budgetsOverviewProvider);
     final now = ref.watch(clockProvider)();
 
-    return Scaffold(
-      body: SectionTint(
-        color: context.colors.primaryTint,
-        child: SafeArea(
+    return SectionTint(
+      color: context.colors.primaryTint,
+      child: Scaffold(
+        body: SafeArea(
           child: ListView(
             padding: const EdgeInsets.fromLTRB(24, 12, 24, 40),
             children: [

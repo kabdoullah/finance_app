@@ -31,10 +31,10 @@ class GoalsPage extends ConsumerWidget {
     final l10n = context.l10n;
     final goals = ref.watch(goalsProvider).value;
 
-    return Scaffold(
-      body: SectionTint(
-        color: context.colors.warningTint,
-        child: SafeArea(
+    return SectionTint(
+      color: context.colors.warningTint,
+      child: Scaffold(
+        body: SafeArea(
           child: ListView(
             padding: const EdgeInsets.fromLTRB(24, 12, 24, 40),
             children: [

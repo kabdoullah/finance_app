@@ -39,10 +39,10 @@ class _ForecastPageState extends ConsumerState<ForecastPage> {
     final now = ref.watch(clockProvider)();
     final days = history?.daysOfHistory(now) ?? 0;
 
-    return Scaffold(
-      body: SectionTint(
-        color: context.colors.infoTint,
-        child: SafeArea(
+    return SectionTint(
+      color: context.colors.infoTint,
+      child: Scaffold(
+        body: SafeArea(
           child: ListView(
             padding: const EdgeInsets.fromLTRB(24, 12, 24, 40),
             children: [

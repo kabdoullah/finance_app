@@ -11,6 +11,7 @@ import '../../../core/formatting/date_format.dart';
 import '../../../core/money/amount_input_formatter.dart';
 import '../../../core/money/money.dart';
 import '../../../core/time/calendar_date.dart';
+import '../../../core/widgets/section_tint.dart';
 import '../../../core/widgets/segmented_choice.dart';
 import '../../../l10n/l10n.dart';
 import '../../assistant/presentation/ai_model_controller.dart';
@@ -108,150 +109,153 @@ class _SimulationPageState extends ConsumerState<SimulationPage> {
             savingsUsed: useSavings ? goal.saved : Money.zero,
           );
 
-    return Scaffold(
-      appBar: AppBar(title: Text(l10n.simTitle)),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(24, 8, 24, 40),
-        children: [
-          _Label(l10n.simWhat),
-          TextField(
-            controller: _label,
-            textCapitalization: TextCapitalization.sentences,
-            onChanged: (_) => setState(() {}),
-            decoration: InputDecoration(hintText: l10n.simWhatHint),
-          ),
-          const SizedBox(height: 18),
-          _Label(l10n.simPrice),
-          TextField(
-            controller: _price,
-            keyboardType: TextInputType.number,
-            inputFormatters: const [AmountInputFormatter()],
-            onChanged: (_) => setState(() {}),
-            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-            decoration: InputDecoration(
-              hintText: '0',
-              suffixText: l10n.currencyLabel,
-              suffixStyle: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: colors.inkSecondary,
+    return SectionTint(
+      color: context.colors.infoTint,
+      child: Scaffold(
+        appBar: AppBar(title: Text(l10n.simTitle)),
+        body: ListView(
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 40),
+          children: [
+            _Label(l10n.simWhat),
+            TextField(
+              controller: _label,
+              textCapitalization: TextCapitalization.sentences,
+              onChanged: (_) => setState(() {}),
+              decoration: InputDecoration(hintText: l10n.simWhatHint),
+            ),
+            const SizedBox(height: 18),
+            _Label(l10n.simPrice),
+            TextField(
+              controller: _price,
+              keyboardType: TextInputType.number,
+              inputFormatters: const [AmountInputFormatter()],
+              onChanged: (_) => setState(() {}),
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+              decoration: InputDecoration(
+                hintText: '0',
+                suffixText: l10n.currencyLabel,
+                suffixStyle: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: colors.inkSecondary,
+                ),
               ),
             ),
-          ),
-          if (income != null) ...[
-            const SizedBox(height: 18),
-            _Label(l10n.simWhen),
-            SegmentedChoice<bool>(
-              options: [
-                (false, l10n.simToday),
-                (
-                  true,
-                  l10n.simAfterIncome(
-                    income.name,
-                    AppDateFormat.dayMonth(income.nextDue!, locale),
-                  ),
-                ),
-              ],
-              selected: afterIncome,
-              onChanged: (v) => setState(() => _afterIncome = v),
-            ),
-          ],
-          if (goal != null) ...[
-            const SizedBox(height: 14),
-            MergeSemantics(
-              child: Row(
-                spacing: 12,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      spacing: 2,
-                      children: [
-                        Text(
-                          l10n.simUseSavings(goal.name),
-                          style: const TextStyle(
-                            fontSize: 14.5,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        Text(
-                          l10n.simSavingsHelp(MoneyFormat.amount(goal.saved)),
-                          style: TextStyle(
-                            fontSize: 12.5,
-                            color: colors.inkTertiary,
-                          ),
-                        ),
-                      ],
+            if (income != null) ...[
+              const SizedBox(height: 18),
+              _Label(l10n.simWhen),
+              SegmentedChoice<bool>(
+                options: [
+                  (false, l10n.simToday),
+                  (
+                    true,
+                    l10n.simAfterIncome(
+                      income.name,
+                      AppDateFormat.dayMonth(income.nextDue!, locale),
                     ),
                   ),
-                  Switch(
-                    value: useSavings,
-                    onChanged: (v) => setState(() => _useSavings = v),
-                  ),
                 ],
+                selected: afterIncome,
+                onChanged: (v) => setState(() => _afterIncome = v),
               ),
-            ),
-          ],
-          const SizedBox(height: 22),
-          if (history != null && days < Forecast.minHistoryDays)
-            _Message(
-              l10n.forecastInsufficientBody,
-              title: l10n.forecastInsufficientTitle,
-            )
-          else if (simulation == null)
-            _Message(l10n.simEnterPrice)
-          else ...[
-            _Result(
-              simulation: simulation,
-              what: label.isEmpty ? l10n.simThisPurchase : '« $label »',
-              when: afterIncome
-                  ? l10n.simOnDate(
-                      AppDateFormat.dayMonth(income.nextDue!, locale),
-                    )
-                  : l10n.simTodayLower,
-              showAdvice: !useSavings,
-            ),
-            const SizedBox(height: 10),
-            Text(
-              '${_reliability(l10n, forecast!, days)} '
-              '${l10n.simAvailableNote}',
-              style: TextStyle(
-                fontSize: 12.5,
-                height: 1.45,
-                color: colors.inkTertiary,
+            ],
+            if (goal != null) ...[
+              const SizedBox(height: 14),
+              MergeSemantics(
+                child: Row(
+                  spacing: 12,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        spacing: 2,
+                        children: [
+                          Text(
+                            l10n.simUseSavings(goal.name),
+                            style: const TextStyle(
+                              fontSize: 14.5,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Text(
+                            l10n.simSavingsHelp(MoneyFormat.amount(goal.saved)),
+                            style: TextStyle(
+                              fontSize: 12.5,
+                              color: colors.inkTertiary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Switch(
+                      value: useSavings,
+                      onChanged: (v) => setState(() => _useSavings = v),
+                    ),
+                  ],
+                ),
               ),
-            ),
+            ],
             const SizedBox(height: 22),
-            OutlinedButton.icon(
-              onPressed: () => context.push(
-                AppRoutes.newGoalFor(name: label, target: price.value),
+            if (history != null && days < Forecast.minHistoryDays)
+              _Message(
+                l10n.forecastInsufficientBody,
+                title: l10n.forecastInsufficientTitle,
+              )
+            else if (simulation == null)
+              _Message(l10n.simEnterPrice)
+            else ...[
+              _Result(
+                simulation: simulation,
+                what: label.isEmpty ? l10n.simThisPurchase : '« $label »',
+                when: afterIncome
+                    ? l10n.simOnDate(
+                        AppDateFormat.dayMonth(income.nextDue!, locale),
+                      )
+                    : l10n.simTodayLower,
+                showAdvice: !useSavings,
               ),
-              icon: const Icon(AppIcons.target, size: 18),
-              label: Text(l10n.simCreateGoal),
-            ),
-            const SizedBox(height: 8),
-            TextButton.icon(
-              onPressed: () {
-                // Question posée seulement si l'assistant est prêt ; sinon
-                // l'onglet s'ouvre tel quel.
-                if (ref.read(aiModelControllerProvider).status ==
-                    AiModelStatus.ready) {
-                  final amount = MoneyFormat.amount(price);
-                  ref
-                      .read(assistantRequestProvider.notifier)
-                      .ask(
-                        label.isEmpty
-                            ? l10n.simAskQuestionNoLabel(amount)
-                            : l10n.simAskQuestion(label, amount),
-                      );
-                }
-                context.go(AppRoutes.assistant);
-              },
-              icon: const Icon(AppIcons.chatCircleText, size: 18),
-              label: Text(l10n.simAskCopilot),
-            ),
+              const SizedBox(height: 10),
+              Text(
+                '${_reliability(l10n, forecast!, days)} '
+                '${l10n.simAvailableNote}',
+                style: TextStyle(
+                  fontSize: 12.5,
+                  height: 1.45,
+                  color: colors.inkTertiary,
+                ),
+              ),
+              const SizedBox(height: 22),
+              OutlinedButton.icon(
+                onPressed: () => context.push(
+                  AppRoutes.newGoalFor(name: label, target: price.value),
+                ),
+                icon: const Icon(AppIcons.target, size: 18),
+                label: Text(l10n.simCreateGoal),
+              ),
+              const SizedBox(height: 8),
+              TextButton.icon(
+                onPressed: () {
+                  // Question posée seulement si l'assistant est prêt ; sinon
+                  // l'onglet s'ouvre tel quel.
+                  if (ref.read(aiModelControllerProvider).status ==
+                      AiModelStatus.ready) {
+                    final amount = MoneyFormat.amount(price);
+                    ref
+                        .read(assistantRequestProvider.notifier)
+                        .ask(
+                          label.isEmpty
+                              ? l10n.simAskQuestionNoLabel(amount)
+                              : l10n.simAskQuestion(label, amount),
+                        );
+                  }
+                  context.go(AppRoutes.assistant);
+                },
+                icon: const Icon(AppIcons.chatCircleText, size: 18),
+                label: Text(l10n.simAskCopilot),
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
