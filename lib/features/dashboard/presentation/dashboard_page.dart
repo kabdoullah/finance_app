@@ -63,8 +63,8 @@ class DashboardPage extends ConsumerWidget {
 
     return SectionTint(
       color: context.colors.primaryTint,
-      child: Scaffold(
-        floatingActionButton: hasAccounts ? const AddOperationButton() : null,
+      child: AddOperationScaffold(
+        showButton: hasAccounts,
         body: SafeArea(
           bottom: false,
           child: SingleChildScrollView(

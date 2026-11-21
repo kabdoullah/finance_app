@@ -458,8 +458,7 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
     final periodLabel = _periodLabel(relative);
     final isCustom = _period.span == PeriodSpan.custom;
 
-    return Scaffold(
-      floatingActionButton: const AddOperationButton(),
+    return AddOperationScaffold(
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(24, 12, 24, 120),
