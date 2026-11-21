@@ -106,10 +106,10 @@ void main() {
     expect(modes, ['SystemUiMode.immersiveSticky']);
 
     // Logo complet encore affiché : barres toujours masquées.
-    await tester.pump(const Duration(milliseconds: 2500));
+    await tester.pump(const Duration(milliseconds: 1500));
     expect(modes, ['SystemUiMode.immersiveSticky']);
 
-    // Début du fondu (2,64 s) : barres rendues.
+    // Début du fondu (1,65 s) : barres rendues.
     await tester.pump(const Duration(milliseconds: 200));
     expect(modes, ['SystemUiMode.immersiveSticky', 'SystemUiMode.edgeToEdge']);
 

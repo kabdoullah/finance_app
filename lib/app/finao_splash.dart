@@ -4,12 +4,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_ui/material_ui.dart';
 
-/// Splash animé de Finao (≈ 3,1 s), posé au-dessus de [next] puis effacé
+/// Splash animé de Finao (≈ 2,1 s), posé au-dessus de [next] puis effacé
 /// par un fondu croisé.
 ///
-/// Chronologie (ms) : galet de base 0–480 · milieu 240–720 · sommet ambre
-/// 480–1050 · mot « Finao » 930–1380 · logo complet affiché 1,2 s · fondu
-/// croisé vers l'app 2640–3150.
+/// Chronologie (ms) : galet de base 0–384 · milieu 192–576 · sommet ambre
+/// 384–840 · mot « Finao » 744–1104 · logo complet affiché 0,5 s · fondu
+/// croisé vers l'app 1652–2060.
 /// « Réduire les animations » : position finale d'emblée, puis fondu simple.
 ///
 /// Barres système masquées pendant le splash (plein écran), rendues au
@@ -36,11 +36,11 @@ class FinaoSplash extends StatefulWidget {
 
 class _FinaoSplashState extends State<FinaoSplash>
     with SingleTickerProviderStateMixin {
-  /// Ralentissement des mouvements (chronologie de référence × 1,5).
-  static const _pace = 1.5;
+  /// Ralentissement des mouvements (chronologie de référence × 1,2).
+  static const _pace = 1.2;
 
   /// Temps pendant lequel le logo complet reste affiché avant le fondu.
-  static const _hold = 1200.0;
+  static const _hold = 500.0;
   static const _total = 1300.0 * _pace + _hold;
   static const _decelerate = Cubic(0, 0, 0.2, 1);
 
