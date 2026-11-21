@@ -718,7 +718,7 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
   }
 }
 
-/// Payées · Planifiées · Opérations, puis une phrase.
+/// Dépenses · Planifiées · Opérations, puis une phrase.
 class _Summary extends StatelessWidget {
   const _Summary({
     required this.loading,

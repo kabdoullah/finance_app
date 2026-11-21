@@ -175,7 +175,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Dépenses du mois'), findsOneWidget);
     expect(find.text('À payer · 14${_nbsp}000${_nbsp}FCFA'), findsOneWidget);
-    expect(find.text('Payées · 8${_nbsp}500${_nbsp}FCFA'), findsOneWidget);
+    expect(find.text('Dépenses · 8${_nbsp}500${_nbsp}FCFA'), findsOneWidget);
     expect(find.text('22${_nbsp}500'), findsOneWidget);
   });
 
