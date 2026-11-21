@@ -7,7 +7,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
-import '../../../app/theme/app_theme.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../app/theme/motion.dart';
 import '../../../core/clock.dart';
 import '../../../core/formatting/date_format.dart';
@@ -40,14 +40,7 @@ class GoalsPage extends ConsumerWidget {
             children: [
               Semantics(
                 header: true,
-                child: Text(
-                  l10n.budgetsTitle,
-                  style: const TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: -0.5,
-                  ),
-                ),
+                child: Text(l10n.budgetsTitle, style: AppText.screenTitle),
               ),
               const SizedBox(height: 16),
               const BudgetsGoalsSwitch(showGoals: true),
@@ -56,9 +49,7 @@ class GoalsPage extends ConsumerWidget {
                 if (goals.isEmpty)
                   Text(
                     l10n.goalsEmpty,
-                    style: TextStyle(
-                      fontSize: 14,
-                      height: 1.5,
+                    style: AppText.body.prose.copyWith(
                       color: colors.inkSecondary,
                     ),
                   )
@@ -97,11 +88,7 @@ class _Summary extends StatelessWidget {
       children: [
         Text(
           l10n.goalsSaved,
-          style: TextStyle(
-            fontSize: 13.5,
-            fontWeight: FontWeight.w500,
-            color: colors.inkSecondary,
-          ),
+          style: AppText.bodySmall.medium.copyWith(color: colors.inkSecondary),
         ),
         CountingValue(
           value: summary.saved.value,
@@ -111,25 +98,19 @@ class _Summary extends StatelessWidget {
               children: [
                 TextSpan(
                   text: l10n.goalsOfTarget(MoneyFormat.amount(summary.target)),
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
+                  style: AppText.bodyLarge.semibold.copyWith(
                     letterSpacing: 0,
                     color: colors.inkSecondary,
                   ),
                 ),
               ],
             ),
-            style: const TextStyle(
-              fontSize: 34,
-              fontWeight: FontWeight.w600,
-              letterSpacing: -1,
-            ),
+            style: AppText.amount(34, inline: true),
           ),
         ),
         Text(
           l10n.goalsInProgress(summary.inProgress),
-          style: TextStyle(fontSize: 12.5, color: colors.inkTertiary),
+          style: AppText.caption.copyWith(color: colors.inkTertiary),
         ),
       ],
     );
@@ -207,10 +188,7 @@ class GoalCard extends ConsumerWidget {
                           Flexible(
                             child: Text(
                               goal.name,
-                              style: const TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                              ),
+                              style: AppText.bodyLarge.semibold,
                             ),
                           ),
                           Icon(
@@ -228,8 +206,7 @@ class GoalCard extends ConsumerWidget {
                                   AppDateFormat.dayMonthYear(date, locale),
                                 ),
                         ),
-                        style: TextStyle(
-                          fontSize: 12.5,
+                        style: AppText.caption.copyWith(
                           color: colors.inkTertiary,
                         ),
                       ),
@@ -241,11 +218,7 @@ class GoalCard extends ConsumerWidget {
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size(0, 36),
                   padding: const EdgeInsets.symmetric(horizontal: 14),
-                  textStyle: const TextStyle(
-                    fontFamily: AppTheme.fontFamily,
-                    fontSize: 13.5,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  textStyle: AppText.bodySmall.semibold,
                 ),
                 onPressed: () => showGoalMovementSheet(
                   context,
@@ -262,22 +235,17 @@ class GoalCard extends ConsumerWidget {
             children: [
               Text(
                 '${MoneyFormat.amount(goal.saved)} ',
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: AppText.headline,
               ),
               Expanded(
                 child: Text(
                   l10n.goalSavedOf(MoneyFormat.amount(goal.target)),
-                  style: TextStyle(fontSize: 13, color: colors.inkSecondary),
+                  style: AppText.label.copyWith(color: colors.inkSecondary),
                 ),
               ),
               Text(
                 '${goal.percent} %',
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
+                style: AppText.label.semibold.copyWith(
                   color: colors.inkSecondary,
                 ),
               ),
@@ -287,9 +255,7 @@ class GoalCard extends ConsumerWidget {
           if (!goal.isReached)
             Text(
               l10n.goalLeft(MoneyFormat.amount(goal.left)),
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
+              style: AppText.label.semibold.copyWith(
                 color: colors.inkSecondary,
               ),
             ),
@@ -305,9 +271,7 @@ class GoalCard extends ConsumerWidget {
               Expanded(
                 child: Text(
                   note,
-                  style: TextStyle(
-                    fontSize: 13,
-                    height: 1.45,
+                  style: AppText.label.prose.copyWith(
                     color: late ? colors.warning : colors.inkSecondary,
                   ),
                 ),
@@ -419,10 +383,7 @@ class GoalsAccountsLink extends ConsumerWidget {
                 children: [
                   Text(
                     l10n.goalsAccountsLink,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: AppText.bodyLarge.semibold,
                   ),
                   Text(
                     summary.count == 0
@@ -431,10 +392,7 @@ class GoalsAccountsLink extends ConsumerWidget {
                             summary.count,
                             MoneyFormat.amount(summary.saved),
                           ),
-                    style: TextStyle(
-                      fontSize: 12.5,
-                      color: colors.inkSecondary,
-                    ),
+                    style: AppText.caption.copyWith(color: colors.inkSecondary),
                   ),
                 ],
               ),

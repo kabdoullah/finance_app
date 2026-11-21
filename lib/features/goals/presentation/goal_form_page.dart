@@ -5,7 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
-import '../../../app/theme/app_theme.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../core/clock.dart';
 import '../../../core/errors/result.dart';
 import '../../../core/formatting/date_format.dart';
@@ -293,13 +293,11 @@ class _GoalFormPageState extends ConsumerState<GoalFormPage> {
           keyboardType: TextInputType.number,
           inputFormatters: const [AmountInputFormatter()],
           onChanged: (_) => _change(() {}),
-          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+          style: AppText.title,
           decoration: InputDecoration(
             hintText: '0',
             suffixText: l10n.currencyLabel,
-            suffixStyle: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
+            suffixStyle: AppText.body.semibold.copyWith(
               color: colors.inkSecondary,
             ),
             errorText:
@@ -338,10 +336,7 @@ class _GoalFormPageState extends ConsumerState<GoalFormPage> {
                     Expanded(
                       child: Text(
                         AppDateFormat.dayMonthYear(date, locale),
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: AppText.bodyLarge.semibold,
                       ),
                     ),
                     Icon(
@@ -356,7 +351,7 @@ class _GoalFormPageState extends ConsumerState<GoalFormPage> {
           if (_errors.contains(GoalFieldError.dateInPast))
             Text(
               l10n.goalErrorDate,
-              style: TextStyle(fontSize: 12.5, color: colors.negative),
+              style: AppText.caption.copyWith(color: colors.negative),
             ),
         ] else ...[
           SegmentedChoice<int>(
@@ -413,9 +408,7 @@ class _EmergencySuggestion extends StatelessWidget {
         children: [
           Text(
             l10n.goalEmergencySuggestion(MoneyFormat.amount(amount)),
-            style: TextStyle(
-              fontSize: 13.5,
-              height: 1.45,
+            style: AppText.bodySmall.prose.copyWith(
               color: colors.onPrimarySoft,
             ),
           ),
@@ -424,11 +417,7 @@ class _EmergencySuggestion extends StatelessWidget {
             style: TextButton.styleFrom(
               foregroundColor: colors.onPrimarySoft,
               padding: EdgeInsets.zero,
-              textStyle: const TextStyle(
-                fontFamily: AppTheme.fontFamily,
-                fontSize: 13.5,
-                fontWeight: FontWeight.w600,
-              ),
+              textStyle: AppText.bodySmall.semibold,
             ),
             child: Text(l10n.budgetUseAmount),
           ),
@@ -481,9 +470,7 @@ class _Plan extends StatelessWidget {
           Expanded(
             child: Text(
               text,
-              style: TextStyle(
-                fontSize: 13.5,
-                height: 1.45,
+              style: AppText.bodySmall.prose.copyWith(
                 color: tooMuch ? colors.warning : colors.onPrimarySoft,
               ),
             ),
@@ -528,7 +515,7 @@ class _CreatedMessage extends StatelessWidget {
           Text(
             l10n.goalCreatedMessage(goal.name),
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+            style: AppText.title,
           ),
           Text(
             l10n.goalCreatedDetail(
@@ -540,7 +527,7 @@ class _CreatedMessage extends StatelessWidget {
                     ),
             ),
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14.5, color: colors.inkSecondary),
+            style: AppText.bodyLarge.copyWith(color: colors.inkSecondary),
           ),
         ],
       ),

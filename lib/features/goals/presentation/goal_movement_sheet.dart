@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../app/theme/app_colors.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../core/errors/result.dart';
 import '../../../core/money/amount_input_formatter.dart';
 import '../../../core/money/money.dart';
@@ -155,7 +156,7 @@ class _GoalMovementSheetState extends ConsumerState<_GoalMovementSheet> {
               _isAdd
                   ? l10n.goalAddTitle(goal.name)
                   : l10n.goalWithdrawTitle(goal.name),
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              style: AppText.sheetTitle,
             ),
             if (_isAdd)
               Text(
@@ -163,7 +164,7 @@ class _GoalMovementSheetState extends ConsumerState<_GoalMovementSheet> {
                   MoneyFormat.amount(goal.saved),
                   MoneyFormat.amount(goal.target),
                 ),
-                style: TextStyle(fontSize: 13.5, color: colors.inkSecondary),
+                style: AppText.bodySmall.copyWith(color: colors.inkSecondary),
               ),
             Wrap(
               spacing: 8,
@@ -196,10 +197,7 @@ class _GoalMovementSheetState extends ConsumerState<_GoalMovementSheet> {
                 keyboardType: TextInputType.number,
                 inputFormatters: const [AmountInputFormatter()],
                 onChanged: (_) => setState(() => _tooLarge = false),
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: AppText.headline,
                 decoration: InputDecoration(
                   hintText: '0',
                   suffixText: l10n.currencyLabel,
@@ -208,14 +206,12 @@ class _GoalMovementSheetState extends ConsumerState<_GoalMovementSheet> {
             if (choices.isEmpty)
               Text(
                 l10n.goalNoAccount,
-                style: TextStyle(fontSize: 13.5, color: colors.inkSecondary),
+                style: AppText.bodySmall.copyWith(color: colors.inkSecondary),
               )
             else ...[
               Text(
                 _isAdd ? l10n.goalFrom : l10n.goalTo,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
+                style: AppText.label.medium.copyWith(
                   color: colors.inkSecondary,
                 ),
               ),
@@ -241,24 +237,16 @@ class _GoalMovementSheetState extends ConsumerState<_GoalMovementSheet> {
             if (overLimit || _tooLarge)
               Text(
                 l10n.goalAmountTooLarge,
-                style: TextStyle(fontSize: 13, color: colors.negative),
+                style: AppText.label.copyWith(color: colors.negative),
               )
             else if (!_isAdd && delayWeeks != null && goal.targetDate != null)
               Text(
                 l10n.goalWithdrawDelay(delayWeeks),
-                style: TextStyle(
-                  fontSize: 13.5,
-                  height: 1.45,
-                  color: colors.warning,
-                ),
+                style: AppText.bodySmall.prose.copyWith(color: colors.warning),
               ),
             Text(
               l10n.goalReservedNote,
-              style: TextStyle(
-                fontSize: 12.5,
-                height: 1.45,
-                color: colors.inkTertiary,
-              ),
+              style: AppText.caption.prose.copyWith(color: colors.inkTertiary),
             ),
             FilledButton(
               onPressed:

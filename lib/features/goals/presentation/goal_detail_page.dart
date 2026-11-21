@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../core/clock.dart';
 import '../../../core/errors/result.dart';
 import '../../../core/formatting/date_format.dart';
@@ -75,20 +76,14 @@ class GoalDetailPage extends ConsumerWidget {
                 children: [
                   TextSpan(
                     text: l10n.goalsOfTarget(MoneyFormat.amount(goal.target)),
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
+                    style: AppText.bodyLarge.semibold.copyWith(
                       letterSpacing: 0,
                       color: colors.inkSecondary,
                     ),
                   ),
                 ],
               ),
-              style: const TextStyle(
-                fontSize: 38,
-                fontWeight: FontWeight.w600,
-                letterSpacing: -1,
-              ),
+              style: AppText.amount(38, inline: true),
             ),
           ),
           const SizedBox(height: 12),
@@ -99,7 +94,7 @@ class GoalDetailPage extends ConsumerWidget {
               Expanded(
                 child: Text(
                   l10n.goalLeft(MoneyFormat.amount(goal.left)),
-                  style: TextStyle(fontSize: 13, color: colors.inkSecondary),
+                  style: AppText.label.copyWith(color: colors.inkSecondary),
                 ),
               ),
               Flexible(
@@ -110,7 +105,7 @@ class GoalDetailPage extends ConsumerWidget {
                           AppDateFormat.dayMonthYear(date, locale),
                         ),
                   textAlign: TextAlign.end,
-                  style: TextStyle(fontSize: 13, color: colors.inkSecondary),
+                  style: AppText.label.copyWith(color: colors.inkSecondary),
                 ),
               ),
             ],
@@ -159,13 +154,7 @@ class GoalDetailPage extends ConsumerWidget {
               spacing: 12,
               children: [
                 if (perMonth != null && perWeek != null) ...[
-                  Text(
-                    l10n.goalEffort,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  Text(l10n.goalEffort, style: AppText.bodyLarge.semibold),
                   Row(
                     spacing: 12,
                     children: [
@@ -210,9 +199,7 @@ class GoalDetailPage extends ConsumerWidget {
                               l10n.goalPace(MoneyFormat.amount(pace)),
                             ?advice?.text(l10n, locale),
                           ].join(' '),
-                          style: TextStyle(
-                            fontSize: 13.5,
-                            height: 1.45,
+                          style: AppText.bodySmall.prose.copyWith(
                             color: late ? colors.warning : colors.inkSecondary,
                           ),
                         ),
@@ -231,16 +218,13 @@ class GoalDetailPage extends ConsumerWidget {
                   ),
                 Text(
                   l10n.goalComputedBy,
-                  style: TextStyle(fontSize: 12, color: colors.inkTertiary),
+                  style: AppText.small.copyWith(color: colors.inkTertiary),
                 ),
               ],
             ),
           ),
           const SizedBox(height: 28),
-          Text(
-            l10n.goalHistory,
-            style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-          ),
+          Text(l10n.goalHistory, style: AppText.sectionTitle),
           const SizedBox(height: 4),
           _History(goalId: goalId),
         ],
@@ -352,13 +336,10 @@ class _EffortCell extends StatelessWidget {
     crossAxisAlignment: CrossAxisAlignment.start,
     spacing: 2,
     children: [
-      Text(
-        value,
-        style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-      ),
+      Text(value, style: AppText.title),
       Text(
         unit,
-        style: TextStyle(fontSize: 12.5, color: context.colors.inkSecondary),
+        style: AppText.caption.copyWith(color: context.colors.inkSecondary),
       ),
     ],
   );
@@ -380,7 +361,7 @@ class _History extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(vertical: 12),
         child: Text(
           l10n.goalHistoryEmpty,
-          style: TextStyle(fontSize: 14, color: colors.inkSecondary),
+          style: AppText.body.copyWith(color: colors.inkSecondary),
         ),
       );
     }
@@ -441,23 +422,18 @@ class _MovementRow extends StatelessWidget {
               children: [
                 Text(
                   isIn ? l10n.goalContribution : l10n.goalWithdrawal,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: AppText.bodyLarge.semibold,
                 ),
                 Text(
                   '$day · $account',
-                  style: TextStyle(fontSize: 12.5, color: colors.inkSecondary),
+                  style: AppText.caption.copyWith(color: colors.inkSecondary),
                 ),
               ],
             ),
           ),
           Text(
             MoneyFormat.signed(movement.signed),
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
+            style: AppText.bodyLarge.semibold.copyWith(
               color: isIn ? colors.positive : colors.ink,
             ),
           ),
