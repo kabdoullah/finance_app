@@ -3,11 +3,12 @@ import 'package:material_ui/material_ui.dart';
 
 import 'app_colors.dart';
 import 'app_icons.dart';
+import 'app_text.dart';
 
 /// Thème global : Manrope seule, chiffres tabulaires partout (les montants
 /// restent alignés), couleurs issues de [AppColors].
 abstract final class AppTheme {
-  static const fontFamily = 'Manrope';
+  static const fontFamily = AppText.fontFamily;
 
   static final ThemeData light = _build(AppColors.light, Brightness.light);
   static final ThemeData dark = _build(AppColors.dark, Brightness.dark);
@@ -74,12 +75,7 @@ abstract final class AppTheme {
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: true,
-        titleTextStyle: TextStyle(
-          fontFamily: fontFamily,
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-          color: colors.ink,
-        ),
+        titleTextStyle: AppText.subtitle.copyWith(color: colors.ink),
       ),
       actionIconTheme: ActionIconThemeData(
         backButtonIconBuilder: (_) =>
@@ -111,7 +107,7 @@ abstract final class AppTheme {
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: colors.primary,
-          textStyle: _buttonText.copyWith(fontSize: 14),
+          textStyle: AppText.body.semibold,
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
@@ -127,7 +123,7 @@ abstract final class AppTheme {
         focusedBorder: _inputBorder(colors.primary),
         errorBorder: _inputBorder(colors.negative),
         focusedErrorBorder: _inputBorder(colors.negative),
-        errorStyle: TextStyle(color: colors.negative, fontSize: 12.5),
+        errorStyle: AppText.caption.copyWith(color: colors.negative),
       ),
       // Bouton « Ajouter » : pilule libellée, toujours au même endroit.
       floatingActionButtonTheme: FloatingActionButtonThemeData(
@@ -152,11 +148,7 @@ abstract final class AppTheme {
     );
   }
 
-  static const _buttonText = TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 15,
-    fontWeight: FontWeight.w600,
-  );
+  static final _buttonText = AppText.bodyLarge.semibold;
 
   static OutlineInputBorder _inputBorder(Color color) => OutlineInputBorder(
     borderRadius: BorderRadius.circular(14),

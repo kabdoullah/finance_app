@@ -6,6 +6,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../core/clock.dart';
 import '../../../core/formatting/date_format.dart';
 import '../../../core/formatting/relative_date.dart';
@@ -147,7 +148,7 @@ class _MonthTotals extends ConsumerWidget {
               Flexible(
                 child: Text(
                   label,
-                  style: TextStyle(fontSize: 13, color: colors.inkSecondary),
+                  style: AppText.label.copyWith(color: colors.inkSecondary),
                 ),
               ),
             ],
@@ -155,12 +156,7 @@ class _MonthTotals extends ConsumerWidget {
           // Entrées en vert, sorties en terracotta (maquette).
           Text(
             masked ? MoneyFormat.masked : MoneyFormat.amount(amount),
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              letterSpacing: -0.4,
-              color: iconColor,
-            ),
+            style: AppText.amount(20, inline: true).copyWith(color: iconColor),
           ),
         ],
       ),
@@ -244,10 +240,7 @@ class _WhereMoneyGoes extends ConsumerWidget {
                 header: true,
                 child: Text(
                   l10n.dashboardWhereMoney,
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: AppText.sectionTitle,
                 ),
               ),
             ),
@@ -256,7 +249,7 @@ class _WhereMoneyGoes extends ConsumerWidget {
               child: Text(
                 monthName,
                 textAlign: TextAlign.end,
-                style: TextStyle(fontSize: 13, color: colors.inkTertiary),
+                style: AppText.label.copyWith(color: colors.inkTertiary),
               ),
             ),
           ],
@@ -326,10 +319,7 @@ class _WhereMoneyGoes extends ConsumerWidget {
                               name(share),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
+                              style: AppText.body.medium,
                             ),
                           ),
                           Flexible(
@@ -337,8 +327,7 @@ class _WhereMoneyGoes extends ConsumerWidget {
                               l10n.dashboardShare(share.percent),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 14,
+                              style: AppText.body.copyWith(
                                 color: colors.inkTertiary,
                               ),
                             ),
@@ -350,10 +339,7 @@ class _WhereMoneyGoes extends ConsumerWidget {
                       ref.watch(amountsHiddenProvider)
                           ? MoneyFormat.masked
                           : MoneyFormat.amount(share.amount),
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: AppText.body.semibold,
                     ),
                   ],
                 ),
@@ -374,7 +360,7 @@ class _WhereMoneyGoes extends ConsumerWidget {
                           name(share),
                       ].join(', '),
                     ),
-                    style: TextStyle(fontSize: 12.5, color: colors.inkTertiary),
+                    style: AppText.caption.copyWith(color: colors.inkTertiary),
                   ),
                 ),
             ],
@@ -409,13 +395,7 @@ class _Budgets extends ConsumerWidget {
             Expanded(
               child: Semantics(
                 header: true,
-                child: Text(
-                  l10n.budgetWatchTitle,
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                child: Text(l10n.budgetWatchTitle, style: AppText.sectionTitle),
               ),
             ),
             TextButton(
@@ -512,21 +492,14 @@ class _AccountsStrip extends ConsumerWidget {
                       name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 12.5,
+                      style: AppText.caption.copyWith(
                         color: colors.inkSecondary,
                       ),
                     ),
                     FittedBox(
                       fit: BoxFit.scaleDown,
                       alignment: Alignment.centerLeft,
-                      child: Text(
-                        value,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                      child: Text(value, style: AppText.bodyLarge.semibold),
                     ),
                   ],
                 ),
@@ -548,10 +521,7 @@ class _AccountsStrip extends ConsumerWidget {
                 header: true,
                 child: Text(
                   l10n.dashboardAccountsTitle,
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: AppText.sectionTitle,
                 ),
               ),
             ),
@@ -607,13 +577,7 @@ class _RecentOperations extends ConsumerWidget {
             Expanded(
               child: Semantics(
                 header: true,
-                child: Text(
-                  l10n.dashboardRecent,
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                child: Text(l10n.dashboardRecent, style: AppText.sectionTitle),
               ),
             ),
             TextButton(
@@ -652,16 +616,10 @@ class _Header extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 2,
             children: [
-              Text(
-                context.l10n.dashboardWelcome,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              Text(context.l10n.dashboardWelcome, style: AppText.subtitle),
               Text(
                 capitalized,
-                style: TextStyle(fontSize: 13, color: colors.inkTertiary),
+                style: AppText.label.copyWith(color: colors.inkTertiary),
               ),
             ],
           ),
@@ -708,11 +666,7 @@ class _Balance extends StatelessWidget {
             Flexible(
               child: Text(
                 l10n.dashboardBalanceCount(summary.count),
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: colors.inkSecondary,
-                ),
+                style: AppText.body.medium.copyWith(color: colors.inkSecondary),
               ),
             ),
             if (hasAccounts)
@@ -755,7 +709,7 @@ class _Balance extends StatelessWidget {
         if (!hasAccounts)
           Text(
             l10n.dashboardEmptyBalanceHint,
-            style: TextStyle(fontSize: 13.5, color: colors.inkSecondary),
+            style: AppText.bodySmall.copyWith(color: colors.inkSecondary),
           ),
       ],
     );
@@ -779,7 +733,7 @@ class _GetStarted extends StatelessWidget {
             header: true,
             child: Text(
               l10n.dashboardGetStartedTitle,
-              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+              style: AppText.sectionTitle,
             ),
           ),
         ),
@@ -870,11 +824,7 @@ class _StepRow extends StatelessWidget {
                   ? Icon(AppIcons.checkBold, size: 16, color: badgeInk)
                   : Text(
                       '$number',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: badgeInk,
-                      ),
+                      style: AppText.body.bold.copyWith(color: badgeInk),
                     ),
             ),
             Expanded(
@@ -882,16 +832,10 @@ class _StepRow extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 spacing: 2,
                 children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  Text(title, style: AppText.bodyLarge.semibold),
                   Text(
                     subtitle,
-                    style: TextStyle(fontSize: 12.5, color: colors.inkTertiary),
+                    style: AppText.caption.copyWith(color: colors.inkTertiary),
                   ),
                 ],
               ),
@@ -938,10 +882,7 @@ class _CopilotHint extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: 6,
               children: [
-                Text(
-                  l10n.dashboardCopilotHint,
-                  style: const TextStyle(fontSize: 14.5, height: 1.5),
-                ),
+                Text(l10n.dashboardCopilotHint, style: AppText.bodyLarge.prose),
                 TextButton(
                   onPressed: () => context.go(AppRoutes.assistant),
                   style: TextButton.styleFrom(
@@ -965,11 +906,7 @@ class _PrivacyNote extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final style = TextStyle(
-      fontSize: 13,
-      height: 1.5,
-      color: colors.inkTertiary,
-    );
+    final style = AppText.label.prose.copyWith(color: colors.inkTertiary);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 8,
@@ -1041,9 +978,7 @@ class _CopilotInsight extends ConsumerWidget {
               Expanded(
                 child: Text(
                   insight.text,
-                  style: TextStyle(
-                    fontSize: 14.5,
-                    height: 1.4,
+                  style: AppText.bodyLarge.prose.copyWith(
                     color: colors.onPrimarySoft,
                   ),
                 ),
@@ -1118,10 +1053,7 @@ class _ForecastCard extends ConsumerWidget {
                 header: true,
                 child: Text(
                   l10n.homeForecastTitle,
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: AppText.sectionTitle,
                 ),
               ),
             ),
@@ -1129,22 +1061,18 @@ class _ForecastCard extends ConsumerWidget {
               child: Text(
                 RelativeDate.capitalize(l10n.forecastReliability(level)),
                 textAlign: TextAlign.end,
-                style: TextStyle(fontSize: 13, color: colors.inkTertiary),
+                style: AppText.label.copyWith(color: colors.inkTertiary),
               ),
             ),
           ],
         ),
         Text(
           '≈ ${amount(forecast.endBalance)} ${l10n.currencyLabel}',
-          style: const TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.w600,
-            letterSpacing: -0.4,
-          ),
+          style: AppText.amount(24, inline: true),
         ),
         Text(
           l10n.homeForecastRange(amount(low), amount(high)),
-          style: TextStyle(fontSize: 13, color: colors.inkSecondary),
+          style: AppText.label.copyWith(color: colors.inkSecondary),
         ),
         if (!masked)
           ForecastChart(

@@ -6,7 +6,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
-import '../../../app/theme/app_theme.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../app/theme/motion.dart';
 import '../../../core/clock.dart';
 import '../../../core/formatting/relative_date.dart';
@@ -106,11 +106,7 @@ class _SpendingCalendarState extends ConsumerState<SpendingCalendar> {
                 header: true,
                 child: Text(
                   l10n.calTitle,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: -0.2,
-                  ),
+                  style: AppText.sheetTitle.bold.copyWith(letterSpacing: -0.2),
                 ),
               ),
             ),
@@ -126,10 +122,7 @@ class _SpendingCalendarState extends ConsumerState<SpendingCalendar> {
                 // Maquette : « Novembre 2026 ».
                 spendingMonthLabel(relative, month, withYear: true),
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                ),
+                style: AppText.body.bold,
               ),
             ),
             IconButton(
@@ -205,11 +198,7 @@ class _SpendingCalendarState extends ConsumerState<SpendingCalendar> {
                     style: TextButton.styleFrom(
                       minimumSize: const Size(0, 40),
                       foregroundColor: colors.ink,
-                      textStyle: const TextStyle(
-                        fontFamily: AppTheme.fontFamily,
-                        fontSize: 13.5,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      textStyle: AppText.bodySmall.semibold,
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -332,9 +321,7 @@ class SpendingCalendarGrid extends StatelessWidget {
                   child: Text(
                     letter.toUpperCase(),
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
+                    style: AppText.small.semibold.copyWith(
                       color: colors.inkTertiary,
                     ),
                   ),
@@ -435,8 +422,7 @@ class _DayCell extends StatelessWidget {
             children: [
               Text(
                 '${day.day}',
-                style: TextStyle(
-                  fontSize: 14,
+                style: AppText.body.copyWith(
                   fontWeight: isToday || selected
                       ? FontWeight.w700
                       : FontWeight.w500,
@@ -485,7 +471,7 @@ class _Legend extends StatelessWidget {
         Flexible(
           child: Text(
             label,
-            style: TextStyle(fontSize: 11.5, color: colors.inkSecondary),
+            style: AppText.tag.copyWith(color: colors.inkSecondary),
           ),
         ),
       ],
@@ -568,7 +554,7 @@ class _DayPanel extends ConsumerWidget {
     if (day == null) {
       return Text(
         spending.isEmpty ? l10n.calDayEmptyMonth(monthName) : l10n.calDayEmpty,
-        style: TextStyle(fontSize: 14, color: colors.inkSecondary),
+        style: AppText.body.copyWith(color: colors.inkSecondary),
       );
     }
     final dues = spending.duesOn(day);
@@ -612,21 +598,13 @@ class _DayPanel extends ConsumerWidget {
             textBaseline: TextBaseline.alphabetic,
             spacing: 10,
             children: [
-              Expanded(
-                child: Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
+              Expanded(child: Text(title, style: AppText.bodyLarge.bold)),
               if (summary.isNotEmpty)
                 Flexible(
                   child: Text(
                     summary,
                     textAlign: TextAlign.end,
-                    style: TextStyle(fontSize: 13, color: colors.inkSecondary),
+                    style: AppText.label.copyWith(color: colors.inkSecondary),
                   ),
                 ),
             ],
@@ -663,8 +641,7 @@ class _DayPanel extends ConsumerWidget {
                         : day.isAfter(today)
                         ? l10n.calDayEmptyFuture
                         : l10n.calDayEmpty,
-                    style: TextStyle(
-                      fontSize: 13.5,
+                    style: AppText.bodySmall.copyWith(
                       color: colors.inkSecondary,
                     ),
                   ),
@@ -697,11 +674,7 @@ class _DayPanel extends ConsumerWidget {
                 padding: EdgeInsets.zero,
                 minimumSize: const Size(0, 44),
                 foregroundColor: colors.ink,
-                textStyle: const TextStyle(
-                  fontFamily: AppTheme.fontFamily,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                ),
+                textStyle: AppText.body.semibold,
               ),
             ),
           ),
@@ -764,7 +737,7 @@ class MonthSpendingSummary extends ConsumerWidget {
         children: [
           Text(
             label,
-            style: TextStyle(fontSize: 12, color: colors.inkSecondary),
+            style: AppText.small.copyWith(color: colors.inkSecondary),
           ),
           FittedBox(
             fit: BoxFit.scaleDown,
@@ -773,11 +746,7 @@ class MonthSpendingSummary extends ConsumerWidget {
               value: value.value,
               builder: (context, v) => Text(
                 amount(Money(v)),
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w700,
-                  color: color,
-                ),
+                style: AppText.sectionTitle.bold.copyWith(color: color),
               ),
             ),
           ),
@@ -795,10 +764,7 @@ class MonthSpendingSummary extends ConsumerWidget {
               Expanded(
                 child: Text(
                   l10n.spendTitle(monthName),
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                  ),
+                  style: AppText.body.bold,
                 ),
               ),
               if (onOpen != null)
@@ -856,11 +822,7 @@ class MonthSpendingSummary extends ConsumerWidget {
         ),
         Text(
           note,
-          style: TextStyle(
-            fontSize: 13,
-            height: 1.4,
-            color: colors.inkSecondary,
-          ),
+          style: AppText.label.prose.copyWith(color: colors.inkSecondary),
         ),
       ],
     );

@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
 import '../../app/theme/app_colors.dart';
+import '../../app/theme/app_text.dart';
 import '../../l10n/l10n.dart';
 import '../money/money.dart';
 
@@ -42,20 +43,14 @@ class AmountDisplay extends StatelessWidget {
             text,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.w600,
-              letterSpacing: -0.035 * fontSize,
-              height: 1,
+            style: AppText.amount(fontSize).copyWith(
               color: amount.isNegative ? colors.negative : color ?? colors.ink,
             ),
           ),
         ),
         Text(
           context.l10n.currencyLabel,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
+          style: AppText.subtitle.copyWith(
             color: currencyColor ?? colors.inkSecondary,
           ),
         ),
