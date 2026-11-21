@@ -6,12 +6,14 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../core/clock.dart';
 import '../../../core/errors/error_reporter.dart';
 import '../../../core/formatting/date_format.dart';
 import '../../../core/formatting/relative_date.dart';
 import '../../../core/time/month.dart';
 import '../../../core/widgets/confirm_dialog.dart';
+import '../../../core/widgets/section_label.dart';
 import '../../../l10n/l10n.dart';
 import '../../assistant/presentation/ai_model_controller.dart';
 import '../../assistant/presentation/assistant_controller.dart';
@@ -84,12 +86,12 @@ class SettingsPage extends ConsumerWidget {
               Expanded(
                 child: Text(
                   l10n.settingsLocalOnly,
-                  style: TextStyle(fontSize: 14, color: colors.inkSecondary),
+                  style: AppText.body.copyWith(color: colors.inkSecondary),
                 ),
               ),
             ],
           ),
-          _SectionLabel(l10n.settingsPrefsSection),
+          SectionLabel(l10n.settingsPrefsSection),
           _SettingsRow(
             icon: AppIcons.money,
             title: l10n.settingsCurrency,
@@ -132,14 +134,14 @@ class SettingsPage extends ConsumerWidget {
             onChanged: ref.read(hideAmountsSettingProvider.notifier).set,
             title: Text(
               l10n.settingsHideAmounts,
-              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+              style: AppText.bodyLarge.semibold,
             ),
             subtitle: Text(
               l10n.settingsHideAmountsHint,
-              style: TextStyle(fontSize: 12.5, color: colors.inkTertiary),
+              style: AppText.caption.copyWith(color: colors.inkTertiary),
             ),
           ),
-          _SectionLabel(l10n.settingsNotifSection),
+          SectionLabel(l10n.settingsNotifSection),
           for (final (kind, title, hint) in [
             (
               NoticeKind.reminder,
@@ -164,28 +166,22 @@ class SettingsPage extends ConsumerWidget {
               onChanged: (value) => ref
                   .read(notificationSchedulerProvider.notifier)
                   .setEnabled(kind, value),
-              title: Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              title: Text(title, style: AppText.bodyLarge.semibold),
               subtitle: Text(
                 hint,
-                style: TextStyle(fontSize: 12.5, color: colors.inkTertiary),
+                style: AppText.caption.copyWith(color: colors.inkTertiary),
               ),
             ),
-          _SectionLabel(l10n.settingsSecuritySection),
+          SectionLabel(l10n.settingsSecuritySection),
           const _LockSettings(),
           _SettingsRow(
             icon: AppIcons.shieldCheck,
             title: l10n.settingsPrivacy,
             subtitle: l10n.settingsPrivacyHint,
           ),
-          _SectionLabel(l10n.bkSection),
+          SectionLabel(l10n.bkSection),
           const _BackupSettings(),
-          _SectionLabel(l10n.settingsAiSection),
+          SectionLabel(l10n.settingsAiSection),
           _SettingsRow(
             icon: AppIcons.chatCircleText,
             title: l10n.settingsAiModel,
@@ -206,11 +202,11 @@ class SettingsPage extends ConsumerWidget {
             onChanged: ref.read(suggestionsSettingProvider.notifier).set,
             title: Text(
               l10n.settingsSuggestions,
-              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+              style: AppText.bodyLarge.semibold,
             ),
             subtitle: Text(
               l10n.settingsSuggestionsHint,
-              style: TextStyle(fontSize: 12.5, color: colors.inkTertiary),
+              style: AppText.caption.copyWith(color: colors.inkTertiary),
             ),
           ),
           _SettingsRow(
@@ -222,7 +218,7 @@ class SettingsPage extends ConsumerWidget {
           Text(
             l10n.settingsFooter(l10n.appTitle, _appVersion),
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 12, color: colors.inkTertiary),
+            style: AppText.small.copyWith(color: colors.inkTertiary),
           ),
         ],
       ),
@@ -245,9 +241,7 @@ Future<void> _chooseMonthStart(BuildContext context, WidgetRef ref) async {
           padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
           child: Text(
             l10n.settingsMonthStartExplain,
-            style: TextStyle(
-              fontSize: 13.5,
-              height: 1.4,
+            style: AppText.bodySmall.prose.copyWith(
               color: context.colors.inkSecondary,
             ),
           ),
@@ -430,7 +424,7 @@ class _BackupSettings extends ConsumerWidget {
                   failure == BackupFailure.storageFull
                       ? l10n.bkFailedStorage
                       : l10n.bkFailedOther,
-                  style: const TextStyle(fontSize: 13.5, height: 1.4),
+                  style: AppText.bodySmall.prose,
                 ),
                 TextButton(
                   onPressed: () => _backup(context, ref),
@@ -527,9 +521,8 @@ class _LockSettings extends ConsumerWidget {
     final colors = context.colors;
     final l10n = context.l10n;
     final lock = ref.watch(lockControllerProvider);
-    TextStyle subtitle() =>
-        TextStyle(fontSize: 12.5, color: colors.inkTertiary);
-    const title = TextStyle(fontSize: 15, fontWeight: FontWeight.w600);
+    TextStyle subtitle() => AppText.caption.copyWith(color: colors.inkTertiary);
+    final title = AppText.bodyLarge.semibold;
     return Column(
       children: [
         SwitchListTile(
@@ -571,26 +564,6 @@ String _delayLabel(LockDelay delay, AppLocalizations l10n) => switch (delay) {
   LockDelay.oneMinute => l10n.lockDelayOneMinute,
   LockDelay.fiveMinutes => l10n.lockDelayFiveMinutes,
 };
-
-class _SectionLabel extends StatelessWidget {
-  const _SectionLabel(this.label);
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(top: 24, bottom: 4),
-    child: Text(
-      label.toUpperCase(),
-      style: TextStyle(
-        fontSize: 12,
-        fontWeight: FontWeight.w600,
-        letterSpacing: 0.6,
-        color: context.colors.inkTertiary,
-      ),
-    ),
-  );
-}
 
 class _SettingsRow extends StatelessWidget {
   const _SettingsRow({
@@ -639,18 +612,11 @@ class _SettingsRow extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 spacing: 2,
                 children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  Text(title, style: AppText.bodyLarge.semibold),
                   if (subtitle case final text?)
                     Text(
                       text,
-                      style: TextStyle(
-                        fontSize: 12.5,
+                      style: AppText.caption.copyWith(
                         color: colors.inkTertiary,
                       ),
                     ),
@@ -669,9 +635,7 @@ class _SettingsRow extends StatelessWidget {
                 ),
                 child: Text(
                   label,
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
+                  style: AppText.small.semibold.copyWith(
                     color: ok ? colors.onPrimarySoft : colors.inkSecondary,
                   ),
                 ),
@@ -679,7 +643,7 @@ class _SettingsRow extends StatelessWidget {
             if (value case final text?)
               Text(
                 text,
-                style: TextStyle(fontSize: 14, color: colors.inkSecondary),
+                style: AppText.body.copyWith(color: colors.inkSecondary),
               ),
             if (onTap != null)
               Icon(AppIcons.caretRight, size: 14, color: colors.inkTertiary),

@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../l10n/l10n.dart';
 import '../domain/pin_policy.dart';
 
@@ -69,10 +70,7 @@ class _PinPadState extends State<PinPad> {
       ),
     );
     Widget digit(String d) => key(
-      Text(
-        d,
-        style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w500),
-      ),
+      Text(d, style: AppText.pinKey),
       onTap: widget.enabled ? () => _digit(d) : null,
       label: d,
     );
@@ -83,7 +81,7 @@ class _PinPadState extends State<PinPad> {
         Text(
           widget.title,
           textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+          style: AppText.headline,
         ),
         const SizedBox(height: 20),
         Row(
@@ -110,8 +108,7 @@ class _PinPadState extends State<PinPad> {
                 : Text(
                     widget.message!,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 14,
+                    style: AppText.body.copyWith(
                       color: widget.messageIsError
                           ? colors.negative
                           : colors.inkSecondary,

@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../l10n/l10n.dart';
 import '../domain/pin_policy.dart';
 import 'lock_controller.dart';
@@ -170,7 +171,7 @@ class _LockScreenState extends ConsumerState<_LockScreen> {
                 const SizedBox(height: 8),
                 Text(
                   l10n.appTitle,
-                  style: TextStyle(fontSize: 14, color: colors.inkSecondary),
+                  style: AppText.body.copyWith(color: colors.inkSecondary),
                 ),
                 const SizedBox(height: 16),
                 PinPad(
@@ -191,9 +192,7 @@ class _LockScreenState extends ConsumerState<_LockScreen> {
                     child: Text(
                       l10n.lockForgotBody,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 13.5,
-                        height: 1.45,
+                      style: AppText.bodySmall.prose.copyWith(
                         color: colors.inkSecondary,
                       ),
                     ),

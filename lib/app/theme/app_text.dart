@@ -133,6 +133,14 @@ abstract final class AppText {
     fontWeight: FontWeight.w600,
   );
 
+  /// Chiffre d'une touche du pavé du code PIN.
+  static const pinKey = TextStyle(
+    fontFamily: fontFamily,
+    fontFeatures: _tabular,
+    fontSize: 28,
+    fontWeight: FontWeight.w500,
+  );
+
   // Montants.
 
   /// Grand montant : chiffres serrés de 3,5 % de la taille, sans interligne,

@@ -3,7 +3,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
-import '../../../app/theme/app_theme.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../core/errors/result.dart';
 import '../../../core/widgets/choice_pill.dart';
 import '../../../core/widgets/confirm_dialog.dart';
@@ -127,13 +127,7 @@ class _CategoriesPageState extends ConsumerState<CategoriesPage> {
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Text(
-                  sub.name,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                child: Text(sub.name, style: AppText.sheetTitle),
               ),
             ),
             for (final (key, label, icon, enabled) in [
@@ -223,11 +217,7 @@ class _CategoriesPageState extends ConsumerState<CategoriesPage> {
           const SizedBox(height: 22),
           Text(
             l10n.categoriesFootnote,
-            style: TextStyle(
-              fontSize: 12.5,
-              height: 1.5,
-              color: colors.inkTertiary,
-            ),
+            style: AppText.caption.prose.copyWith(color: colors.inkTertiary),
           ),
         ],
       ),
@@ -268,10 +258,7 @@ class _CategoryTile extends StatelessWidget {
         color: bg,
         borderRadius: BorderRadius.circular(6),
       ),
-      child: Text(
-        text,
-        style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: fg),
-      ),
+      child: Text(text, style: AppText.tag.bold.copyWith(color: fg)),
     );
 
     final header = InkWell(
@@ -304,13 +291,7 @@ class _CategoryTile extends StatelessWidget {
                     runSpacing: 4,
                     crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
-                      Text(
-                        category.name,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                      Text(category.name, style: AppText.bodyLarge.semibold),
                       if (category.isCustom)
                         badge(
                           l10n.categoryCustom,
@@ -327,7 +308,7 @@ class _CategoryTile extends StatelessWidget {
                   ),
                   Text(
                     l10n.categorySubCount(group.children.length),
-                    style: TextStyle(fontSize: 12.5, color: colors.inkTertiary),
+                    style: AppText.caption.copyWith(color: colors.inkTertiary),
                   ),
                 ],
               ),
@@ -386,11 +367,7 @@ class _CategoryTile extends StatelessWidget {
                           foregroundColor: colors.primary,
                           backgroundColor: Colors.transparent,
                           side: BorderSide(color: colors.inkTertiary),
-                          textStyle: const TextStyle(
-                            fontFamily: AppTheme.fontFamily,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                          ),
+                          textStyle: AppText.label.semibold,
                         ),
                       ),
                     ],
@@ -543,10 +520,7 @@ class _CategorySheetState extends ConsumerState<_CategorySheet> {
             children: [
               Text(
                 parent == null ? l10n.categoriesNew : l10n.categoriesNewSub,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: AppText.sheetTitle,
               ),
               _Field(
                 label: l10n.categoryName,
@@ -669,10 +643,7 @@ class _RenameSheetState extends ConsumerState<_RenameSheet> {
             children: [
               Text(
                 l10n.categoryRenameTitle(widget.category.name),
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: AppText.sheetTitle,
               ),
               TextField(
                 controller: _name,
@@ -717,9 +688,7 @@ class _Field extends StatelessWidget {
     children: [
       Text(
         label,
-        style: TextStyle(
-          fontSize: 13,
-          fontWeight: FontWeight.w500,
+        style: AppText.label.medium.copyWith(
           color: context.colors.inkSecondary,
         ),
       ),

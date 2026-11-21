@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../app/theme/app_colors.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../l10n/l10n.dart';
 import '../domain/pin_policy.dart';
 import 'lock_controller.dart';
@@ -117,7 +118,9 @@ class _PinFlowPageState extends ConsumerState<PinFlowPage> {
                   Text(
                     l10n.pinCreateHint,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 15, color: colors.inkSecondary),
+                    style: AppText.bodyLarge.copyWith(
+                      color: colors.inkSecondary,
+                    ),
                   ),
                   const SizedBox(height: 12),
                   Container(
@@ -128,7 +131,7 @@ class _PinFlowPageState extends ConsumerState<PinFlowPage> {
                     ),
                     child: Text(
                       l10n.pinCreateWarning,
-                      style: const TextStyle(fontSize: 13.5, height: 1.4),
+                      style: AppText.bodySmall.prose,
                     ),
                   ),
                   const SizedBox(height: 24),
