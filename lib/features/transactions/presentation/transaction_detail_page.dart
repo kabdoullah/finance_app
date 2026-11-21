@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../core/clock.dart';
 import '../../../core/errors/result.dart';
 import '../../../core/formatting/relative_date.dart';
@@ -212,10 +213,7 @@ class _TransactionDetailPageState extends ConsumerState<TransactionDetailPage> {
               Text(
                 t.title(l10n),
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: AppText.bodyLarge.semibold,
               ),
               Text.rich(
                 TextSpan(
@@ -223,27 +221,22 @@ class _TransactionDetailPageState extends ConsumerState<TransactionDetailPage> {
                   children: [
                     TextSpan(
                       text: l10n.currencyLabel,
-                      style: TextStyle(
-                        fontSize: 16,
+                      style: AppText.subtitle.copyWith(
+                        letterSpacing: 0,
                         color: colors.inkSecondary,
                       ),
                     ),
                   ],
                 ),
-                style: TextStyle(
-                  fontSize: 38,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: -1.3,
-                  height: 1,
-                  color: t.amountColor(colors),
-                ),
+                style: AppText.amount(38)
+                    .copyWith(color: t.amountColor(colors)),
               ),
               Text(
                 l10n.txKindWhen(
                   t.kind.label(l10n),
                   relative.dayAndTime(t.occurredAt),
                 ),
-                style: TextStyle(fontSize: 13, color: colors.inkSecondary),
+                style: AppText.label.copyWith(color: colors.inkSecondary),
               ),
             ],
           ),
@@ -354,10 +347,7 @@ class _TransactionDetailPageState extends ConsumerState<TransactionDetailPage> {
                     keyboardType: TextInputType.number,
                     inputFormatters: const [AmountInputFormatter(maxDigits: 9)],
                     onChanged: (_) => setState(() {}),
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: AppText.title,
                     decoration: InputDecoration(suffixText: l10n.currencyLabel),
                   ),
                   const SizedBox(height: 20),
@@ -523,10 +513,7 @@ class _InfoRow extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          Text(
-            label,
-            style: TextStyle(fontSize: 14, color: colors.inkSecondary),
-          ),
+          Text(label, style: AppText.body.copyWith(color: colors.inkSecondary)),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -535,15 +522,12 @@ class _InfoRow extends StatelessWidget {
                 Text(
                   value,
                   textAlign: TextAlign.right,
-                  style: const TextStyle(
-                    fontSize: 14.5,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: AppText.bodyLarge.semibold,
                 ),
                 if (secondary != null)
                   Text(
                     secondary!,
-                    style: TextStyle(fontSize: 12.5, color: colors.inkTertiary),
+                    style: AppText.caption.copyWith(color: colors.inkTertiary),
                   ),
               ],
             ),
@@ -589,11 +573,7 @@ class _ActionRow extends StatelessWidget {
           Expanded(
             child: Text(
               label,
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                color: color,
-              ),
+              style: AppText.bodyLarge.semibold.copyWith(color: color),
             ),
           ),
           if (showChevron)
@@ -618,11 +598,7 @@ class _Label extends StatelessWidget {
     padding: const EdgeInsets.only(bottom: 8),
     child: Text(
       text,
-      style: TextStyle(
-        fontSize: 13,
-        fontWeight: FontWeight.w500,
-        color: context.colors.inkSecondary,
-      ),
+      style: AppText.label.medium.copyWith(color: context.colors.inkSecondary),
     ),
   );
 }
@@ -655,17 +631,13 @@ class _DeletedView extends StatelessWidget {
         Text(
           l10n.txDeletedTitle,
           textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+          style: AppText.headline,
         ),
         const SizedBox(height: 10),
         Text(
           l10n.txDeletedBody(transaction.accountName),
           textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 14,
-            height: 1.5,
-            color: colors.inkSecondary,
-          ),
+          style: AppText.body.prose.copyWith(color: colors.inkSecondary),
         ),
         const SizedBox(height: 16),
         Center(
