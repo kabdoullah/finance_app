@@ -55,6 +55,25 @@ void main() {
       );
     });
 
+    test('montants de Gemma remis au format de l\'application', () {
+      final reply = composeReply(
+        question: 'Combien cette semaine ?',
+        gemmaText: 'Tu as dépensé 35000 FCFA cette semaine, dont 17000 F.',
+        outcomes: [
+          const ToolOutcome(
+            data: {'total_fcfa': 35000, 'part': 17000},
+            summary: '',
+            rows: [ReplyRow('Alimentation', '17 000 FCFA', ratio: 1)],
+          ),
+        ],
+        fallback: '',
+      );
+      expect(
+        reply.text,
+        'Tu as dépensé 35 000 FCFA cette semaine, dont 17 000 F.',
+      );
+    });
+
     test('nombre inventé : phrase de l\'application à la place', () {
       final reply = composeReply(
         question: 'Combien cette semaine ?',

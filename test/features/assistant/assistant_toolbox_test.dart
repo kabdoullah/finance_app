@@ -116,6 +116,20 @@ void main() {
     expect(outcome.head?.caption, 'dépensés cette semaine');
   });
 
+  test(
+    'catégorie qui coûte le plus : chiffre clé sur cette catégorie',
+    () async {
+      final outcome = await toolbox.run('get_spending', {
+        'period': 'this_week',
+        'focus': 'top_category',
+      });
+      final top = outcome.rows.first;
+      expect(outcome.head?.value, top.value);
+      expect(outcome.head?.caption, startsWith('${top.label}, '));
+      expect(outcome.head?.caption, endsWith('des dépenses cette semaine'));
+    },
+  );
+
   test('dépenses d\'une catégorie ce mois-ci, par sous-catégorie', () async {
     final outcome = await toolbox.run('get_spending', {
       'period': 'this_month',

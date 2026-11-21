@@ -4092,6 +4092,11 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String asHeadTopCategory(String category, String percent, String period) {
+    return '$category, $percent % des dépenses $period';
+  }
+
+  @override
   String asHeadWeek(Object perDay) {
     return 'à dépenser sur 7 jours, soit $perDay FCFA par jour';
   }

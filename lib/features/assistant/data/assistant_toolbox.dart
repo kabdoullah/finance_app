@@ -100,6 +100,13 @@ class AssistantToolbox {
               'description': "this_month si la période n'est pas précisée.",
             },
             'category': category,
+            'focus': {
+              'type': 'string',
+              'enum': ['total', 'top_category'],
+              'description':
+                  'top_category si la question porte sur ce qui coûte le '
+                  'plus ; sinon total.',
+            },
           },
         },
       ),
@@ -341,7 +348,16 @@ class AssistantToolbox {
       summary: summary,
       rows: rows,
       link: link,
-      head: ReplyHead(_fcfa(total), _l10n.asHeadSpent(label)),
+      head: category == null && args['focus'] == 'top_category'
+          ? ReplyHead(
+              _fcfa(Money(top['amount_fcfa']! as int)),
+              _l10n.asHeadTopCategory(
+                '${top['category']}',
+                '${top['percent']}',
+                label,
+              ),
+            )
+          : ReplyHead(_fcfa(total), _l10n.asHeadSpent(label)),
     );
   }
 

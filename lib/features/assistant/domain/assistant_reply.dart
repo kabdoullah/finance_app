@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart' show immutable;
 
+import '../../../core/money/money.dart';
 import '../../quick_entry/domain/quick_entry_parser.dart';
 import 'number_check.dart';
 
@@ -182,7 +183,7 @@ ReplyEntry composeReply({
   required List<ToolOutcome> outcomes,
   required String fallback,
 }) {
-  final text = gemmaText.replaceAll('**', '').trim();
+  final text = _formatAmounts(gemmaText.replaceAll('**', '').trim());
   if (outcomes.isEmpty) {
     return ReplyEntry(
       text: text.isNotEmpty && NumberCheck.inText(text).isEmpty
@@ -209,3 +210,12 @@ ReplyEntry composeReply({
     head: outcomes.map((o) => o.head).nonNulls.firstOrNull,
   );
 }
+
+/// Montant collé devant sa devise (« 8000 FCFA ») : Gemma ne groupe pas
+/// toujours les milliers ; on remet le format du reste de l'application.
+final _rawAmount = RegExp(r'(?<![\d.,])(\d{4,})(?=\s?(?:FCFA|F\b|francs))');
+
+String _formatAmounts(String text) => text.replaceAllMapped(
+  _rawAmount,
+  (m) => MoneyFormat.amount(Money(int.parse(m.group(1)!))),
+);

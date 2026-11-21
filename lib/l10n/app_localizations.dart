@@ -6532,6 +6532,12 @@ abstract class AppLocalizations {
   /// **'dépensés {period}'**
   String asHeadSpent(Object period);
 
+  /// No description provided for @asHeadTopCategory.
+  ///
+  /// In fr, this message translates to:
+  /// **'{category}, {percent} % des dépenses {period}'**
+  String asHeadTopCategory(String category, String percent, String period);
+
   /// No description provided for @asHeadWeek.
   ///
   /// In fr, this message translates to:
