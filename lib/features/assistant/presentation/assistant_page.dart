@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_radius.dart';
 import '../../../app/theme/app_text.dart';
 import '../../../core/clock.dart';
 import '../../../core/formatting/relative_date.dart';
@@ -220,10 +221,10 @@ class _UserBubble extends StatelessWidget {
               color: colors.surface,
               border: Border.all(color: colors.line),
               borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(18),
-                topRight: Radius.circular(18),
-                bottomLeft: Radius.circular(18),
-                bottomRight: Radius.circular(6),
+                topLeft: Radius.circular(AppRadius.lg),
+                topRight: Radius.circular(AppRadius.lg),
+                bottomLeft: Radius.circular(AppRadius.lg),
+                bottomRight: Radius.circular(AppRadius.xs),
               ),
             ),
             child: Row(
@@ -315,7 +316,7 @@ class _ReplyBubble extends StatelessWidget {
                     ),
                     if (row.ratio case final ratio?)
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(3),
+                        borderRadius: BorderRadius.circular(AppRadius.pill),
                         child: LinearProgressIndicator(
                           value: ratio,
                           minHeight: 5,
@@ -424,7 +425,7 @@ class _PreparedCard extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
               decoration: BoxDecoration(
                 color: colors.warningSoft,
-                borderRadius: BorderRadius.circular(6),
+                borderRadius: BorderRadius.circular(AppRadius.xs),
               ),
               child: Text(
                 l10n.qeToCheck,
@@ -447,7 +448,7 @@ class _PreparedCard extends ConsumerWidget {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: colors.background,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(AppRadius.field),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -739,7 +740,7 @@ class _Composer extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: colors.surface,
                           border: Border.all(color: colors.line),
-                          borderRadius: BorderRadius.circular(26),
+                          borderRadius: BorderRadius.circular(AppRadius.pill),
                         ),
                         child: Row(
                           children: [
@@ -834,7 +835,7 @@ class _NotLoaded extends ConsumerWidget {
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: colors.infoSoft,
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(AppRadius.lg),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,

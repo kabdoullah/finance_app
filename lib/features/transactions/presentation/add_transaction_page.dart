@@ -8,6 +8,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_radius.dart';
 import '../../../app/theme/app_text.dart';
 import '../../../app/theme/motion.dart';
 import '../../../core/clock.dart';
@@ -983,7 +984,7 @@ class _AmountKeypad extends StatelessWidget {
                         : key,
                     excludeSemantics: true,
                     child: InkWell(
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(AppRadius.field),
                       onTap: () => onKey(key),
                       child: SizedBox(
                         height: 58,
@@ -1125,7 +1126,7 @@ class _InfoBox extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
         color: colors.chip,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1332,11 +1333,11 @@ class _DayChip extends StatelessWidget {
       child: Material(
         color: selected ? colors.primarySoft : colors.surface,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(AppRadius.field),
           side: BorderSide(color: selected ? colors.primaryMid : colors.line),
         ),
         child: InkWell(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(AppRadius.field),
           onTap: onTap,
           child: Container(
             constraints: const BoxConstraints(minHeight: 56),

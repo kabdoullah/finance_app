@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
 import '../../app/theme/app_colors.dart';
+import '../../app/theme/app_radius.dart';
 import '../../app/theme/app_text.dart';
 import '../../app/theme/motion.dart';
 
@@ -23,7 +24,7 @@ class SegmentedChoice<T> extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: colors.chip,
-        borderRadius: BorderRadius.circular(11),
+        borderRadius: BorderRadius.circular(AppRadius.md),
       ),
       child: Padding(
         padding: const EdgeInsets.all(3),
@@ -59,7 +60,7 @@ class _Segment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final radius = BorderRadius.circular(9);
+    final radius = BorderRadius.circular(AppRadius.sm);
     return Semantics(
       button: true,
       selected: selected,

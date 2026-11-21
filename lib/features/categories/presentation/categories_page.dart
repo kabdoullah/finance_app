@@ -3,6 +3,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_radius.dart';
 import '../../../app/theme/app_text.dart';
 import '../../../core/errors/result.dart';
 import '../../../core/widgets/choice_pill.dart';
@@ -256,7 +257,7 @@ class _CategoryTile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
       decoration: BoxDecoration(
         color: bg,
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(AppRadius.xs),
       ),
       child: Text(text, style: AppText.tag.bold.copyWith(color: fg)),
     );
@@ -714,7 +715,7 @@ class _IconChoice extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final shape = RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(AppRadius.md),
       side: selected
           ? BorderSide(color: colors.primary, width: 2)
           : BorderSide(color: colors.line),

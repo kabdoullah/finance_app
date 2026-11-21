@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_radius.dart';
 import '../../../app/theme/app_text.dart';
 import '../../../core/errors/result.dart';
 import '../../../core/money/amount_input_formatter.dart';
@@ -310,7 +311,7 @@ class _TypeTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final shape = RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(AppRadius.lg),
       side: selected
           ? BorderSide(color: colors.primary, width: 2)
           : BorderSide(color: colors.line),

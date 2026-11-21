@@ -2,10 +2,10 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../app/theme/app_text.dart';
-
 import '../l10n/l10n.dart';
 import 'theme/app_colors.dart';
 import 'theme/app_icons.dart';
+import 'theme/app_radius.dart';
 
 /// Coque des onglets principaux : contenu + barre de navigation basse.
 class AppShell extends StatelessWidget {
@@ -97,7 +97,7 @@ class _NavigationItem extends StatelessWidget {
         label: label,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           child: ConstrainedBox(
             constraints: const BoxConstraints(minHeight: 48),
             child: Padding(

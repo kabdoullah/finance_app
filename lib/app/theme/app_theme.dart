@@ -3,6 +3,7 @@ import 'package:material_ui/material_ui.dart';
 
 import 'app_colors.dart';
 import 'app_icons.dart';
+import 'app_radius.dart';
 import 'app_text.dart';
 
 /// Thème global : Manrope seule, chiffres tabulaires partout (les montants
@@ -137,7 +138,9 @@ abstract final class AppTheme {
       dialogTheme: DialogThemeData(
         backgroundColor: colors.surface,
         surfaceTintColor: Colors.transparent,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.xl),
+        ),
       ),
       extensions: [colors],
     );
@@ -151,7 +154,7 @@ abstract final class AppTheme {
   static final _buttonText = AppText.bodyLarge.semibold;
 
   static OutlineInputBorder _inputBorder(Color color) => OutlineInputBorder(
-    borderRadius: BorderRadius.circular(14),
+    borderRadius: BorderRadius.circular(AppRadius.field),
     borderSide: BorderSide(color: color),
   );
 

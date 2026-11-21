@@ -8,6 +8,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_radius.dart';
 import '../../../app/theme/app_text.dart';
 import '../../../app/theme/motion.dart';
 import '../../../core/clock.dart';
@@ -505,7 +506,7 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
                     excludeSemantics: isCustom,
                     child: InkWell(
                       onTap: isCustom ? _choosePeriod : null,
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(AppRadius.sm),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         child: Row(
@@ -835,7 +836,7 @@ class _Skeleton extends StatelessWidget {
                           height: 12,
                           decoration: BoxDecoration(
                             color: colors.chip,
-                            borderRadius: BorderRadius.circular(6),
+                            borderRadius: BorderRadius.circular(AppRadius.pill),
                           ),
                         ),
                       ),
@@ -1002,7 +1003,7 @@ class _SwipeToDelete extends StatelessWidget {
           padding: const EdgeInsets.only(right: 20),
           decoration: BoxDecoration(
             color: colors.negativeSoft,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppRadius.md),
           ),
           child: Icon(AppIcons.trash, color: colors.negative, size: 20),
         ),

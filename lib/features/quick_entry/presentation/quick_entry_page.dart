@@ -9,6 +9,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_radius.dart';
 import '../../../app/theme/app_text.dart';
 import '../../../app/theme/motion.dart';
 import '../../../core/clock.dart';
@@ -618,7 +619,7 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
               color: colors.chip,
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(AppRadius.field),
             ),
             child: Text(
               _isIos ? l10n.qeLangManualIos : l10n.qeLangManual,
@@ -1083,7 +1084,7 @@ class _OperationCard extends ConsumerWidget {
       padding: const EdgeInsets.fromLTRB(16, 12, 8, 8),
       decoration: BoxDecoration(
         color: colors.surface,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         border: Border.all(color: colors.line),
       ),
       child: Column(
@@ -1310,7 +1311,7 @@ class _ToCheck extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
         decoration: BoxDecoration(
           color: colors.warningSoft,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppRadius.sm),
         ),
         child: Text(label, style: AppText.tag.copyWith(color: colors.warning)),
       ),
@@ -1332,7 +1333,7 @@ class _Notice extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: colors.chip,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(AppRadius.field),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

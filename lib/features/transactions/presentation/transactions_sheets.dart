@@ -3,6 +3,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_radius.dart';
 import '../../../app/theme/app_text.dart';
 import '../../../core/formatting/date_format.dart';
 import '../../../core/formatting/relative_date.dart';
@@ -268,7 +269,7 @@ Future<TransactionPeriod?> showPeriodPicker(
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppRadius.md),
               border: Border.all(
                 width: active ? 2 : 1,
                 color: active ? colors.primary : colors.line,
@@ -420,7 +421,7 @@ class _RangeDay extends StatelessWidget {
       excludeSemantics: true,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(AppRadius.sm),
         child: Container(
           constraints: const BoxConstraints(minHeight: 44),
           alignment: Alignment.center,
@@ -429,7 +430,7 @@ class _RangeDay extends StatelessWidget {
             color: inRange
                 ? colors.primarySoft.withValues(alpha: isBound ? 1 : 0.55)
                 : null,
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(AppRadius.sm),
             border: Border.all(
               width: 1.5,
               color: isBound

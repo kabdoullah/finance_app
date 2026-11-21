@@ -8,6 +8,7 @@ import 'package:pdf/widgets.dart' as pw;
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_radius.dart';
 import '../../../app/theme/app_text.dart';
 import '../../../core/clock.dart';
 import '../../../core/errors/error_reporter.dart';
@@ -150,7 +151,7 @@ class _ExportPageState extends ConsumerState<ExportPage> {
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
               color: colors.warningSoft,
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(AppRadius.field),
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,

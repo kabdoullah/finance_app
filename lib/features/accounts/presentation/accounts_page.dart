@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_radius.dart';
 import '../../../app/theme/app_text.dart';
 import '../../../core/clock.dart';
 import '../../../core/formatting/date_format.dart';
@@ -188,7 +189,7 @@ class _DistributionBar extends StatelessWidget {
         Semantics(
           label: l10n.accountsDistribution(labels.join(', ')),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(5),
+            borderRadius: BorderRadius.circular(AppRadius.pill),
             child: SizedBox(
               height: 10,
               child: Row(
@@ -374,7 +375,7 @@ class _AddSavingsTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final l10n = context.l10n;
-    final radius = BorderRadius.circular(14);
+    final radius = BorderRadius.circular(AppRadius.field);
     return Padding(
       padding: const EdgeInsets.only(top: 6),
       child: CustomPaint(

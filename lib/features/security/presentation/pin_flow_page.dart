@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../app/theme/app_colors.dart';
+import '../../../app/theme/app_radius.dart';
 import '../../../app/theme/app_text.dart';
 import '../../../l10n/l10n.dart';
 import '../domain/pin_policy.dart';
@@ -127,7 +128,7 @@ class _PinFlowPageState extends ConsumerState<PinFlowPage> {
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
                       color: colors.warningSoft,
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(AppRadius.field),
                     ),
                     child: Text(
                       l10n.pinCreateWarning,

@@ -6,6 +6,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_radius.dart';
 import '../../../app/theme/app_text.dart';
 import '../../../app/theme/motion.dart';
 import '../../../core/clock.dart';
@@ -141,7 +142,7 @@ class _SpendingCalendarState extends ConsumerState<SpendingCalendar> {
             padding: const EdgeInsets.fromLTRB(10, 12, 10, 6),
             decoration: BoxDecoration(
               color: colors.surface,
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(AppRadius.xl),
               border: Border.all(color: colors.line),
             ),
             child: Column(
@@ -399,14 +400,14 @@ class _DayCell extends StatelessWidget {
       excludeSemantics: true,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         child: Container(
           constraints: const BoxConstraints(minHeight: 48),
           padding: const EdgeInsets.symmetric(vertical: 6),
           margin: const EdgeInsets.all(1.5),
           decoration: BoxDecoration(
             color: selected ? colors.primarySoft : null,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppRadius.md),
             border: Border.all(
               width: 1.5,
               color: selected
@@ -781,7 +782,7 @@ class MonthSpendingSummary extends ConsumerWidget {
         ),
         ExcludeSemantics(
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(AppRadius.pill),
             child: SizedBox(
               height: 8,
               child: total == 0

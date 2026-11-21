@@ -6,6 +6,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_radius.dart';
 import '../../../app/theme/app_text.dart';
 import '../../../core/clock.dart';
 import '../../../core/formatting/date_format.dart';
@@ -260,7 +261,7 @@ class _WhereMoneyGoes extends ConsumerWidget {
               l10n.accountsShare(name(share), share.percent),
           ].join(', '),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(6),
+            borderRadius: BorderRadius.circular(AppRadius.pill),
             child: SizedBox(
               height: 12,
               child: Row(
@@ -463,11 +464,11 @@ class _AccountsStrip extends ConsumerWidget {
       child: Material(
         color: colors.surface,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppRadius.lg),
           side: BorderSide(color: colors.line),
         ),
         child: InkWell(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppRadius.lg),
           onTap: onTap,
           child: Padding(
             padding: const EdgeInsets.all(12),
@@ -961,7 +962,7 @@ class _CopilotInsight extends ConsumerWidget {
       padding: const EdgeInsets.fromLTRB(16, 14, 16, 4),
       decoration: BoxDecoration(
         color: colors.primarySoft,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_radius.dart';
 import '../../../app/theme/app_text.dart';
 import '../../../core/money/money.dart';
 import '../../../l10n/l10n.dart';
@@ -20,7 +21,7 @@ Future<String?> showAccountPicker(
   backgroundColor: context.colors.surface,
   isScrollControlled: true,
   shape: const RoundedRectangleBorder(
-    borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+    borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.sheet)),
   ),
   builder: (sheetContext) {
     final colors = sheetContext.colors;

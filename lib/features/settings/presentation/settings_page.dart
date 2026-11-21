@@ -6,6 +6,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_radius.dart';
 import '../../../app/theme/app_text.dart';
 import '../../../core/clock.dart';
 import '../../../core/errors/error_reporter.dart';
@@ -415,7 +416,7 @@ class _BackupSettings extends ConsumerWidget {
             padding: const EdgeInsets.fromLTRB(14, 12, 8, 4),
             decoration: BoxDecoration(
               color: colors.negativeSoft,
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(AppRadius.field),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -631,7 +632,7 @@ class _SettingsRow extends StatelessWidget {
                 ),
                 decoration: BoxDecoration(
                   color: ok ? colors.primarySoft : colors.chip,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppRadius.md),
                 ),
                 child: Text(
                   label,
