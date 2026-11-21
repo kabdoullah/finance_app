@@ -75,6 +75,12 @@ class GemmaRuntime {
     required CancelToken cancel,
   }) async {
     await _init();
+    // Repart d'une file vide : des essais échoués laissent des tâches du même
+    // identifiant qui se relancent et s'annulent entre elles (des milliers
+    // relevées sur un Redmi, téléchargement bloqué et « ne répond pas »).
+    // Les modèles installés sont protégés ; Hugging Face ne permet pas la
+    // reprise, on ne perd donc rien.
+    await FlutterEdgeAi.performCleanup();
     await FlutterEdgeAi.installModel(
           modelType: ModelType.gemma4,
           fileType: ModelFileType.litertlm,
