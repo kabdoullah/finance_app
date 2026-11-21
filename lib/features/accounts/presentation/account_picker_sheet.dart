@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../core/money/money.dart';
 import '../../../l10n/l10n.dart';
 import '../domain/account.dart';
@@ -32,7 +33,7 @@ Future<String?> showAccountPicker(
             padding: const EdgeInsets.only(bottom: 8),
             child: Text(
               sheetContext.l10n.txChooseAccount,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              style: AppText.sheetTitle,
             ),
           ),
           for (final account in accounts)
@@ -55,15 +56,12 @@ Future<String?> showAccountPicker(
                     Expanded(
                       child: Text(
                         account.name,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: AppText.bodyLarge.semibold,
                       ),
                     ),
                     Text(
                       MoneyFormat.amount(account.balance),
-                      style: TextStyle(color: colors.inkSecondary),
+                      style: AppText.body.copyWith(color: colors.inkSecondary),
                     ),
                     if (account.id == selectedId)
                       Icon(AppIcons.checkBold, size: 16, color: colors.primary)

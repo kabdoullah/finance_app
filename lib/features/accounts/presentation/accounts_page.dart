@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../core/clock.dart';
 import '../../../core/formatting/date_format.dart';
 import '../../../core/formatting/relative_date.dart';
@@ -81,7 +82,7 @@ class _AccountsList extends StatelessWidget {
           const SizedBox(height: 28),
           Text(
             l10n.accountsEmpty,
-            style: TextStyle(fontSize: 14, color: context.colors.inkSecondary),
+            style: AppText.body.copyWith(color: context.colors.inkSecondary),
           ),
           const SizedBox(height: 16),
           FilledButton(
@@ -150,16 +151,12 @@ class _TotalHeader extends StatelessWidget {
       children: [
         Text(
           l10n.accountsTotal,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: colors.inkSecondary,
-          ),
+          style: AppText.body.medium.copyWith(color: colors.inkSecondary),
         ),
         AmountDisplay(amount: summary.total),
         Text(
           l10n.accountsCount(summary.count),
-          style: TextStyle(fontSize: 13, color: colors.inkTertiary),
+          style: AppText.label.copyWith(color: colors.inkTertiary),
         ),
       ],
     );
@@ -230,8 +227,7 @@ class _DistributionBar extends StatelessWidget {
                     ),
                     Text(
                       label,
-                      style: TextStyle(
-                        fontSize: 12.5,
+                      style: AppText.caption.copyWith(
                         color: colors.inkSecondary,
                       ),
                     ),
@@ -253,9 +249,7 @@ class _GroupHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = TextStyle(
-      fontSize: 12.5,
-      fontWeight: FontWeight.w600,
+    final style = AppText.caption.semibold.copyWith(
       color: context.colors.inkTertiary,
     );
     return Padding(
@@ -318,16 +312,13 @@ class _AccountTile extends ConsumerWidget {
                     account.name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: AppText.bodyLarge.semibold,
                   ),
                   Text(
                     subtitle,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 12.5, color: colors.inkTertiary),
+                    style: AppText.caption.copyWith(color: colors.inkTertiary),
                   ),
                 ],
               ),
@@ -338,17 +329,14 @@ class _AccountTile extends ConsumerWidget {
               children: [
                 Text(
                   MoneyFormat.amount(account.balance),
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: AppText.bodyLarge.semibold,
                 ),
                 // Part réservée aux objectifs d'épargne (le solde ne change
                 // pas : l'argent est toujours sur le compte).
                 if (reserved != null)
                   Text(
                     l10n.accountReserved(MoneyFormat.amount(reserved)),
-                    style: TextStyle(fontSize: 12, color: colors.inkTertiary),
+                    style: AppText.small.copyWith(color: colors.inkTertiary),
                   ),
               ],
             ),
@@ -419,15 +407,11 @@ class _AddSavingsTile extends StatelessWidget {
                     children: [
                       Text(
                         l10n.accountsAddSavings,
-                        style: const TextStyle(
-                          fontSize: 14.5,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: AppText.bodyLarge.semibold,
                       ),
                       Text(
                         l10n.accountsAddSavingsHint,
-                        style: TextStyle(
-                          fontSize: 12.5,
+                        style: AppText.caption.copyWith(
                           color: colors.inkTertiary,
                         ),
                       ),
@@ -519,17 +503,11 @@ class _TransferLink extends StatelessWidget {
                 children: [
                   Text(
                     l10n.accountsTransfer,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: AppText.bodyLarge.semibold,
                   ),
                   Text(
                     l10n.accountsTransferHint,
-                    style: TextStyle(
-                      fontSize: 12.5,
-                      color: colors.inkSecondary,
-                    ),
+                    style: AppText.caption.copyWith(color: colors.inkSecondary),
                   ),
                 ],
               ),

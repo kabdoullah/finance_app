@@ -5,7 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
-import '../../../app/theme/app_theme.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../core/errors/result.dart';
 import '../../../core/money/amount_input_formatter.dart';
 import '../../../core/money/money.dart';
@@ -160,11 +160,7 @@ class _AccountFormPageState extends ConsumerState<AccountFormPage> {
                           onPressed: _reset,
                           style: TextButton.styleFrom(
                             minimumSize: const Size(0, 52),
-                            textStyle: const TextStyle(
-                              fontFamily: AppTheme.fontFamily,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                            ),
+                            textStyle: AppText.bodyLarge.semibold,
                           ),
                           child: Text(l10n.accountAddAnother),
                         ),
@@ -243,7 +239,7 @@ class _AccountFormPageState extends ConsumerState<AccountFormPage> {
           controller: _name,
           textCapitalization: TextCapitalization.sentences,
           textInputAction: TextInputAction.next,
-          style: const TextStyle(fontSize: 15),
+          style: AppText.bodyLarge,
           decoration: InputDecoration(
             hintText: type?.nameHint(l10n) ?? l10n.accountNameHintNone,
             errorText: _nameError(l10n),
@@ -262,13 +258,11 @@ class _AccountFormPageState extends ConsumerState<AccountFormPage> {
           keyboardType: TextInputType.number,
           inputFormatters: const [AmountInputFormatter()],
           onChanged: (_) => _onChanged(),
-          style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+          style: AppText.sectionTitle,
           decoration: InputDecoration(
             hintText: '0',
             suffixText: l10n.currencyLabel,
-            suffixStyle: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
+            suffixStyle: AppText.body.semibold.copyWith(
               color: colors.inkSecondary,
             ),
             errorText: _errors.contains(AccountFieldError.openingBalanceInvalid)
@@ -281,11 +275,7 @@ class _AccountFormPageState extends ConsumerState<AccountFormPage> {
           _isEdit
               ? l10n.accountOpeningBalanceLocked
               : l10n.accountOpeningBalanceHelp,
-          style: TextStyle(
-            fontSize: 12.5,
-            height: 1.45,
-            color: colors.inkTertiary,
-          ),
+          style: AppText.caption.prose.copyWith(color: colors.inkTertiary),
         ),
       ],
     );
@@ -352,10 +342,7 @@ class _TypeTile extends StatelessWidget {
                   ),
                   Text(
                     type.label(context.l10n),
-                    style: const TextStyle(
-                      fontSize: 14.5,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: AppText.bodyLarge.semibold,
                   ),
                 ],
               ),
@@ -398,14 +385,14 @@ class _CreatedMessage extends StatelessWidget {
           Text(
             l10n.accountCreatedMessage(account.name),
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+            style: AppText.title,
           ),
           Text(
             l10n.accountCreatedBalance(
               MoneyFormat.amount(account.openingBalance),
             ),
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14.5, color: colors.inkSecondary),
+            style: AppText.bodyLarge.copyWith(color: colors.inkSecondary),
           ),
         ],
       ),

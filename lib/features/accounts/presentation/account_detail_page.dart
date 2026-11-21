@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../core/clock.dart';
 import '../../../core/errors/result.dart';
 import '../../../core/formatting/date_format.dart';
@@ -101,9 +102,7 @@ class _AccountDetail extends ConsumerWidget {
               Text(
                 l10n.accountTypeAndName(account.type.label(l10n), account.name),
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
+                style: AppText.label.medium.copyWith(
                   color: colors.inkSecondary,
                 ),
               ),
@@ -119,7 +118,7 @@ class _AccountDetail extends ConsumerWidget {
                     MoneyFormat.amount(reserved),
                   ),
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 13, color: colors.inkSecondary),
+                  style: AppText.label.copyWith(color: colors.inkSecondary),
                 ),
             ],
           ),
@@ -180,17 +179,14 @@ class _AccountDetail extends ConsumerWidget {
           const SizedBox(height: 28),
           Semantics(
             header: true,
-            child: Text(
-              l10n.accountHistory,
-              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-            ),
+            child: Text(l10n.accountHistory, style: AppText.sectionTitle),
           ),
           if (history.isEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: Text(
                 l10n.accountNoHistory,
-                style: TextStyle(fontSize: 14, color: colors.inkSecondary),
+                style: AppText.body.copyWith(color: colors.inkSecondary),
               ),
             ),
           for (final (day, items) in groupByDay(history)) ...[
@@ -231,7 +227,7 @@ class _AccountDetail extends ConsumerWidget {
   }
 
   TextStyle _captionStyle(AppColors colors) =>
-      TextStyle(fontSize: 12.5, height: 1.45, color: colors.inkTertiary);
+      AppText.caption.prose.copyWith(color: colors.inkTertiary);
 
   Future<void> _archive(BuildContext context, WidgetRef ref) async {
     final l10n = context.l10n;
@@ -331,15 +327,11 @@ class _MonthFlow extends StatelessWidget {
         children: [
           Text(
             label,
-            style: TextStyle(fontSize: 12.5, color: colors.inkSecondary),
+            style: AppText.caption.copyWith(color: colors.inkSecondary),
           ),
           Text(
             amount,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: color ?? colors.ink,
-            ),
+            style: AppText.sheetTitle.copyWith(color: color ?? colors.ink),
           ),
         ],
       ),
@@ -385,11 +377,7 @@ class _MonthFlow extends StatelessWidget {
         if (flow.transfers.value > 0)
           Text(
             l10n.accountTransfersNote(MoneyFormat.amount(flow.transfers)),
-            style: TextStyle(
-              fontSize: 12.5,
-              height: 1.45,
-              color: colors.inkTertiary,
-            ),
+            style: AppText.caption.prose.copyWith(color: colors.inkTertiary),
           ),
       ],
     );
@@ -430,16 +418,13 @@ class _HistoryRow extends StatelessWidget {
                     t.title(l10n),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: AppText.bodyLarge.semibold,
                   ),
                   Text(
                     t.isTransfer
                         ? l10n.accountInternalTransfer
                         : t.mainCategory?.name ?? '',
-                    style: TextStyle(fontSize: 12.5, color: colors.inkTertiary),
+                    style: AppText.caption.copyWith(color: colors.inkTertiary),
                   ),
                 ],
               ),
@@ -450,9 +435,7 @@ class _HistoryRow extends StatelessWidget {
               children: [
                 Text(
                   MoneyFormat.signed(effect),
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
+                  style: AppText.bodyLarge.semibold.copyWith(
                     color: t.isTransfer
                         ? colors.inkSecondary
                         : effect.isNegative
@@ -465,7 +448,7 @@ class _HistoryRow extends StatelessWidget {
                     l10n.accountBalanceAfterShort(
                       MoneyFormat.amount(balanceAfter!),
                     ),
-                    style: TextStyle(fontSize: 12, color: colors.inkTertiary),
+                    style: AppText.small.copyWith(color: colors.inkTertiary),
                   ),
               ],
             ),
