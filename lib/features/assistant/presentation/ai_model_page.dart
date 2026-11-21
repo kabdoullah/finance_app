@@ -3,6 +3,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../core/widgets/confirm_dialog.dart';
 import '../../../l10n/l10n.dart';
 import '../../quick_entry/data/speech_service.dart';
@@ -170,19 +171,10 @@ class AiModelPage extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   spacing: 2,
                   children: [
-                    Text(
-                      l10n.aiModelName,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                    Text(l10n.aiModelName, style: AppText.sheetTitle),
                     Text(
                       l10n.aiModelMeta,
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: colors.inkSecondary,
-                      ),
+                      style: AppText.label.copyWith(color: colors.inkSecondary),
                     ),
                   ],
                 ),
@@ -193,11 +185,7 @@ class AiModelPage extends ConsumerWidget {
           const SizedBox(height: 16),
           Text(
             description,
-            style: TextStyle(
-              fontSize: 15,
-              height: 1.45,
-              color: colors.inkSecondary,
-            ),
+            style: AppText.bodyLarge.prose.copyWith(color: colors.inkSecondary),
           ),
           if (state.status == AiModelStatus.downloading ||
               state.status == AiModelStatus.loading) ...[
@@ -218,7 +206,7 @@ class AiModelPage extends ConsumerWidget {
               state.status == AiModelStatus.loading
                   ? l10n.aiLoadingBar
                   : l10n.aiProgress(received, state.progress),
-              style: TextStyle(fontSize: 13, color: colors.inkSecondary),
+              style: AppText.label.copyWith(color: colors.inkSecondary),
             ),
           ],
           if (notice != null) ...[
@@ -238,12 +226,7 @@ class AiModelPage extends ConsumerWidget {
                     size: 18,
                     color: colors.warning,
                   ),
-                  Expanded(
-                    child: Text(
-                      notice,
-                      style: const TextStyle(fontSize: 14, height: 1.4),
-                    ),
-                  ),
+                  Expanded(child: Text(notice, style: AppText.body.prose)),
                 ],
               ),
             ),
@@ -274,20 +257,13 @@ class AiModelPage extends ConsumerWidget {
           const SizedBox(height: 12),
           Text(
             l10n.aiWithout,
-            style: TextStyle(
-              fontSize: 13,
-              height: 1.45,
-              color: colors.inkTertiary,
-            ),
+            style: AppText.label.prose.copyWith(color: colors.inkTertiary),
           ),
           _SectionLabel(l10n.aiVoiceSection),
           const _VoiceEngineRow(),
           _InfoRow(
             title: l10n.aiVoiceLanguage,
-            trailing: Text(
-              l10n.aiVoiceFrench,
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-            ),
+            trailing: Text(l10n.aiVoiceFrench, style: AppText.body.semibold),
           ),
           if (state.isInstalled) ...[
             _SectionLabel(l10n.aiPrefsSection),
@@ -297,14 +273,11 @@ class AiModelPage extends ConsumerWidget {
               onChanged: controller.setLoadOnStartup,
               title: Text(
                 l10n.aiLoadOnStartup,
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: AppText.bodyLarge.semibold,
               ),
               subtitle: Text(
                 l10n.aiLoadOnStartupHint,
-                style: TextStyle(fontSize: 12.5, color: colors.inkTertiary),
+                style: AppText.caption.copyWith(color: colors.inkTertiary),
               ),
             ),
             const SizedBox(height: 16),
@@ -325,16 +298,13 @@ class AiModelPage extends ConsumerWidget {
                         children: [
                           Text(
                             l10n.aiDelete,
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
+                            style: AppText.bodyLarge.semibold.copyWith(
                               color: colors.negative,
                             ),
                           ),
                           Text(
                             l10n.aiDeleteHint,
-                            style: TextStyle(
-                              fontSize: 12.5,
+                            style: AppText.caption.copyWith(
                               color: colors.inkTertiary,
                             ),
                           ),
@@ -372,11 +342,7 @@ class _Pill extends StatelessWidget {
     ),
     child: Text(
       label,
-      style: TextStyle(
-        fontSize: 12,
-        fontWeight: FontWeight.w600,
-        color: foreground,
-      ),
+      style: AppText.small.semibold.copyWith(color: foreground),
     ),
   );
 }
@@ -411,18 +377,10 @@ class _RoleRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: 2,
               children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                Text(title, style: AppText.bodyLarge.semibold),
                 Text(
                   body,
-                  style: TextStyle(
-                    fontSize: 13.5,
-                    height: 1.4,
+                  style: AppText.bodySmall.prose.copyWith(
                     color: colors.inkSecondary,
                   ),
                 ),
@@ -445,12 +403,7 @@ class _SectionLabel extends StatelessWidget {
     padding: const EdgeInsets.only(top: 28, bottom: 4),
     child: Text(
       label.toUpperCase(),
-      style: TextStyle(
-        fontSize: 12,
-        fontWeight: FontWeight.w600,
-        letterSpacing: 0.6,
-        color: context.colors.inkTertiary,
-      ),
+      style: AppText.overline.copyWith(color: context.colors.inkTertiary),
     ),
   );
 }
@@ -479,17 +432,11 @@ class _InfoRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: 2,
               children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                Text(title, style: AppText.bodyLarge.semibold),
                 if (subtitle case final text?)
                   Text(
                     text,
-                    style: TextStyle(fontSize: 12.5, color: colors.inkTertiary),
+                    style: AppText.caption.copyWith(color: colors.inkTertiary),
                   ),
               ],
             ),

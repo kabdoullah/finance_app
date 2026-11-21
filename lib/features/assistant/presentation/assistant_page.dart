@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../core/clock.dart';
 import '../../../core/formatting/relative_date.dart';
 import '../../../core/money/money.dart';
@@ -44,14 +45,7 @@ class AssistantPage extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 2,
             children: [
-              Text(
-                l10n.asTitle,
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: -0.5,
-                ),
-              ),
+              Text(l10n.asTitle, style: AppText.screenTitle),
               Row(
                 spacing: 5,
                 children: [
@@ -63,8 +57,7 @@ class AssistantPage extends ConsumerWidget {
                   Flexible(
                     child: Text(
                       l10n.asSubtitle,
-                      style: TextStyle(
-                        fontSize: 12.5,
+                      style: AppText.caption.copyWith(
                         color: colors.inkSecondary,
                       ),
                     ),
@@ -247,14 +240,7 @@ class _UserBubble extends StatelessWidget {
                   ),
                 ),
                 Flexible(
-                  child: Text(
-                    text,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      height: 1.4,
-                    ),
-                  ),
+                  child: Text(text, style: AppText.bodyLarge.semibold.prose),
                 ),
               ],
             ),
@@ -303,7 +289,7 @@ class _ReplyBubble extends StatelessWidget {
           const _ReplyLabel(),
           if (reply.head case final head?) _ReplyHead(head: head),
           const SizedBox(height: 10),
-          Text(reply.text, style: const TextStyle(fontSize: 15, height: 1.5)),
+          Text(reply.text, style: AppText.bodyLarge.prose),
           if (reply.rows.isNotEmpty) ...[
             const SizedBox(height: 10),
             for (final row in reply.rows)
@@ -319,19 +305,12 @@ class _ReplyBubble extends StatelessWidget {
                         Expanded(
                           child: Text(
                             row.label,
-                            style: TextStyle(
-                              fontSize: 13.5,
+                            style: AppText.bodySmall.copyWith(
                               color: colors.inkSecondary,
                             ),
                           ),
                         ),
-                        Text(
-                          row.value,
-                          style: const TextStyle(
-                            fontSize: 13.5,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+                        Text(row.value, style: AppText.bodySmall.semibold),
                       ],
                     ),
                     if (row.ratio case final ratio?)
@@ -358,7 +337,7 @@ class _ReplyBubble extends StatelessWidget {
                 Expanded(
                   child: Text(
                     l10n.asFootnote,
-                    style: TextStyle(fontSize: 11.5, color: colors.inkTertiary),
+                    style: AppText.tag.copyWith(color: colors.inkTertiary),
                   ),
                 ),
               ],
@@ -438,7 +417,7 @@ class _PreparedCard extends ConsumerWidget {
         children: [
           Text(
             label,
-            style: TextStyle(fontSize: 13.5, color: colors.inkSecondary),
+            style: AppText.bodySmall.copyWith(color: colors.inkSecondary),
           ),
           if (toCheck)
             Container(
@@ -449,21 +428,14 @@ class _PreparedCard extends ConsumerWidget {
               ),
               child: Text(
                 l10n.qeToCheck,
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
-                  color: colors.warning,
-                ),
+                style: AppText.tag.copyWith(color: colors.warning),
               ),
             ),
           Expanded(
             child: Text(
               value,
               textAlign: TextAlign.end,
-              style: const TextStyle(
-                fontSize: 13.5,
-                fontWeight: FontWeight.w600,
-              ),
+              style: AppText.bodySmall.semibold,
             ),
           ),
         ],
@@ -532,7 +504,7 @@ class _PreparedCard extends ConsumerWidget {
             PreparedState.saved => const SizedBox.shrink(),
             PreparedState.unsaved => Text(
               l10n.asNotSaved,
-              style: TextStyle(fontSize: 13, color: colors.inkTertiary),
+              style: AppText.label.copyWith(color: colors.inkTertiary),
             ),
           },
           if (reply.note case final note?)
@@ -550,8 +522,7 @@ class _PreparedCard extends ConsumerWidget {
                   Expanded(
                     child: Text(
                       note,
-                      style: TextStyle(
-                        fontSize: 13,
+                      style: AppText.label.copyWith(
                         color: reply.preparedState == PreparedState.saved
                             ? colors.positive
                             : colors.warning,
@@ -614,7 +585,7 @@ class _Typing extends StatelessWidget {
                         TextSpan(text: ' · ${l10n.asTyping}'),
                       ],
                     ),
-                    style: TextStyle(fontSize: 13, color: colors.inkSecondary),
+                    style: AppText.label.copyWith(color: colors.inkSecondary),
                   ),
                 ),
               ],
@@ -646,10 +617,7 @@ class _ReplyHead extends StatelessWidget {
         children: [
           Text(
             head.value,
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.w700,
-              letterSpacing: -0.7,
+            style: AppText.amount(28).bold.copyWith(
               height: 1.15,
               color: switch (head.tone) {
                 ReplyTone.neutral => colors.ink,
@@ -661,7 +629,7 @@ class _ReplyHead extends StatelessWidget {
           ),
           Text(
             head.caption,
-            style: TextStyle(fontSize: 13.5, color: colors.inkSecondary),
+            style: AppText.bodySmall.copyWith(color: colors.inkSecondary),
           ),
         ],
       ),
@@ -682,12 +650,7 @@ class _ReplyLabel extends StatelessWidget {
         Icon(AppIcons.sparkleFill, size: 14, color: colors.info),
         Text(
           context.l10n.asReplyLabel.toUpperCase(),
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w700,
-            letterSpacing: 0.5,
-            color: colors.info,
-          ),
+          style: AppText.overline.bold.copyWith(color: colors.info),
         ),
       ],
     );
@@ -753,13 +716,7 @@ class _Composer extends StatelessWidget {
                                   spacing: 6,
                                   children: [
                                     Icon(icon, size: 15, color: colors.info),
-                                    Text(
-                                      label,
-                                      style: const TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
+                                    Text(label, style: AppText.label.semibold),
                                   ],
                                 ),
                               ),
@@ -796,7 +753,7 @@ class _Composer extends StatelessWidget {
                                     TextCapitalization.sentences,
                                 textInputAction: TextInputAction.send,
                                 onSubmitted: (_) => onSend?.call(),
-                                style: const TextStyle(fontSize: 15),
+                                style: AppText.bodyLarge,
                                 decoration: InputDecoration(
                                   hintText: l10n.asInputHint,
                                   hintMaxLines: 1,
@@ -908,7 +865,7 @@ class _NotLoaded extends ConsumerWidget {
                                 TextSpan(text: body),
                               ],
                             ),
-                            style: const TextStyle(fontSize: 14, height: 1.5),
+                            style: AppText.body.prose,
                           ),
                         ),
                       ],
@@ -918,7 +875,7 @@ class _NotLoaded extends ConsumerWidget {
                       Text(
                         l10n.aiLowMemory,
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 14, color: colors.warning),
+                        style: AppText.body.copyWith(color: colors.warning),
                       ),
                     ],
                     switch (status) {

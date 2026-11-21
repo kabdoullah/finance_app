@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../app/theme/app_colors.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../core/clock.dart';
 import '../../../core/formatting/date_format.dart';
 import '../../../core/money/money.dart';
@@ -125,16 +126,13 @@ class WeekCard extends ConsumerWidget {
               children: [
                 Text(
                   l10n.asWeekTitle.toUpperCase(),
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 0.6,
+                  style: AppText.overline.bold.copyWith(
                     color: colors.inkTertiary,
                   ),
                 ),
                 Text(
                   l10n.asComputedNow,
-                  style: TextStyle(fontSize: 12, color: colors.inkTertiary),
+                  style: AppText.small.copyWith(color: colors.inkTertiary),
                 ),
               ],
             ),
@@ -150,26 +148,19 @@ class WeekCard extends ConsumerWidget {
                       children: [
                         Text(
                           label,
-                          style: TextStyle(
-                            fontSize: 12.5,
+                          style: AppText.caption.copyWith(
                             color: colors.inkSecondary,
                           ),
                         ),
                         FittedBox(
                           fit: BoxFit.scaleDown,
                           alignment: Alignment.centerLeft,
-                          child: Text(
-                            value,
-                            style: const TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
+                          child: Text(value, style: AppText.sectionTitle),
                         ),
                         if (sub.isNotEmpty)
                           Text(
                             sub,
-                            style: TextStyle(fontSize: 11.5, color: subColor),
+                            style: AppText.tag.copyWith(color: subColor),
                           ),
                       ],
                     ),
