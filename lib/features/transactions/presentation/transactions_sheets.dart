@@ -3,6 +3,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../core/formatting/date_format.dart';
 import '../../../core/formatting/relative_date.dart';
 import '../../../core/time/calendar_date.dart';
@@ -73,9 +74,7 @@ Future<TransactionFilters?> showTransactionFilters(
             children: [
               Text(
                 title,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
+                style: AppText.label.semibold.copyWith(
                   color: colors.inkSecondary,
                 ),
               ),
@@ -106,13 +105,7 @@ Future<TransactionFilters?> showTransactionFilters(
                   child: Row(
                     children: [
                       Expanded(
-                        child: Text(
-                          l10n.txFilters,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+                        child: Text(l10n.txFilters, style: AppText.sheetTitle),
                       ),
                       TextButton(
                         onPressed: draft.count == 0
@@ -287,17 +280,14 @@ Future<TransactionPeriod?> showPeriodPicker(
               children: [
                 Text(
                   label,
-                  style: TextStyle(fontSize: 12, color: colors.inkSecondary),
+                  style: AppText.small.copyWith(color: colors.inkSecondary),
                 ),
                 Text(
                   RelativeDate.capitalize(
                     '${DateFormat('EEE', locale).format(date)} '
                     '${AppDateFormat.dayMonth(date, locale)}',
                   ),
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: AppText.body.semibold,
                 ),
               ],
             ),
@@ -310,13 +300,7 @@ Future<TransactionPeriod?> showPeriodPicker(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               spacing: 12,
               children: [
-                Text(
-                  l10n.txRangeTitle,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                Text(l10n.txRangeTitle, style: AppText.sheetTitle),
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
@@ -350,10 +334,7 @@ Future<TransactionPeriod?> showPeriodPicker(
                           DateFormat('MMMM y', locale).format(shown),
                         ),
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: AppText.bodyLarge.semibold,
                       ),
                     ),
                     IconButton(
@@ -460,8 +441,7 @@ class _RangeDay extends StatelessWidget {
           ),
           child: Text(
             '${day.day}',
-            style: TextStyle(
-              fontSize: 14,
+            style: AppText.body.copyWith(
               fontWeight: inRange ? FontWeight.w700 : FontWeight.w500,
             ),
           ),

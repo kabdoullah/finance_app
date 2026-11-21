@@ -8,6 +8,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../app/theme/motion.dart';
 import '../../../core/clock.dart';
 import '../../../core/errors/result.dart';
@@ -277,14 +278,7 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
           Expanded(
             child: Semantics(
               header: true,
-              child: Text(
-                l10n.txListTitle,
-                style: const TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: -0.5,
-                ),
-              ),
+              child: Text(l10n.txListTitle, style: AppText.screenTitle),
             ),
           ),
           if (hasAny != false || hasPlanned)
@@ -434,11 +428,7 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
               header: true,
               child: Text(
                 title,
-                style: TextStyle(
-                  fontSize: 12.5,
-                  fontWeight: FontWeight.w600,
-                  color: ink,
-                ),
+                style: AppText.caption.semibold.copyWith(color: ink),
               ),
             ),
           ),
@@ -448,7 +438,7 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
                 items.fold(Money.zero, (sum, d) => sum + d.amount),
               ),
             ),
-            style: TextStyle(fontSize: 12.5, color: colors.inkTertiary),
+            style: AppText.caption.copyWith(color: colors.inkTertiary),
           ),
         ],
       ),
@@ -532,10 +522,7 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
                               child: Text(
                                 periodLabel,
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                                style: AppText.bodyLarge.semibold,
                               ),
                             ),
                           ],
@@ -764,26 +751,19 @@ class _Summary extends StatelessWidget {
         children: [
           Text(
             label,
-            style: TextStyle(fontSize: 12.5, color: colors.inkSecondary),
+            style: AppText.caption.copyWith(color: colors.inkSecondary),
           ),
           FittedBox(
             fit: BoxFit.scaleDown,
             alignment: Alignment.centerLeft,
             child: loading
-                ? const Text(
-                    '…',
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-                  )
+                ? const Text('…', style: AppText.sectionTitle)
                 : CountingValue(
                     value: value,
                     firstDuration: Duration.zero,
                     builder: (context, v) => Text(
                       format(v),
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w600,
-                        color: color,
-                      ),
+                      style: AppText.sectionTitle.copyWith(color: color),
                     ),
                   ),
           ),
@@ -812,7 +792,7 @@ class _Summary extends StatelessWidget {
             cell(l10n.txSumCount, count, (v) => '$v'),
           ],
         ),
-        Text(note, style: TextStyle(fontSize: 12.5, color: colors.inkTertiary)),
+        Text(note, style: AppText.caption.copyWith(color: colors.inkTertiary)),
       ],
     );
   }
@@ -898,16 +878,12 @@ class _EmptyState extends StatelessWidget {
           Text(
             l10n.txEmptyTitle,
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+            style: AppText.headline,
           ),
           Text(
             l10n.txEmptyBody,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 14.5,
-              height: 1.5,
-              color: colors.inkSecondary,
-            ),
+            style: AppText.bodyLarge.prose.copyWith(color: colors.inkSecondary),
           ),
           const SizedBox(height: 12),
           SizedBox(
@@ -970,18 +946,11 @@ class _NoResult extends StatelessWidget {
               color: colors.inkSecondary,
             ),
           ),
-          Text(
-            title,
-            style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-          ),
+          Text(title, style: AppText.sectionTitle),
           Text(
             body,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 14,
-              height: 1.5,
-              color: colors.inkSecondary,
-            ),
+            style: AppText.body.prose.copyWith(color: colors.inkSecondary),
           ),
           if (onReset != null)
             OutlinedButton(

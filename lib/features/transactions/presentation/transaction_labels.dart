@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../core/money/money.dart';
 import '../../../core/widgets/motion.dart';
 import '../../../l10n/l10n.dart';
@@ -155,17 +156,13 @@ class TransactionTile extends StatelessWidget {
                       transaction.title(l10n),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: AppText.bodyLarge.semibold,
                     ),
                     Text(
                       transaction.meta(l10n),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 12.5,
+                      style: AppText.caption.copyWith(
                         color: colors.inkTertiary,
                       ),
                     ),
@@ -174,9 +171,7 @@ class TransactionTile extends StatelessWidget {
               ),
               Text(
                 masked ? MoneyFormat.masked : transaction.signedAmount,
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
+                style: AppText.bodyLarge.semibold.copyWith(
                   color: transaction.amountColor(colors),
                 ),
               ),
@@ -201,9 +196,7 @@ class DayHeader extends StatelessWidget {
       header: true,
       child: Text(
         label,
-        style: TextStyle(
-          fontSize: 12.5,
-          fontWeight: FontWeight.w600,
+        style: AppText.caption.semibold.copyWith(
           color: context.colors.inkTertiary,
         ),
       ),
