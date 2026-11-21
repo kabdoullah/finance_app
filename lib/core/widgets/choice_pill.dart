@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
 import '../../app/theme/app_colors.dart';
+import '../../app/theme/app_text.dart';
 import '../../app/theme/motion.dart';
 
 /// Pilule de choix des maquettes (catégories, opérateurs, comptes) :
@@ -54,9 +55,7 @@ class ChoicePill extends StatelessWidget {
                     if (icon != null) Icon(icon, size: 17, color: foreground),
                     Text(
                       label,
-                      style: TextStyle(
-                        fontSize: 13.5,
-                        fontWeight: FontWeight.w600,
+                      style: AppText.bodySmall.semibold.copyWith(
                         color: foreground,
                       ),
                     ),

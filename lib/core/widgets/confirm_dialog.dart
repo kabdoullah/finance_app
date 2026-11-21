@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
 import '../../app/theme/app_colors.dart';
+import '../../app/theme/app_text.dart';
 import '../../l10n/l10n.dart';
 
 /// Boîte de confirmation des maquettes : titre, explication, action principale
@@ -25,20 +26,10 @@ Future<bool> showConfirmDialog(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             spacing: 10,
             children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              Text(title, style: AppText.sheetTitle),
               Text(
                 message,
-                style: TextStyle(
-                  fontSize: 14,
-                  height: 1.5,
-                  color: colors.inkSecondary,
-                ),
+                style: AppText.body.prose.copyWith(color: colors.inkSecondary),
               ),
               const SizedBox(height: 8),
               FilledButton(

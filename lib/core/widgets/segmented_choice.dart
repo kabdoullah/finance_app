@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
 import '../../app/theme/app_colors.dart';
+import '../../app/theme/app_text.dart';
 import '../../app/theme/motion.dart';
 
 /// Sélecteur segmenté des maquettes : fond pastille, segment actif en surface.
@@ -80,9 +81,7 @@ class _Segment extends StatelessWidget {
                 label,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 13.5,
-                  fontWeight: FontWeight.w600,
+                style: AppText.bodySmall.semibold.copyWith(
                   color: selected ? colors.ink : colors.inkSecondary,
                 ),
               ),

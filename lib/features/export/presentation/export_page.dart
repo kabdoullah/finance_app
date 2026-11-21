@@ -8,6 +8,7 @@ import 'package:pdf/widgets.dart' as pw;
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../core/clock.dart';
 import '../../../core/errors/error_reporter.dart';
 import '../../../core/files/file_output.dart';
@@ -123,11 +124,11 @@ class _ExportPageState extends ConsumerState<ExportPage> {
           const SizedBox(height: 16),
           Text(
             _format == _Format.csv ? l10n.exCsv : l10n.exPdf,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            style: AppText.subtitle,
           ),
           Text(
             _format == _Format.csv ? l10n.exCsvHint : l10n.exPdfHint,
-            style: TextStyle(fontSize: 13.5, color: colors.inkSecondary),
+            style: AppText.bodySmall.copyWith(color: colors.inkSecondary),
           ),
           if (_format == _Format.pdf) ...[
             const SizedBox(height: 12),
@@ -161,10 +162,7 @@ class _ExportPageState extends ConsumerState<ExportPage> {
                   color: colors.warning,
                 ),
                 Expanded(
-                  child: Text(
-                    l10n.exWarning,
-                    style: const TextStyle(fontSize: 13.5, height: 1.4),
-                  ),
+                  child: Text(l10n.exWarning, style: AppText.bodySmall.prose),
                 ),
               ],
             ),

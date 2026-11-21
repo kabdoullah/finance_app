@@ -9,6 +9,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../app/theme/motion.dart';
 import '../../../core/clock.dart';
 import '../../../core/errors/result.dart';
@@ -503,7 +504,7 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
                 Flexible(
                   child: Text(
                     l10n.qeListening,
-                    style: TextStyle(fontSize: 13, color: colors.inkSecondary),
+                    style: AppText.label.copyWith(color: colors.inkSecondary),
                   ),
                 ),
               ],
@@ -517,18 +518,16 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
                       : message ?? l10n.qeListenHint,
                   textAlign: TextAlign.center,
                   style: _transcript.isNotEmpty
-                      ? const TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w600,
-                          height: 1.35,
-                        )
-                      : TextStyle(
-                          fontSize: message != null ? 17 : 15,
-                          color: message != null
-                              ? colors.ink
-                              : colors.inkSecondary,
-                          height: 1.45,
-                        ),
+                      ? AppText.title.copyWith(height: 1.35)
+                      : (message != null
+                                ? AppText.sectionTitle.regular
+                                : AppText.bodyLarge)
+                            .prose
+                            .copyWith(
+                              color: message != null
+                                  ? colors.ink
+                                  : colors.inkSecondary,
+                            ),
                 ),
               ),
             ),
@@ -537,8 +536,7 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
             Text(
               timer,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 15,
+              style: AppText.bodyLarge.copyWith(
                 color: colors.inkSecondary,
                 fontFeatures: const [FontFeature.tabularFigures()],
               ),
@@ -584,7 +582,7 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
             child: Text(
               _listening ? l10n.qeTapToFinish : l10n.qeTapToRetry,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 13, color: colors.inkSecondary),
+              style: AppText.label.copyWith(color: colors.inkSecondary),
             ),
           ),
           const SizedBox(height: 8),
@@ -606,18 +604,11 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
     return ListView(
       padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
       children: [
-        Text(
-          l10n.qeLangTitle,
-          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-        ),
+        Text(l10n.qeLangTitle, style: AppText.title),
         const SizedBox(height: 10),
         Text(
           downloading ? l10n.qeLangDownloading : l10n.qeLangBody,
-          style: TextStyle(
-            fontSize: 15,
-            color: colors.inkSecondary,
-            height: 1.45,
-          ),
+          style: AppText.bodyLarge.prose.copyWith(color: colors.inkSecondary),
         ),
         // iOS ne laisse pas une application installer une langue : les
         // étapes sont montrées d'emblée.
@@ -631,7 +622,7 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
             ),
             child: Text(
               _isIos ? l10n.qeLangManualIos : l10n.qeLangManual,
-              style: const TextStyle(fontSize: 14, height: 1.45),
+              style: AppText.body.prose,
             ),
           ),
         ],
@@ -678,13 +669,13 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
                 maxLines: 6,
                 textCapitalization: TextCapitalization.sentences,
                 onChanged: (_) => setState(() {}),
-                style: const TextStyle(fontSize: 18, height: 1.4),
+                style: AppText.sheetTitle.prose,
                 decoration: InputDecoration(hintText: l10n.qeInputPrompt),
               ),
               const SizedBox(height: 20),
               Text(
                 l10n.qeExamples,
-                style: TextStyle(fontSize: 13, color: colors.inkSecondary),
+                style: AppText.label.copyWith(color: colors.inkSecondary),
               ),
               const SizedBox(height: 4),
               for (final example in examples)
@@ -698,10 +689,7 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
                   child: Container(
                     constraints: const BoxConstraints(minHeight: 48),
                     alignment: Alignment.centerLeft,
-                    child: Text(
-                      '« $example »',
-                      style: const TextStyle(fontSize: 15),
-                    ),
+                    child: Text('« $example »', style: AppText.bodyLarge),
                   ),
                 ),
             ],
@@ -734,8 +722,7 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
           Expanded(
             child: Text(
               label,
-              style: TextStyle(
-                fontSize: 15,
+              style: AppText.bodyLarge.copyWith(
                 color: done ? colors.inkSecondary : colors.ink,
                 fontWeight: done ? FontWeight.w400 : FontWeight.w600,
               ),
@@ -751,11 +738,7 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
         children: [
           Text(
             '« $_source »',
-            style: TextStyle(
-              fontSize: 15,
-              color: colors.inkSecondary,
-              height: 1.4,
-            ),
+            style: AppText.bodyLarge.prose.copyWith(color: colors.inkSecondary),
           ),
           const SizedBox(height: 24),
           step(
@@ -808,10 +791,8 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
               if (_source.isNotEmpty)
                 Text(
                   '« $_source »',
-                  style: TextStyle(
-                    fontSize: 14,
+                  style: AppText.body.prose.copyWith(
                     color: colors.inkSecondary,
-                    height: 1.4,
                   ),
                 ),
               const SizedBox(height: 14),
@@ -825,18 +806,12 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
                 ),
               },
               const SizedBox(height: 18),
-              Text(
-                l10n.qeCount(_operations.length),
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              Text(l10n.qeCount(_operations.length), style: AppText.sheetTitle),
               if (_operations.isEmpty) ...[
                 const SizedBox(height: 6),
                 Text(
                   l10n.qeNoOperation,
-                  style: TextStyle(fontSize: 14, color: colors.inkSecondary),
+                  style: AppText.body.copyWith(color: colors.inkSecondary),
                 ),
               ],
               // Lignes du récapitulatif en cascade (80 ms).
@@ -880,8 +855,7 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
                     Expanded(
                       child: Text(
                         l10n.qeTotal,
-                        style: TextStyle(
-                          fontSize: 14,
+                        style: AppText.body.copyWith(
                           color: colors.inkSecondary,
                         ),
                       ),
@@ -889,17 +863,12 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
                     if (out.value > 0)
                       Text(
                         '${MoneyFormat.signed(-out)} ${l10n.currencyLabel}',
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: AppText.bodyLarge.semibold,
                       ),
                     if (inn.value > 0)
                       Text(
                         '${MoneyFormat.signed(inn)} ${l10n.currencyLabel}',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
+                        style: AppText.bodyLarge.semibold.copyWith(
                           color: colors.positive,
                         ),
                       ),
@@ -912,7 +881,7 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
               Text(
                 l10n.qeNothingSaved,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 12, color: colors.inkTertiary),
+                style: AppText.small.copyWith(color: colors.inkTertiary),
               ),
             ],
           ),
@@ -948,16 +917,13 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
               Text(
                 l10n.qeDoneTitle(_saved.length),
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: AppText.title,
               ),
               const SizedBox(height: 6),
               Text(
                 l10n.qeDoneSubtitle,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14, color: colors.inkSecondary),
+                style: AppText.body.copyWith(color: colors.inkSecondary),
               ),
               const SizedBox(height: 20),
               for (final transaction in _saved)
@@ -1151,9 +1117,7 @@ class _OperationCard extends ConsumerWidget {
                         Icon(op.kind.icon, size: 14, color: kindForeground),
                         Text(
                           op.kind.label(l10n),
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
+                          style: AppText.label.semibold.copyWith(
                             color: kindForeground,
                           ),
                         ),
@@ -1181,11 +1145,7 @@ class _OperationCard extends ConsumerWidget {
                   inputFormatters: const [AmountInputFormatter(maxDigits: 9)],
                   onChanged: (_) =>
                       _update((op) => op.uncertain.remove(ParsedField.amount)),
-                  style: const TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: -0.6,
-                  ),
+                  style: AppText.amount(26, inline: true),
                   decoration: InputDecoration(
                     labelText: l10n.qeAmount,
                     suffixText: l10n.currencyLabel,
@@ -1199,7 +1159,7 @@ class _OperationCard extends ConsumerWidget {
                   controller: op.description,
                   maxLength: TransactionDraft.maxDescriptionLength,
                   textCapitalization: TextCapitalization.sentences,
-                  style: const TextStyle(fontSize: 15),
+                  style: AppText.bodyLarge,
                   decoration: InputDecoration(
                     labelText: l10n.qeDescription,
                     counterText: '',
@@ -1316,7 +1276,7 @@ class _FieldRow extends StatelessWidget {
           children: [
             Text(
               label,
-              style: TextStyle(fontSize: 14, color: colors.inkSecondary),
+              style: AppText.body.copyWith(color: colors.inkSecondary),
             ),
             if (toCheck case final text?) _ToCheck(label: text),
             Expanded(
@@ -1324,10 +1284,7 @@ class _FieldRow extends StatelessWidget {
                 value,
                 textAlign: TextAlign.end,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: AppText.body.semibold,
               ),
             ),
             Icon(AppIcons.caretRight, size: 14, color: colors.inkTertiary),
@@ -1355,14 +1312,7 @@ class _ToCheck extends StatelessWidget {
           color: colors.warningSoft,
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 11.5,
-            fontWeight: FontWeight.w600,
-            color: colors.warning,
-          ),
-        ),
+        child: Text(label, style: AppText.tag.copyWith(color: colors.warning)),
       ),
     );
   }
@@ -1395,10 +1345,8 @@ class _Notice extends StatelessWidget {
               children: [
                 Text(
                   text,
-                  style: TextStyle(
-                    fontSize: 13.5,
+                  style: AppText.bodySmall.prose.copyWith(
                     color: colors.inkSecondary,
-                    height: 1.4,
                   ),
                 ),
                 if (action case final label?)

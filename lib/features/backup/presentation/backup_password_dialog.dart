@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../l10n/l10n.dart';
 import '../data/backup_file.dart';
 
@@ -79,9 +80,7 @@ class _PasswordDialogState extends State<_PasswordDialog> {
             if (widget.create)
               Text(
                 l10n.bkPasswordWarning,
-                style: TextStyle(
-                  fontSize: 13.5,
-                  height: 1.4,
+                style: AppText.bodySmall.prose.copyWith(
                   color: colors.inkSecondary,
                 ),
               ),
@@ -94,10 +93,7 @@ class _PasswordDialogState extends State<_PasswordDialog> {
                       ? const SizedBox.shrink()
                       : Text(
                           _error!,
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: colors.negative,
-                          ),
+                          style: AppText.label.copyWith(color: colors.negative),
                         ),
                 ),
                 IconButton(

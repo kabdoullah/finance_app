@@ -1,6 +1,8 @@
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../app/theme/app_text.dart';
+
 import '../l10n/l10n.dart';
 import 'theme/app_colors.dart';
 import 'theme/app_icons.dart';
@@ -109,11 +111,7 @@ class _NavigationItem extends StatelessWidget {
                     label,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                      color: color,
-                    ),
+                    style: AppText.tag.copyWith(color: color),
                   ),
                 ],
               ),
