@@ -41,6 +41,7 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.expenseChart,
     required this.categories,
     required this.scrim,
+    required this.shadow,
   });
 
   /// Fond « Papier ».
@@ -104,6 +105,9 @@ class AppColors extends ThemeExtension<AppColors> {
   final Map<CategoryHue, CategoryColors> categories;
 
   final Color scrim;
+
+  /// Ombre légère (segment actif d'un sélecteur).
+  final Color shadow;
 
   /// Couleurs d'une catégorie d'après sa clé d'icône.
   CategoryColors category(String iconKey) =>
@@ -204,6 +208,7 @@ class AppColors extends ThemeExtension<AppColors> {
       ),
     },
     scrim: Color(0x61141815),
+    shadow: Color(0x42000000),
   );
 
   static const dark = AppColors(
@@ -301,6 +306,7 @@ class AppColors extends ThemeExtension<AppColors> {
       ),
     },
     scrim: Color(0x8C000000),
+    shadow: Color(0x42000000),
   );
 
   @override
@@ -348,6 +354,7 @@ class AppColors extends ThemeExtension<AppColors> {
           hue: CategoryColors.lerp(categories[hue]!, other.categories[hue]!, t),
       },
       scrim: mix(scrim, other.scrim),
+      shadow: mix(shadow, other.shadow),
     );
   }
 }

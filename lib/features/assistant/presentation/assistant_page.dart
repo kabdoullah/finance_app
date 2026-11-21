@@ -7,6 +7,7 @@ import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
 import '../../../app/theme/app_radius.dart';
 import '../../../app/theme/app_text.dart';
+import '../../../app/theme/motion.dart';
 import '../../../core/clock.dart';
 import '../../../core/formatting/relative_date.dart';
 import '../../../core/money/money.dart';
@@ -143,8 +144,8 @@ class _ConversationState extends ConsumerState<_Conversation> {
     if (_scroll.hasClients) {
       _scroll.animateTo(
         _scroll.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 250),
-        curve: Curves.easeOut,
+        duration: Motion.base,
+        curve: Motion.easeOut,
       );
     }
   });

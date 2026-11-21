@@ -7,6 +7,7 @@ import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
 import '../../../app/theme/app_radius.dart';
 import '../../../app/theme/app_text.dart';
+import '../../../app/theme/motion.dart';
 import '../../../core/clock.dart';
 import '../../../core/errors/result.dart';
 import '../../../core/formatting/date_format.dart';
@@ -70,7 +71,7 @@ class GoalDetailPage extends ConsumerWidget {
           // Le montant compte après une contribution.
           CountingValue(
             value: goal.saved.value,
-            duration: const Duration(milliseconds: 600),
+            duration: Motion.chart,
             builder: (context, saved) => Text.rich(
               TextSpan(
                 text: '${MoneyFormat.amount(Money(saved))} ',

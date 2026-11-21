@@ -76,6 +76,9 @@ class QuickEntryPage extends ConsumerStatefulWidget {
 enum _VoiceIssue { nothingHeard, missingLanguage, downloading, failed }
 
 class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
+  /// Le halo du micro suit le niveau de la voix en direct.
+  static const _levelFollow = Duration(milliseconds: 120);
+
   late QuickEntryMode _mode = widget.initialMode;
   late _Stage _stage = _mode == QuickEntryMode.voice
       ? _Stage.listen
@@ -554,7 +557,7 @@ class _QuickEntryPageState extends ConsumerState<QuickEntryPage> {
                   active: _listening,
                   color: colors.primary,
                   child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 120),
+                    duration: _levelFollow,
                     width: 88,
                     height: 88,
                     decoration: BoxDecoration(

@@ -205,6 +205,8 @@ class BlurFadeSwitcher extends StatelessWidget {
 
 /// Coche qui se trace (360 ms) : opération ou budget enregistré.
 class DrawnCheck extends StatelessWidget {
+  static const _duration = Duration(milliseconds: 360);
+
   const DrawnCheck({required this.color, this.size = 32, super.key});
 
   final Color color;
@@ -213,7 +215,7 @@ class DrawnCheck extends StatelessWidget {
   @override
   Widget build(BuildContext context) => TweenAnimationBuilder<double>(
     tween: Tween(begin: 0, end: 1),
-    duration: Motion.of(context, const Duration(milliseconds: 360)),
+    duration: Motion.of(context, _duration),
     curve: Motion.ease,
     builder: (context, progress, _) => CustomPaint(
       size: Size.square(size),
@@ -273,10 +275,9 @@ class PulseRings extends StatefulWidget {
 
 class _PulseRingsState extends State<PulseRings>
     with SingleTickerProviderStateMixin {
-  late final _controller = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 1800),
-  );
+  static const _cycle = Duration(milliseconds: 1800);
+
+  late final _controller = AnimationController(vsync: this, duration: _cycle);
 
   void _sync() {
     if (widget.active && !Motion.reduced(context)) {
@@ -349,10 +350,9 @@ class TypingDots extends StatefulWidget {
 
 class _TypingDotsState extends State<TypingDots>
     with SingleTickerProviderStateMixin {
-  late final _controller = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 1200),
-  );
+  static const _cycle = Duration(milliseconds: 1200);
+
+  late final _controller = AnimationController(vsync: this, duration: _cycle);
 
   @override
   void didChangeDependencies() {
@@ -420,9 +420,11 @@ class ReachedHalo extends StatefulWidget {
 
 class _ReachedHaloState extends State<ReachedHalo>
     with SingleTickerProviderStateMixin {
+  static const _duration = Duration(milliseconds: 900);
+
   late final _controller = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 900),
+    duration: _duration,
   );
 
   @override

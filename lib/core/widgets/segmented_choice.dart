@@ -68,7 +68,7 @@ class _Segment extends StatelessWidget {
         color: selected ? colors.surface : Colors.transparent,
         borderRadius: radius,
         elevation: selected ? 0.5 : 0,
-        shadowColor: Colors.black26,
+        shadowColor: colors.shadow,
         child: InkWell(
           borderRadius: radius,
           onTap: () {
