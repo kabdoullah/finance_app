@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../app/theme/motion.dart';
 import '../../../core/clock.dart';
 import '../../../core/formatting/date_format.dart';
@@ -130,13 +131,11 @@ class _SimulationPageState extends ConsumerState<SimulationPage> {
               keyboardType: TextInputType.number,
               inputFormatters: const [AmountInputFormatter()],
               onChanged: (_) => setState(() {}),
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+              style: AppText.title,
               decoration: InputDecoration(
                 hintText: '0',
                 suffixText: l10n.currencyLabel,
-                suffixStyle: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
+                suffixStyle: AppText.body.semibold.copyWith(
                   color: colors.inkSecondary,
                 ),
               ),
@@ -172,15 +171,11 @@ class _SimulationPageState extends ConsumerState<SimulationPage> {
                         children: [
                           Text(
                             l10n.simUseSavings(goal.name),
-                            style: const TextStyle(
-                              fontSize: 14.5,
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: AppText.bodyLarge.semibold,
                           ),
                           Text(
                             l10n.simSavingsHelp(MoneyFormat.amount(goal.saved)),
-                            style: TextStyle(
-                              fontSize: 12.5,
+                            style: AppText.caption.copyWith(
                               color: colors.inkTertiary,
                             ),
                           ),
@@ -218,9 +213,7 @@ class _SimulationPageState extends ConsumerState<SimulationPage> {
               Text(
                 '${_reliability(l10n, forecast!, days)} '
                 '${l10n.simAvailableNote}',
-                style: TextStyle(
-                  fontSize: 12.5,
-                  height: 1.45,
+                style: AppText.caption.prose.copyWith(
                   color: colors.inkTertiary,
                 ),
               ),
@@ -339,17 +332,15 @@ class _Result extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyle(fontSize: 12.5, color: colors.inkSecondary),
+          style: AppText.caption.copyWith(color: colors.inkSecondary),
         ),
         Text(
           signed(value),
-          style: TextStyle(
-            fontSize: 19,
-            fontWeight: FontWeight.w600,
+          style: AppText.headline.copyWith(
             color: value.isNegative ? colors.negative : colors.ink,
           ),
         ),
-        Text(note, style: TextStyle(fontSize: 12, color: colors.inkSecondary)),
+        Text(note, style: AppText.small.copyWith(color: colors.inkSecondary)),
       ],
     );
 
@@ -374,17 +365,13 @@ class _Result extends StatelessWidget {
                 Icon(icon, size: 22, color: foreground),
                 Text(
                   title,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: foreground,
-                  ),
+                  style: AppText.sheetTitle.copyWith(color: foreground),
                 ),
               ],
             ),
             Text(
               AppDateFormat.sentence(explain),
-              style: TextStyle(fontSize: 14, height: 1.5, color: colors.ink),
+              style: AppText.body.prose.copyWith(color: colors.ink),
             ),
             Container(
               padding: const EdgeInsets.only(top: 12),
@@ -440,18 +427,10 @@ class _Message extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 6,
         children: [
-          if (title case final t?)
-            Text(
-              t,
-              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-            ),
+          if (title case final t?) Text(t, style: AppText.bodyLarge.semibold),
           Text(
             text,
-            style: TextStyle(
-              fontSize: 14,
-              height: 1.5,
-              color: colors.inkSecondary,
-            ),
+            style: AppText.body.prose.copyWith(color: colors.inkSecondary),
           ),
         ],
       ),
@@ -469,11 +448,7 @@ class _Label extends StatelessWidget {
     padding: const EdgeInsets.only(bottom: 8),
     child: Text(
       text,
-      style: TextStyle(
-        fontSize: 13,
-        fontWeight: FontWeight.w500,
-        color: context.colors.inkSecondary,
-      ),
+      style: AppText.label.medium.copyWith(color: context.colors.inkSecondary),
     ),
   );
 }

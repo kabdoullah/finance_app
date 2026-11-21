@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../app/theme/motion.dart';
 import '../../../core/clock.dart';
 import '../../../core/formatting/date_format.dart';
@@ -48,14 +49,7 @@ class _ForecastPageState extends ConsumerState<ForecastPage> {
             children: [
               Semantics(
                 header: true,
-                child: Text(
-                  l10n.forecastTitle,
-                  style: const TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: -0.5,
-                  ),
-                ),
+                child: Text(l10n.forecastTitle, style: AppText.screenTitle),
               ),
               const SizedBox(height: 16),
               if (history != null && days < Forecast.minHistoryDays)
@@ -116,17 +110,10 @@ class _Insufficient extends StatelessWidget {
       spacing: 12,
       children: [
         const SizedBox(height: 8),
-        Text(
-          l10n.forecastInsufficientTitle,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-        ),
+        Text(l10n.forecastInsufficientTitle, style: AppText.headline),
         Text(
           l10n.forecastInsufficientBody,
-          style: TextStyle(
-            fontSize: 14,
-            height: 1.5,
-            color: colors.inkSecondary,
-          ),
+          style: AppText.body.prose.copyWith(color: colors.inkSecondary),
         ),
         const SizedBox(height: 4),
         ClipRRect(
@@ -145,11 +132,11 @@ class _Insufficient extends StatelessWidget {
           children: [
             Text(
               l10n.forecastInsufficientProgress(days, total),
-              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+              style: AppText.label.semibold,
             ),
             Text(
               l10n.forecastInsufficientLeft(total - days),
-              style: TextStyle(fontSize: 13, color: colors.inkSecondary),
+              style: AppText.label.copyWith(color: colors.inkSecondary),
             ),
           ],
         ),
@@ -167,9 +154,7 @@ class _Insufficient extends StatelessWidget {
               Expanded(
                 child: Text(
                   tip,
-                  style: TextStyle(
-                    fontSize: 14,
-                    height: 1.45,
+                  style: AppText.body.prose.copyWith(
                     color: colors.inkSecondary,
                   ),
                 ),
@@ -221,9 +206,7 @@ class _Summary extends StatelessWidget {
             Flexible(
               child: Text(
                 label,
-                style: TextStyle(
-                  fontSize: 12.5,
-                  fontWeight: FontWeight.w600,
+                style: AppText.caption.semibold.copyWith(
                   color: colors.inkSecondary,
                 ),
               ),
@@ -235,15 +218,10 @@ class _Summary extends StatelessWidget {
           alignment: Alignment.centerLeft,
           child: Text(
             value,
-            style: TextStyle(
-              fontSize: 26,
-              fontWeight: FontWeight.w600,
-              letterSpacing: -0.6,
-              color: color,
-            ),
+            style: AppText.amount(26, inline: true).copyWith(color: color),
           ),
         ),
-        Text(sub, style: TextStyle(fontSize: 12.5, color: colors.inkTertiary)),
+        Text(sub, style: AppText.caption.copyWith(color: colors.inkTertiary)),
       ],
     );
     return Column(
@@ -322,7 +300,7 @@ class _Summary extends StatelessWidget {
             Flexible(
               child: Text(
                 l10n.forecastReliability(level),
-                style: TextStyle(fontSize: 13, color: colors.inkSecondary),
+                style: AppText.label.copyWith(color: colors.inkSecondary),
               ),
             ),
           ],
@@ -392,7 +370,7 @@ class _ChartBlock extends StatelessWidget {
       forecast.today.day - back,
     );
     final todayFraction = back / (back + forecast.horizon.days);
-    final small = TextStyle(fontSize: 11.5, color: colors.inkTertiary);
+    final small = AppText.tag.copyWith(color: colors.inkTertiary);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: 6,
@@ -495,7 +473,7 @@ class _Legend extends StatelessWidget {
       Flexible(
         child: Text(
           label,
-          style: TextStyle(fontSize: 12, color: context.colors.inkSecondary),
+          style: AppText.small.copyWith(color: context.colors.inkSecondary),
         ),
       ),
     ],
@@ -534,18 +512,12 @@ class _Risks extends ConsumerWidget {
           textBaseline: TextBaseline.alphabetic,
           children: [
             Expanded(
-              child: Text(
-                l10n.forecastRisks,
-                style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              child: Text(l10n.forecastRisks, style: AppText.sectionTitle),
             ),
             if (count > 0)
               Text(
                 l10n.forecastRiskCount(count),
-                style: TextStyle(fontSize: 13, color: colors.inkTertiary),
+                style: AppText.label.copyWith(color: colors.inkTertiary),
               ),
           ],
         ),
@@ -626,7 +598,7 @@ class _RiskBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = TextStyle(fontSize: 13.5, height: 1.45, color: foreground);
+    final style = AppText.bodySmall.prose.copyWith(color: foreground);
     final link = linkLabel;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -706,10 +678,7 @@ class _Expected extends StatelessWidget {
         Expanded(
           child: Semantics(
             header: true,
-            child: Text(
-              title,
-              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-            ),
+            child: Text(title, style: AppText.sectionTitle),
           ),
         ),
         ?trailing,
@@ -736,27 +705,17 @@ class _Expected extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: 1,
               children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 14.5,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                Text(title, style: AppText.bodyLarge.semibold),
                 Text(
                   sub,
-                  style: TextStyle(fontSize: 12.5, color: colors.inkTertiary),
+                  style: AppText.caption.copyWith(color: colors.inkTertiary),
                 ),
               ],
             ),
           ),
           Text(
             amount,
-            style: TextStyle(
-              fontSize: 14.5,
-              fontWeight: FontWeight.w600,
-              color: amountColor,
-            ),
+            style: AppText.bodyLarge.semibold.copyWith(color: amountColor),
           ),
         ],
       ),
@@ -785,7 +744,7 @@ class _Expected extends StatelessWidget {
           padding: const EdgeInsets.only(top: 2, bottom: 6),
           child: Text(
             l10n.forecastScheduledHint,
-            style: TextStyle(fontSize: 13, color: colors.inkSecondary),
+            style: AppText.label.copyWith(color: colors.inkSecondary),
           ),
         ),
         if (forecast.events.isEmpty)
@@ -793,7 +752,7 @@ class _Expected extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: Text(
               l10n.forecastNoRecurring,
-              style: TextStyle(fontSize: 13.5, color: colors.inkSecondary),
+              style: AppText.bodySmall.copyWith(color: colors.inkSecondary),
             ),
           ),
         for (final e in forecast.events.take(_maxEvents))
@@ -815,30 +774,24 @@ class _Expected extends StatelessWidget {
                 Expanded(
                   child: Text(
                     l10n.forecastScheduledTotal,
-                    style: TextStyle(
-                      fontSize: 13.5,
+                    style: AppText.bodySmall.copyWith(
                       color: colors.inkSecondary,
                     ),
                   ),
                 ),
                 Text(
                   MoneyFormat.signed(income),
-                  style: TextStyle(
-                    fontSize: 13.5,
-                    fontWeight: FontWeight.w700,
+                  style: AppText.bodySmall.bold.copyWith(
                     color: colors.positive,
                   ),
                 ),
                 Text(
                   ' · ',
-                  style: TextStyle(fontSize: 13.5, color: colors.inkTertiary),
+                  style: AppText.bodySmall.copyWith(color: colors.inkTertiary),
                 ),
                 Text(
                   MoneyFormat.signed(-expenses),
-                  style: const TextStyle(
-                    fontSize: 13.5,
-                    fontWeight: FontWeight.w700,
-                  ),
+                  style: AppText.bodySmall.bold,
                 ),
               ],
             ),
@@ -889,11 +842,7 @@ class _HowItWorks extends StatelessWidget {
       else
         l10n.forecastHowNoException,
     ];
-    final style = TextStyle(
-      fontSize: 13.5,
-      height: 1.5,
-      color: colors.inkSecondary,
-    );
+    final style = AppText.bodySmall.prose.copyWith(color: colors.inkSecondary);
     // Maquette : simple section sous un filet, pas une carte.
     return Container(
       padding: const EdgeInsets.only(top: 16),
@@ -904,10 +853,7 @@ class _HowItWorks extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         spacing: 8,
         children: [
-          Text(
-            l10n.forecastHowTitle,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-          ),
+          Text(l10n.forecastHowTitle, style: AppText.subtitle.bold),
           for (final b in bullets)
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -919,11 +865,7 @@ class _HowItWorks extends StatelessWidget {
             ),
           Text(
             l10n.forecastDisclaimer,
-            style: TextStyle(
-              fontSize: 12.5,
-              height: 1.45,
-              color: colors.inkTertiary,
-            ),
+            style: AppText.caption.prose.copyWith(color: colors.inkTertiary),
           ),
         ],
       ),
@@ -960,18 +902,13 @@ class _SimulateCard extends StatelessWidget {
                   children: [
                     Text(
                       l10n.forecastSimulate,
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
+                      style: AppText.bodyLarge.bold.copyWith(
                         color: colors.info,
                       ),
                     ),
                     Text(
                       l10n.forecastSimulateExample,
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: colors.inkSecondary,
-                      ),
+                      style: AppText.label.copyWith(color: colors.inkSecondary),
                     ),
                   ],
                 ),
