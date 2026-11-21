@@ -3601,7 +3601,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get calNextMonth => 'Mois suivant';
 
   @override
-  String get calLegendPaid => 'Dépenses';
+  String get calLegendPaid => 'Dépenses (plus foncé = plus élevées)';
 
   @override
   String get calLegendPlanned => 'Planifiée';

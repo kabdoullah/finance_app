@@ -235,9 +235,7 @@ class _TransactionDetailPageState extends ConsumerState<TransactionDetailPage> {
                   fontWeight: FontWeight.w600,
                   letterSpacing: -1.3,
                   height: 1,
-                  color: t.kind == TransactionKind.income
-                      ? colors.positive
-                      : colors.ink,
+                  color: t.amountColor(colors),
                 ),
               ),
               Text(

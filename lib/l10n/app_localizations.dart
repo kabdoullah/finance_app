@@ -5779,7 +5779,7 @@ abstract class AppLocalizations {
   /// No description provided for @calLegendPaid.
   ///
   /// In fr, this message translates to:
-  /// **'Dépenses'**
+  /// **'Dépenses (plus foncé = plus élevées)'**
   String get calLegendPaid;
 
   /// No description provided for @calLegendPlanned.

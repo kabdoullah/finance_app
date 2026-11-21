@@ -800,13 +800,14 @@ class _Summary extends StatelessWidget {
             cell(
               l10n.txSumPaid,
               paid.value,
-              (v) => v == 0 ? '0' : MoneyFormat.signed(Money(-v)),
+              (v) => MoneyFormat.amount(Money(v)),
+              color: colors.expense,
             ),
             cell(
               l10n.txSumPlanned,
               planned.value,
-              (v) => v == 0 ? '—' : MoneyFormat.amount(Money(v)),
-              color: planned.value == 0 ? colors.inkTertiary : null,
+              (v) => MoneyFormat.amount(Money(v)),
+              color: colors.info,
             ),
             cell(l10n.txSumCount, count, (v) => '$v'),
           ],

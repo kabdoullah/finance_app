@@ -1170,7 +1170,7 @@
   "calCollapse": "Réduire",
   "calPrevMonth": "Mois précédent",
   "calNextMonth": "Mois suivant",
-  "calLegendPaid": "Dépenses",
+  "calLegendPaid": "Dépenses (plus foncé = plus élevées)",
   "calLegendPlanned": "Planifiée",
   "calLegendLate": "En retard",
   "calDayToday": "{day} · aujourd'hui",

@@ -458,19 +458,7 @@ class _DayCell extends StatelessWidget {
                         ),
                       ),
                     ),
-                  if (hasDue)
-                    Container(
-                      width: 7,
-                      height: 7,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: hasLate ? colors.warning : null,
-                        border: Border.all(
-                          width: 1.5,
-                          color: hasLate ? colors.warning : colors.infoMid,
-                        ),
-                      ),
-                    ),
+                  if (hasDue) _DueMark(late: hasLate),
                   if (level == 0 && !hasDue) const SizedBox(height: 7),
                 ],
               ),
@@ -502,23 +490,51 @@ class _Legend extends StatelessWidget {
         ),
       ],
     );
-    Widget dot(Color fill, Color border) => Container(
-      width: 7,
-      height: 7,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: fill,
-        border: Border.all(width: 1.5, color: border),
-      ),
-    );
     return Wrap(
       spacing: 12,
       runSpacing: 4,
       children: [
-        item(dot(colors.expense, colors.expense), l10n.calLegendPaid),
-        item(dot(Colors.transparent, colors.infoMid), l10n.calLegendPlanned),
-        item(dot(colors.warning, colors.warning), l10n.calLegendLate),
+        item(
+          Container(
+            width: 6,
+            height: 6,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: colors.expense,
+            ),
+          ),
+          l10n.calLegendPaid,
+        ),
+        item(const _DueMark(late: false), l10n.calLegendPlanned),
+        item(const _DueMark(late: true), l10n.calLegendLate),
       ],
+    );
+  }
+}
+
+/// Échéance d'un jour : anneau si planifiée, carré plein si en retard. La
+/// forme distingue le retard des dépenses (point plein), pas seulement la
+/// couleur.
+class _DueMark extends StatelessWidget {
+  const _DueMark({required this.late});
+
+  final bool late;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    return Container(
+      width: 7,
+      height: 7,
+      decoration: late
+          ? BoxDecoration(
+              color: colors.warning,
+              borderRadius: BorderRadius.circular(1.5),
+            )
+          : BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(width: 1.5, color: colors.infoMid),
+            ),
     );
   }
 }
