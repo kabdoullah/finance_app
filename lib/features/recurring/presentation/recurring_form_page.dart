@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../core/clock.dart';
 import '../../../core/errors/result.dart';
 import '../../../core/formatting/date_format.dart';
@@ -339,13 +340,11 @@ class _RecurringFormPageState extends ConsumerState<RecurringFormPage> {
           keyboardType: TextInputType.number,
           inputFormatters: const [AmountInputFormatter()],
           onChanged: (_) => _change(() {}),
-          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+          style: AppText.title,
           decoration: InputDecoration(
             hintText: '0',
             suffixText: l10n.currencyLabel,
-            suffixStyle: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
+            suffixStyle: AppText.body.semibold.copyWith(
               color: colors.inkSecondary,
             ),
             errorText: error({
@@ -502,7 +501,7 @@ class _CreatedMessage extends StatelessWidget {
           Text(
             l10n.recurringCreatedMessage(operation.name),
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+            style: AppText.title,
           ),
           Text(
             [
@@ -517,11 +516,7 @@ class _CreatedMessage extends StatelessWidget {
                 ),
             ].join('\n'),
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 14.5,
-              height: 1.5,
-              color: colors.inkSecondary,
-            ),
+            style: AppText.bodyLarge.prose.copyWith(color: colors.inkSecondary),
           ),
         ],
       ),
@@ -539,7 +534,7 @@ class _ErrorText extends StatelessWidget {
     padding: const EdgeInsets.only(top: 6),
     child: Text(
       text,
-      style: TextStyle(fontSize: 12.5, color: context.colors.negative),
+      style: AppText.caption.copyWith(color: context.colors.negative),
     ),
   );
 }
@@ -567,18 +562,10 @@ class _SwitchRow extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 2,
             children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              Text(title, style: AppText.body.semibold),
               Text(
                 subtitle,
-                style: TextStyle(
-                  fontSize: 12.5,
-                  height: 1.4,
+                style: AppText.caption.prose.copyWith(
                   color: context.colors.inkTertiary,
                 ),
               ),
@@ -634,18 +621,9 @@ class _DateRow extends StatelessWidget {
                 children: [
                   Text(
                     label,
-                    style: TextStyle(
-                      fontSize: 12.5,
-                      color: colors.inkSecondary,
-                    ),
+                    style: AppText.caption.copyWith(color: colors.inkSecondary),
                   ),
-                  Text(
-                    value,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  Text(value, style: AppText.bodyLarge.semibold),
                 ],
               ),
             ),

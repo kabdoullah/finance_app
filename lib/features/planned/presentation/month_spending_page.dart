@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../core/clock.dart';
 import '../../../core/formatting/relative_date.dart';
 import '../../../core/money/money.dart';
@@ -77,10 +78,7 @@ class _MonthSpendingPageState extends ConsumerState<MonthSpendingPage> {
                   child: Text(
                     spendingMonthLabel(relative, month),
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: AppText.bodyLarge.semibold,
                   ),
                 ),
                 IconButton(
@@ -96,7 +94,7 @@ class _MonthSpendingPageState extends ConsumerState<MonthSpendingPage> {
               const SizedBox(height: 12),
               Text(
                 l10n.monthTotalLabel,
-                style: TextStyle(fontSize: 13, color: colors.inkSecondary),
+                style: AppText.label.copyWith(color: colors.inkSecondary),
               ),
               Text.rich(
                 TextSpan(
@@ -104,18 +102,14 @@ class _MonthSpendingPageState extends ConsumerState<MonthSpendingPage> {
                   children: [
                     TextSpan(
                       text: l10n.currencyLabel,
-                      style: TextStyle(
-                        fontSize: 15,
+                      style: AppText.bodyLarge.copyWith(
+                        letterSpacing: 0,
                         color: colors.inkSecondary,
                       ),
                     ),
                   ],
                 ),
-                style: const TextStyle(
-                  fontSize: 34,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: -1,
-                ),
+                style: AppText.amount(34, inline: true),
               ),
               const SizedBox(height: 12),
               MonthSpendingSummary(
@@ -178,9 +172,7 @@ class _MonthSpendingPageState extends ConsumerState<MonthSpendingPage> {
               const SizedBox(height: 24),
               Text(
                 l10n.monthRule,
-                style: TextStyle(
-                  fontSize: 12.5,
-                  height: 1.45,
+                style: AppText.caption.prose.copyWith(
                   color: colors.inkTertiary,
                 ),
               ),
@@ -224,13 +216,7 @@ class _SectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.only(top: 24, bottom: 4),
-    child: Semantics(
-      header: true,
-      child: Text(
-        text,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-      ),
-    ),
+    child: Semantics(header: true, child: Text(text, style: AppText.subtitle)),
   );
 }
 
@@ -272,21 +258,9 @@ class _CategoryBar extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: Text(
-                        name,
-                        style: const TextStyle(
-                          fontSize: 14.5,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                      child: Text(name, style: AppText.bodyLarge.semibold),
                     ),
-                    Text(
-                      amount,
-                      style: const TextStyle(
-                        fontSize: 14.5,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                    Text(amount, style: AppText.bodyLarge.semibold),
                   ],
                 ),
                 ExcludeSemantics(
@@ -326,12 +300,12 @@ class _Empty extends StatelessWidget {
           Text(
             l10n.monthEmptyTitle(month),
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            style: AppText.subtitle,
           ),
           Text(
             l10n.monthEmptyText,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14, color: colors.inkSecondary),
+            style: AppText.body.copyWith(color: colors.inkSecondary),
           ),
         ],
       ),

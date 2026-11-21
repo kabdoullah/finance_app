@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../core/clock.dart';
 import '../../../core/errors/result.dart';
 import '../../../core/formatting/date_format.dart';
@@ -184,10 +185,7 @@ class _PlannedDetailPageState extends ConsumerState<PlannedDetailPage> {
                       Text(
                         expense.name,
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: AppText.bodyLarge.semibold,
                       ),
                       Text.rich(
                         TextSpan(
@@ -195,19 +193,14 @@ class _PlannedDetailPageState extends ConsumerState<PlannedDetailPage> {
                           children: [
                             TextSpan(
                               text: l10n.currencyLabel,
-                              style: TextStyle(
-                                fontSize: 16,
+                              style: AppText.subtitle.copyWith(
+                                letterSpacing: 0,
                                 color: colors.inkSecondary,
                               ),
                             ),
                           ],
                         ),
-                        style: const TextStyle(
-                          fontSize: 38,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: -1.3,
-                          height: 1,
-                        ),
+                        style: AppText.amount(38),
                       ),
                       PlannedStatusPill(status: status),
                     ],
@@ -354,13 +347,7 @@ class _PlannedDetailPageState extends ConsumerState<PlannedDetailPage> {
                 shrinkWrap: true,
                 padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
                 children: [
-                  Text(
-                    l10n.plannedMarkPaid,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  Text(l10n.plannedMarkPaid, style: AppText.sheetTitle),
                   const SizedBox(height: 16),
                   _SheetLabel(l10n.plannedPayDate),
                   Wrap(
@@ -382,10 +369,7 @@ class _PlannedDetailPageState extends ConsumerState<PlannedDetailPage> {
                       expense.accountName,
                       MoneyFormat.amount(expense.amount),
                     ),
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: AppText.bodyLarge.semibold,
                   ),
                   if (early || afterDue) ...[
                     const SizedBox(height: 16),
@@ -423,9 +407,7 @@ class _PlannedDetailPageState extends ConsumerState<PlannedDetailPage> {
                               ),
                           ],
                         ),
-                        style: TextStyle(
-                          fontSize: 13.5,
-                          height: 1.45,
+                        style: AppText.bodySmall.prose.copyWith(
                           color: colors.inkSecondary,
                         ),
                       ),
@@ -461,11 +443,7 @@ class _SheetLabel extends StatelessWidget {
     padding: const EdgeInsets.only(bottom: 8),
     child: Text(
       text,
-      style: TextStyle(
-        fontSize: 13,
-        fontWeight: FontWeight.w500,
-        color: context.colors.inkSecondary,
-      ),
+      style: AppText.label.medium.copyWith(color: context.colors.inkSecondary),
     ),
   );
 }
@@ -489,19 +467,12 @@ class _InfoRow extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          Text(
-            label,
-            style: TextStyle(fontSize: 14, color: colors.inkSecondary),
-          ),
+          Text(label, style: AppText.body.copyWith(color: colors.inkSecondary)),
           Expanded(
             child: Text(
               value,
               textAlign: TextAlign.right,
-              style: TextStyle(
-                fontSize: 14.5,
-                fontWeight: FontWeight.w600,
-                color: valueColor,
-              ),
+              style: AppText.bodyLarge.semibold.copyWith(color: valueColor),
             ),
           ),
         ],
@@ -546,19 +517,10 @@ class _ImpactBox extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: 4,
               children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: ink,
-                  ),
-                ),
+                Text(title, style: AppText.body.semibold.copyWith(color: ink)),
                 Text(
                   text,
-                  style: TextStyle(
-                    fontSize: 13.5,
-                    height: 1.45,
+                  style: AppText.bodySmall.prose.copyWith(
                     color: colors.inkSecondary,
                   ),
                 ),
@@ -604,17 +566,13 @@ class _DeletedView extends StatelessWidget {
         Text(
           l10n.plannedDeletedTitle,
           textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+          style: AppText.headline,
         ),
         const SizedBox(height: 10),
         Text(
           l10n.plannedDeletedBody(month, name),
           textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 14,
-            height: 1.5,
-            color: colors.inkSecondary,
-          ),
+          style: AppText.body.prose.copyWith(color: colors.inkSecondary),
         ),
         const SizedBox(height: 16),
         Center(

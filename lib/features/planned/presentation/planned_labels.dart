@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../core/formatting/date_format.dart';
 import '../../../core/formatting/relative_date.dart';
 import '../../../core/money/money.dart';
@@ -50,11 +51,7 @@ class PlannedStatusPill extends StatelessWidget {
       ),
       child: Text(
         status.label(context.l10n),
-        style: TextStyle(
-          fontSize: 12.5,
-          fontWeight: FontWeight.w600,
-          color: ink,
-        ),
+        style: AppText.caption.semibold.copyWith(color: ink),
       ),
     );
   }
@@ -115,19 +112,13 @@ class DueRow extends StatelessWidget {
                     due.name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: AppText.bodyLarge.semibold,
                   ),
                   Text(
                     meta,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 12.5,
-                      color: colors.inkSecondary,
-                    ),
+                    style: AppText.caption.copyWith(color: colors.inkSecondary),
                   ),
                 ],
               ),
@@ -141,9 +132,7 @@ class DueRow extends StatelessWidget {
                       ? MoneyFormat.masked
                       : '${due.isEstimate ? '≈ ' : ''}'
                             '${MoneyFormat.amount(due.amount)}',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
+                  style: AppText.bodyLarge.semibold.copyWith(
                     color: colors.inkSecondary,
                   ),
                 ),

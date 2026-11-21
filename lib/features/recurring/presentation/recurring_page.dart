@@ -7,6 +7,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_text.dart';
 import '../../../core/clock.dart';
 import '../../../core/errors/result.dart';
 import '../../../core/formatting/date_format.dart';
@@ -53,9 +54,7 @@ class RecurringPage extends ConsumerWidget {
                       TextSpan(text: l10n.recurringIntroAfter),
                     ],
                   ),
-                  style: TextStyle(
-                    fontSize: 14,
-                    height: 1.5,
+                  style: AppText.body.prose.copyWith(
                     color: colors.inkSecondary,
                   ),
                 ),
@@ -70,9 +69,7 @@ class RecurringPage extends ConsumerWidget {
                 if (operations.isEmpty)
                   Text(
                     l10n.recurringEmpty,
-                    style: TextStyle(
-                      fontSize: 14,
-                      height: 1.5,
+                    style: AppText.body.prose.copyWith(
                       color: colors.inkSecondary,
                     ),
                   )
@@ -86,17 +83,13 @@ class RecurringPage extends ConsumerWidget {
                           header: true,
                           child: Text(
                             l10n.recurringModels,
-                            style: const TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: AppText.sectionTitle,
                           ),
                         ),
                       ),
                       Text(
                         '${operations.where((o) => o.isActive).length}',
-                        style: TextStyle(
-                          fontSize: 13,
+                        style: AppText.label.copyWith(
                           color: colors.inkTertiary,
                         ),
                       ),
@@ -135,16 +128,9 @@ class _Totals extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: TextStyle(fontSize: 12.5, color: colors.inkSecondary),
+                style: AppText.caption.copyWith(color: colors.inkSecondary),
               ),
-              Text(
-                value,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: color,
-                ),
-              ),
+              Text(value, style: AppText.sheetTitle.copyWith(color: color)),
             ],
           ),
         );
@@ -220,11 +206,7 @@ class _PendingCard extends ConsumerWidget {
               Expanded(
                 child: Text(
                   label.toUpperCase(),
-                  style: TextStyle(
-                    fontSize: 12.5,
-                    fontWeight: FontWeight.w700,
-                    color: colors.warning,
-                  ),
+                  style: AppText.caption.bold.copyWith(color: colors.warning),
                 ),
               ),
             ],
@@ -237,30 +219,17 @@ class _PendingCard extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   spacing: 2,
                   children: [
-                    Text(
-                      operation.name,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                    Text(operation.name, style: AppText.bodyLarge.semibold),
                     Text(
                       l10n.recurringPendingMeta(dueDay, operation.accountName),
-                      style: TextStyle(
-                        fontSize: 12.5,
+                      style: AppText.caption.copyWith(
                         color: colors.inkSecondary,
                       ),
                     ),
                   ],
                 ),
               ),
-              Text(
-                operation.signedAmount,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              Text(operation.signedAmount, style: AppText.subtitle),
             ],
           ),
           if (occurrence.isFirst)
@@ -294,7 +263,7 @@ class _PendingCard extends ConsumerWidget {
                   AppDateFormat.dayMonth(operation.nextDue!, locale),
                 ),
               ),
-              style: TextStyle(fontSize: 12.5, color: colors.inkSecondary),
+              style: AppText.caption.copyWith(color: colors.inkSecondary),
             ),
         ],
       ),
@@ -390,7 +359,7 @@ class _RealAmountSheetState extends State<_RealAmountSheet> {
         children: [
           Text(
             l10n.recurringRealAmountTitle(widget.operation.name),
-            style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+            style: AppText.sectionTitle,
           ),
           TextField(
             controller: _amount,
@@ -398,7 +367,7 @@ class _RealAmountSheetState extends State<_RealAmountSheet> {
             keyboardType: TextInputType.number,
             inputFormatters: const [AmountInputFormatter()],
             onChanged: (_) => setState(() {}),
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+            style: AppText.headline,
             decoration: InputDecoration(
               suffixText: l10n.currencyLabel,
               helperText: l10n.recurringRealAmountHelp(
@@ -481,8 +450,7 @@ class _OperationRow extends ConsumerWidget {
                         children: [
                           TextSpan(
                             text: operation.signedAmount,
-                            style: TextStyle(
-                              fontSize: 14,
+                            style: AppText.body.copyWith(
                               color: operation.kind == TransactionKind.income
                                   ? colors.positive
                                   : colors.ink,
@@ -490,23 +458,17 @@ class _OperationRow extends ConsumerWidget {
                           ),
                         ],
                       ),
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: AppText.bodyLarge.semibold,
                     ),
                     Text(
                       meta,
-                      style: TextStyle(
-                        fontSize: 12.5,
+                      style: AppText.caption.copyWith(
                         color: colors.inkTertiary,
                       ),
                     ),
                     Text(
                       status,
-                      style: TextStyle(
-                        fontSize: 12.5,
-                        fontWeight: FontWeight.w600,
+                      style: AppText.caption.semibold.copyWith(
                         color: active
                             ? colors.inkSecondary
                             : colors.inkTertiary,
