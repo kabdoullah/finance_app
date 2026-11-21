@@ -5,6 +5,7 @@ import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
 import '../../../app/theme/app_text.dart';
 import '../../../core/widgets/confirm_dialog.dart';
+import '../../../core/widgets/section_label.dart';
 import '../../../l10n/l10n.dart';
 import '../../quick_entry/data/speech_service.dart';
 import '../domain/ai_compatibility.dart';
@@ -259,14 +260,14 @@ class AiModelPage extends ConsumerWidget {
             l10n.aiWithout,
             style: AppText.label.prose.copyWith(color: colors.inkTertiary),
           ),
-          _SectionLabel(l10n.aiVoiceSection),
+          SectionLabel(l10n.aiVoiceSection),
           const _VoiceEngineRow(),
           _InfoRow(
             title: l10n.aiVoiceLanguage,
             trailing: Text(l10n.aiVoiceFrench, style: AppText.body.semibold),
           ),
           if (state.isInstalled) ...[
-            _SectionLabel(l10n.aiPrefsSection),
+            SectionLabel(l10n.aiPrefsSection),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
               value: state.loadOnStartup,
@@ -391,21 +392,6 @@ class _RoleRow extends StatelessWidget {
       ),
     );
   }
-}
-
-class _SectionLabel extends StatelessWidget {
-  const _SectionLabel(this.label);
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(top: 28, bottom: 4),
-    child: Text(
-      label.toUpperCase(),
-      style: AppText.overline.copyWith(color: context.colors.inkTertiary),
-    ),
-  );
 }
 
 class _InfoRow extends StatelessWidget {

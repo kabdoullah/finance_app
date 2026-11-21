@@ -17,6 +17,7 @@ import '../../../core/formatting/relative_date.dart';
 import '../../../core/money/money.dart';
 import '../../../core/time/calendar_date.dart';
 import '../../../core/widgets/choice_pill.dart';
+import '../../../core/widgets/field_label.dart';
 import '../../../core/widgets/motion.dart';
 import '../../../core/widgets/segmented_choice.dart';
 import '../../../l10n/l10n.dart';
@@ -549,7 +550,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                 const SizedBox(height: 20),
               ],
               if (isPlanned) ...[
-                _SectionLabel(l10n.plannedName),
+                FieldLabel(l10n.plannedName),
                 TextField(
                   controller: _name,
                   maxLength: PlannedDraft.maxLength,
@@ -593,7 +594,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                   ),
                 ],
               ] else ...[
-                _SectionLabel(l10n.txCategory),
+                FieldLabel(l10n.txCategory),
                 _CategoryPills(
                   kind: _kind,
                   selectedId: _categoryId,
@@ -647,9 +648,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
               ],
               const SizedBox(height: 12),
               if (_descriptionOpen) ...[
-                _SectionLabel(
-                  isPlanned ? l10n.plannedNote : l10n.txDescription,
-                ),
+                FieldLabel(isPlanned ? l10n.plannedNote : l10n.txDescription),
                 TextField(
                   controller: _description,
                   autofocus: widget.editPlanned == null,
@@ -1112,21 +1111,6 @@ class _PickerRow extends StatelessWidget {
       ),
     );
   }
-}
-
-class _SectionLabel extends StatelessWidget {
-  const _SectionLabel(this.text);
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(bottom: 10),
-    child: Text(
-      text,
-      style: AppText.label.medium.copyWith(color: context.colors.inkSecondary),
-    ),
-  );
 }
 
 class _InfoBox extends StatelessWidget {
