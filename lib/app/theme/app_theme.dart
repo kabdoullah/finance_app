@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 
 import 'app_colors.dart';
@@ -57,6 +58,16 @@ abstract final class AppTheme {
       ),
       // En-têtes des maquettes : fond papier, titre centré 16/600, sans ombre.
       appBarTheme: AppBarTheme(
+        // Fixé : une barre transparente (écrans teintés) ferait deviner des
+        // icônes blanches à Flutter, invisibles sur le papier, et le réglage
+        // resterait en revenant sur l'Accueil (qui n'a pas de barre).
+        systemOverlayStyle: brightness == Brightness.light
+            ? SystemUiOverlayStyle.dark.copyWith(
+                statusBarColor: Colors.transparent,
+              )
+            : SystemUiOverlayStyle.light.copyWith(
+                statusBarColor: Colors.transparent,
+              ),
         backgroundColor: colors.background,
         foregroundColor: colors.ink,
         surfaceTintColor: Colors.transparent,

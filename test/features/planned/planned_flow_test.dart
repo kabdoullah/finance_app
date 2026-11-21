@@ -170,12 +170,54 @@ void main() {
     await tester.tap(find.byType(CloseButton));
     await tester.pumpAndSettle();
 
-    await tester.ensureVisible(find.text('Voir les dépenses de novembre'));
-    await tester.tap(find.text('Voir les dépenses de novembre'));
+    await tester.ensureVisible(find.text('Dépenses de novembre'));
+    await tester.tap(find.text('Dépenses de novembre'));
     await tester.pumpAndSettle();
     expect(find.text('Dépenses du mois'), findsOneWidget);
     expect(find.text('À payer · 14${_nbsp}000${_nbsp}FCFA'), findsOneWidget);
     expect(find.text('Payées · 8${_nbsp}500${_nbsp}FCFA'), findsOneWidget);
     expect(find.text('22${_nbsp}500'), findsOneWidget);
+  });
+
+  testWidgets('jour passé : « Ajouter une dépense ce jour-là » garde la date', (
+    tester,
+  ) async {
+    final accountId = (await AccountsRepository(
+      db,
+      () => testNow,
+    ).watchActive().first).single.id;
+    await TransactionsRepository(db, () => testNow).create(
+      TransactionDraft(
+        kind: TransactionKind.expense,
+        amount: const Money(8500),
+        occurredAt: testNow,
+        accountId: accountId,
+        categoryId: 'exp.food',
+        description: 'Marché',
+      ),
+    );
+    await pumpTestApp(tester, db);
+    // testNow : dimanche 15 nov. ; on choisit le vendredi 13.
+    await tester.ensureVisible(find.text('Voir tout le mois'));
+    await tester.tap(find.text('Voir tout le mois'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.bySemanticsLabel(RegExp(r'^Vendredi 13 nov')));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Ajouter une dépense ce jour-là'));
+    await tester.tap(find.text('Ajouter une dépense ce jour-là'));
+    await tester.pumpAndSettle();
+    expect(find.byType(AddTransactionPage), findsOneWidget);
+    for (final key in ['2', '000']) {
+      await tester.tap(find.text(key));
+      await tester.pump();
+    }
+    await tester.tap(find.text('Continuer'));
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.text('Vendredi 13 nov. 2026'),
+      200,
+      scrollable: scrollableOf(AddTransactionPage),
+    );
+    expect(find.text('Vendredi 13 nov. 2026'), findsOneWidget);
   });
 }

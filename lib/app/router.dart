@@ -81,12 +81,14 @@ abstract final class AppRoutes {
     TransactionKind? kind,
     String? accountId,
     DateTime? plannedDue,
+    DateTime? paidOn,
   }) => Uri(
     path: '/transactions/new',
     queryParameters: {
       'kind': ?kind?.storageValue,
       'account': ?accountId,
       'due': ?(plannedDue == null ? null : CalendarDate.format(plannedDue)),
+      'date': ?(paidOn == null ? null : CalendarDate.format(paidOn)),
     },
   ).toString();
   static String monthSpending(Month month) =>
@@ -140,6 +142,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               initialAccountId: state.uri.queryParameters['account'],
               initialPlannedDue: switch (state.uri.queryParameters['due']) {
                 final due? => CalendarDate.parse(due),
+                null => null,
+              },
+              initialDate: switch (state.uri.queryParameters['date']) {
+                final date? => CalendarDate.parse(date),
                 null => null,
               },
             ),

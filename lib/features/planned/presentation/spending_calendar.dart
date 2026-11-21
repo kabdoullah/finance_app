@@ -6,6 +6,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_icons.dart';
+import '../../../app/theme/app_theme.dart';
 import '../../../app/theme/motion.dart';
 import '../../../core/clock.dart';
 import '../../../core/formatting/relative_date.dart';
@@ -24,8 +25,15 @@ import 'planned_labels.dart';
 import 'planned_providers.dart';
 
 /// Nom d'un mois budgétaire : « Novembre », « Novembre · 25 oct. – 24 nov. ».
-String spendingMonthLabel(RelativeDate relative, Month month) => [
-  RelativeDate.capitalize(relative.month(month)),
+String spendingMonthLabel(
+  RelativeDate relative,
+  Month month, {
+  bool withYear = false,
+}) => [
+  [
+    RelativeDate.capitalize(relative.month(month)),
+    if (withYear) '${month.year}',
+  ].join(' '),
   ?relative.monthRange(month),
 ].join(' · ');
 
@@ -99,8 +107,9 @@ class _SpendingCalendarState extends ConsumerState<SpendingCalendar> {
                 child: Text(
                   l10n.calTitle,
                   style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -0.2,
                   ),
                 ),
               ),
@@ -114,11 +123,12 @@ class _SpendingCalendarState extends ConsumerState<SpendingCalendar> {
             ),
             Flexible(
               child: Text(
-                spendingMonthLabel(relative, month),
+                // Maquette : « Novembre 2026 ».
+                spendingMonthLabel(relative, month, withYear: true),
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 14,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ),
@@ -133,56 +143,98 @@ class _SpendingCalendarState extends ConsumerState<SpendingCalendar> {
         ),
         const SizedBox(height: 8),
         if (spending != null) ...[
-          // Changement de mois : la grille glisse dans le sens choisi.
-          AnimatedSwitcher(
-            duration: Motion.of(context, Motion.slow),
-            switchInCurve: Motion.easeOut,
-            switchOutCurve: Motion.easeIn,
-            transitionBuilder: (child, animation) {
-              final incoming = child.key == ValueKey(month);
-              final from = Offset(0.15 * _direction * (incoming ? 1 : -1), 0);
-              return FadeTransition(
-                opacity: animation,
-                child: SlideTransition(
-                  position: Tween(
-                    begin: from,
-                    end: Offset.zero,
-                  ).animate(animation),
-                  child: child,
+          // Maquette : grille, légende (mois déplié) et bascule dans une carte.
+          Container(
+            padding: const EdgeInsets.fromLTRB(10, 12, 10, 6),
+            decoration: BoxDecoration(
+              color: colors.surface,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: colors.line),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: 8,
+              children: [
+                // Changement de mois : la grille glisse dans le sens choisi.
+                AnimatedSwitcher(
+                  duration: Motion.of(context, Motion.slow),
+                  switchInCurve: Motion.easeOut,
+                  switchOutCurve: Motion.easeIn,
+                  transitionBuilder: (child, animation) {
+                    final incoming = child.key == ValueKey(month);
+                    final from = Offset(
+                      0.15 * _direction * (incoming ? 1 : -1),
+                      0,
+                    );
+                    return FadeTransition(
+                      opacity: animation,
+                      child: SlideTransition(
+                        position: Tween(
+                          begin: from,
+                          end: Offset.zero,
+                        ).animate(animation),
+                        child: child,
+                      ),
+                    );
+                  },
+                  layoutBuilder: (current, previous) => Stack(
+                    alignment: Alignment.topCenter,
+                    children: [...previous, ?current],
+                  ),
+                  child: SpendingCalendarGrid(
+                    key: ValueKey(month),
+                    month: month,
+                    spending: spending,
+                    selected: selected,
+                    now: now,
+                    expanded: _expanded,
+                    onSelect: (day) => setState(() {
+                      _month = month;
+                      _selected = day;
+                    }),
+                  ),
                 ),
-              );
-            },
-            layoutBuilder: (current, previous) => Stack(
-              alignment: Alignment.topCenter,
-              children: [...previous, ?current],
-            ),
-            child: SpendingCalendarGrid(
-              key: ValueKey(month),
-              month: month,
-              spending: spending,
-              selected: selected,
-              now: now,
-              expanded: _expanded,
-              onSelect: (day) => setState(() {
-                _month = month;
-                _selected = day;
-              }),
+                if (_expanded)
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(4, 4, 4, 0),
+                    child: _Legend(),
+                  ),
+                Center(
+                  child: TextButton(
+                    onPressed: () => setState(() => _expanded = !_expanded),
+                    style: TextButton.styleFrom(
+                      minimumSize: const Size(0, 40),
+                      foregroundColor: colors.ink,
+                      textStyle: const TextStyle(
+                        fontFamily: AppTheme.fontFamily,
+                        fontSize: 13.5,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      spacing: 6,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            _expanded ? l10n.calCollapse : l10n.calSeeMonth,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Icon(
+                          _expanded
+                              ? AppIcons.caretUpBold
+                              : AppIcons.caretDownBold,
+                          size: 12,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 8),
-          const _Legend(),
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton.icon(
-              onPressed: () => setState(() => _expanded = !_expanded),
-              icon: Icon(
-                _expanded ? AppIcons.caretUpBold : AppIcons.caretDownBold,
-                size: 14,
-              ),
-              label: Text(_expanded ? l10n.calCollapse : l10n.calSeeMonth),
-            ),
-          ),
-          Divider(height: 24, color: colors.line),
+          const SizedBox(height: 16),
           AnimatedSwitcher(
             duration: Motion.of(context, Motion.base),
             switchInCurve: Motion.ease,
@@ -521,23 +573,49 @@ class _DayPanel extends ConsumerWidget {
             ? l10n.calDayLate(amount(due))
             : l10n.calDayDue(amount(due)),
     ].join(' · ');
-    final title = relative.header(day);
+    // Maquette : « Dimanche 15 novembre · aujourd'hui ».
+    final daysAgo = CalendarDate.of(now).difference(day).inDays;
+    final title = [
+      RelativeDate.capitalize(
+        DateFormat(
+          'EEEE d MMMM',
+          Localizations.localeOf(context).toLanguageTag(),
+        ).format(day),
+      ),
+      if (daysAgo == 0) l10n.dayToday.toLowerCase(),
+      if (daysAgo == 1) l10n.dayYesterday.toLowerCase(),
+    ].join(' · ');
     final empty = dues.isEmpty && operations.isEmpty;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          title,
-          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-        ),
-        if (summary.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.only(top: 2),
-            child: Text(
-              summary,
-              style: TextStyle(fontSize: 13, color: colors.inkSecondary),
-            ),
+        Padding(
+          padding: const EdgeInsets.only(top: 4, bottom: 6),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            spacing: 10,
+            children: [
+              Expanded(
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              if (summary.isNotEmpty)
+                Flexible(
+                  child: Text(
+                    summary,
+                    textAlign: TextAlign.end,
+                    style: TextStyle(fontSize: 13, color: colors.inkSecondary),
+                  ),
+                ),
+            ],
           ),
+        ),
         for (final d in dues)
           DueRow(
             due: d,
@@ -553,29 +631,62 @@ class _DayPanel extends ConsumerWidget {
           ),
         if (empty)
           Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: Text(
-              spending.isEmpty
-                  ? l10n.calDayEmptyMonth(monthName)
-                  : day.isAfter(today)
-                  ? l10n.calDayEmptyFuture
-                  : l10n.calDayEmpty,
-              style: TextStyle(fontSize: 14, color: colors.inkSecondary),
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Row(
+              spacing: 10,
+              children: [
+                Icon(
+                  AppIcons.calendarBlank,
+                  size: 18,
+                  color: colors.inkTertiary,
+                ),
+                Expanded(
+                  child: Text(
+                    spending.isEmpty
+                        ? l10n.calDayEmptyMonth(monthName)
+                        : day.isAfter(today)
+                        ? l10n.calDayEmptyFuture
+                        : l10n.calDayEmpty,
+                    style: TextStyle(
+                      fontSize: 13.5,
+                      color: colors.inkSecondary,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-        if (day.isAfter(today) && dues.isEmpty)
+        // Action rapide sous le jour : planifier (à venir) ou ajouter une
+        // dépense déjà payée (aujourd'hui, passé).
+        if (!day.isAfter(today) || dues.isEmpty)
           Align(
             alignment: Alignment.centerLeft,
             child: TextButton.icon(
               onPressed: () => context.push(
-                AppRoutes.newTransaction(
-                  kind: TransactionKind.expense,
-                  plannedDue: day,
+                day.isAfter(today)
+                    ? AppRoutes.newTransaction(
+                        kind: TransactionKind.expense,
+                        plannedDue: day,
+                      )
+                    : AppRoutes.newTransaction(
+                        kind: TransactionKind.expense,
+                        paidOn: day,
+                      ),
+              ),
+              icon: Icon(AppIcons.plusBold, size: 14, color: colors.info),
+              label: Text(
+                day.isAfter(today) ? l10n.calPlanThisDay : l10n.calAddThisDay,
+              ),
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.zero,
+                minimumSize: const Size(0, 44),
+                foregroundColor: colors.ink,
+                textStyle: const TextStyle(
+                  fontFamily: AppTheme.fontFamily,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-              icon: const Icon(AppIcons.plusBold, size: 16),
-              label: Text(l10n.calPlanThisDay),
-              style: TextButton.styleFrom(padding: EdgeInsets.zero),
             ),
           ),
       ],
@@ -630,14 +741,14 @@ class MonthSpendingSummary extends ConsumerWidget {
             : l10n.spendNotePast,
     };
     final total = spending.total.value;
-    Widget cell(String label, Money value, {bool strong = false}) => Expanded(
+    Widget cell(String label, Money value, Color color) => Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 2,
         children: [
           Text(
             label,
-            style: TextStyle(fontSize: 12.5, color: colors.inkSecondary),
+            style: TextStyle(fontSize: 12, color: colors.inkSecondary),
           ),
           FittedBox(
             fit: BoxFit.scaleDown,
@@ -648,7 +759,8 @@ class MonthSpendingSummary extends ConsumerWidget {
                 amount(Money(v)),
                 style: TextStyle(
                   fontSize: 17,
-                  fontWeight: strong ? FontWeight.w700 : FontWeight.w600,
+                  fontWeight: FontWeight.w700,
+                  color: color,
                 ),
               ),
             ),
@@ -656,21 +768,33 @@ class MonthSpendingSummary extends ConsumerWidget {
         ],
       ),
     );
-    return Column(
+    final content = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: 10,
       children: [
+        // Maquette : titre et chevron, tout le bloc ouvre Dépenses du mois.
         if (showTitle)
-          Text(
-            l10n.spendTitle(monthName),
-            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  l10n.spendTitle(monthName),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              if (onOpen != null)
+                Icon(AppIcons.caretRight, size: 14, color: colors.inkTertiary),
+            ],
           ),
         Row(
           spacing: 12,
           children: [
-            cell(l10n.spendPaid, spending.paid),
-            cell(l10n.spendPlanned, spending.planned),
-            cell(l10n.spendTotal, spending.total, strong: true),
+            cell(l10n.spendPaid, spending.paid, colors.expense),
+            cell(l10n.spendPlanned, spending.planned, colors.info),
+            cell(l10n.spendTotal, spending.total, colors.ink),
           ],
         ),
         ExcludeSemantics(
@@ -684,9 +808,13 @@ class MonthSpendingSummary extends ConsumerWidget {
                       value: 1,
                       builder: (context, progress) => Align(
                         alignment: Alignment.centerLeft,
+                        // Align et Row relâchent la hauteur : sans
+                        // heightFactor et stretch, la barre ferait 0 px.
                         child: FractionallySizedBox(
                           widthFactor: progress,
+                          heightFactor: 1,
                           child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               if (spending.paid.value > 0)
                                 Expanded(
@@ -718,16 +846,22 @@ class MonthSpendingSummary extends ConsumerWidget {
             color: colors.inkSecondary,
           ),
         ),
-        if (onOpen != null)
-          Align(
-            alignment: Alignment.centerLeft,
-            child: TextButton(
-              onPressed: onOpen,
-              style: TextButton.styleFrom(padding: EdgeInsets.zero),
-              child: Text(l10n.spendSeeMonth(monthName)),
-            ),
-          ),
       ],
+    );
+    if (onOpen == null) return content;
+    return Semantics(
+      button: true,
+      hint: l10n.spendSeeMonth(monthName),
+      child: InkWell(
+        onTap: onOpen,
+        child: Container(
+          padding: const EdgeInsets.only(top: 14, bottom: 4),
+          decoration: BoxDecoration(
+            border: Border(top: BorderSide(color: colors.line)),
+          ),
+          child: content,
+        ),
+      ),
     );
   }
 }

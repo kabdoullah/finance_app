@@ -78,11 +78,15 @@ void main() {
     // Accueil : la dépense du 28 oct. compte dans « novembre ».
     expect(monthExpense('15 000'), findsOneWidget);
     // Aussi en tête du calendrier de l'accueil.
-    expect(find.text('Novembre · 25 oct. – 24 nov.'), findsNWidgets(2));
+    expect(find.text('Novembre · 25 oct. – 24 nov.'), findsOneWidget);
+    expect(find.text('Novembre 2026 · 25 oct. – 24 nov.'), findsOneWidget);
 
     await tester.tap(find.text('Budgets').last);
     await tester.pumpAndSettle();
-    expect(find.text('Budget global · novembre · 25 oct. – 24 nov.'), findsOneWidget);
+    expect(
+      find.text('Budget global · novembre · 25 oct. – 24 nov.'),
+      findsOneWidget,
+    );
     // 15 → 24 nov. inclus.
     expect(find.text('Encore 10 jours'), findsOneWidget);
 
@@ -114,7 +118,8 @@ void main() {
     await tester.tap(find.byType(BackButton));
     await tester.pumpAndSettle();
     // Du 5 nov. au 4 déc. : toujours la seule dépense du 10 nov.
-    expect(find.text('Novembre · 5 nov. – 4 déc.'), findsNWidgets(2));
+    expect(find.text('Novembre · 5 nov. – 4 déc.'), findsOneWidget);
+    expect(find.text('Novembre 2026 · 5 nov. – 4 déc.'), findsOneWidget);
     expect(monthExpense('5 000'), findsOneWidget);
   });
 }
