@@ -4,11 +4,11 @@ import '../../../core/time/calendar_date.dart';
 import '../../../core/time/month.dart';
 
 /// Pas de la période affichée dans Transactions.
-enum PeriodSpan { day, week, month, custom }
+enum PeriodSpan { day, week, month, year, custom }
 
 /// Période de l'onglet Transactions : un jour, une semaine (lundi →
-/// dimanche), un mois budgétaire ou des dates choisies. [start] inclus,
-/// [end] exclu, minuits locaux.
+/// dimanche), un mois budgétaire, une année civile ou des dates choisies.
+/// [start] inclus, [end] exclu, minuits locaux.
 @immutable
 class TransactionPeriod {
   const TransactionPeriod._(this.span, this.start, this.end, [this.month]);
@@ -26,6 +26,13 @@ class TransactionPeriod {
 
   factory TransactionPeriod.month(Month month) =>
       TransactionPeriod._(PeriodSpan.month, month.start, month.end, month);
+
+  /// Année civile de [date] : du 1er janvier au 31 décembre.
+  factory TransactionPeriod.year(DateTime date) => TransactionPeriod._(
+    PeriodSpan.year,
+    DateTime(date.year),
+    DateTime(date.year + 1),
+  );
 
   /// Du [first] au [last] inclus (dans n'importe quel ordre).
   factory TransactionPeriod.custom(DateTime first, DateTime last) {
@@ -54,6 +61,7 @@ class TransactionPeriod {
     PeriodSpan.day => TransactionPeriod.day(_addDays(start, steps)),
     PeriodSpan.week => TransactionPeriod.week(_addDays(start, 7 * steps)),
     PeriodSpan.month => TransactionPeriod.month(_shiftMonth(month!, steps)),
+    PeriodSpan.year => TransactionPeriod.year(DateTime(start.year + steps)),
     PeriodSpan.custom => this,
   };
 
@@ -67,6 +75,7 @@ class TransactionPeriod {
     PeriodSpan.day => TransactionPeriod.day(anchor),
     PeriodSpan.week => TransactionPeriod.week(anchor),
     PeriodSpan.month => TransactionPeriod.month(monthOf(anchor)),
+    PeriodSpan.year => TransactionPeriod.year(anchor),
     PeriodSpan.custom => TransactionPeriod.custom(start, last),
   };
 

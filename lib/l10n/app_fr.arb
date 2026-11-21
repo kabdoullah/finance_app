@@ -1211,6 +1211,7 @@
   "txSpanDay": "Jour",
   "txSpanWeek": "Semaine",
   "txSpanMonth": "Mois",
+  "txSpanYear": "Année",
   "txSpanCustom": "Période",
   "txPeriodRange": "{start} – {end}",
   "txPrevPeriod": "Période précédente",

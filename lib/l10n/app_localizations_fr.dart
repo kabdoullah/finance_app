@@ -3762,6 +3762,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get txSpanMonth => 'Mois';
 
   @override
+  String get txSpanYear => 'Année';
+
+  @override
   String get txSpanCustom => 'Période';
 
   @override

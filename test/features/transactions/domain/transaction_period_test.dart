@@ -22,6 +22,26 @@ void main() {
     expect(month.shift(-2).start, DateTime(2026, 8, 25));
   });
 
+  test('année civile, pas suivant et ancre conservée', () {
+    final year = TransactionPeriod.year(DateTime(2026, 11, 20, 18));
+
+    expect(year.start, DateTime(2026));
+    expect(year.last, DateTime(2026, 12, 31));
+    expect(year.contains(DateTime(2026, 12, 31, 23, 59)), isTrue);
+    expect(year.contains(DateTime(2027)), isFalse);
+    expect(year.shift(-1).start, DateTime(2025));
+    expect(
+      year
+          .withSpan(
+            PeriodSpan.month,
+            anchor: DateTime(2026, 11, 20),
+            monthOf: monthOf,
+          )
+          .month,
+      monthOf(DateTime(2026, 11, 20)),
+    );
+  });
+
   test('changer de pas garde l’ancre ; dates choisies dans le désordre', () {
     final month = TransactionPeriod.month(monthOf(DateTime(2026, 11, 20)));
     final day = month.withSpan(

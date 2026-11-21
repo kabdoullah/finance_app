@@ -221,6 +221,7 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
     return switch (_period.span) {
       PeriodSpan.day => relative.header(_period.start),
       PeriodSpan.month => spendingMonthLabel(relative, _period.month!),
+      PeriodSpan.year => '${_period.start.year}',
       PeriodSpan.week || PeriodSpan.custom =>
         _period.start == _period.last
             ? relative.header(_period.start)
@@ -529,6 +530,7 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
                 (PeriodSpan.day, l10n.txSpanDay),
                 (PeriodSpan.week, l10n.txSpanWeek),
                 (PeriodSpan.month, l10n.txSpanMonth),
+                (PeriodSpan.year, l10n.txSpanYear),
                 (PeriodSpan.custom, l10n.txSpanCustom),
               ],
               selected: _period.span,

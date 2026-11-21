@@ -6022,6 +6022,12 @@ abstract class AppLocalizations {
   /// **'Mois'**
   String get txSpanMonth;
 
+  /// No description provided for @txSpanYear.
+  ///
+  /// In fr, this message translates to:
+  /// **'Année'**
+  String get txSpanYear;
+
   /// No description provided for @txSpanCustom.
   ///
   /// In fr, this message translates to:
