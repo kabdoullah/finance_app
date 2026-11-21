@@ -45,6 +45,11 @@ void main() {
           goalMonths: 3,
         ),
         fromTools: true,
+        head: ReplyHead(
+          '28 000 FCFA',
+          'dépensés cette semaine',
+          tone: ReplyTone.warning,
+        ),
       ),
     );
     now = now.add(const Duration(seconds: 1));
@@ -59,6 +64,9 @@ void main() {
     expect(figures.link?.target, ReplyLinkTarget.goal);
     expect(figures.link?.goalMonths, 3);
     expect(figures.fromTools, isTrue);
+    expect(figures.head?.value, '28 000 FCFA');
+    expect(figures.head?.caption, 'dépensés cette semaine');
+    expect(figures.head?.tone, ReplyTone.warning);
 
     final card = loaded[2] as ReplyEntry;
     final op = card.prepared.single;

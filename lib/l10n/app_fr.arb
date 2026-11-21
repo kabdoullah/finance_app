@@ -1293,5 +1293,17 @@
   "asReplyLabel": "Copilote",
   "asTypingModel": "Gemma 4",
   "asSettings": "Réglages de l'assistant",
-  "calAddThisDay": "Ajouter une dépense ce jour-là"
+  "calAddThisDay": "Ajouter une dépense ce jour-là",
+  "asHeadSpent": "dépensés {period}",
+  "asHeadWeek": "à dépenser sur 7 jours, soit {perDay}\u00a0FCFA par jour",
+  "asHeadOver": "au-delà du budget",
+  "asHeadBudgetCategory": "restants pour {category}",
+  "asHeadBalance": "sur tes comptes aujourd'hui",
+  "asHeadForecast": "prévus le {date}",
+  "asHeadSimPossible": "Possible",
+  "asHeadSimTight": "Juste",
+  "asHeadSimNo": "Pas maintenant",
+  "asHeadSimCaption": "Un achat à {price}\u00a0FCFA, payé depuis tes comptes",
+  "asHeadSavings": "mis de côté par mois, en moyenne",
+  "asHeadSavingsDeficit": "dépensés de plus que tes revenus, chaque mois"
 }

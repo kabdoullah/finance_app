@@ -117,6 +117,10 @@ class AssistantHistoryRepository {
     'prepared': [for (final op in e.prepared) _encodeOperation(op)],
     'state': e.preparedState.name,
     'note': ?e.note,
+    'head': ?switch (e.head) {
+      null => null,
+      final h => {'v': h.value, 'c': h.caption, 't': h.tone.name},
+    },
   };
 
   static ReplyEntry _decodeReply(AssistantMessageRow row) {
@@ -163,6 +167,17 @@ class AssistantHistoryRepository {
           ? PreparedState.unsaved
           : state,
       note: json['note'] as String?,
+      head: switch ((json['head'] as Map?)?.cast<String, Object?>()) {
+        null => null,
+        final h => ReplyHead(
+          h['v']! as String,
+          h['c']! as String,
+          tone: ReplyTone.values.firstWhere(
+            (t) => t.name == h['t'],
+            orElse: () => ReplyTone.neutral,
+          ),
+        ),
+      },
     );
   }
 

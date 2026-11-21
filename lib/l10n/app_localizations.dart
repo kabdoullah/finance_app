@@ -6525,6 +6525,78 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Ajouter une dépense ce jour-là'**
   String get calAddThisDay;
+
+  /// No description provided for @asHeadSpent.
+  ///
+  /// In fr, this message translates to:
+  /// **'dépensés {period}'**
+  String asHeadSpent(Object period);
+
+  /// No description provided for @asHeadWeek.
+  ///
+  /// In fr, this message translates to:
+  /// **'à dépenser sur 7 jours, soit {perDay} FCFA par jour'**
+  String asHeadWeek(Object perDay);
+
+  /// No description provided for @asHeadOver.
+  ///
+  /// In fr, this message translates to:
+  /// **'au-delà du budget'**
+  String get asHeadOver;
+
+  /// No description provided for @asHeadBudgetCategory.
+  ///
+  /// In fr, this message translates to:
+  /// **'restants pour {category}'**
+  String asHeadBudgetCategory(Object category);
+
+  /// No description provided for @asHeadBalance.
+  ///
+  /// In fr, this message translates to:
+  /// **'sur tes comptes aujourd\'hui'**
+  String get asHeadBalance;
+
+  /// No description provided for @asHeadForecast.
+  ///
+  /// In fr, this message translates to:
+  /// **'prévus le {date}'**
+  String asHeadForecast(Object date);
+
+  /// No description provided for @asHeadSimPossible.
+  ///
+  /// In fr, this message translates to:
+  /// **'Possible'**
+  String get asHeadSimPossible;
+
+  /// No description provided for @asHeadSimTight.
+  ///
+  /// In fr, this message translates to:
+  /// **'Juste'**
+  String get asHeadSimTight;
+
+  /// No description provided for @asHeadSimNo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas maintenant'**
+  String get asHeadSimNo;
+
+  /// No description provided for @asHeadSimCaption.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un achat à {price} FCFA, payé depuis tes comptes'**
+  String asHeadSimCaption(Object price);
+
+  /// No description provided for @asHeadSavings.
+  ///
+  /// In fr, this message translates to:
+  /// **'mis de côté par mois, en moyenne'**
+  String get asHeadSavings;
+
+  /// No description provided for @asHeadSavingsDeficit.
+  ///
+  /// In fr, this message translates to:
+  /// **'dépensés de plus que tes revenus, chaque mois'**
+  String get asHeadSavingsDeficit;
 }
 
 class _AppLocalizationsDelegate

@@ -301,6 +301,7 @@ class _ReplyBubble extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const _ReplyLabel(),
+          if (reply.head case final head?) _ReplyHead(head: head),
           const SizedBox(height: 10),
           Text(reply.text, style: const TextStyle(fontSize: 15, height: 1.5)),
           if (reply.rows.isNotEmpty) ...[
@@ -372,14 +373,23 @@ class _ReplyBubble extends StatelessWidget {
                   padding: EdgeInsets.zero,
                   minimumSize: const Size(0, 44),
                 ),
-                child: Text(switch (link.target) {
-                  ReplyLinkTarget.transactions => l10n.asLinkTransactions,
-                  ReplyLinkTarget.budgets => l10n.asLinkBudgets,
-                  ReplyLinkTarget.accounts => l10n.asLinkAccounts,
-                  ReplyLinkTarget.forecast => l10n.asLinkForecast,
-                  ReplyLinkTarget.simulation => l10n.asLinkSimulation,
-                  ReplyLinkTarget.goal => l10n.asLinkGoal,
-                }),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  spacing: 6,
+                  children: [
+                    Flexible(
+                      child: Text(switch (link.target) {
+                        ReplyLinkTarget.transactions => l10n.asLinkTransactions,
+                        ReplyLinkTarget.budgets => l10n.asLinkBudgets,
+                        ReplyLinkTarget.accounts => l10n.asLinkAccounts,
+                        ReplyLinkTarget.forecast => l10n.asLinkForecast,
+                        ReplyLinkTarget.simulation => l10n.asLinkSimulation,
+                        ReplyLinkTarget.goal => l10n.asLinkGoal,
+                      }),
+                    ),
+                    const Icon(AppIcons.arrowRightBold, size: 12),
+                  ],
+                ),
               ),
             )
           else
@@ -614,6 +624,46 @@ class _Typing extends StatelessWidget {
             bar(0.70, 12),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// Chiffre clé de la réponse (maquette : 28 px gras et sa légende).
+class _ReplyHead extends StatelessWidget {
+  const _ReplyHead({required this.head});
+
+  final ReplyHead head;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 2,
+        children: [
+          Text(
+            head.value,
+            style: TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.w700,
+              letterSpacing: -0.7,
+              height: 1.15,
+              color: switch (head.tone) {
+                ReplyTone.neutral => colors.ink,
+                ReplyTone.positive => colors.positive,
+                ReplyTone.warning => colors.warning,
+                ReplyTone.negative => colors.negative,
+              },
+            ),
+          ),
+          Text(
+            head.caption,
+            style: TextStyle(fontSize: 13.5, color: colors.inkSecondary),
+          ),
+        ],
       ),
     );
   }

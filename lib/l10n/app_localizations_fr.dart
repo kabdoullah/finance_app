@@ -4085,4 +4085,51 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get calAddThisDay => 'Ajouter une dépense ce jour-là';
+
+  @override
+  String asHeadSpent(Object period) {
+    return 'dépensés $period';
+  }
+
+  @override
+  String asHeadWeek(Object perDay) {
+    return 'à dépenser sur 7 jours, soit $perDay FCFA par jour';
+  }
+
+  @override
+  String get asHeadOver => 'au-delà du budget';
+
+  @override
+  String asHeadBudgetCategory(Object category) {
+    return 'restants pour $category';
+  }
+
+  @override
+  String get asHeadBalance => 'sur tes comptes aujourd\'hui';
+
+  @override
+  String asHeadForecast(Object date) {
+    return 'prévus le $date';
+  }
+
+  @override
+  String get asHeadSimPossible => 'Possible';
+
+  @override
+  String get asHeadSimTight => 'Juste';
+
+  @override
+  String get asHeadSimNo => 'Pas maintenant';
+
+  @override
+  String asHeadSimCaption(Object price) {
+    return 'Un achat à $price FCFA, payé depuis tes comptes';
+  }
+
+  @override
+  String get asHeadSavings => 'mis de côté par mois, en moyenne';
+
+  @override
+  String get asHeadSavingsDeficit =>
+      'dépensés de plus que tes revenus, chaque mois';
 }

@@ -32,6 +32,7 @@ void main() {
       summary: 'Tu as dépensé 35 000 FCFA cette semaine.',
       rows: [ReplyRow('Alimentation', '17 000 FCFA', ratio: 1)],
       link: ReplyLink(ReplyLinkTarget.transactions),
+      head: ReplyHead('35 000 FCFA', 'dépensés cette semaine'),
     );
 
     test('phrase de Gemma gardée si ses nombres viennent des outils', () {
@@ -45,6 +46,13 @@ void main() {
       expect(reply.rows, hasLength(1));
       expect(reply.link?.target, ReplyLinkTarget.transactions);
       expect(reply.fromTools, isTrue);
+      expect(reply.head?.value, '35 000 FCFA');
+      // Conservé une fois la réponse enregistrée ou la carte mise à jour.
+      expect(reply.withId('r1').head?.caption, 'dépensés cette semaine');
+      expect(
+        reply.withPrepared(PreparedState.saved).head?.value,
+        '35 000 FCFA',
+      );
     });
 
     test('nombre inventé : phrase de l\'application à la place', () {

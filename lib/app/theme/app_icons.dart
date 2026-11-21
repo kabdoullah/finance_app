@@ -66,6 +66,7 @@ abstract final class AppIcons {
   static const tray = IconData(0xe4aa, fontFamily: _regular);
   static const info = IconData(0xe2ce, fontFamily: _regular);
   static const trendDown = IconData(0xe4ac, fontFamily: _regular);
+  static const arrowRightBold = IconData(0xe06c, fontFamily: _bold);
   static const quotesFill = IconData(0xe660, fontFamily: _fill);
   static const sparkleFill = IconData(0xe6a2, fontFamily: _fill);
   static const cpuBold = IconData(0xe610, fontFamily: _bold);

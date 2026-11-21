@@ -14,6 +14,20 @@ class ReplyRow {
   final double? ratio;
 }
 
+/// Ton du chiffre clé : neutre, favorable, à surveiller, défavorable.
+enum ReplyTone { neutral, positive, warning, negative }
+
+/// Chiffre clé en tête d'une réponse (maquette Assistant : grand chiffre et
+/// légende), calculé par l'application.
+@immutable
+class ReplyHead {
+  const ReplyHead(this.value, this.caption, {this.tone = ReplyTone.neutral});
+
+  final String value;
+  final String caption;
+  final ReplyTone tone;
+}
+
 /// Écran vers lequel une réponse renvoie.
 enum ReplyLinkTarget {
   transactions,
@@ -58,6 +72,7 @@ class ToolOutcome {
     this.rows = const [],
     this.link,
     this.prepared = const [],
+    this.head,
   });
 
   final Map<String, Object?> data;
@@ -67,6 +82,9 @@ class ToolOutcome {
 
   /// Opérations préparées, à confirmer par l'utilisateur.
   final List<ParsedOperation> prepared;
+
+  /// Chiffre clé de la réponse.
+  final ReplyHead? head;
 }
 
 /// État de la carte d'opérations préparées.
@@ -102,6 +120,7 @@ final class ReplyEntry extends ChatEntry {
     this.prepared = const [],
     this.preparedState = PreparedState.pending,
     this.note,
+    this.head,
     super.id,
   });
 
@@ -116,6 +135,9 @@ final class ReplyEntry extends ChatEntry {
   /// Mention sous la carte (« Dépense enregistrée · solde Wave : … »).
   final String? note;
 
+  /// Chiffre clé (grand chiffre et légende) en tête de la réponse.
+  final ReplyHead? head;
+
   ReplyEntry withPrepared(PreparedState state, {String? note}) => ReplyEntry(
     text: text,
     rows: rows,
@@ -124,6 +146,7 @@ final class ReplyEntry extends ChatEntry {
     prepared: prepared,
     preparedState: state,
     note: note,
+    head: head,
     id: id,
   );
 
@@ -135,6 +158,7 @@ final class ReplyEntry extends ChatEntry {
     prepared: prepared,
     preparedState: preparedState,
     note: note,
+    head: head,
     id: id,
   );
 
@@ -182,5 +206,6 @@ ReplyEntry composeReply({
     link: outcomes.map((o) => o.link).nonNulls.lastOrNull,
     fromTools: rows.isNotEmpty,
     prepared: [for (final outcome in outcomes) ...outcome.prepared],
+    head: outcomes.map((o) => o.head).nonNulls.firstOrNull,
   );
 }

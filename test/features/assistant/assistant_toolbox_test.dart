@@ -111,6 +111,9 @@ void main() {
     expect(outcome.summary, contains('28 000 FCFA cette semaine'));
     expect(outcome.rows.map((r) => r.label), ['Alimentation', 'Transport']);
     expect(outcome.link?.target, ReplyLinkTarget.transactions);
+    // Chiffre clé en tête de la réponse (maquette).
+    expect(outcome.head?.value, '28\u00a0000 FCFA');
+    expect(outcome.head?.caption, 'dépensés cette semaine');
   });
 
   test('dépenses d\'une catégorie ce mois-ci, par sous-catégorie', () async {
@@ -134,6 +137,11 @@ void main() {
     expect(outcome.data['days_left'], 16);
     expect(outcome.data['per_day_fcfa'], 2000);
     expect(outcome.data['next_7_days_fcfa'], 14000);
+    expect(outcome.head?.value, '14\u00a0000 FCFA');
+    expect(
+      outcome.head?.caption,
+      'à dépenser sur 7 jours, soit 2\u00a0000\u00a0FCFA par jour',
+    );
     expect(outcome.rows.map((r) => r.value), [
       '33 000 FCFA',
       '16',
@@ -153,6 +161,7 @@ void main() {
     final all = await toolbox.run('get_balance', {});
     // Wave : 100 000 − 108 000 ; Orange Money : 20 000.
     expect(all.data['total_fcfa'], 12000);
+    expect(all.head?.caption, 'sur tes comptes aujourd\'hui');
     final orange = await toolbox.run('get_balance', {
       'account': 'orange_money',
     });

@@ -341,6 +341,7 @@ class AssistantToolbox {
       summary: summary,
       rows: rows,
       link: link,
+      head: ReplyHead(_fcfa(total), _l10n.asHeadSpent(label)),
     );
   }
 
@@ -412,6 +413,19 @@ class AssistantToolbox {
           ReplyRow(_l10n.asRowDaysLeft, '$daysLeft'),
         ],
         link: link,
+        head: status.remaining.value < 0
+            ? ReplyHead(
+                _fcfa(-status.remaining),
+                _l10n.asHeadOver,
+                tone: ReplyTone.negative,
+              )
+            : ReplyHead(
+                _fcfa(status.remaining),
+                _l10n.asHeadBudgetCategory(category.name),
+                tone: status.percent >= 85
+                    ? ReplyTone.warning
+                    : ReplyTone.neutral,
+              ),
       );
     }
 
@@ -455,6 +469,13 @@ class AssistantToolbox {
         ReplyRow(_l10n.asRowWeek, _fcfa(week)),
       ],
       link: link,
+      head: remaining.value < 0
+          ? ReplyHead(
+              _fcfa(-remaining),
+              _l10n.asHeadOver,
+              tone: ReplyTone.negative,
+            )
+          : ReplyHead(_fcfa(week), _l10n.asHeadWeek(_amount(perDay))),
     );
   }
 
@@ -485,6 +506,7 @@ class AssistantToolbox {
         ],
       },
       summary: _l10n.asBalance(_amount(summary.total)),
+      head: ReplyHead(_fcfa(summary.total), _l10n.asHeadBalance),
       rows: [
         for (final a in accounts) ReplyRow(a.name, _fcfa(a.balance)),
         ReplyRow(_l10n.asRowTotal, _fcfa(summary.total)),
@@ -558,6 +580,11 @@ class AssistantToolbox {
         ReplyRow(_l10n.asRowReliability, level),
       ],
       link: const ReplyLink(ReplyLinkTarget.forecast),
+      head: ReplyHead(
+        '≈\u00a0${_fcfa(forecast.endBalance)}',
+        _l10n.asHeadForecast(end),
+        tone: negative != null ? ReplyTone.negative : ReplyTone.neutral,
+      ),
     );
   }
 
@@ -615,6 +642,23 @@ class AssistantToolbox {
         'end_without_purchase_fcfa': simulation.endWithout.value,
       },
       summary: AppDateFormat.sentence(summary),
+      head: switch (simulation.verdict) {
+        PurchaseVerdict.possible => ReplyHead(
+          _l10n.asHeadSimPossible,
+          _l10n.asHeadSimCaption(_amount(Money(price))),
+          tone: ReplyTone.positive,
+        ),
+        PurchaseVerdict.tight => ReplyHead(
+          _l10n.asHeadSimTight,
+          _l10n.asHeadSimCaption(_amount(Money(price))),
+          tone: ReplyTone.warning,
+        ),
+        PurchaseVerdict.discouraged => ReplyHead(
+          _l10n.asHeadSimNo,
+          _l10n.asHeadSimCaption(_amount(Money(price))),
+          tone: ReplyTone.negative,
+        ),
+      },
       rows: [
         ReplyRow(_l10n.asRowLowest, '≈ ${_fcfa(simulation.lowest)}'),
         ReplyRow(_l10n.asRowEndWith(end), '≈ ${_fcfa(simulation.endBalance)}'),
@@ -709,6 +753,13 @@ class AssistantToolbox {
               '$percent',
             )
           : _l10n.asSavings(_amount(income), _amount(expenses), '$percent'),
+      head: surplus.value < 0
+          ? ReplyHead(
+              _fcfa(-surplus),
+              _l10n.asHeadSavingsDeficit,
+              tone: ReplyTone.negative,
+            )
+          : ReplyHead(_fcfa(surplus), _l10n.asHeadSavings),
       rows: [
         ReplyRow(
           _l10n.asRowIncome,
