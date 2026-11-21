@@ -10,6 +10,7 @@ import '../../../core/errors/result.dart';
 import '../../../core/money/amount_input_formatter.dart';
 import '../../../core/money/money.dart';
 import '../../../core/widgets/choice_pill.dart';
+import '../../../core/widgets/field_label.dart';
 import '../../../l10n/l10n.dart';
 import '../domain/account.dart';
 import '../domain/account_draft.dart';
@@ -192,7 +193,7 @@ class _AccountFormPageState extends ConsumerState<AccountFormPage> {
     return ListView(
       padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
       children: [
-        _FieldLabel(l10n.accountFieldType),
+        FieldLabel(l10n.accountFieldType),
         // Deux tuiles par rangée ; hauteur minimale de 84 px, extensible
         // (libellé sur deux lignes, grande taille de texte).
         Column(
@@ -222,7 +223,7 @@ class _AccountFormPageState extends ConsumerState<AccountFormPage> {
         ),
         if (type == AccountType.mobileMoney) ...[
           const SizedBox(height: 24),
-          _FieldLabel(l10n.accountFieldOperator),
+          FieldLabel(l10n.accountFieldOperator),
           Wrap(
             spacing: 8,
             runSpacing: 8,
@@ -237,7 +238,7 @@ class _AccountFormPageState extends ConsumerState<AccountFormPage> {
           ),
         ],
         const SizedBox(height: 24),
-        _FieldLabel(l10n.accountFieldName),
+        FieldLabel(l10n.accountFieldName),
         TextField(
           controller: _name,
           textCapitalization: TextCapitalization.sentences,
@@ -249,7 +250,7 @@ class _AccountFormPageState extends ConsumerState<AccountFormPage> {
           ),
         ),
         const SizedBox(height: 24),
-        _FieldLabel(
+        FieldLabel(
           _isEdit
               ? l10n.accountFieldOpeningBalance
               : l10n.accountFieldCurrentBalance,
@@ -301,27 +302,6 @@ class _AccountFormPageState extends ConsumerState<AccountFormPage> {
       return l10n.accountErrorNameMissing;
     }
     return null;
-  }
-}
-
-class _FieldLabel extends StatelessWidget {
-  const _FieldLabel(this.text);
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: 13,
-          fontWeight: FontWeight.w500,
-          color: context.colors.inkSecondary,
-        ),
-      ),
-    );
   }
 }
 

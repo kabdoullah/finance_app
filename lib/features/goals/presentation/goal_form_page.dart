@@ -14,6 +14,7 @@ import '../../../core/money/money.dart';
 import '../../../core/time/calendar_date.dart';
 import '../../../core/widgets/choice_pill.dart';
 import '../../../core/widgets/confirm_dialog.dart';
+import '../../../core/widgets/field_label.dart';
 import '../../../core/widgets/segmented_choice.dart';
 import '../../../l10n/l10n.dart';
 import '../domain/goal_draft.dart';
@@ -253,7 +254,7 @@ class _GoalFormPageState extends ConsumerState<GoalFormPage> {
     return ListView(
       padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
       children: [
-        _FieldLabel(l10n.goalNameQuestion),
+        FieldLabel(l10n.goalNameQuestion),
         TextField(
           controller: _name,
           textCapitalization: TextCapitalization.sentences,
@@ -286,7 +287,7 @@ class _GoalFormPageState extends ConsumerState<GoalFormPage> {
           ),
         ],
         const SizedBox(height: 20),
-        _FieldLabel(l10n.goalTarget),
+        FieldLabel(l10n.goalTarget),
         TextField(
           controller: _target,
           keyboardType: TextInputType.number,
@@ -316,7 +317,7 @@ class _GoalFormPageState extends ConsumerState<GoalFormPage> {
                   _change(() => _target.text = MoneyFormat.amount(suggested)),
             ),
         const SizedBox(height: 20),
-        _FieldLabel(l10n.goalDueLabel),
+        FieldLabel(l10n.goalDueLabel),
         if (_isEdit) ...[
           SegmentedChoice<bool>(
             options: [(true, l10n.goalTargetDate), (false, l10n.goalDueNone)],
@@ -545,23 +546,4 @@ class _CreatedMessage extends StatelessWidget {
       ),
     );
   }
-}
-
-class _FieldLabel extends StatelessWidget {
-  const _FieldLabel(this.text);
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(bottom: 8),
-    child: Text(
-      text,
-      style: TextStyle(
-        fontSize: 13,
-        fontWeight: FontWeight.w500,
-        color: context.colors.inkSecondary,
-      ),
-    ),
-  );
 }

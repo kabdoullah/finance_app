@@ -13,6 +13,7 @@ import '../../../core/money/money.dart';
 import '../../../core/time/calendar_date.dart';
 import '../../../core/widgets/choice_pill.dart';
 import '../../../core/widgets/confirm_dialog.dart';
+import '../../../core/widgets/field_label.dart';
 import '../../../core/widgets/segmented_choice.dart';
 import '../../../l10n/l10n.dart';
 import '../../accounts/presentation/accounts_providers.dart';
@@ -316,7 +317,7 @@ class _RecurringFormPageState extends ConsumerState<RecurringFormPage> {
           }),
         ),
         const SizedBox(height: 20),
-        _FieldLabel(l10n.recurringName),
+        FieldLabel(l10n.recurringName),
         TextField(
           controller: _name,
           textCapitalization: TextCapitalization.sentences,
@@ -332,7 +333,7 @@ class _RecurringFormPageState extends ConsumerState<RecurringFormPage> {
           ),
         ),
         const SizedBox(height: 18),
-        _FieldLabel(l10n.recurringAmount),
+        FieldLabel(l10n.recurringAmount),
         TextField(
           controller: _amount,
           keyboardType: TextInputType.number,
@@ -361,7 +362,7 @@ class _RecurringFormPageState extends ConsumerState<RecurringFormPage> {
           onChanged: (v) => _change(() => _isVariable = v),
         ),
         const SizedBox(height: 18),
-        _FieldLabel(l10n.txCategory),
+        FieldLabel(l10n.txCategory),
         Wrap(
           spacing: 8,
           runSpacing: 8,
@@ -385,7 +386,7 @@ class _RecurringFormPageState extends ConsumerState<RecurringFormPage> {
             case final message?)
           _ErrorText(message),
         const SizedBox(height: 18),
-        _FieldLabel(l10n.txAccount),
+        FieldLabel(l10n.txAccount),
         Wrap(
           spacing: 8,
           runSpacing: 8,
@@ -405,7 +406,7 @@ class _RecurringFormPageState extends ConsumerState<RecurringFormPage> {
             case final message?)
           _ErrorText(message),
         const SizedBox(height: 18),
-        _FieldLabel(l10n.recurringFrequency),
+        FieldLabel(l10n.recurringFrequency),
         SegmentedChoice<RecurrenceFrequency>(
           options: [
             for (final f in RecurrenceFrequency.values) (f, f.label(l10n)),
@@ -426,7 +427,7 @@ class _RecurringFormPageState extends ConsumerState<RecurringFormPage> {
           onTap: _pickStart,
         ),
         const SizedBox(height: 18),
-        _FieldLabel(l10n.recurringEnd),
+        FieldLabel(l10n.recurringEnd),
         SegmentedChoice<bool>(
           options: [
             (false, l10n.recurringNoEnd),
@@ -526,25 +527,6 @@ class _CreatedMessage extends StatelessWidget {
       ),
     );
   }
-}
-
-class _FieldLabel extends StatelessWidget {
-  const _FieldLabel(this.text);
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(bottom: 8),
-    child: Text(
-      text,
-      style: TextStyle(
-        fontSize: 13,
-        fontWeight: FontWeight.w500,
-        color: context.colors.inkSecondary,
-      ),
-    ),
-  );
 }
 
 class _ErrorText extends StatelessWidget {
