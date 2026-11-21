@@ -321,11 +321,6 @@ class _PlannedDetailPageState extends ConsumerState<PlannedDetailPage> {
       showDragHandle: true,
       isScrollControlled: true,
       backgroundColor: context.colors.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(AppRadius.sheet),
-        ),
-      ),
       builder: (sheetContext) {
         var picked = today;
         return StatefulBuilder(

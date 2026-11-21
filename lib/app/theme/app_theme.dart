@@ -135,6 +135,14 @@ abstract final class AppTheme {
         extendedPadding: const EdgeInsets.only(left: 18, right: 22),
         extendedTextStyle: _buttonText,
       ),
+      // Feuilles du bas : même arrondi partout, au lieu des 28 de Material.
+      bottomSheetTheme: const BottomSheetThemeData(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppRadius.sheet),
+          ),
+        ),
+      ),
       dialogTheme: DialogThemeData(
         backgroundColor: colors.surface,
         surfaceTintColor: Colors.transparent,
