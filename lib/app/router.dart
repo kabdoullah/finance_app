@@ -228,7 +228,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           child: GoalFormPage(goalId: state.pathParameters['id']),
         ),
       ),
-      StatefulShellRoute.indexedStack(
+      StatefulShellRoute(
+        navigatorContainerBuilder: _branchStack,
         builder: (context, state, shell) =>
             RecurringAutoRecorder(child: AppShell(navigationShell: shell)),
         branches: [
@@ -375,3 +376,25 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   ref.onDispose(router.dispose);
   return router;
 });
+
+/// Onglets gardés en mémoire (comme `StatefulShellRoute.indexedStack`), mais
+/// seuls les Hero de l'onglet affiché participent aux transitions : chaque
+/// onglet porte les mêmes boutons flottants (mêmes tags), en double sinon dès
+/// qu'un écran s'ouvre par-dessus.
+Widget _branchStack(
+  BuildContext context,
+  StatefulNavigationShell shell,
+  List<Widget> children,
+) => IndexedStack(
+  index: shell.currentIndex,
+  children: [
+    for (final (i, child) in children.indexed)
+      Offstage(
+        offstage: i != shell.currentIndex,
+        child: TickerMode(
+          enabled: i == shell.currentIndex,
+          child: HeroMode(enabled: i == shell.currentIndex, child: child),
+        ),
+      ),
+  ],
+);
