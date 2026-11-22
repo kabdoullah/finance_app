@@ -23,7 +23,8 @@ les erreurs rencontrées et la marche à suivre pour les versions suivantes.
 Les deux pages web sont sur la branche `gh-pages` (HTML statique, sans
 Jekyll). Les textes de la fiche sont dans [fiche-fr.md](fiche-fr.md). Les
 captures 6,9" sont dans [captures-iphone-6.9/](captures-iphone-6.9/) ;
-`capture-iphone/` contient des captures 6,3".
+`capture-iphone/` contient les mêmes écrans en 6,3" (1206 × 2622), mis en
+page avec un titre au-dessus de chaque capture.
 
 ## Ce qui a été configuré dans le projet
 
