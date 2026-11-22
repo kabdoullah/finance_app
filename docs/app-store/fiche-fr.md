@@ -40,7 +40,7 @@ TES DONNÉES T'APPARTIENNENT
 • Sauvegarde chiffrée par mot de passe, à ranger où tu veux, et restauration sur un autre iPhone ou un Android.
 • Export de tes opérations en CSV et relevé mensuel en PDF.
 
-Finao est gratuit, sans publicité et sans abonnement.
+Finao est gratuit et sans abonnement.
 
 ## Notes pour la vérification d'Apple (App Review Information > Notes)
 Finao works fully offline and requires no account or sign-in, so no demo account is needed. The app is in French.
