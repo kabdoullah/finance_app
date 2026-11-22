@@ -47,6 +47,8 @@
 			</array>
 		</dict>
 	</dict>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Finao n'utilise pas tes photos. Cet accès ne serait demandé que si tu choisissais un fichier dans ta photothèque.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Finao utilise le micro pour la dictée de tes opérations. L'audio ne quitte pas ton iPhone.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>

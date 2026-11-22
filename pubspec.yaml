@@ -2,7 +2,7 @@ name: finance_app
 description: "Finance Copilot — gestion financière personnelle offline-first (nom provisoire)."
 publish_to: 'none'
 
-version: 1.0.0+1
+version: 1.0.0+2
 
 environment:
   sdk: ^3.14.0
