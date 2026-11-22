@@ -125,10 +125,7 @@ void main() {
     expect(find.text('Retrait'), findsOneWidget);
 
     // Page Comptes : ligne « Objectifs d'épargne ».
-    await tester.tap(find.text('Transactions').last);
-    await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Mes comptes'));
-    await tester.pumpAndSettle();
+    await openAccounts(tester);
     await tester.scrollUntilVisible(find.text("Objectifs d'épargne"), 200);
     expect(
       find.text('1 objectif · 15 000 FCFA mis de côté'),

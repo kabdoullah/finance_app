@@ -60,10 +60,13 @@ void main() {
     expect(result, isA<Ok<Object>>());
   }
 
+  /// Accueil → Paramètres → Opérations récurrentes.
   Future<void> openRecurring(WidgetTester tester) async {
-    await tester.tap(find.text('Transactions').last);
+    await tester.tap(find.text('Accueil').last);
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Opérations récurrentes'));
+    await tester.tap(find.byTooltip('Paramètres'));
+    await tester.pumpAndSettle();
+    await tapSetting(tester, 'Opérations récurrentes');
     await tester.pumpAndSettle();
   }
 

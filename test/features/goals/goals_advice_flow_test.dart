@@ -156,10 +156,7 @@ void main() {
     expect(find.textContaining('Date repoussée au'), findsOneWidget);
 
     // Page Comptes et détail du compte : part réservée et disponible.
-    await tester.tap(find.text('Transactions').last);
-    await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Mes comptes'));
-    await tester.pumpAndSettle();
+    await openAccounts(tester);
     expect(find.text('dont 10 000 réservés'), findsOneWidget);
     await tester.tap(find.text('Wave'));
     await tester.pumpAndSettle();

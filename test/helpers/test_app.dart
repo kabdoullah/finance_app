@@ -1,6 +1,8 @@
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:finance_app/app/app.dart';
+import 'package:finance_app/app/app_shell.dart';
+import 'package:finance_app/app/router.dart';
 import 'package:finance_app/core/clock.dart';
 import 'package:finance_app/core/database/app_database.dart';
 import 'package:finance_app/core/database/database_providers.dart';
@@ -8,6 +10,7 @@ import 'package:finance_app/features/settings/presentation/settings_page.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// Date fixe des tests : dimanche 15 novembre 2026, 9 h.
@@ -50,6 +53,13 @@ Widget buildTestApp(AppDatabase db, {List<Override> overrides = const []}) =>
 Finder scrollableOf(Type page) => find
     .descendant(of: find.byType(page), matching: find.byType(Scrollable))
     .first;
+
+/// Ouvre la page Comptes par le routeur : son lien sur l'Accueil dépend de
+/// l'état (étapes de démarrage ou section « Comptes et épargne »).
+Future<void> openAccounts(WidgetTester tester) async {
+  GoRouter.of(tester.element(find.byType(AppShell))).go(AppRoutes.accounts);
+  await tester.pumpAndSettle();
+}
 
 /// Fait défiler les Paramètres jusqu'à [text], puis le touche.
 Future<void> tapSetting(WidgetTester tester, String text) async {
